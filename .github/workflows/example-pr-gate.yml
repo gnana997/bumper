@@ -1,0 +1,39 @@
+# Example: gate Terraform PRs with bumper. Copy this into a repo that has
+# Terraform code. It produces a plan JSON, then runs the bumper action to upload
+# SARIF (Security tab) and post a sticky PR comment, and fails the check on any
+# high+ finding.
+#
+# Note: SARIF upload and PR comments require the permissions below and do not
+# work from forked-PR runs (GitHub restricts the token there).
+name: terraform-safety (example)
+
+on:
+  workflow_dispatch: {} # template — switch to `pull_request:` in your repo
+  # pull_request:
+  #   paths: ["**.tf"]
+
+permissions:
+  contents: read
+  security-events: write # upload SARIF
+  pull-requests: write # sticky comment
+
+jobs:
+  bumper:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: hashicorp/setup-terraform@v3
+
+      # Your real workflow authenticates to your cloud/backend before this.
+      - name: Terraform plan -> JSON
+        run: |
+          terraform init -input=false
+          terraform plan -input=false -out=plan.tfplan
+          terraform show -json plan.tfplan > plan.json
+
+      - name: bumper
+        uses: gnana097/bumper@v1
+        with:
+          plan-json: plan.json
+          fail-severity: high

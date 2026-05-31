@@ -1,0 +1,86 @@
+# Encryption-at-rest rules for data stores. Several are absence checks (the
+# resource is unencrypted unless a KMS key / flag is set), so they fire on a
+# missing field — guarded so they only apply to the right resource type.
+
+- id: AWS_SNS_UNENCRYPTED
+  severity: high
+  resource: aws_sns_topic
+  on: [create, update]
+  when: |
+    !has(after.kms_master_key_id) || after.kms_master_key_id == ""
+  title: "SNS topic is not encrypted at rest (no KMS key)"
+  fix: "Set kms_master_key_id (e.g. alias/aws/sns or a customer-managed key)."
+
+- id: AWS_SQS_UNENCRYPTED
+  severity: high
+  resource: aws_sqs_queue
+  on: [create, update]
+  when: |
+    (!has(after.kms_master_key_id) || after.kms_master_key_id == "") &&
+    (!has(after.sqs_managed_sse_enabled) || after.sqs_managed_sse_enabled == false)
+  title: "SQS queue is not encrypted at rest (no KMS key and SSE-SQS disabled)"
+  fix: "Set sqs_managed_sse_enabled = true, or provide kms_master_key_id."
+
+- id: AWS_KINESIS_UNENCRYPTED
+  severity: high
+  resource: aws_kinesis_stream
+  on: [create, update]
+  when: |
+    !has(after.encryption_type) || after.encryption_type == "" || after.encryption_type == "NONE"
+  title: "Kinesis stream is not encrypted (encryption_type is not KMS)"
+  fix: "Set encryption_type = \"KMS\" and provide kms_key_id."
+
+- id: AWS_ES_UNENCRYPTED_AT_REST
+  severity: high
+  on: [create, update]
+  when: |
+    type in ["aws_elasticsearch_domain", "aws_opensearch_domain"] &&
+    has(after.encrypt_at_rest) && after.encrypt_at_rest.exists(e,
+      has(e.enabled) && e.enabled == false)
+  title: "Elasticsearch/OpenSearch domain is not encrypted at rest"
+  fix: "Set encrypt_at_rest.enabled = true."
+
+- id: AWS_REDSHIFT_UNENCRYPTED
+  severity: high
+  resource: aws_redshift_cluster
+  on: [create, update]
+  when: |
+    has(after.encrypted) && after.encrypted == false
+  title: "Redshift cluster is not encrypted at rest"
+  fix: "Set encrypted = true."
+
+- id: AWS_NEPTUNE_UNENCRYPTED
+  severity: high
+  resource: aws_neptune_cluster
+  on: [create, update]
+  when: |
+    has(after.storage_encrypted) && after.storage_encrypted == false
+  title: "Neptune cluster storage is not encrypted at rest"
+  fix: "Set storage_encrypted = true."
+
+- id: AWS_DOCDB_UNENCRYPTED
+  severity: high
+  resource: aws_docdb_cluster
+  on: [create, update]
+  when: |
+    has(after.storage_encrypted) && after.storage_encrypted == false
+  title: "DocumentDB cluster storage is not encrypted at rest"
+  fix: "Set storage_encrypted = true."
+
+- id: AWS_RDS_CLUSTER_UNENCRYPTED
+  severity: high
+  resource: aws_rds_cluster
+  on: [create, update]
+  when: |
+    has(after.storage_encrypted) && after.storage_encrypted == false
+  title: "RDS (Aurora) cluster storage is not encrypted at rest"
+  fix: "Set storage_encrypted = true."
+
+- id: AWS_ELASTICACHE_AT_REST_UNENCRYPTED
+  severity: high
+  resource: aws_elasticache_replication_group
+  on: [create, update]
+  when: |
+    has(after.at_rest_encryption_enabled) && after.at_rest_encryption_enabled == false
+  title: "ElastiCache replication group is not encrypted at rest"
+  fix: "Set at_rest_encryption_enabled = true."

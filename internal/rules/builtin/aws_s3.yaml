@@ -1,0 +1,40 @@
+# S3 public-access rules.
+
+# Legacy canned ACL on the bucket resource itself.
+- id: AWS_S3_BUCKET_PUBLIC_ACL
+  severity: high
+  resource: aws_s3_bucket
+  on: [create, update]
+  when: |
+    has(after.acl) && (after.acl == "public-read" || after.acl == "public-read-write")
+  title: "S3 bucket uses a public canned ACL"
+  fix: "Use a private ACL and an aws_s3_bucket_public_access_block; avoid public-read/public-read-write."
+  refs:
+    - "https://docs.aws.amazon.com/AmazonS3/latest/userguide/access-control-block-public-access.html"
+
+# Modern standalone ACL resource.
+- id: AWS_S3_ACL_PUBLIC
+  severity: high
+  resource: aws_s3_bucket_acl
+  on: [create, update]
+  when: |
+    has(after.acl) && (after.acl == "public-read" || after.acl == "public-read-write")
+  title: "S3 bucket ACL grants public access"
+  fix: "Set a private canned ACL and enable Block Public Access."
+  refs:
+    - "https://docs.aws.amazon.com/AmazonS3/latest/userguide/access-control-block-public-access.html"
+
+# Block Public Access not fully enabled.
+- id: AWS_S3_PUBLIC_ACCESS_BLOCK_WEAK
+  severity: high
+  resource: aws_s3_bucket_public_access_block
+  on: [create, update]
+  when: |
+    (has(after.block_public_acls) && after.block_public_acls == false) ||
+    (has(after.ignore_public_acls) && after.ignore_public_acls == false) ||
+    (has(after.block_public_policy) && after.block_public_policy == false) ||
+    (has(after.restrict_public_buckets) && after.restrict_public_buckets == false)
+  title: "S3 Block Public Access is not fully enabled"
+  fix: "Set block_public_acls, ignore_public_acls, block_public_policy and restrict_public_buckets all to true."
+  refs:
+    - "https://docs.aws.amazon.com/AmazonS3/latest/userguide/access-control-block-public-access.html"

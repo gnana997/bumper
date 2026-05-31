@@ -1,0 +1,82 @@
+# Additional encryption-at-rest / key-management checks.
+
+- id: AWS_KMS_NO_ROTATION
+  severity: medium
+  resource: aws_kms_key
+  on: [create, update]
+  when: |
+    !has(after.enable_key_rotation) || after.enable_key_rotation == false
+  title: "KMS key does not have automatic key rotation enabled"
+  fix: "Set enable_key_rotation = true."
+
+- id: AWS_EC2_BLOCK_DEVICE_UNENCRYPTED
+  severity: high
+  resource: aws_instance
+  on: [create, update]
+  when: |
+    (has(after.root_block_device) && after.root_block_device.exists(d,
+      has(d.encrypted) && d.encrypted == false)) ||
+    (has(after.ebs_block_device) && after.ebs_block_device.exists(d,
+      has(d.encrypted) && d.encrypted == false))
+  title: "EC2 instance has an unencrypted block device"
+  fix: "Set encrypted = true on root_block_device / ebs_block_device, or enable EBS default encryption."
+
+- id: AWS_DAX_UNENCRYPTED
+  severity: high
+  resource: aws_dax_cluster
+  on: [create, update]
+  when: |
+    !has(after.server_side_encryption) ||
+    after.server_side_encryption.exists(e, !has(e.enabled) || e.enabled == false)
+  title: "DynamoDB DAX cluster is not encrypted at rest"
+  fix: "Add server_side_encryption { enabled = true }."
+
+- id: AWS_MSK_TRANSIT_UNENCRYPTED
+  severity: high
+  resource: aws_msk_cluster
+  on: [create, update]
+  when: |
+    has(after.encryption_info) && after.encryption_info.exists(ei,
+      has(ei.encryption_in_transit) && ei.encryption_in_transit.exists(t,
+        has(t.client_broker) && t.client_broker != "TLS"))
+  title: "MSK cluster allows plaintext (non-TLS) data in transit"
+  fix: "Set encryption_info.encryption_in_transit.client_broker = \"TLS\"."
+
+- id: AWS_WORKSPACES_UNENCRYPTED
+  severity: high
+  resource: aws_workspaces_workspace
+  on: [create, update]
+  when: |
+    (has(after.root_volume_encryption_enabled) && after.root_volume_encryption_enabled == false) ||
+    (has(after.user_volume_encryption_enabled) && after.user_volume_encryption_enabled == false)
+  title: "WorkSpaces root/user volume is not encrypted"
+  fix: "Set root_volume_encryption_enabled = true and user_volume_encryption_enabled = true."
+
+- id: AWS_EKS_SECRETS_UNENCRYPTED
+  severity: high
+  resource: aws_eks_cluster
+  on: [create, update]
+  when: |
+    !has(after.encryption_config) ||
+    !after.encryption_config.exists(e, has(e.resources) && ("secrets" in e.resources))
+  title: "EKS cluster does not enable envelope encryption of Kubernetes secrets"
+  fix: "Add encryption_config with resources = [\"secrets\"] and a KMS key."
+
+- id: AWS_CODEBUILD_ARTIFACT_UNENCRYPTED
+  severity: medium
+  resource: aws_codebuild_project
+  on: [create, update]
+  when: |
+    has(after.artifacts) && after.artifacts.exists(a,
+      has(a.encryption_disabled) && a.encryption_disabled == true)
+  title: "CodeBuild project artifacts have encryption disabled"
+  fix: "Set artifacts.encryption_disabled = false."
+
+- id: AWS_EBS_DEFAULT_ENCRYPTION_DISABLED
+  severity: medium
+  resource: aws_ebs_encryption_by_default
+  on: [create, update]
+  when: |
+    has(after.enabled) && after.enabled == false
+  title: "EBS encryption-by-default is disabled for the region"
+  fix: "Set enabled = true (or remove the resource to keep the default enabled)."

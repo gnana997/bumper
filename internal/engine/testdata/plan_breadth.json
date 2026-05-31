@@ -1,0 +1,71 @@
+{
+  "format_version": "1.2",
+  "terraform_version": "1.9.0",
+  "resource_changes": [
+    {
+      "address": "aws_s3_bucket.legacy",
+      "type": "aws_s3_bucket",
+      "name": "legacy",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": { "bucket": "legacy", "acl": "public-read" }
+      }
+    },
+    {
+      "address": "aws_s3_bucket_acl.modern",
+      "type": "aws_s3_bucket_acl",
+      "name": "modern",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": { "acl": "public-read-write" }
+      }
+    },
+    {
+      "address": "aws_s3_bucket_public_access_block.weak",
+      "type": "aws_s3_bucket_public_access_block",
+      "name": "weak",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": {
+          "block_public_acls": false,
+          "ignore_public_acls": true,
+          "block_public_policy": true,
+          "restrict_public_buckets": true
+        }
+      }
+    },
+    {
+      "address": "aws_efs_file_system.data",
+      "type": "aws_efs_file_system",
+      "name": "data",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": { "encrypted": false }
+      }
+    },
+    {
+      "address": "aws_elasticache_replication_group.cache",
+      "type": "aws_elasticache_replication_group",
+      "name": "cache",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": { "transit_encryption_enabled": false }
+      }
+    },
+    {
+      "address": "aws_db_instance.prod",
+      "type": "aws_db_instance",
+      "name": "prod",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": { "deletion_protection": false, "storage_encrypted": true }
+      }
+    }
+  ]
+}

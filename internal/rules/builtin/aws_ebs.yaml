@@ -1,0 +1,11 @@
+# EBS encryption at rest (metadata informed by trivy-checks AVD AWS-0026/0027).
+- id: AWS_EBS_VOLUME_UNENCRYPTED
+  severity: high
+  resource: aws_ebs_volume
+  on: [create, update]
+  when: |
+    has(after.encrypted) && after.encrypted == false
+  title: "EBS volume is not encrypted at rest"
+  fix: "Set encrypted = true, or enable EBS encryption by default for the account/region."
+  refs:
+    - "https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/EBSEncryption.html"

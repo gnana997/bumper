@@ -1,0 +1,22 @@
+bumper
+Copyright 2026 the bumper authors
+
+This product includes rule logic and metadata adapted from the following
+open-source projects. The rules were re-expressed in bumper's YAML + CEL format
+against the Terraform plan-JSON model; the original source is credited here.
+
+- trivy-checks (Aqua Security) — https://github.com/aquasecurity/trivy-checks
+  Licensed under the Apache License, Version 2.0.
+  Check metadata (ids, severities, titles, recommended actions, CIS mappings)
+  was harvested as a porting worklist (see docs/rule-catalog/).
+
+- Checkov (Prisma Cloud / Bridgecrew) — https://github.com/bridgecrewio/checkov
+  Licensed under the Apache License, Version 2.0.
+  Used as a coverage cross-reference.
+
+A copy of the Apache License, Version 2.0 is available at:
+  https://www.apache.org/licenses/LICENSE-2.0
+
+CIS Benchmark content is NOT redistributed by this project. Where a rule notes a
+CIS mapping, it refers to the publicly documented control number only; the CIS
+Benchmarks themselves (CC BY-NC-SA 4.0) are not included.

@@ -1,0 +1,18 @@
+# Network ACL public ingress (the stateless layer in front of security groups).
+- id: AWS_NACL_PUBLIC_INGRESS
+  severity: high
+  resource: aws_network_acl_rule
+  on: [create, update]
+  when: |
+    has(after.egress) && after.egress == false &&
+    has(after.rule_action) && after.rule_action == "allow" &&
+    has(after.cidr_block) && after.cidr_block == "0.0.0.0/0" && (
+      (has(after.protocol) && (after.protocol == "-1" || after.protocol == "all")) ||
+      (has(after.from_port) && has(after.to_port) && (
+        hits_sensitive_port(after.from_port, after.to_port) ||
+        (after.to_port - after.from_port) >= 1000.0))
+    )
+  title: "Network ACL allows public ingress (0.0.0.0/0) to a sensitive or wide port range"
+  fix: "Restrict the NACL rule's cidr_block and port range."
+  refs:
+    - "https://docs.aws.amazon.com/vpc/latest/userguide/vpc-network-acls.html"

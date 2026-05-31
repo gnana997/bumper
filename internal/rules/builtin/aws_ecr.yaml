@@ -1,0 +1,12 @@
+# ECR repository hardening.
+- id: AWS_ECR_SCAN_ON_PUSH_DISABLED
+  severity: high
+  resource: aws_ecr_repository
+  on: [create, update]
+  when: |
+    !has(after.image_scanning_configuration) ||
+    after.image_scanning_configuration.exists(c, !has(c.scan_on_push) || c.scan_on_push == false)
+  title: "ECR repository does not scan images on push"
+  fix: "Set image_scanning_configuration { scan_on_push = true }."
+  refs:
+    - "https://docs.aws.amazon.com/AmazonECR/latest/userguide/image-scanning.html"

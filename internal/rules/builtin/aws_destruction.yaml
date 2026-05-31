@@ -1,0 +1,15 @@
+# Destruction / plan-diff rules — bumper's differentiator. These read the
+# change ACTIONS (on: [delete, replace]) rather than end-state config, which is
+# the only way to catch "this apply will destroy data." No type filter here; we
+# match a set of stateful resource types via the `type` variable in CEL.
+- id: AWS_STATEFUL_RESOURCE_DESTROY
+  severity: high
+  on: [delete, replace]
+  when: |
+    type in [
+      "aws_db_instance", "aws_rds_cluster", "aws_dynamodb_table", "aws_s3_bucket",
+      "aws_elasticache_cluster", "aws_efs_file_system", "aws_redshift_cluster",
+      "aws_docdb_cluster", "aws_neptune_cluster"
+    ]
+  title: "This apply will DELETE or REPLACE a stateful data resource (potential data loss)"
+  fix: "Confirm the destruction is intended. Check prevent_destroy, final snapshots, and backups before applying."

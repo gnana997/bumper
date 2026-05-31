@@ -1,0 +1,40 @@
+# Git hooks for bumper, managed by lefthook (a single Go binary — no Node).
+#
+# One-time setup after cloning:  make hooks   (installs lefthook + the hooks)
+# Requires `gitleaks` on PATH:   brew install gitleaks
+#                          (or)  go install github.com/zricethezav/gitleaks/v8@latest
+
+pre-commit:
+  parallel: true
+  commands:
+    # Secret scanning on staged changes — blocks the commit if a secret leaks.
+    gitleaks:
+      run: |
+        if ! command -v gitleaks >/dev/null 2>&1; then
+          echo "✖ gitleaks not found. Install it:"
+          echo "    brew install gitleaks"
+          echo "    # or: go install github.com/zricethezav/gitleaks/v8@latest"
+          exit 1
+        fi
+        gitleaks git --staged --redact --verbose
+
+    # Go formatting — gofmt -l only lists, so fail explicitly when non-empty.
+    gofmt:
+      glob: "*.go"
+      run: |
+        unformatted=$(gofmt -l {staged_files})
+        if [ -n "$unformatted" ]; then
+          echo "✖ These files need gofmt:"
+          echo "$unformatted"
+          echo "  Fix: gofmt -w {staged_files}"
+          exit 1
+        fi
+
+# Heavier checks before sharing — kept out of pre-commit so commits stay fast.
+pre-push:
+  parallel: false
+  commands:
+    vet:
+      run: go vet ./...
+    test:
+      run: go test ./...

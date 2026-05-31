@@ -1,0 +1,40 @@
+# Resource-policy exposure (uses parse_json, like the IAM family).
+
+- id: AWS_ECR_PUBLIC_POLICY
+  severity: high
+  resource: aws_ecr_repository_policy
+  on: [create, update]
+  when: |
+    has(after.policy) &&
+    as_list(parse_json(after.policy).Statement).exists(s,
+      has(s.Effect) && s.Effect == "Allow" && has(s.Principal) && (
+        (type(s.Principal) == string && s.Principal == "*") ||
+        (type(s.Principal) == map && has(s.Principal.AWS) && as_list(s.Principal.AWS).exists(p, p == "*"))
+      ))
+  title: "ECR repository policy grants public access (Principal '*')"
+  fix: "Restrict the repository policy Principal to specific accounts/roles."
+
+- id: AWS_SQS_POLICY_PUBLIC
+  severity: high
+  resource: aws_sqs_queue_policy
+  on: [create, update]
+  when: |
+    has(after.policy) &&
+    as_list(parse_json(after.policy).Statement).exists(s,
+      has(s.Effect) && s.Effect == "Allow" && has(s.Principal) && (
+        (type(s.Principal) == string && s.Principal == "*") ||
+        (type(s.Principal) == map && has(s.Principal.AWS) && as_list(s.Principal.AWS).exists(p, p == "*"))
+      ))
+  title: "SQS queue policy grants public access (Principal '*')"
+  fix: "Restrict the queue policy Principal; avoid Principal '*'."
+
+- id: AWS_LAMBDA_PERMISSION_NO_SOURCE_ARN
+  severity: high
+  resource: aws_lambda_permission
+  on: [create, update]
+  when: |
+    has(after.principal) && after.principal.endsWith(".amazonaws.com") &&
+    (!has(after.source_arn) || after.source_arn == "") &&
+    (!has(after.source_account) || after.source_account == "")
+  title: "Lambda permission grants a service principal access without source_arn (confused-deputy risk)"
+  fix: "Set source_arn (and/or source_account) to restrict which resource can invoke the function."

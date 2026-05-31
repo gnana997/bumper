@@ -1,0 +1,12 @@
+# Application load balancer hardening.
+- id: AWS_ELB_DROP_INVALID_HEADERS
+  severity: medium
+  resource: aws_lb
+  on: [create, update]
+  when: |
+    (!has(after.load_balancer_type) || after.load_balancer_type == "application") &&
+    (!has(after.drop_invalid_header_fields) || after.drop_invalid_header_fields == false)
+  title: "Application load balancer does not drop invalid HTTP headers"
+  fix: "Set drop_invalid_header_fields = true on the ALB."
+  refs:
+    - "https://docs.aws.amazon.com/elasticloadbalancing/latest/application/application-load-balancers.html"

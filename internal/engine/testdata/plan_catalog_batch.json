@@ -1,0 +1,77 @@
+{
+  "format_version": "1.2",
+  "terraform_version": "1.9.0",
+  "resource_changes": [
+    { "address": "aws_cloudfront_distribution.cdn", "type": "aws_cloudfront_distribution", "name": "cdn",
+      "change": { "actions": ["create"], "before": null, "after": {
+        "default_cache_behavior": [ { "viewer_protocol_policy": "allow-all" } ] } } },
+
+    { "address": "aws_lb_listener.http", "type": "aws_lb_listener", "name": "http",
+      "change": { "actions": ["create"], "before": null, "after": {
+        "protocol": "HTTP", "default_action": [ { "type": "forward" } ] } } },
+
+    { "address": "aws_elasticsearch_domain.search", "type": "aws_elasticsearch_domain", "name": "search",
+      "change": { "actions": ["create"], "before": null, "after": {
+        "domain_endpoint_options": [ { "enforce_https": false } ],
+        "encrypt_at_rest": [ { "enabled": false } ] } } },
+
+    { "address": "aws_eks_cluster.k8s", "type": "aws_eks_cluster", "name": "k8s",
+      "change": { "actions": ["create"], "before": null, "after": {
+        "vpc_config": [ { "endpoint_public_access": true, "public_access_cidrs": ["0.0.0.0/0"] } ] } } },
+
+    { "address": "aws_mq_broker.broker", "type": "aws_mq_broker", "name": "broker",
+      "change": { "actions": ["create"], "before": null, "after": { "publicly_accessible": true } } },
+
+    { "address": "aws_sns_topic.topic", "type": "aws_sns_topic", "name": "topic",
+      "change": { "actions": ["create"], "before": null, "after": { "name": "topic" } } },
+
+    { "address": "aws_sns_topic.enc", "type": "aws_sns_topic", "name": "enc",
+      "change": { "actions": ["create"], "before": null, "after": { "name": "enc", "kms_master_key_id": "alias/aws/sns" } } },
+
+    { "address": "aws_sqs_queue.queue", "type": "aws_sqs_queue", "name": "queue",
+      "change": { "actions": ["create"], "before": null, "after": { "name": "queue" } } },
+
+    { "address": "aws_kinesis_stream.stream", "type": "aws_kinesis_stream", "name": "stream",
+      "change": { "actions": ["create"], "before": null, "after": { "encryption_type": "NONE" } } },
+
+    { "address": "aws_redshift_cluster.rs", "type": "aws_redshift_cluster", "name": "rs",
+      "change": { "actions": ["create"], "before": null, "after": { "encrypted": false } } },
+
+    { "address": "aws_neptune_cluster.neptune", "type": "aws_neptune_cluster", "name": "neptune",
+      "change": { "actions": ["create"], "before": null, "after": { "storage_encrypted": false } } },
+
+    { "address": "aws_docdb_cluster.docdb", "type": "aws_docdb_cluster", "name": "docdb",
+      "change": { "actions": ["create"], "before": null, "after": { "storage_encrypted": false } } },
+
+    { "address": "aws_rds_cluster.aurora", "type": "aws_rds_cluster", "name": "aurora",
+      "change": { "actions": ["create"], "before": null, "after": {
+        "storage_encrypted": false, "deletion_protection": false, "backup_retention_period": 0 } } },
+
+    { "address": "aws_elasticache_replication_group.cache2", "type": "aws_elasticache_replication_group", "name": "cache2",
+      "change": { "actions": ["create"], "before": null, "after": { "at_rest_encryption_enabled": false } } },
+
+    { "address": "aws_instance.box", "type": "aws_instance", "name": "box",
+      "change": { "actions": ["create"], "before": null, "after": {
+        "metadata_options": [ { "http_tokens": "optional" } ] } } },
+
+    { "address": "aws_instance.hardened", "type": "aws_instance", "name": "hardened",
+      "change": { "actions": ["create"], "before": null, "after": {
+        "metadata_options": [ { "http_tokens": "required" } ] } } },
+
+    { "address": "aws_ecr_repository.repo", "type": "aws_ecr_repository", "name": "repo",
+      "change": { "actions": ["create"], "before": null, "after": {
+        "image_scanning_configuration": [ { "scan_on_push": false } ] } } },
+
+    { "address": "aws_dynamodb_table.tbl", "type": "aws_dynamodb_table", "name": "tbl",
+      "change": { "actions": ["create"], "before": null, "after": {
+        "point_in_time_recovery": [ { "enabled": false } ] } } },
+
+    { "address": "aws_s3_bucket_versioning.ver", "type": "aws_s3_bucket_versioning", "name": "ver",
+      "change": { "actions": ["create"], "before": null, "after": {
+        "versioning_configuration": [ { "status": "Suspended" } ] } } },
+
+    { "address": "aws_db_instance.bak", "type": "aws_db_instance", "name": "bak",
+      "change": { "actions": ["create"], "before": null, "after": {
+        "backup_retention_period": 0, "storage_encrypted": true } } }
+  ]
+}

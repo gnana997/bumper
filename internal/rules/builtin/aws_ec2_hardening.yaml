@@ -1,0 +1,12 @@
+# EC2 instance hardening.
+- id: AWS_EC2_IMDSV2_NOT_ENFORCED
+  severity: high
+  resource: aws_instance
+  on: [create, update]
+  when: |
+    !has(after.metadata_options) ||
+    after.metadata_options.exists(m, !has(m.http_tokens) || m.http_tokens != "required")
+  title: "EC2 instance does not enforce IMDSv2 (http_tokens != required)"
+  fix: "Set metadata_options { http_tokens = \"required\" } to mitigate SSRF-based credential theft."
+  refs:
+    - "https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/configuring-instance-metadata-service.html"

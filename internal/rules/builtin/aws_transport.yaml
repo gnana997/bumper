@@ -1,0 +1,63 @@
+# Public-exposure / plaintext-transport rules.
+
+- id: AWS_CLOUDFRONT_NO_HTTPS
+  severity: critical
+  resource: aws_cloudfront_distribution
+  on: [create, update]
+  when: |
+    (has(after.default_cache_behavior) && after.default_cache_behavior.exists(b,
+      has(b.viewer_protocol_policy) && b.viewer_protocol_policy == "allow-all")) ||
+    (has(after.ordered_cache_behavior) && after.ordered_cache_behavior.exists(b,
+      has(b.viewer_protocol_policy) && b.viewer_protocol_policy == "allow-all"))
+  title: "CloudFront distribution allows unencrypted HTTP (viewer_protocol_policy = allow-all)"
+  fix: "Set viewer_protocol_policy to redirect-to-https or https-only."
+  refs:
+    - "https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/using-https-viewers-to-cloudfront.html"
+
+- id: AWS_ELB_PLAIN_HTTP_LISTENER
+  severity: critical
+  on: [create, update]
+  when: |
+    type in ["aws_lb_listener", "aws_alb_listener"] &&
+    has(after.protocol) && after.protocol == "HTTP" &&
+    !(has(after.default_action) && after.default_action.exists(a, has(a.type) && a.type == "redirect"))
+  title: "Load balancer listener serves plain HTTP with no TLS and no HTTPS redirect"
+  fix: "Use an HTTPS listener, or make the HTTP listener redirect to HTTPS."
+  refs:
+    - "https://docs.aws.amazon.com/elasticloadbalancing/latest/application/create-https-listener.html"
+
+- id: AWS_ES_NO_HTTPS_ENFORCED
+  severity: critical
+  on: [create, update]
+  when: |
+    type in ["aws_elasticsearch_domain", "aws_opensearch_domain"] &&
+    has(after.domain_endpoint_options) && after.domain_endpoint_options.exists(o,
+      has(o.enforce_https) && o.enforce_https == false)
+  title: "Elasticsearch/OpenSearch domain does not enforce HTTPS"
+  fix: "Set domain_endpoint_options.enforce_https = true."
+  refs:
+    - "https://docs.aws.amazon.com/opensearch-service/latest/developerguide/infrastructure-security.html"
+
+- id: AWS_EKS_PUBLIC_ENDPOINT_OPEN
+  severity: critical
+  resource: aws_eks_cluster
+  on: [create, update]
+  when: |
+    has(after.vpc_config) && after.vpc_config.exists(v,
+      (!has(v.endpoint_public_access) || v.endpoint_public_access == true) &&
+      (!has(v.public_access_cidrs) || v.public_access_cidrs.exists(c, c == "0.0.0.0/0")))
+  title: "EKS cluster API endpoint is publicly reachable from any IP (0.0.0.0/0)"
+  fix: "Disable endpoint_public_access, or restrict public_access_cidrs to known ranges."
+  refs:
+    - "https://docs.aws.amazon.com/eks/latest/userguide/cluster-endpoint.html"
+
+- id: AWS_MQ_BROKER_PUBLIC
+  severity: high
+  resource: aws_mq_broker
+  on: [create, update]
+  when: |
+    has(after.publicly_accessible) && after.publicly_accessible == true
+  title: "MQ broker is publicly accessible from the internet"
+  fix: "Set publicly_accessible = false and place the broker in private subnets."
+  refs:
+    - "https://docs.aws.amazon.com/amazon-mq/latest/developer-guide/using-amazon-mq-securely.html"

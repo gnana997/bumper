@@ -1,0 +1,13 @@
+# Destruction rule — reads the TRANSITION (on: [replace]), not just end-state.
+# This is the class of check the existing static scanners largely miss, because
+# they look at resulting config rather than the plan's change actions.
+- id: AWS_DB_DESTRUCTIVE_REPLACE_NO_SNAPSHOT
+  severity: critical
+  resource: aws_db_instance
+  on: [replace]
+  when: |
+    has(after.skip_final_snapshot) && after.skip_final_snapshot == true
+  title: "This apply will DESTROY and recreate a database with no final snapshot"
+  fix: "Set skip_final_snapshot = false, or find what forces replacement (terraform plan shows the triggering attribute) to avoid irreversible data loss."
+  refs:
+    - "https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/db_instance#skip_final_snapshot"

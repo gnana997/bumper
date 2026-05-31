@@ -1,0 +1,20 @@
+# Build output
+/bumper
+/dist/
+
+# Terraform plan artifacts (never commit these — they contain real infra data)
+*.tfplan
+*.tfstate
+*.tfstate.*
+plan.json
+
+# Go
+*.test
+*.out
+
+# Git hooks (lefthook) — keep lefthook.yml, ignore local overrides
+lefthook-local.yml
+
+# Node (not used by the project; guard against accidental husky/npm installs)
+node_modules/
+package-lock.json

@@ -1,0 +1,54 @@
+{
+  "format_version": "1.2",
+  "terraform_version": "1.9.0",
+  "resource_changes": [
+    {
+      "address": "aws_db_instance.public",
+      "mode": "managed",
+      "type": "aws_db_instance",
+      "name": "public",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": { "publicly_accessible": true, "storage_encrypted": false }
+      }
+    },
+    {
+      "address": "aws_ebs_volume.data",
+      "mode": "managed",
+      "type": "aws_ebs_volume",
+      "name": "data",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": { "encrypted": false, "size": 100 }
+      }
+    },
+    {
+      "address": "aws_dynamodb_table.sessions",
+      "mode": "managed",
+      "type": "aws_dynamodb_table",
+      "name": "sessions",
+      "change": {
+        "actions": ["delete"],
+        "before": { "name": "sessions" },
+        "after": null
+      }
+    },
+    {
+      "address": "aws_security_group.open",
+      "mode": "managed",
+      "type": "aws_security_group",
+      "name": "open",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": {
+          "ingress": [
+            { "from_port": 0, "to_port": 65535, "protocol": "-1", "cidr_blocks": ["0.0.0.0/0"] }
+          ]
+        }
+      }
+    }
+  ]
+}

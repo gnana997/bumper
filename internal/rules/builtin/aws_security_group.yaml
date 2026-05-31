@@ -1,0 +1,63 @@
+# Public-ingress exposure across all three Terraform shapes for SG rules.
+# Hardened vs. the naive version: matches the full port RANGE (from<=p<=to),
+# both IPv4 (0.0.0.0/0) and IPv6 (::/0), and "all protocols" (-1).
+
+# Inline ingress blocks on aws_security_group.
+- id: AWS_SG_PUBLIC_INGRESS
+  severity: critical
+  resource: aws_security_group
+  on: [create, update]
+  when: |
+    has(after.ingress) && after.ingress.exists(r,
+      (
+        (has(r.cidr_blocks) && "0.0.0.0/0" in r.cidr_blocks) ||
+        (has(r.ipv6_cidr_blocks) && "::/0" in r.ipv6_cidr_blocks)
+      ) && has(r.from_port) && has(r.to_port) && (
+        hits_sensitive_port(r.from_port, r.to_port) ||
+        (r.to_port - r.from_port) >= 1000.0 ||
+        (has(r.protocol) && r.protocol == "-1")
+      )
+    )
+  title: "Security group allows public internet ingress (0.0.0.0/0 or ::/0) to a sensitive or wide port range"
+  fix: "Restrict cidr_blocks/ipv6_cidr_blocks to known ranges and narrow the port range."
+  refs:
+    - "https://docs.aws.amazon.com/vpc/latest/userguide/security-group-rules.html"
+
+# Standalone aws_security_group_rule (fields at top level; type distinguishes direction).
+- id: AWS_SG_RULE_PUBLIC_INGRESS
+  severity: critical
+  resource: aws_security_group_rule
+  on: [create, update]
+  when: |
+    has(after.type) && after.type == "ingress" &&
+    (
+      (has(after.cidr_blocks) && "0.0.0.0/0" in after.cidr_blocks) ||
+      (has(after.ipv6_cidr_blocks) && "::/0" in after.ipv6_cidr_blocks)
+    ) && has(after.from_port) && has(after.to_port) && (
+      hits_sensitive_port(after.from_port, after.to_port) ||
+      (after.to_port - after.from_port) >= 1000.0 ||
+      (has(after.protocol) && after.protocol == "-1")
+    )
+  title: "Security group rule allows public internet ingress (0.0.0.0/0 or ::/0) to a sensitive or wide port range"
+  fix: "Restrict the CIDR ranges and narrow the port range."
+  refs:
+    - "https://docs.aws.amazon.com/vpc/latest/userguide/security-group-rules.html"
+
+# Modern aws_vpc_security_group_ingress_rule (single cidr_ipv4/cidr_ipv6, ip_protocol).
+- id: AWS_VPC_SG_INGRESS_PUBLIC
+  severity: critical
+  resource: aws_vpc_security_group_ingress_rule
+  on: [create, update]
+  when: |
+    (
+      (has(after.cidr_ipv4) && after.cidr_ipv4 == "0.0.0.0/0") ||
+      (has(after.cidr_ipv6) && after.cidr_ipv6 == "::/0")
+    ) && has(after.from_port) && has(after.to_port) && (
+      hits_sensitive_port(after.from_port, after.to_port) ||
+      (after.to_port - after.from_port) >= 1000.0 ||
+      (has(after.ip_protocol) && after.ip_protocol == "-1")
+    )
+  title: "VPC security group ingress rule allows public internet access (0.0.0.0/0 or ::/0)"
+  fix: "Restrict cidr_ipv4/cidr_ipv6 and narrow the port range."
+  refs:
+    - "https://docs.aws.amazon.com/vpc/latest/userguide/security-group-rules.html"

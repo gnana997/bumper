@@ -1,0 +1,1869 @@
+[
+  {
+    "id": "AWS-0175",
+    "long_id": "aws-accessanalyzer-enable-access-analyzer",
+    "service": "accessanalyzer",
+    "severity": "low",
+    "title": "Enable IAM Access analyzer for IAM policies about all resources in each region.",
+    "fix": "Enable IAM Access analyzer across all regions.",
+    "cis": [
+      "cis-aws-1.4"
+    ],
+    "source_file": "checks/cloud/aws/accessanalyzer/enable_access_analyzer.rego"
+  },
+  {
+    "id": "AWS-0344",
+    "long_id": "aws-ami-ensure-ami-has-owners",
+    "service": "ami",
+    "severity": "low",
+    "title": "AWS AMI data source should specify owners",
+    "fix": "Specify the owners field in the AWS AMI data source configuration",
+    "cis": [],
+    "source_file": "checks/cloud/aws/ec2/specify_ami_owners.rego"
+  },
+  {
+    "id": "AWS-0001",
+    "long_id": "aws-apigateway-enable-access-logging",
+    "service": "apigateway",
+    "severity": "medium",
+    "title": "API Gateway stages for V1 and V2 should have access logging enabled",
+    "fix": "Enable logging for API Gateway stages",
+    "cis": [],
+    "source_file": "checks/cloud/aws/apigateway/enable_access_logging.rego"
+  },
+  {
+    "id": "AWS-0002",
+    "long_id": "aws-apigateway-enable-cache-encryption",
+    "service": "apigateway",
+    "severity": "medium",
+    "title": "API Gateway must have cache enabled",
+    "fix": "Enable cache encryption",
+    "cis": [],
+    "source_file": "checks/cloud/aws/apigateway/enable_cache_encryption.rego"
+  },
+  {
+    "id": "AWS-0003",
+    "long_id": "aws-apigateway-enable-tracing",
+    "service": "apigateway",
+    "severity": "low",
+    "title": "API Gateway must have X-Ray tracing enabled",
+    "fix": "Enable tracing",
+    "cis": [],
+    "source_file": "checks/cloud/aws/apigateway/enable_tracing.rego"
+  },
+  {
+    "id": "AWS-0004",
+    "long_id": "aws-apigateway-no-public-access",
+    "service": "apigateway",
+    "severity": "low",
+    "title": "No unauthorized access to API Gateway methods",
+    "fix": "Use and authorization method or require API Key",
+    "cis": [],
+    "source_file": "checks/cloud/aws/apigateway/no_public_access.rego"
+  },
+  {
+    "id": "AWS-0005",
+    "long_id": "aws-apigateway-use-secure-tls-policy",
+    "service": "apigateway",
+    "severity": "high",
+    "title": "API Gateway domain name uses outdated SSL/TLS protocols.",
+    "fix": "Use the most modern TLS/SSL policies available",
+    "cis": [],
+    "source_file": "checks/cloud/aws/apigateway/use_secure_tls_policy.rego"
+  },
+  {
+    "id": "AWS-0190",
+    "long_id": "aws-apigateway-enable-cache",
+    "service": "apigateway",
+    "severity": "low",
+    "title": "Ensure that response caching is enabled for your Amazon API Gateway REST APIs.",
+    "fix": "Enable cache",
+    "cis": [],
+    "source_file": "checks/cloud/aws/apigateway/enable_cache.rego"
+  },
+  {
+    "id": "AWS-0006",
+    "long_id": "aws-athena-enable-at-rest-encryption",
+    "service": "athena",
+    "severity": "high",
+    "title": "Athena databases and workgroup configurations are created unencrypted at rest by default, they should be encrypted",
+    "fix": "Enable encryption at rest for Athena databases and workgroup configurations",
+    "cis": [],
+    "source_file": "checks/cloud/aws/athena/enable_at_rest_encryption.rego"
+  },
+  {
+    "id": "AWS-0007",
+    "long_id": "aws-athena-no-encryption-override",
+    "service": "athena",
+    "severity": "high",
+    "title": "Athena workgroups should enforce configuration to prevent client disabling encryption",
+    "fix": "Enforce the configuration to prevent client overrides",
+    "cis": [],
+    "source_file": "checks/cloud/aws/athena/no_encryption_override.rego"
+  },
+  {
+    "id": "AWS-0010",
+    "long_id": "aws-cloudfront-enable-logging",
+    "service": "cloudfront",
+    "severity": "medium",
+    "title": "Cloudfront distribution should have Access Logging configured",
+    "fix": "Enable logging for CloudFront distributions",
+    "cis": [],
+    "source_file": "checks/cloud/aws/cloudfront/enable_logging.rego"
+  },
+  {
+    "id": "AWS-0011",
+    "long_id": "aws-cloudfront-enable-waf",
+    "service": "cloudfront",
+    "severity": "high",
+    "title": "CloudFront distribution does not have a WAF in front.",
+    "fix": "Enable WAF for the CloudFront distribution",
+    "cis": [],
+    "source_file": "checks/cloud/aws/cloudfront/enable_waf.rego"
+  },
+  {
+    "id": "AWS-0012",
+    "long_id": "aws-cloudfront-enforce-https",
+    "service": "cloudfront",
+    "severity": "critical",
+    "title": "CloudFront distribution allows unencrypted (HTTP) communications.",
+    "fix": "Only allow HTTPS for CloudFront distribution communication",
+    "cis": [],
+    "source_file": "checks/cloud/aws/cloudfront/enforce_https.rego"
+  },
+  {
+    "id": "AWS-0013",
+    "long_id": "aws-cloudfront-use-secure-tls-policy",
+    "service": "cloudfront",
+    "severity": "high",
+    "title": "CloudFront distribution uses outdated SSL/TLS protocols.",
+    "fix": "Use the most modern TLS/SSL policies available",
+    "cis": [],
+    "source_file": "checks/cloud/aws/cloudfront/use_secure_tls_policy.rego"
+  },
+  {
+    "id": "AWS-0014",
+    "long_id": "aws-cloudtrail-enable-all-regions",
+    "service": "cloudtrail",
+    "severity": "medium",
+    "title": "Cloudtrail should be enabled in all regions regardless of where your AWS resources are generally homed",
+    "fix": "Enable Cloudtrail in all regions",
+    "cis": [
+      "cis-aws-1.2"
+    ],
+    "source_file": "checks/cloud/aws/cloudtrail/enable_all_regions.rego"
+  },
+  {
+    "id": "AWS-0015",
+    "long_id": "aws-cloudtrail-encryption-customer-managed-key",
+    "service": "cloudtrail",
+    "severity": "high",
+    "title": "CloudTrail should use Customer managed keys to encrypt the logs",
+    "fix": "Use Customer managed key",
+    "cis": [],
+    "source_file": "checks/cloud/aws/cloudtrail/encryption_customer_key.rego"
+  },
+  {
+    "id": "AWS-0016",
+    "long_id": "aws-cloudtrail-enable-log-validation",
+    "service": "cloudtrail",
+    "severity": "high",
+    "title": "Cloudtrail log validation should be enabled to prevent tampering of log data",
+    "fix": "Turn on log validation for Cloudtrail",
+    "cis": [],
+    "source_file": "checks/cloud/aws/cloudtrail/enable_log_validation.rego"
+  },
+  {
+    "id": "AWS-0161",
+    "long_id": "aws-cloudtrail-no-public-log-access",
+    "service": "cloudtrail",
+    "severity": "critical",
+    "title": "The S3 Bucket backing Cloudtrail should be private",
+    "fix": "Restrict public access to the S3 bucket",
+    "cis": [
+      "cis-aws-1.2",
+      "cis-aws-1.4"
+    ],
+    "source_file": "checks/cloud/aws/cloudtrail/no_public_log_access.rego"
+  },
+  {
+    "id": "AWS-0162",
+    "long_id": "aws-cloudtrail-ensure-cloudwatch-integration",
+    "service": "cloudtrail",
+    "severity": "low",
+    "title": "CloudTrail logs should be stored in S3 and also sent to CloudWatch Logs",
+    "fix": "Enable logging to CloudWatch",
+    "cis": [
+      "cis-aws-1.2",
+      "cis-aws-1.4"
+    ],
+    "source_file": "checks/cloud/aws/cloudtrail/ensure_cloudwatch_integration.rego"
+  },
+  {
+    "id": "AWS-0163",
+    "long_id": "aws-cloudtrail-require-bucket-access-logging",
+    "service": "cloudtrail",
+    "severity": "low",
+    "title": "You should enable bucket access logging on the CloudTrail S3 bucket.",
+    "fix": "Enable access logging on the bucket",
+    "cis": [
+      "cis-aws-1.2",
+      "cis-aws-1.4"
+    ],
+    "source_file": "checks/cloud/aws/cloudtrail/require_bucket_access_logging.rego"
+  },
+  {
+    "id": "AWS-0017",
+    "long_id": "aws-cloudwatch-log-group-customer-key",
+    "service": "cloudwatch",
+    "severity": "low",
+    "title": "CloudWatch log groups should be encrypted using CMK",
+    "fix": "Enable CMK encryption of CloudWatch Log Groups",
+    "cis": [],
+    "source_file": "checks/cloud/aws/cloudwatch/log_group_customer_key.rego"
+  },
+  {
+    "id": "AWS-0147",
+    "long_id": "aws-cloudwatch-require-unauthorised-api-call-alarm",
+    "service": "cloudwatch",
+    "severity": "low",
+    "title": "Ensure a log metric filter and alarm exist for unauthorized API calls",
+    "fix": "Create an alarm to alert on unauthorized API calls",
+    "cis": [
+      "cis-aws-1.2",
+      "cis-aws-1.4"
+    ],
+    "source_file": "checks/cloud/aws/cloudwatch/require_unauthorised_api_call_alarm.rego"
+  },
+  {
+    "id": "AWS-0148",
+    "long_id": "aws-cloudwatch-require-non-mfa-login-alarm",
+    "service": "cloudwatch",
+    "severity": "low",
+    "title": "Ensure a log metric filter and alarm exist for AWS Management Console sign-in without MFA",
+    "fix": "Create an alarm to alert on non MFA logins",
+    "cis": [
+      "cis-aws-1.2",
+      "cis-aws-1.4"
+    ],
+    "source_file": "checks/cloud/aws/cloudwatch/require_non_mfa_login_alarm.rego"
+  },
+  {
+    "id": "AWS-0149",
+    "long_id": "aws-cloudwatch-require-root-user-usage-alarm",
+    "service": "cloudwatch",
+    "severity": "low",
+    "title": "Ensure a log metric filter and alarm exist for usage of root user",
+    "fix": "Create an alarm to alert on root user login",
+    "cis": [
+      "cis-aws-1.2",
+      "cis-aws-1.4"
+    ],
+    "source_file": "checks/cloud/aws/cloudwatch/require_root_user_usage_alarm.rego"
+  },
+  {
+    "id": "AWS-0150",
+    "long_id": "aws-cloudwatch-require-iam-policy-change-alarm",
+    "service": "cloudwatch",
+    "severity": "low",
+    "title": "Ensure a log metric filter and alarm exist for IAM policy changes",
+    "fix": "Create an alarm to alert on IAM Policy changes",
+    "cis": [
+      "cis-aws-1.2",
+      "cis-aws-1.4"
+    ],
+    "source_file": "checks/cloud/aws/cloudwatch/require_iam_policy_change_alarm.rego"
+  },
+  {
+    "id": "AWS-0151",
+    "long_id": "aws-cloudwatch-require-cloud-trail-change-alarm",
+    "service": "cloudwatch",
+    "severity": "low",
+    "title": "Ensure a log metric filter and alarm exist for CloudTrail configuration changes",
+    "fix": "Create an alarm to alert on CloudTrail configuration changes",
+    "cis": [
+      "cis-aws-1.2",
+      "cis-aws-1.4"
+    ],
+    "source_file": "checks/cloud/aws/cloudwatch/require_cloudtrail_change_alarm.rego"
+  },
+  {
+    "id": "AWS-0152",
+    "long_id": "aws-cloudwatch-require-console-login-failures-alarm",
+    "service": "cloudwatch",
+    "severity": "low",
+    "title": "Ensure a log metric filter and alarm exist for AWS Management Console authentication failures",
+    "fix": "Create an alarm to alert on console login failures",
+    "cis": [
+      "cis-aws-1.2",
+      "cis-aws-1.4"
+    ],
+    "source_file": "checks/cloud/aws/cloudwatch/require_console_login_failure_alarm.rego"
+  },
+  {
+    "id": "AWS-0153",
+    "long_id": "aws-cloudwatch-require-cmk-disabled-alarm",
+    "service": "cloudwatch",
+    "severity": "low",
+    "title": "Ensure a log metric filter and alarm exist for disabling or scheduled deletion of customer managed keys",
+    "fix": "Create an alarm to alert on CMKs being disabled or scheduled for deletion",
+    "cis": [
+      "cis-aws-1.2",
+      "cis-aws-1.4"
+    ],
+    "source_file": "checks/cloud/aws/cloudwatch/require_cmk_disabled_alarm.rego"
+  },
+  {
+    "id": "AWS-0154",
+    "long_id": "aws-cloudwatch-require-s3-bucket-policy-change-alarm",
+    "service": "cloudwatch",
+    "severity": "low",
+    "title": "Ensure a log metric filter and alarm exist for S3 bucket policy changes",
+    "fix": "Create an alarm to alert on S3 Bucket policy changes",
+    "cis": [
+      "cis-aws-1.2",
+      "cis-aws-1.4"
+    ],
+    "source_file": "checks/cloud/aws/cloudwatch/require_s3_bucket_policy_change_alarm.rego"
+  },
+  {
+    "id": "AWS-0155",
+    "long_id": "aws-cloudwatch-require-config-configuration-changes-alarm",
+    "service": "cloudwatch",
+    "severity": "low",
+    "title": "Ensure a log metric filter and alarm exist for AWS Config configuration changes",
+    "fix": "Create an alarm to alert on AWS Config configuration changes",
+    "cis": [
+      "cis-aws-1.2",
+      "cis-aws-1.4"
+    ],
+    "source_file": "checks/cloud/aws/cloudwatch/require_config_configuration_change_alarm.rego"
+  },
+  {
+    "id": "AWS-0156",
+    "long_id": "aws-cloudwatch-require-sg-change-alarms",
+    "service": "cloudwatch",
+    "severity": "low",
+    "title": "Ensure a log metric filter and alarm exist for security group changes",
+    "fix": "Create an alarm to alert on security group changes",
+    "cis": [
+      "cis-aws-1.2",
+      "cis-aws-1.4"
+    ],
+    "source_file": "checks/cloud/aws/cloudwatch/require_security_group_change_alarm.rego"
+  },
+  {
+    "id": "AWS-0157",
+    "long_id": "aws-cloudwatch-require-nacl-changes-alarm",
+    "service": "cloudwatch",
+    "severity": "low",
+    "title": "Ensure a log metric filter and alarm exist for changes to Network Access Control Lists (NACL)",
+    "fix": "Create an alarm to alert on network acl changes",
+    "cis": [
+      "cis-aws-1.2",
+      "cis-aws-1.4"
+    ],
+    "source_file": "checks/cloud/aws/cloudwatch/require_nacl_change_alarm.rego"
+  },
+  {
+    "id": "AWS-0158",
+    "long_id": "aws-cloudwatch-require-network-gateway-changes-alarm",
+    "service": "cloudwatch",
+    "severity": "low",
+    "title": "Ensure a log metric filter and alarm exist for changes to network gateways",
+    "fix": "Create an alarm to alert on network gateway changes",
+    "cis": [
+      "cis-aws-1.2",
+      "cis-aws-1.4"
+    ],
+    "source_file": "checks/cloud/aws/cloudwatch/require_network_gateway_change_alarm.rego"
+  },
+  {
+    "id": "AWS-0159",
+    "long_id": "aws-cloudwatch-require-network-gateway-changes-alarm",
+    "service": "cloudwatch",
+    "severity": "low",
+    "title": "Ensure a log metric filter and alarm exist for route table changes",
+    "fix": "Create an alarm to alert on route table changes",
+    "cis": [
+      "cis-aws-1.2",
+      "cis-aws-1.4"
+    ],
+    "source_file": "checks/cloud/aws/cloudwatch/require_route_table_change_alarm.rego"
+  },
+  {
+    "id": "AWS-0160",
+    "long_id": "aws-cloudwatch-require-vpc-changes-alarm",
+    "service": "cloudwatch",
+    "severity": "low",
+    "title": "Ensure a log metric filter and alarm exist for VPC changes",
+    "fix": "Create an alarm to alert on route table changes",
+    "cis": [
+      "cis-aws-1.2",
+      "cis-aws-1.4"
+    ],
+    "source_file": "checks/cloud/aws/cloudwatch/require_vpc_change_alarm.rego"
+  },
+  {
+    "id": "AWS-0174",
+    "long_id": "aws-cloudwatch-require-org-changes-alarm",
+    "service": "cloudwatch",
+    "severity": "low",
+    "title": "Ensure a log metric filter and alarm exist for organisation changes",
+    "fix": "Create an alarm to alert on organisation changes",
+    "cis": [
+      "cis-aws-1.4"
+    ],
+    "source_file": "checks/cloud/aws/cloudwatch/require_org_changes_alarm.rego"
+  },
+  {
+    "id": "AWS-0018",
+    "long_id": "aws-codebuild-enable-encryption",
+    "service": "codebuild",
+    "severity": "high",
+    "title": "CodeBuild Project artifacts encryption should not be disabled",
+    "fix": "Enable encryption for CodeBuild project artifacts",
+    "cis": [],
+    "source_file": "checks/cloud/aws/codebuild/enable_encryption.rego"
+  },
+  {
+    "id": "AWS-0019",
+    "long_id": "aws-config-aggregate-all-regions",
+    "service": "config",
+    "severity": "high",
+    "title": "Config configuration aggregator should be using all regions for source",
+    "fix": "Set the aggregator to cover all regions",
+    "cis": [],
+    "source_file": "checks/cloud/aws/config/aggregate_all_regions.rego"
+  },
+  {
+    "id": "AWS-0020",
+    "long_id": "aws-documentdb-enable-log-export",
+    "service": "documentdb",
+    "severity": "medium",
+    "title": "DocumentDB logs export should be enabled",
+    "fix": "Enable export logs",
+    "cis": [],
+    "source_file": "checks/cloud/aws/documentdb/enable_log_export.rego"
+  },
+  {
+    "id": "AWS-0021",
+    "long_id": "aws-documentdb-enable-storage-encryption",
+    "service": "documentdb",
+    "severity": "high",
+    "title": "DocumentDB storage must be encrypted",
+    "fix": "Enable storage encryption",
+    "cis": [],
+    "source_file": "checks/cloud/aws/documentdb/enable_storage_encryption.rego"
+  },
+  {
+    "id": "AWS-0022",
+    "long_id": "aws-documentdb-encryption-customer-key",
+    "service": "documentdb",
+    "severity": "low",
+    "title": "DocumentDB encryption should use Customer Managed Keys",
+    "fix": "Enable encryption using customer managed keys",
+    "cis": [],
+    "source_file": "checks/cloud/aws/documentdb/encryption_customer_key.rego"
+  },
+  {
+    "id": "AWS-0023",
+    "long_id": "aws-dynamodb-enable-at-rest-encryption",
+    "service": "dynamodb",
+    "severity": "high",
+    "title": "DAX Cluster should always encrypt data at rest",
+    "fix": "Enable encryption at rest for DAX Cluster",
+    "cis": [],
+    "source_file": "checks/cloud/aws/dynamodb/enable_at_rest_encryption.rego"
+  },
+  {
+    "id": "AWS-0024",
+    "long_id": "aws-dynamodb-enable-recovery",
+    "service": "dynamodb",
+    "severity": "medium",
+    "title": "Point in time recovery should be enabled to protect DynamoDB table",
+    "fix": "Enable point in time recovery",
+    "cis": [],
+    "source_file": "checks/cloud/aws/dynamodb/enable_recovery.rego"
+  },
+  {
+    "id": "AWS-0025",
+    "long_id": "aws-dynamodb-table-customer-key",
+    "service": "dynamodb",
+    "severity": "low",
+    "title": "DynamoDB tables should use at rest encryption with a Customer Managed Key",
+    "fix": "Enable server side encryption with a customer managed key",
+    "cis": [],
+    "source_file": "checks/cloud/aws/dynamodb/table_customer_key.rego"
+  },
+  {
+    "id": "AWS-0008",
+    "long_id": "aws-ec2-enable-launch-config-at-rest-encryption",
+    "service": "ec2",
+    "severity": "high",
+    "title": "Launch configuration with unencrypted block device.",
+    "fix": "Turn on encryption for all block devices",
+    "cis": [],
+    "source_file": "checks/cloud/aws/ec2/as_enable_at_rest_encryption.rego"
+  },
+  {
+    "id": "AWS-0009",
+    "long_id": "aws-ec2-no-public-ip",
+    "service": "ec2",
+    "severity": "high",
+    "title": "Launch configuration should not have a public IP address.",
+    "fix": "Set the instance to not be publicly accessible",
+    "cis": [],
+    "source_file": "checks/cloud/aws/ec2/no_public_ip.rego"
+  },
+  {
+    "id": "AWS-0026",
+    "long_id": "aws-ec2-enable-volume-encryption",
+    "service": "ec2",
+    "severity": "high",
+    "title": "EBS volumes must be encrypted",
+    "fix": "Enable encryption of EBS volumes",
+    "cis": [],
+    "source_file": "checks/cloud/aws/ec2/enable_volume_encryption.rego"
+  },
+  {
+    "id": "AWS-0027",
+    "long_id": "aws-ec2-volume-encryption-customer-key",
+    "service": "ec2",
+    "severity": "low",
+    "title": "EBS volume encryption should use Customer Managed Keys",
+    "fix": "Enable encryption using customer managed keys",
+    "cis": [],
+    "source_file": "checks/cloud/aws/ec2/encryption_customer_key.rego"
+  },
+  {
+    "id": "AWS-0028",
+    "long_id": "aws-ec2-enforce-http-token-imds",
+    "service": "ec2",
+    "severity": "high",
+    "title": "aws_instance should activate session tokens for Instance Metadata Service.",
+    "fix": "Enable HTTP token requirement for IMDS",
+    "cis": [],
+    "source_file": "checks/cloud/aws/ec2/enforce_http_token_imds.rego"
+  },
+  {
+    "id": "AWS-0029",
+    "long_id": "aws-ec2-no-secrets-in-user-data",
+    "service": "ec2",
+    "severity": "critical",
+    "title": "User data for EC2 instances must not contain sensitive AWS keys",
+    "fix": "Remove sensitive data from the EC2 instance user-data",
+    "cis": [],
+    "source_file": "checks/cloud/aws/ec2/no_secrets_in_user_data.rego"
+  },
+  {
+    "id": "AWS-0099",
+    "long_id": "aws-ec2-add-description-to-security-group",
+    "service": "ec2",
+    "severity": "low",
+    "title": "Missing description for security group.",
+    "fix": "Add descriptions for all security groups",
+    "cis": [],
+    "source_file": "checks/cloud/aws/ec2/add_description_to_security_group.rego"
+  },
+  {
+    "id": "AWS-0101",
+    "long_id": "aws-ec2-no-default-vpc",
+    "service": "ec2",
+    "severity": "high",
+    "title": "AWS best practice to not use the default VPC for workflows",
+    "fix": "Create a non-default vpc for resources to be created in",
+    "cis": [],
+    "source_file": "checks/cloud/aws/ec2/no_default_vpc.rego"
+  },
+  {
+    "id": "AWS-0102",
+    "long_id": "aws-ec2-no-excessive-port-access",
+    "service": "ec2",
+    "severity": "critical",
+    "title": "An Network ACL rule allows ALL ports.",
+    "fix": "Set specific allowed ports",
+    "cis": [],
+    "source_file": "checks/cloud/aws/ec2/no_excessive_port_access.rego"
+  },
+  {
+    "id": "AWS-0104",
+    "long_id": "aws-ec2-no-public-egress-sgr",
+    "service": "ec2",
+    "severity": "critical",
+    "title": "A security group rule should not allow unrestricted egress to any IP address.",
+    "fix": "Set a more restrictive cidr range",
+    "cis": [],
+    "source_file": "checks/cloud/aws/ec2/no_public_egress_sgr.rego"
+  },
+  {
+    "id": "AWS-0105",
+    "long_id": "aws-ec2-no-public-ingress-acl",
+    "service": "ec2",
+    "severity": "medium",
+    "title": "Network ACLs should not allow unrestricted ingress to SSH or RDP from any IP address.",
+    "fix": "Set a more restrictive CIDR range",
+    "cis": [
+      "cis-aws-1.4"
+    ],
+    "source_file": "checks/cloud/aws/ec2/no_public_ingress_acl.rego"
+  },
+  {
+    "id": "AWS-0107",
+    "long_id": "aws-ec2-no-public-ingress-sgr",
+    "service": "ec2",
+    "severity": "high",
+    "title": "Security groups should not allow unrestricted ingress to SSH or RDP from any IP address.",
+    "fix": "Set a more restrictive CIDR range",
+    "cis": [
+      "cis-aws-1.2"
+    ],
+    "source_file": "checks/cloud/aws/ec2/no_public_ingress_sgr.rego"
+  },
+  {
+    "id": "AWS-0122",
+    "long_id": "aws-ec2-no-sensitive-info",
+    "service": "ec2",
+    "severity": "high",
+    "title": "Ensure all data stored in the launch configuration EBS is securely encrypted",
+    "fix": "Don't use sensitive data in user data",
+    "cis": [],
+    "source_file": "checks/cloud/aws/ec2/no_sensitive_info.rego"
+  },
+  {
+    "id": "AWS-0124",
+    "long_id": "aws-ec2-add-description-to-security-group-rule",
+    "service": "ec2",
+    "severity": "low",
+    "title": "Missing description for security group rule.",
+    "fix": "Add descriptions for all security groups rules",
+    "cis": [],
+    "source_file": "checks/cloud/aws/ec2/add_description_to_security_group_rule.rego"
+  },
+  {
+    "id": "AWS-0129",
+    "long_id": "aws-ec2-no-secrets-in-launch-template-user-data",
+    "service": "ec2",
+    "severity": "critical",
+    "title": "User data for EC2 instances must not contain sensitive AWS keys",
+    "fix": "Remove sensitive data from the EC2 instance user-data generated by launch templates",
+    "cis": [],
+    "source_file": "checks/cloud/aws/ec2/as_no_secrets_in_user_data.rego"
+  },
+  {
+    "id": "AWS-0130",
+    "long_id": "aws-ec2-enforce-launch-config-http-token-imds",
+    "service": "ec2",
+    "severity": "high",
+    "title": "aws_instance should activate session tokens for Instance Metadata Service.",
+    "fix": "Enable HTTP token requirement for IMDS",
+    "cis": [],
+    "source_file": "checks/cloud/aws/ec2/as_enforce_http_token_imds.rego"
+  },
+  {
+    "id": "AWS-0131",
+    "long_id": "aws-ec2-enable-at-rest-encryption",
+    "service": "ec2",
+    "severity": "high",
+    "title": "Instance with unencrypted block device.",
+    "fix": "Turn on encryption for all block devices",
+    "cis": [],
+    "source_file": "checks/cloud/aws/ec2/enable_at_rest_encryption.rego"
+  },
+  {
+    "id": "AWS-0164",
+    "long_id": "aws-ec2-no-public-ip-subnet",
+    "service": "ec2",
+    "severity": "high",
+    "title": "Instances in a subnet should not receive a public IP address by default.",
+    "fix": "Set the instance to not be publicly accessible",
+    "cis": [],
+    "source_file": "checks/cloud/aws/ec2/no_public_ip_subnet.rego"
+  },
+  {
+    "id": "AWS-0173",
+    "long_id": "aws-ec2-restrict-all-in-default-sg",
+    "service": "ec2",
+    "severity": "low",
+    "title": "Default security group should restrict all traffic",
+    "fix": "Configure default security group to restrict all traffic",
+    "cis": [
+      "cis-aws-1.4"
+    ],
+    "source_file": "checks/cloud/aws/ec2/restrict_all_in_default_sg.rego"
+  },
+  {
+    "id": "AWS-0178",
+    "long_id": "aws-ec2-require-vpc-flow-logs-for-all-vpcs",
+    "service": "ec2",
+    "severity": "medium",
+    "title": "VPC Flow Logs is a feature that enables you to capture information about the IP traffic going to and from network interfaces in your VPC. After you've created a flow log, you can view and retrieve its data in Amazon CloudWatch Logs. It is recommended that VPC Flow Logs be enabled for packet \"Rejects\" for VPCs.",
+    "fix": "Enable flow logs for VPC",
+    "cis": [],
+    "source_file": "checks/cloud/aws/ec2/require_vpc_flow_logs_for_all_vpcs.rego"
+  },
+  {
+    "id": "AWS-0030",
+    "long_id": "aws-ecr-enable-image-scans",
+    "service": "ecr",
+    "severity": "high",
+    "title": "ECR repository has image scans disabled.",
+    "fix": "Enable ECR image scanning",
+    "cis": [],
+    "source_file": "checks/cloud/aws/ecr/enable_image_scans.rego"
+  },
+  {
+    "id": "AWS-0031",
+    "long_id": "aws-ecr-enforce-immutable-repository",
+    "service": "ecr",
+    "severity": "high",
+    "title": "ECR images tags shouldn't be mutable.",
+    "fix": "Only use immutable images in ECR",
+    "cis": [],
+    "source_file": "checks/cloud/aws/ecr/enforce_immutable_repository.rego"
+  },
+  {
+    "id": "AWS-0032",
+    "long_id": "aws-ecr-no-public-access",
+    "service": "ecr",
+    "severity": "high",
+    "title": "ECR repository policy must block public access",
+    "fix": "Do not allow public access in the policy",
+    "cis": [],
+    "source_file": "checks/cloud/aws/ecr/no_public_access.rego"
+  },
+  {
+    "id": "AWS-0033",
+    "long_id": "aws-ecr-repository-customer-key",
+    "service": "ecr",
+    "severity": "low",
+    "title": "ECR Repository should use customer managed keys to allow more control",
+    "fix": "Use customer managed keys",
+    "cis": [],
+    "source_file": "checks/cloud/aws/ecr/repository_customer_key.rego"
+  },
+  {
+    "id": "AWS-0034",
+    "long_id": "aws-ecs-enable-container-insight",
+    "service": "ecs",
+    "severity": "low",
+    "title": "ECS clusters should have container insights enabled",
+    "fix": "Enable Container Insights",
+    "cis": [],
+    "source_file": "checks/cloud/aws/ecs/enable_container_insight.rego"
+  },
+  {
+    "id": "AWS-0035",
+    "long_id": "aws-ecs-enable-in-transit-encryption",
+    "service": "ecs",
+    "severity": "high",
+    "title": "ECS Task Definitions with EFS volumes should use in-transit encryption",
+    "fix": "Enable in transit encryption when using efs",
+    "cis": [],
+    "source_file": "checks/cloud/aws/ecs/enable_in_transit_encryption.rego"
+  },
+  {
+    "id": "AWS-0036",
+    "long_id": "aws-ecs-no-plaintext-secrets",
+    "service": "ecs",
+    "severity": "critical",
+    "title": "Task definition defines sensitive environment variable(s).",
+    "fix": "Use secrets for the task definition",
+    "cis": [],
+    "source_file": "checks/cloud/aws/ecs/no_plaintext_secrets.rego"
+  },
+  {
+    "id": "AWS-0037",
+    "long_id": "aws-efs-enable-at-rest-encryption",
+    "service": "efs",
+    "severity": "high",
+    "title": "EFS Encryption has not been enabled",
+    "fix": "Enable encryption for EFS",
+    "cis": [],
+    "source_file": "checks/cloud/aws/efs/enable_at_rest_encryption.rego"
+  },
+  {
+    "id": "AWS-0038",
+    "long_id": "aws-eks-enable-control-plane-logging",
+    "service": "eks",
+    "severity": "medium",
+    "title": "EKS Clusters should have cluster control plane logging turned on",
+    "fix": "Enable logging for the EKS control plane",
+    "cis": [],
+    "source_file": "checks/cloud/aws/eks/enable_control_plane_logging.rego"
+  },
+  {
+    "id": "AWS-0039",
+    "long_id": "aws-eks-encrypt-secrets",
+    "service": "eks",
+    "severity": "high",
+    "title": "EKS should have the encryption of secrets enabled",
+    "fix": "Enable encryption of EKS secrets",
+    "cis": [],
+    "source_file": "checks/cloud/aws/eks/encrypt_secrets.rego"
+  },
+  {
+    "id": "AWS-0040",
+    "long_id": "aws-eks-no-public-cluster-access",
+    "service": "eks",
+    "severity": "critical",
+    "title": "EKS Clusters should have the public access disabled",
+    "fix": "Don't enable public access to EKS Clusters",
+    "cis": [],
+    "source_file": "checks/cloud/aws/eks/no_public_cluster_access.rego"
+  },
+  {
+    "id": "AWS-0041",
+    "long_id": "aws-eks-no-public-cluster-access-to-cidr",
+    "service": "eks",
+    "severity": "critical",
+    "title": "EKS cluster should not have open CIDR range for public access",
+    "fix": "Don't enable public access to EKS Clusters",
+    "cis": [],
+    "source_file": "checks/cloud/aws/eks/no_public_cluster_access_to_cidr.rego"
+  },
+  {
+    "id": "AWS-0045",
+    "long_id": "aws-elasticache-enable-at-rest-encryption",
+    "service": "elasticache",
+    "severity": "high",
+    "title": "Elasticache Replication Group stores unencrypted data at-rest.",
+    "fix": "Enable at-rest encryption for replication group",
+    "cis": [],
+    "source_file": "checks/cloud/aws/elasticache/enable_at_rest_encryption.rego"
+  },
+  {
+    "id": "AWS-0049",
+    "long_id": "aws-elasticache-add-description-for-security-group",
+    "service": "elasticache",
+    "severity": "low",
+    "title": "Missing description for security group/security group rule.",
+    "fix": "Add descriptions for all security groups and rules",
+    "cis": [],
+    "source_file": "checks/cloud/aws/elasticache/add_description_for_security_group.rego"
+  },
+  {
+    "id": "AWS-0050",
+    "long_id": "aws-elasticache-enable-backup-retention",
+    "service": "elasticache",
+    "severity": "medium",
+    "title": "Redis cluster should have backup retention turned on",
+    "fix": "Configure snapshot retention for redis cluster",
+    "cis": [],
+    "source_file": "checks/cloud/aws/elasticache/enable_backup_retention.rego"
+  },
+  {
+    "id": "AWS-0051",
+    "long_id": "aws-elasticache-enable-in-transit-encryption",
+    "service": "elasticache",
+    "severity": "high",
+    "title": "Elasticache Replication Group uses unencrypted traffic.",
+    "fix": "Enable in transit encryption for replication group",
+    "cis": [],
+    "source_file": "checks/cloud/aws/elasticache/enable_in_transit_encryption.rego"
+  },
+  {
+    "id": "AWS-0042",
+    "long_id": "aws-elasticsearch-enable-domain-logging",
+    "service": "elasticsearch",
+    "severity": "medium",
+    "title": "Domain logging should be enabled for Elastic Search domains",
+    "fix": "Enable logging for ElasticSearch domains",
+    "cis": [],
+    "source_file": "checks/cloud/aws/elasticsearch/enable_domain_logging.rego"
+  },
+  {
+    "id": "AWS-0043",
+    "long_id": "aws-elasticsearch-enable-in-transit-encryption",
+    "service": "elasticsearch",
+    "severity": "high",
+    "title": "Elasticsearch domain uses plaintext traffic for node to node communication.",
+    "fix": "Enable encrypted node to node communication",
+    "cis": [],
+    "source_file": "checks/cloud/aws/elasticsearch/enable_in_transit_encryption.rego"
+  },
+  {
+    "id": "AWS-0046",
+    "long_id": "aws-elasticsearch-enforce-https",
+    "service": "elasticsearch",
+    "severity": "critical",
+    "title": "Elasticsearch doesn't enforce HTTPS traffic.",
+    "fix": "Enforce the use of HTTPS for ElasticSearch",
+    "cis": [],
+    "source_file": "checks/cloud/aws/elasticsearch/enforce_https.rego"
+  },
+  {
+    "id": "AWS-0048",
+    "long_id": "aws-elasticsearch-enable-domain-encryption",
+    "service": "elasticsearch",
+    "severity": "high",
+    "title": "Elasticsearch domain isn't encrypted at rest.",
+    "fix": "Enable ElasticSearch domain encryption",
+    "cis": [],
+    "source_file": "checks/cloud/aws/elasticsearch/enable_domain_encryption.rego"
+  },
+  {
+    "id": "AWS-0126",
+    "long_id": "aws-elasticsearch-use-secure-tls-policy",
+    "service": "elasticsearch",
+    "severity": "high",
+    "title": "Elasticsearch domain endpoint is using outdated TLS policy.",
+    "fix": "Use the most modern TLS/SSL policies available",
+    "cis": [],
+    "source_file": "checks/cloud/aws/elasticsearch/use_secure_tls_policy.rego"
+  },
+  {
+    "id": "AWS-0047",
+    "long_id": "aws-elb-use-secure-tls-policy",
+    "service": "elb",
+    "severity": "critical",
+    "title": "An outdated SSL policy is in use by a load balancer.",
+    "fix": "Use a more recent TLS/SSL policy for the load balancer",
+    "cis": [],
+    "source_file": "checks/cloud/aws/elb/use_secure_tls_policy.rego"
+  },
+  {
+    "id": "AWS-0052",
+    "long_id": "aws-elb-drop-invalid-headers",
+    "service": "elb",
+    "severity": "high",
+    "title": "Load balancers should drop invalid headers",
+    "fix": "Set drop_invalid_header_fields to true",
+    "cis": [],
+    "source_file": "checks/cloud/aws/elb/drop_invalid_headers.rego"
+  },
+  {
+    "id": "AWS-0053",
+    "long_id": "aws-elb-alb-not-public",
+    "service": "elb",
+    "severity": "high",
+    "title": "Load balancer is exposed to the internet.",
+    "fix": "Switch to an internal load balancer or add a tfsec ignore",
+    "cis": [],
+    "source_file": "checks/cloud/aws/elb/alb_not_public.rego"
+  },
+  {
+    "id": "AWS-0054",
+    "long_id": "aws-elb-http-not-used",
+    "service": "elb",
+    "severity": "critical",
+    "title": "Use of plain HTTP.",
+    "fix": "Switch to HTTPS to benefit from TLS security features",
+    "cis": [],
+    "source_file": "checks/cloud/aws/elb/http_not_used.rego"
+  },
+  {
+    "id": "AWS-0137",
+    "long_id": "aws-emr-enable-at-rest-encryption",
+    "service": "emr",
+    "severity": "high",
+    "title": "Enable at-rest encryption for EMR clusters.",
+    "fix": "Enable at-rest encryption for EMR cluster",
+    "cis": [],
+    "source_file": "checks/cloud/aws/emr/enable_at_rest_encryption.rego"
+  },
+  {
+    "id": "AWS-0138",
+    "long_id": "aws-emr-enable-in-transit-encryption",
+    "service": "emr",
+    "severity": "high",
+    "title": "Enable in-transit encryption for EMR clusters.",
+    "fix": "Enable in-transit encryption for EMR cluster",
+    "cis": [],
+    "source_file": "checks/cloud/aws/emr/enable_in_transit_encryption.rego"
+  },
+  {
+    "id": "AWS-0139",
+    "long_id": "aws-emr-enable-local-disk-encryption",
+    "service": "emr",
+    "severity": "high",
+    "title": "Enable local-disk encryption for EMR clusters.",
+    "fix": "Enable local-disk encryption for EMR cluster",
+    "cis": [],
+    "source_file": "checks/cloud/aws/emr/enable_local_disk_encryption.rego"
+  },
+  {
+    "id": "AWS-0056",
+    "long_id": "aws-iam-no-password-reuse",
+    "service": "iam",
+    "severity": "medium",
+    "title": "IAM Password policy should prevent password reuse.",
+    "fix": "Prevent password reuse in the policy",
+    "cis": [
+      "cis-aws-1.2",
+      "cis-aws-1.4"
+    ],
+    "source_file": "checks/cloud/aws/iam/no_password_reuse.rego"
+  },
+  {
+    "id": "AWS-0057",
+    "long_id": "aws-iam-no-policy-wildcards",
+    "service": "iam",
+    "severity": "high",
+    "title": "IAM policy should avoid use of wildcards and instead apply the principle of least privilege",
+    "fix": "Specify the exact permissions required, and to which resources they should apply instead of using wildcards.",
+    "cis": [
+      "cis-aws-1.4"
+    ],
+    "source_file": "checks/cloud/aws/iam/no_policy_wildcards.rego"
+  },
+  {
+    "id": "AWS-0058",
+    "long_id": "aws-iam-require-lowercase-in-passwords",
+    "service": "iam",
+    "severity": "medium",
+    "title": "IAM Password policy should have requirement for at least one lowercase character.",
+    "fix": "Enforce longer, more complex passwords in the policy",
+    "cis": [
+      "cis-aws-1.2"
+    ],
+    "source_file": "checks/cloud/aws/iam/require_lowercase_in_passwords.rego"
+  },
+  {
+    "id": "AWS-0059",
+    "long_id": "aws-iam-require-numbers-in-passwords",
+    "service": "iam",
+    "severity": "medium",
+    "title": "IAM Password policy should have requirement for at least one number in the password.",
+    "fix": "Enforce longer, more complex passwords in the policy",
+    "cis": [
+      "cis-aws-1.2"
+    ],
+    "source_file": "checks/cloud/aws/iam/require_numbers_in_passwords.rego"
+  },
+  {
+    "id": "AWS-0060",
+    "long_id": "aws-iam-require-symbols-in-passwords",
+    "service": "iam",
+    "severity": "medium",
+    "title": "IAM Password policy should have requirement for at least one symbol in the password.",
+    "fix": "Enforce longer, more complex passwords in the policy",
+    "cis": [
+      "cis-aws-1.2"
+    ],
+    "source_file": "checks/cloud/aws/iam/require_symbols_in_passwords.rego"
+  },
+  {
+    "id": "AWS-0061",
+    "long_id": "aws-iam-require-uppercase-in-passwords",
+    "service": "iam",
+    "severity": "medium",
+    "title": "IAM Password policy should have requirement for at least one uppercase character.",
+    "fix": "Enforce longer, more complex passwords in the policy",
+    "cis": [
+      "cis-aws-1.2"
+    ],
+    "source_file": "checks/cloud/aws/iam/require_uppercase_in_passwords.rego"
+  },
+  {
+    "id": "AWS-0062",
+    "long_id": "aws-iam-set-max-password-age",
+    "service": "iam",
+    "severity": "medium",
+    "title": "IAM Password policy should have expiry less than or equal to 90 days.",
+    "fix": "Limit the password duration with an expiry in the policy",
+    "cis": [
+      "cis-aws-1.2"
+    ],
+    "source_file": "checks/cloud/aws/iam/set_max_password_age.rego"
+  },
+  {
+    "id": "AWS-0063",
+    "long_id": "aws-iam-set-minimum-password-length",
+    "service": "iam",
+    "severity": "medium",
+    "title": "IAM Password policy should have minimum password length of 14 or more characters.",
+    "fix": "Enforce longer, more complex passwords in the policy",
+    "cis": [
+      "cis-aws-1.2",
+      "cis-aws-1.4"
+    ],
+    "source_file": "checks/cloud/aws/iam/set_minimum_password_length.rego"
+  },
+  {
+    "id": "AWS-0123",
+    "long_id": "aws-iam-enforce-group-mfa",
+    "service": "iam",
+    "severity": "medium",
+    "title": "IAM groups should have MFA enforcement activated.",
+    "fix": "Use terraform-module/enforce-mfa/aws to ensure that MFA is enforced",
+    "cis": [],
+    "source_file": "checks/cloud/aws/iam/enforce_group_mfa.rego"
+  },
+  {
+    "id": "AWS-0140",
+    "long_id": "aws-iam-limit-root-account-usage",
+    "service": "iam",
+    "severity": "low",
+    "title": "The \"root\" account has unrestricted access to all resources in the AWS account. It is highly recommended that the use of this account be avoided.",
+    "fix": "Use lower privileged accounts instead, so only required privileges are available.",
+    "cis": [
+      "cis-aws-1.2",
+      "cis-aws-1.4"
+    ],
+    "source_file": "checks/cloud/aws/iam/limit_root_account_usage.rego"
+  },
+  {
+    "id": "AWS-0141",
+    "long_id": "aws-iam-no-root-access-keys",
+    "service": "iam",
+    "severity": "critical",
+    "title": "The root user has complete access to all services and resources in an AWS account. AWS Access Keys provide programmatic access to a given account.",
+    "fix": "Use lower privileged accounts instead, so only required privileges are available.",
+    "cis": [
+      "cis-aws-1.2",
+      "cis-aws-1.4"
+    ],
+    "source_file": "checks/cloud/aws/iam/no_root_access_keys.rego"
+  },
+  {
+    "id": "AWS-0142",
+    "long_id": "aws-iam-enforce-root-mfa",
+    "service": "iam",
+    "severity": "critical",
+    "title": "The \"root\" account has unrestricted access to all resources in the AWS account. It is highly recommended that this account have MFA enabled.",
+    "fix": "Enable MFA on the root user account.",
+    "cis": [
+      "cis-aws-1.2",
+      "cis-aws-1.4"
+    ],
+    "source_file": "checks/cloud/aws/iam/enforce_root_mfa.rego"
+  },
+  {
+    "id": "AWS-0143",
+    "long_id": "aws-iam-no-user-attached-policies",
+    "service": "iam",
+    "severity": "low",
+    "title": "IAM policies should not be granted directly to users.",
+    "fix": "Grant policies at the group level instead.",
+    "cis": [
+      "cis-aws-1.2",
+      "cis-aws-1.4"
+    ],
+    "source_file": "checks/cloud/aws/iam/no_user_attached_policies.rego"
+  },
+  {
+    "id": "AWS-0144",
+    "long_id": "aws-iam-disable-unused-credentials",
+    "service": "iam",
+    "severity": "medium",
+    "title": "Credentials which are no longer used should be disabled.",
+    "fix": "Disable credentials which are no longer used.",
+    "cis": [
+      "cis-aws-1.2"
+    ],
+    "source_file": "checks/cloud/aws/iam/disable_unused_credentials.rego"
+  },
+  {
+    "id": "AWS-0145",
+    "long_id": "aws-iam-enforce-user-mfa",
+    "service": "iam",
+    "severity": "medium",
+    "title": "IAM Users should have MFA enforcement activated.",
+    "fix": "Enable MFA for the user account",
+    "cis": [
+      "cis-aws-1.2",
+      "cis-aws-1.4"
+    ],
+    "source_file": "checks/cloud/aws/iam/enforce_user_mfa.rego"
+  },
+  {
+    "id": "AWS-0146",
+    "long_id": "aws-iam-rotate-access-keys",
+    "service": "iam",
+    "severity": "low",
+    "title": "Access keys should be rotated at least every 90 days",
+    "fix": "Rotate keys every 90 days or less",
+    "cis": [
+      "cis-aws-1.2",
+      "cis-aws-1.4"
+    ],
+    "source_file": "checks/cloud/aws/iam/rotate_access_keys.rego"
+  },
+  {
+    "id": "AWS-0165",
+    "long_id": "aws-iam-enforce-root-hardware-mfa",
+    "service": "iam",
+    "severity": "medium",
+    "title": "The \"root\" account has unrestricted access to all resources in the AWS account. It is highly recommended that this account have hardware MFA enabled.",
+    "fix": "Enable hardware MFA on the root user account.",
+    "cis": [
+      "cis-aws-1.4"
+    ],
+    "source_file": "checks/cloud/aws/iam/enforce_root_hardware_mfa.rego"
+  },
+  {
+    "id": "AWS-0166",
+    "long_id": "aws-iam-disable-unused-credentials-45-days",
+    "service": "iam",
+    "severity": "low",
+    "title": "Disabling or removing unnecessary credentials will reduce the window of opportunity for credentials associated with a compromised or abandoned account to be used.",
+    "fix": "Disable credentials which are no longer used.",
+    "cis": [
+      "cis-aws-1.4"
+    ],
+    "source_file": "checks/cloud/aws/iam/disable_unused_credentials_45.rego"
+  },
+  {
+    "id": "AWS-0167",
+    "long_id": "aws-iam-limit-user-access-keys",
+    "service": "iam",
+    "severity": "low",
+    "title": "No user should have more than one active access key.",
+    "fix": "Limit the number of active access keys to one key per user.",
+    "cis": [
+      "cis-aws-1.4"
+    ],
+    "source_file": "checks/cloud/aws/iam/limit_user_access_keys.rego"
+  },
+  {
+    "id": "AWS-0168",
+    "long_id": "aws-iam-remove-expired-certificates",
+    "service": "iam",
+    "severity": "low",
+    "title": "Delete expired TLS certificates",
+    "fix": "Remove expired certificates",
+    "cis": [
+      "cis-aws-1.4"
+    ],
+    "source_file": "checks/cloud/aws/iam/remove_expired_certificates.rego"
+  },
+  {
+    "id": "AWS-0169",
+    "long_id": "aws-iam-require-support-role",
+    "service": "iam",
+    "severity": "low",
+    "title": "Missing IAM Role to allow authorized users to manage incidents with AWS Support.",
+    "fix": "Create an IAM role with the necessary permissions to manage incidents with AWS Support.",
+    "cis": [
+      "cis-aws-1.4"
+    ],
+    "source_file": "checks/cloud/aws/iam/require_support_role.rego"
+  },
+  {
+    "id": "AWS-0342",
+    "long_id": "aws-iam-filter-passrole-access",
+    "service": "iam",
+    "severity": "medium",
+    "title": "IAM Pass Role Filtering",
+    "fix": "Resolve permission escalations by denying pass role'",
+    "cis": [],
+    "source_file": "checks/cloud/aws/iam/filter_iam_pass_role.rego"
+  },
+  {
+    "id": "AWS-0345",
+    "long_id": "aws-iam-no-s3-full-access",
+    "service": "iam",
+    "severity": "high",
+    "title": "Disallow unrestricted S3 IAM Policies",
+    "fix": "Create more restrictive S3 policies",
+    "cis": [],
+    "source_file": "checks/cloud/aws/iam/limit_s3_full_access.rego"
+  },
+  {
+    "id": "AWS-0346",
+    "long_id": "aws-iam-unauthorized-bucket-access",
+    "service": "iam",
+    "severity": "high",
+    "title": "Reduce unnecessary unauthorized access or information disclosure of S3 buckets.",
+    "fix": "Allowing Get* along with Put* on all Resources can potentially allow unauthorized access and/or information disclosure from sensitive buckets.",
+    "cis": [],
+    "source_file": "checks/cloud/aws/iam/unauthorized_bucket_access.rego"
+  },
+  {
+    "id": "AWS-0064",
+    "long_id": "aws-kinesis-enable-in-transit-encryption",
+    "service": "kinesis",
+    "severity": "high",
+    "title": "Kinesis stream is unencrypted.",
+    "fix": "Enable in transit encryption",
+    "cis": [],
+    "source_file": "checks/cloud/aws/kinesis/enable_in_transit_encryption.rego"
+  },
+  {
+    "id": "AWS-0065",
+    "long_id": "aws-kms-auto-rotate-keys",
+    "service": "kms",
+    "severity": "medium",
+    "title": "A KMS key is not configured to auto-rotate.",
+    "fix": "Configure KMS key to auto rotate",
+    "cis": [],
+    "source_file": "checks/cloud/aws/kms/auto_rotate_keys.rego"
+  },
+  {
+    "id": "AWS-0066",
+    "long_id": "aws-lambda-enable-tracing",
+    "service": "lambda",
+    "severity": "low",
+    "title": "Lambda functions should have X-Ray tracing enabled",
+    "fix": "Enable tracing",
+    "cis": [],
+    "source_file": "checks/cloud/aws/lambda/enable_tracing.rego"
+  },
+  {
+    "id": "AWS-0067",
+    "long_id": "aws-lambda-restrict-source-arn",
+    "service": "lambda",
+    "severity": "critical",
+    "title": "Ensure that lambda function permission has a source arn specified",
+    "fix": "Always provide a source arn for Lambda permissions",
+    "cis": [],
+    "source_file": "checks/cloud/aws/lambda/restrict_source_arn.rego"
+  },
+  {
+    "id": "AWS-0070",
+    "long_id": "aws-mq-enable-audit-logging",
+    "service": "mq",
+    "severity": "medium",
+    "title": "MQ Broker should have audit logging enabled",
+    "fix": "Enable audit logging",
+    "cis": [],
+    "source_file": "checks/cloud/aws/mq/enable_audit_logging.rego"
+  },
+  {
+    "id": "AWS-0071",
+    "long_id": "aws-mq-enable-general-logging",
+    "service": "mq",
+    "severity": "low",
+    "title": "MQ Broker should have general logging enabled",
+    "fix": "Enable general logging",
+    "cis": [],
+    "source_file": "checks/cloud/aws/mq/enable_general_logging.rego"
+  },
+  {
+    "id": "AWS-0072",
+    "long_id": "aws-mq-no-public-access",
+    "service": "mq",
+    "severity": "high",
+    "title": "Ensure MQ Broker is not publicly exposed",
+    "fix": "Disable public access when not required",
+    "cis": [],
+    "source_file": "checks/cloud/aws/mq/no_public_access.rego"
+  },
+  {
+    "id": "AWS-0073",
+    "long_id": "aws-msk-enable-in-transit-encryption",
+    "service": "msk",
+    "severity": "high",
+    "title": "A MSK cluster allows unencrypted data in transit.",
+    "fix": "Enable in transit encryption",
+    "cis": [],
+    "source_file": "checks/cloud/aws/msk/enable_in_transit_encryption.rego"
+  },
+  {
+    "id": "AWS-0074",
+    "long_id": "aws-msk-enable-logging",
+    "service": "msk",
+    "severity": "medium",
+    "title": "Ensure MSK Cluster logging is enabled",
+    "fix": "Enable logging",
+    "cis": [],
+    "source_file": "checks/cloud/aws/msk/enable_logging.rego"
+  },
+  {
+    "id": "AWS-0179",
+    "long_id": "aws-msk-enable-at-rest-encryption",
+    "service": "msk",
+    "severity": "high",
+    "title": "A MSK cluster allows unencrypted data at rest.",
+    "fix": "Enable at rest encryption",
+    "cis": [],
+    "source_file": "checks/cloud/aws/msk/enable_at_rest_encryption.rego"
+  },
+  {
+    "id": "AWS-0075",
+    "long_id": "aws-neptune-enable-log-export",
+    "service": "neptune",
+    "severity": "medium",
+    "title": "Neptune logs export should be enabled",
+    "fix": "Enable export logs",
+    "cis": [],
+    "source_file": "checks/cloud/aws/neptune/enable_log_export.rego"
+  },
+  {
+    "id": "AWS-0076",
+    "long_id": "aws-neptune-enable-storage-encryption",
+    "service": "neptune",
+    "severity": "high",
+    "title": "Neptune storage must be encrypted at rest",
+    "fix": "Enable encryption of Neptune storage",
+    "cis": [],
+    "source_file": "checks/cloud/aws/neptune/enable_storage_encryption.rego"
+  },
+  {
+    "id": "AWS-0128",
+    "long_id": "aws-neptune-encryption-customer-key",
+    "service": "neptune",
+    "severity": "high",
+    "title": "Neptune encryption should use Customer Managed Keys",
+    "fix": "Enable encryption using customer managed keys",
+    "cis": [],
+    "source_file": "checks/cloud/aws/neptune/encryption_customer_key.rego"
+  },
+  {
+    "id": "AWS-0077",
+    "long_id": "aws-rds-specify-backup-retention",
+    "service": "rds",
+    "severity": "medium",
+    "title": "RDS Cluster and RDS instance should have backup retention longer than default 1 day",
+    "fix": "Explicitly set the retention period to greater than the default",
+    "cis": [],
+    "source_file": "checks/cloud/aws/rds/specify_backup_retention.rego"
+  },
+  {
+    "id": "AWS-0078",
+    "long_id": "aws-rds-performance-insights-encryption-customer-key",
+    "service": "rds",
+    "severity": "low",
+    "title": "Performance Insights encryption should use Customer Managed Keys",
+    "fix": "Use Customer Managed Keys to encrypt Performance Insights data",
+    "cis": [],
+    "source_file": "checks/cloud/aws/rds/performance_insights_encryption_customer_key.rego"
+  },
+  {
+    "id": "AWS-0079",
+    "long_id": "aws-rds-encrypt-cluster-storage-data",
+    "service": "rds",
+    "severity": "high",
+    "title": "There is no encryption specified or encryption is disabled on the RDS Cluster.",
+    "fix": "Enable encryption for RDS clusters",
+    "cis": [],
+    "source_file": "checks/cloud/aws/rds/encrypt_cluster_storage_data.rego"
+  },
+  {
+    "id": "AWS-0080",
+    "long_id": "aws-rds-encrypt-instance-storage-data",
+    "service": "rds",
+    "severity": "high",
+    "title": "RDS encryption has not been enabled at a DB Instance level.",
+    "fix": "Enable encryption for RDS instances",
+    "cis": [],
+    "source_file": "checks/cloud/aws/rds/encrypt_instance_storage_data.rego"
+  },
+  {
+    "id": "AWS-0133",
+    "long_id": "aws-rds-enable-performance-insights",
+    "service": "rds",
+    "severity": "low",
+    "title": "Enable Performance Insights to detect potential problems",
+    "fix": "Enable performance insights",
+    "cis": [],
+    "source_file": "checks/cloud/aws/rds/enable_performance_insights.rego"
+  },
+  {
+    "id": "AWS-0176",
+    "long_id": "aws-rds-enable-iam-auth",
+    "service": "rds",
+    "severity": "medium",
+    "title": "RDS IAM Database Authentication Disabled",
+    "fix": "Modify the PostgreSQL and MySQL type RDS instances to enable IAM database authentication.",
+    "cis": [],
+    "source_file": "checks/cloud/aws/rds/enable_iam_auth.rego"
+  },
+  {
+    "id": "AWS-0177",
+    "long_id": "aws-rds-enable-deletion-protection",
+    "service": "rds",
+    "severity": "medium",
+    "title": "RDS Deletion Protection Disabled",
+    "fix": "Modify the RDS instances to enable deletion protection.",
+    "cis": [],
+    "source_file": "checks/cloud/aws/rds/enable_deletion_protection.rego"
+  },
+  {
+    "id": "AWS-0180",
+    "long_id": "aws-rds-enable-public-access",
+    "service": "rds",
+    "severity": "high",
+    "title": "RDS Publicly Accessible",
+    "fix": "Remove the public endpoint from the RDS instance.",
+    "cis": [],
+    "source_file": "checks/cloud/aws/rds/disable_public_access.rego"
+  },
+  {
+    "id": "AWS-0343",
+    "long_id": "aws-rds-enable-cluster-deletion-protection",
+    "service": "rds",
+    "severity": "medium",
+    "title": "RDS Cluster Deletion Protection Disabled",
+    "fix": "Modify the RDS clusters to enable deletion protection.",
+    "cis": [],
+    "source_file": "checks/cloud/aws/rds/enable_cluster_deletion_protection.rego"
+  },
+  {
+    "id": "AWS-0083",
+    "long_id": "aws-redshift-add-description-to-security-group",
+    "service": "redshift",
+    "severity": "low",
+    "title": "Missing description for security group/security group rule.",
+    "fix": "Add descriptions for all security groups and rules",
+    "cis": [],
+    "source_file": "checks/cloud/aws/redshift/add_description_to_security_group.rego"
+  },
+  {
+    "id": "AWS-0084",
+    "long_id": "aws-redshift-encryption-customer-key",
+    "service": "redshift",
+    "severity": "high",
+    "title": "Redshift clusters should use at rest encryption",
+    "fix": "Enable encryption using CMK",
+    "cis": [],
+    "source_file": "checks/cloud/aws/redshift/encryption_customer_key.rego"
+  },
+  {
+    "id": "AWS-0085",
+    "long_id": "aws-redshift-no-classic-resources",
+    "service": "redshift",
+    "severity": "critical",
+    "title": "AWS Classic resource usage.",
+    "fix": "Switch to VPC resources",
+    "cis": [],
+    "source_file": "checks/cloud/aws/redshift/no_classic_resources.rego"
+  },
+  {
+    "id": "AWS-0127",
+    "long_id": "aws-redshift-use-vpc",
+    "service": "redshift",
+    "severity": "high",
+    "title": "Redshift cluster should be deployed into a specific VPC",
+    "fix": "Deploy Redshift cluster into a non default VPC",
+    "cis": [],
+    "source_file": "checks/cloud/aws/redshift/use_vpc.rego"
+  },
+  {
+    "id": "AWS-0086",
+    "long_id": "aws-s3-block-public-acls",
+    "service": "s3",
+    "severity": "high",
+    "title": "S3 Access block should block public ACL",
+    "fix": "Enable blocking any PUT calls with a public ACL specified",
+    "cis": [],
+    "source_file": "checks/cloud/aws/s3/block_public_acls.rego"
+  },
+  {
+    "id": "AWS-0087",
+    "long_id": "aws-s3-block-public-policy",
+    "service": "s3",
+    "severity": "high",
+    "title": "S3 Access block should block public policy",
+    "fix": "Prevent policies that allow public access being PUT",
+    "cis": [],
+    "source_file": "checks/cloud/aws/s3/block_public_policy.rego"
+  },
+  {
+    "id": "AWS-0088",
+    "long_id": "aws-s3-enable-bucket-encryption",
+    "service": "s3",
+    "severity": "high",
+    "title": "Unencrypted S3 bucket.",
+    "fix": "Configure bucket encryption",
+    "cis": [],
+    "source_file": "checks/cloud/aws/s3/enable_bucket_encryption.rego"
+  },
+  {
+    "id": "AWS-0089",
+    "long_id": "aws-s3-enable-logging",
+    "service": "s3",
+    "severity": "low",
+    "title": "S3 Bucket Logging",
+    "fix": "Add a logging block to the resource to enable access logging",
+    "cis": [],
+    "source_file": "checks/cloud/aws/s3/enable_logging.rego"
+  },
+  {
+    "id": "AWS-0090",
+    "long_id": "aws-s3-enable-versioning",
+    "service": "s3",
+    "severity": "medium",
+    "title": "S3 Data should be versioned",
+    "fix": "Enable versioning to protect against accidental/malicious removal or modification",
+    "cis": [],
+    "source_file": "checks/cloud/aws/s3/enable_versioning.rego"
+  },
+  {
+    "id": "AWS-0091",
+    "long_id": "aws-s3-ignore-public-acls",
+    "service": "s3",
+    "severity": "high",
+    "title": "S3 Access Block should Ignore Public ACL",
+    "fix": "Enable ignoring the application of public ACLs in PUT calls",
+    "cis": [],
+    "source_file": "checks/cloud/aws/s3/ignore_public_acls.rego"
+  },
+  {
+    "id": "AWS-0092",
+    "long_id": "aws-s3-no-public-access-with-acl",
+    "service": "s3",
+    "severity": "high",
+    "title": "S3 Buckets not publicly accessible through ACL.",
+    "fix": "Don't use canned ACLs or switch to private acl",
+    "cis": [],
+    "source_file": "checks/cloud/aws/s3/no_public_access_with_acl.rego"
+  },
+  {
+    "id": "AWS-0093",
+    "long_id": "aws-s3-no-public-buckets",
+    "service": "s3",
+    "severity": "high",
+    "title": "S3 Access block should restrict public bucket to limit access",
+    "fix": "Limit the access to public buckets to only the owner or AWS Services (eg; CloudFront)",
+    "cis": [],
+    "source_file": "checks/cloud/aws/s3/no_public_buckets.rego"
+  },
+  {
+    "id": "AWS-0094",
+    "long_id": "aws-s3-specify-public-access-block",
+    "service": "s3",
+    "severity": "low",
+    "title": "S3 buckets should each define an aws_s3_bucket_public_access_block",
+    "fix": "Define a aws_s3_bucket_public_access_block for the given bucket to control public access policies",
+    "cis": [],
+    "source_file": "checks/cloud/aws/s3/specify_public_access_block.rego"
+  },
+  {
+    "id": "AWS-0132",
+    "long_id": "aws-s3-encryption-customer-key",
+    "service": "s3",
+    "severity": "high",
+    "title": "S3 encryption should use Customer Managed Keys",
+    "fix": "Use SSE-KMS with a customer managed key (CMK)",
+    "cis": [],
+    "source_file": "checks/cloud/aws/s3/encryption_customer_key.rego"
+  },
+  {
+    "id": "AWS-0170",
+    "long_id": "aws-s3-require-mfa-delete",
+    "service": "s3",
+    "severity": "low",
+    "title": "Buckets should have MFA deletion protection enabled.",
+    "fix": "Enable MFA deletion protection on the bucket",
+    "cis": [
+      "cis-aws-1.4"
+    ],
+    "source_file": "checks/cloud/aws/s3/require_mfa_delete.rego"
+  },
+  {
+    "id": "AWS-0171",
+    "long_id": "aws-s3-enable-object-write-logging",
+    "service": "s3",
+    "severity": "low",
+    "title": "S3 object-level API operations such as GetObject, DeleteObject, and PutObject are called data events. By default, CloudTrail trails don't log data events and so it is recommended to enable Object-level logging for S3 buckets.",
+    "fix": "Enable Object-level logging for S3 buckets.",
+    "cis": [
+      "cis-aws-1.4"
+    ],
+    "source_file": "checks/cloud/aws/s3/enable_object_write_logging.rego"
+  },
+  {
+    "id": "AWS-0172",
+    "long_id": "aws-s3-enable-object-read-logging",
+    "service": "s3",
+    "severity": "low",
+    "title": "S3 object-level API operations such as GetObject, DeleteObject, and PutObject are called data events. By default, CloudTrail trails don't log data events and so it is recommended to enable Object-level logging for S3 buckets.",
+    "fix": "Enable Object-level logging for S3 buckets.",
+    "cis": [
+      "cis-aws-1.4"
+    ],
+    "source_file": "checks/cloud/aws/s3/enable_object_read_logging.rego"
+  },
+  {
+    "id": "AWS-0320",
+    "long_id": "aws-s3-dns-compliant-name",
+    "service": "s3",
+    "severity": "medium",
+    "title": "S3 DNS Compliant Bucket Names",
+    "fix": "Recreate S3 bucket to use - instead of . in S3 bucket names",
+    "cis": [],
+    "source_file": "checks/cloud/aws/s3/dns_compliant_name.rego"
+  },
+  {
+    "id": "AWS-0110",
+    "long_id": "aws-sam-enable-api-cache-encryption",
+    "service": "sam",
+    "severity": "medium",
+    "title": "SAM API must have data cache enabled",
+    "fix": "Enable cache encryption",
+    "cis": [],
+    "source_file": "checks/cloud/aws/sam/enable_api_cache_encryption.rego"
+  },
+  {
+    "id": "AWS-0111",
+    "long_id": "aws-sam-enable-api-tracing",
+    "service": "sam",
+    "severity": "low",
+    "title": "SAM API must have X-Ray tracing enabled",
+    "fix": "Enable tracing",
+    "cis": [],
+    "source_file": "checks/cloud/aws/sam/enable_api_tracing.rego"
+  },
+  {
+    "id": "AWS-0112",
+    "long_id": "aws-sam-api-use-secure-tls-policy",
+    "service": "sam",
+    "severity": "high",
+    "title": "SAM API domain name uses outdated SSL/TLS protocols.",
+    "fix": "Use the most modern TLS/SSL policies available",
+    "cis": [],
+    "source_file": "checks/cloud/aws/sam/api_use_secure_tls_policy.rego"
+  },
+  {
+    "id": "AWS-0113",
+    "long_id": "aws-sam-enable-api-access-logging",
+    "service": "sam",
+    "severity": "medium",
+    "title": "SAM API stages for V1 and V2 should have access logging enabled",
+    "fix": "Enable logging for API Gateway stages",
+    "cis": [],
+    "source_file": "checks/cloud/aws/sam/enable_api_access_logging.rego"
+  },
+  {
+    "id": "AWS-0114",
+    "long_id": "aws-sam-no-function-policy-wildcards",
+    "service": "sam",
+    "severity": "high",
+    "title": "Function policies should avoid use of wildcards and instead apply the principle of least privilege",
+    "fix": "Specify the exact permissions required, and to which resources they should apply instead of using wildcards.",
+    "cis": [],
+    "source_file": "checks/cloud/aws/sam/no_function_policy_wildcards.rego"
+  },
+  {
+    "id": "AWS-0116",
+    "long_id": "aws-sam-enable-http-api-access-logging",
+    "service": "sam",
+    "severity": "medium",
+    "title": "SAM HTTP API stages for V1 and V2 should have access logging enabled",
+    "fix": "Enable logging for API Gateway stages",
+    "cis": [],
+    "source_file": "checks/cloud/aws/sam/enable_http_api_access_logging.rego"
+  },
+  {
+    "id": "AWS-0117",
+    "long_id": "aws-sam-enable-state-machine-tracing",
+    "service": "sam",
+    "severity": "low",
+    "title": "SAM State machine must have X-Ray tracing enabled",
+    "fix": "Enable tracing",
+    "cis": [],
+    "source_file": "checks/cloud/aws/sam/enable_state_machine_tracing.rego"
+  },
+  {
+    "id": "AWS-0119",
+    "long_id": "aws-sam-enable-state-machine-logging",
+    "service": "sam",
+    "severity": "low",
+    "title": "SAM State machine must have logging enabled",
+    "fix": "Enable logging",
+    "cis": [],
+    "source_file": "checks/cloud/aws/sam/enable_state_machine_logging.rego"
+  },
+  {
+    "id": "AWS-0120",
+    "long_id": "aws-sam-no-state-machine-policy-wildcards",
+    "service": "sam",
+    "severity": "high",
+    "title": "State machine policies should avoid use of wildcards and instead apply the principle of least privilege",
+    "fix": "Specify the exact permissions required, and to which resources they should apply instead of using wildcards.",
+    "cis": [],
+    "source_file": "checks/cloud/aws/sam/no_state_machine_policy_wildcards.rego"
+  },
+  {
+    "id": "AWS-0121",
+    "long_id": "aws-sam-enable-table-encryption",
+    "service": "sam",
+    "severity": "high",
+    "title": "SAM Simple table must have server side encryption enabled.",
+    "fix": "Enable server side encryption",
+    "cis": [],
+    "source_file": "checks/cloud/aws/sam/enable_table_encryption.rego"
+  },
+  {
+    "id": "AWS-0125",
+    "long_id": "aws-sam-enable-function-tracing",
+    "service": "sam",
+    "severity": "low",
+    "title": "SAM Function must have X-Ray tracing enabled",
+    "fix": "Enable tracing",
+    "cis": [],
+    "source_file": "checks/cloud/aws/sam/enable_function_tracing.rego"
+  },
+  {
+    "id": "AWS-0095",
+    "long_id": "aws-sns-enable-topic-encryption",
+    "service": "sns",
+    "severity": "high",
+    "title": "Unencrypted SNS topic.",
+    "fix": "Turn on SNS Topic encryption",
+    "cis": [],
+    "source_file": "checks/cloud/aws/sns/enable_topic_encryption.rego"
+  },
+  {
+    "id": "AWS-0136",
+    "long_id": "aws-sns-topic-encryption-use-cmk",
+    "service": "sns",
+    "severity": "high",
+    "title": "SNS topic not encrypted with CMK.",
+    "fix": "Use a CMK for SNS Topic encryption",
+    "cis": [],
+    "source_file": "checks/cloud/aws/sns/topic_encryption_with_cmk.rego"
+  },
+  {
+    "id": "AWS-0096",
+    "long_id": "aws-sqs-enable-queue-encryption",
+    "service": "sqs",
+    "severity": "high",
+    "title": "Unencrypted SQS queue.",
+    "fix": "Turn on SQS Queue encryption",
+    "cis": [],
+    "source_file": "checks/cloud/aws/sqs/enable_queue_encryption.rego"
+  },
+  {
+    "id": "AWS-0097",
+    "long_id": "aws-sqs-no-wildcards-in-policy-documents",
+    "service": "sqs",
+    "severity": "high",
+    "title": "AWS SQS policy document has wildcard action statement.",
+    "fix": "Keep policy scope to the minimum that is required to be effective",
+    "cis": [],
+    "source_file": "checks/cloud/aws/sqs/no_wildcards_in_policy_documents.rego"
+  },
+  {
+    "id": "AWS-0135",
+    "long_id": "aws-sqs-queue-encryption-use-cmk",
+    "service": "sqs",
+    "severity": "high",
+    "title": "SQS queue should be encrypted with a CMK.",
+    "fix": "Encrypt SQS Queue with a customer-managed key",
+    "cis": [],
+    "source_file": "checks/cloud/aws/sqs/queue_encryption_with_cmk.rego"
+  },
+  {
+    "id": "AWS-0098",
+    "long_id": "aws-ssm-secret-use-customer-key",
+    "service": "ssm",
+    "severity": "low",
+    "title": "Secrets Manager should use customer managed keys",
+    "fix": "Use customer managed keys",
+    "cis": [],
+    "source_file": "checks/cloud/aws/ssm/secret_use_customer_key.rego"
+  },
+  {
+    "id": "AWS-0134",
+    "long_id": "aws-ssm-avoid-leaks-via-http",
+    "service": "ssm",
+    "severity": "critical",
+    "title": "Secrets should not be exfiltrated using Terraform HTTP data blocks",
+    "fix": "Remove this potential exfiltration HTTP request.",
+    "cis": [],
+    "source_file": "checks/cloud/aws/ssm/avoid_leaks_via_http.rego"
+  },
+  {
+    "id": "AWS-0109",
+    "long_id": "aws-workspaces-enable-disk-encryption",
+    "service": "workspaces",
+    "severity": "high",
+    "title": "Root and user volumes on Workspaces should be encrypted",
+    "fix": "Root and user volume encryption should be enabled",
+    "cis": [],
+    "source_file": "checks/cloud/aws/workspaces/enable_disk_encryption.rego"
+  }
+]

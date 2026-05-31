@@ -1,0 +1,33 @@
+# RDS exposure / encryption (ported logic; metadata informed by trivy-checks AVD).
+- id: AWS_RDS_PUBLICLY_ACCESSIBLE
+  severity: critical
+  resource: aws_db_instance
+  on: [create, update]
+  when: |
+    has(after.publicly_accessible) && after.publicly_accessible == true
+  title: "RDS instance is publicly accessible from the internet"
+  fix: "Set publicly_accessible = false and place the instance in private subnets."
+  refs:
+    - "https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_VPC.WorkingWithRDSInstanceinaVPC.html"
+
+- id: AWS_RDS_STORAGE_UNENCRYPTED
+  severity: high
+  resource: aws_db_instance
+  on: [create, update]
+  when: |
+    has(after.storage_encrypted) && after.storage_encrypted == false
+  title: "RDS instance storage is not encrypted at rest"
+  fix: "Set storage_encrypted = true (existing unencrypted instances must be recreated from an encrypted snapshot)."
+  refs:
+    - "https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Overview.Encryption.html"
+
+- id: AWS_RDS_NO_DELETION_PROTECTION
+  severity: medium
+  resource: aws_db_instance
+  on: [create, update]
+  when: |
+    has(after.deletion_protection) && after.deletion_protection == false
+  title: "RDS instance has deletion protection disabled"
+  fix: "Set deletion_protection = true for production databases."
+  refs:
+    - "https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_DeleteInstance.html"

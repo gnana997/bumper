@@ -1,0 +1,38 @@
+# IAM policy-document rules. The policy is a JSON STRING inside the plan, so
+# these depend on parse_json + as_list (Action/Resource/Principal may each be a
+# string or an array). This is the "depth" unlock for the whole IAM family.
+
+# Wildcard admin: Allow Action "*"/"iam:*"/"*:*" on Resource "*".
+- id: AWS_IAM_WILDCARD_ADMIN
+  severity: critical
+  on: [create, update]
+  when: |
+    type in ["aws_iam_policy", "aws_iam_role_policy", "aws_iam_user_policy", "aws_iam_group_policy"] &&
+    has(after.policy) &&
+    as_list(parse_json(after.policy).Statement).exists(s,
+      has(s.Effect) && s.Effect == "Allow" &&
+      has(s.Action) && as_list(s.Action).exists(a, a == "*" || a == "iam:*" || a == "*:*") &&
+      has(s.Resource) && as_list(s.Resource).exists(r, r == "*")
+    )
+  title: "IAM policy grants wildcard admin access (Action '*'/'iam:*' on Resource '*')"
+  fix: "Scope Action and Resource to the minimum required; never combine '*' Action with '*' Resource."
+  refs:
+    - "https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html#grant-least-privilege"
+
+# Trust policy lets any AWS principal assume the role (Principal "*" or {"AWS":"*"}).
+- id: AWS_IAM_TRUST_POLICY_WILDCARD_PRINCIPAL
+  severity: critical
+  resource: aws_iam_role
+  on: [create, update]
+  when: |
+    has(after.assume_role_policy) &&
+    as_list(parse_json(after.assume_role_policy).Statement).exists(s,
+      has(s.Effect) && s.Effect == "Allow" && has(s.Principal) && (
+        (type(s.Principal) == string && s.Principal == "*") ||
+        (type(s.Principal) == map && has(s.Principal.AWS) && as_list(s.Principal.AWS).exists(p, p == "*"))
+      )
+    )
+  title: "IAM role trust policy allows any AWS principal to assume it (Principal '*')"
+  fix: "Restrict the assume_role_policy Principal to specific accounts, roles, or services."
+  refs:
+    - "https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_elements_principal.html"

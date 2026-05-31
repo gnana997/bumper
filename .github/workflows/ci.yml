@@ -1,0 +1,30 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: "1.26"
+          cache: true
+      - name: Vet
+        run: go vet ./...
+      - name: Test
+        run: go test ./...
+      - name: Build
+        run: go build -o bumper ./cmd/bumper
+      - name: Smoke test (scan bundled fixture)
+        run: |
+          ./bumper --format text --no-fail internal/engine/testdata/plan_expanded.json
+          ./bumper --format sarif --no-fail internal/engine/testdata/plan_expanded.json > /tmp/out.sarif
+          test -s /tmp/out.sarif

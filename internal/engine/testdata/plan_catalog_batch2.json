@@ -1,0 +1,84 @@
+{
+  "format_version": "1.2",
+  "terraform_version": "1.9.0",
+  "resource_changes": [
+    { "address": "aws_cloudfront_distribution.oldtls", "type": "aws_cloudfront_distribution", "name": "oldtls",
+      "change": { "actions": ["create"], "before": null, "after": {
+        "viewer_certificate": [ { "minimum_protocol_version": "TLSv1" } ] } } },
+
+    { "address": "aws_api_gateway_domain_name.dom", "type": "aws_api_gateway_domain_name", "name": "dom",
+      "change": { "actions": ["create"], "before": null, "after": { "security_policy": "TLS_1_0" } } },
+
+    { "address": "aws_opensearch_domain.os", "type": "aws_opensearch_domain", "name": "os",
+      "change": { "actions": ["create"], "before": null, "after": {
+        "domain_endpoint_options": [ { "tls_security_policy": "Policy-Min-TLS-1-0-2019-07" } ],
+        "node_to_node_encryption": [ { "enabled": false } ] } } },
+
+    { "address": "aws_network_acl_rule.open", "type": "aws_network_acl_rule", "name": "open",
+      "change": { "actions": ["create"], "before": null, "after": {
+        "egress": false, "rule_action": "allow", "cidr_block": "0.0.0.0/0", "protocol": "6", "from_port": 22, "to_port": 22 } } },
+
+    { "address": "aws_cloudtrail.trail", "type": "aws_cloudtrail", "name": "trail",
+      "change": { "actions": ["create"], "before": null, "after": { "name": "trail" } } },
+
+    { "address": "aws_cloudtrail.good", "type": "aws_cloudtrail", "name": "good",
+      "change": { "actions": ["create"], "before": null, "after": {
+        "name": "good", "enable_log_file_validation": true, "kms_key_id": "arn:aws:kms:us-east-1:111:key/abc" } } },
+
+    { "address": "aws_kms_key.key", "type": "aws_kms_key", "name": "key",
+      "change": { "actions": ["create"], "before": null, "after": { "description": "k" } } },
+
+    { "address": "aws_instance.unenc", "type": "aws_instance", "name": "unenc",
+      "change": { "actions": ["create"], "before": null, "after": {
+        "metadata_options": [ { "http_tokens": "required" } ],
+        "root_block_device": [ { "encrypted": false } ] } } },
+
+    { "address": "aws_dax_cluster.dax", "type": "aws_dax_cluster", "name": "dax",
+      "change": { "actions": ["create"], "before": null, "after": {
+        "server_side_encryption": [ { "enabled": false } ] } } },
+
+    { "address": "aws_msk_cluster.msk", "type": "aws_msk_cluster", "name": "msk",
+      "change": { "actions": ["create"], "before": null, "after": {
+        "encryption_info": [ { "encryption_in_transit": [ { "client_broker": "PLAINTEXT" } ] } ] } } },
+
+    { "address": "aws_workspaces_workspace.ws", "type": "aws_workspaces_workspace", "name": "ws",
+      "change": { "actions": ["create"], "before": null, "after": { "root_volume_encryption_enabled": false } } },
+
+    { "address": "aws_eks_cluster.noenc", "type": "aws_eks_cluster", "name": "noenc",
+      "change": { "actions": ["create"], "before": null, "after": {
+        "vpc_config": [ { "endpoint_public_access": false } ] } } },
+
+    { "address": "aws_codebuild_project.cb", "type": "aws_codebuild_project", "name": "cb",
+      "change": { "actions": ["create"], "before": null, "after": {
+        "artifacts": [ { "encryption_disabled": true } ] } } },
+
+    { "address": "aws_ebs_encryption_by_default.def", "type": "aws_ebs_encryption_by_default", "name": "def",
+      "change": { "actions": ["create"], "before": null, "after": { "enabled": false } } },
+
+    { "address": "aws_ecr_repository_policy.pub", "type": "aws_ecr_repository_policy", "name": "pub",
+      "change": { "actions": ["create"], "before": null, "after": {
+        "policy": "{\"Version\":\"2008-10-17\",\"Statement\":[{\"Effect\":\"Allow\",\"Principal\":\"*\",\"Action\":\"ecr:*\"}]}" } } },
+
+    { "address": "aws_sqs_queue_policy.pub", "type": "aws_sqs_queue_policy", "name": "pub",
+      "change": { "actions": ["create"], "before": null, "after": {
+        "policy": "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Effect\":\"Allow\",\"Principal\":\"*\",\"Action\":\"sqs:SendMessage\",\"Resource\":\"*\"}]}" } } },
+
+    { "address": "aws_lambda_permission.perm", "type": "aws_lambda_permission", "name": "perm",
+      "change": { "actions": ["create"], "before": null, "after": { "principal": "s3.amazonaws.com" } } },
+
+    { "address": "aws_lambda_permission.scoped", "type": "aws_lambda_permission", "name": "scoped",
+      "change": { "actions": ["create"], "before": null, "after": {
+        "principal": "s3.amazonaws.com", "source_arn": "arn:aws:s3:::my-bucket" } } },
+
+    { "address": "aws_ecs_task_definition.task", "type": "aws_ecs_task_definition", "name": "task",
+      "change": { "actions": ["create"], "before": null, "after": {
+        "container_definitions": "[{\"name\":\"app\",\"image\":\"x\",\"environment\":[{\"name\":\"DB_PASSWORD\",\"value\":\"hunter2\"}]}]" } } },
+
+    { "address": "aws_elasticache_replication_group.nobackup", "type": "aws_elasticache_replication_group", "name": "nobackup",
+      "change": { "actions": ["create"], "before": null, "after": { "snapshot_retention_limit": 0 } } },
+
+    { "address": "aws_lb.alb", "type": "aws_lb", "name": "alb",
+      "change": { "actions": ["create"], "before": null, "after": {
+        "load_balancer_type": "application", "drop_invalid_header_fields": false } } }
+  ]
+}

@@ -1,0 +1,50 @@
+# Recovery / data-durability rules — the same destruction theme, but about
+# being able to RECOVER (backups, versioning, PITR) rather than the destroy
+# action itself.
+
+- id: AWS_DYNAMODB_PITR_DISABLED
+  severity: medium
+  resource: aws_dynamodb_table
+  on: [create, update]
+  when: |
+    !has(after.point_in_time_recovery) ||
+    after.point_in_time_recovery.exists(p, !has(p.enabled) || p.enabled == false)
+  title: "DynamoDB table has point-in-time recovery disabled (no recovery from data loss)"
+  fix: "Add point_in_time_recovery { enabled = true }."
+
+- id: AWS_S3_VERSIONING_DISABLED
+  severity: medium
+  resource: aws_s3_bucket_versioning
+  on: [create, update]
+  when: |
+    has(after.versioning_configuration) && after.versioning_configuration.exists(v,
+      !has(v.status) || v.status != "Enabled")
+  title: "S3 bucket versioning is not enabled (overwritten/deleted objects are unrecoverable)"
+  fix: "Set versioning_configuration { status = \"Enabled\" }."
+
+- id: AWS_RDS_SHORT_BACKUP_RETENTION
+  severity: medium
+  on: [create, update]
+  when: |
+    type in ["aws_db_instance", "aws_rds_cluster"] &&
+    has(after.backup_retention_period) && after.backup_retention_period < 1.0
+  title: "RDS backup retention is disabled (backup_retention_period = 0)"
+  fix: "Set backup_retention_period to at least 7 days for production databases."
+
+- id: AWS_RDS_CLUSTER_NO_DELETION_PROTECTION
+  severity: medium
+  resource: aws_rds_cluster
+  on: [create, update]
+  when: |
+    has(after.deletion_protection) && after.deletion_protection == false
+  title: "RDS (Aurora) cluster has deletion protection disabled"
+  fix: "Set deletion_protection = true for production clusters."
+
+- id: AWS_ELASTICACHE_NO_BACKUP
+  severity: medium
+  resource: aws_elasticache_replication_group
+  on: [create, update]
+  when: |
+    has(after.snapshot_retention_limit) && after.snapshot_retention_limit < 1.0
+  title: "ElastiCache replication group has backups disabled (snapshot_retention_limit = 0)"
+  fix: "Set snapshot_retention_limit to at least 1 (ideally several days)."

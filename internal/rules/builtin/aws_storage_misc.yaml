@@ -1,0 +1,23 @@
+# Misc encryption-at-rest / in-transit exposure checks.
+
+- id: AWS_EFS_UNENCRYPTED
+  severity: high
+  resource: aws_efs_file_system
+  on: [create, update]
+  when: |
+    has(after.encrypted) && after.encrypted == false
+  title: "EFS file system is not encrypted at rest"
+  fix: "Set encrypted = true (existing unencrypted file systems must be recreated)."
+  refs:
+    - "https://docs.aws.amazon.com/efs/latest/ug/encryption.html"
+
+- id: AWS_ELASTICACHE_TRANSIT_UNENCRYPTED
+  severity: high
+  resource: aws_elasticache_replication_group
+  on: [create, update]
+  when: |
+    has(after.transit_encryption_enabled) && after.transit_encryption_enabled == false
+  title: "ElastiCache replication group does not enforce in-transit encryption"
+  fix: "Set transit_encryption_enabled = true."
+  refs:
+    - "https://docs.aws.amazon.com/AmazonElastiCache/latest/red-ug/in-transit-encryption.html"

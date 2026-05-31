@@ -1,0 +1,13 @@
+# ECS task definitions store container_definitions as a JSON string in the plan,
+# so we parse_json it and look for secret-looking plaintext environment vars.
+- id: AWS_ECS_PLAINTEXT_SECRETS
+  severity: medium
+  resource: aws_ecs_task_definition
+  on: [create, update]
+  when: |
+    has(after.container_definitions) &&
+    as_list(parse_json(after.container_definitions)).exists(c,
+      has(c.environment) && as_list(c.environment).exists(e,
+        has(e.name) && e.name.matches("(?i)(password|passwd|secret|token|api[_-]?key|access[_-]?key|private[_-]?key)")))
+  title: "ECS task definition sets a secret-looking value as a plaintext environment variable"
+  fix: "Move secrets to the container 'secrets' block sourced from SSM Parameter Store or Secrets Manager."

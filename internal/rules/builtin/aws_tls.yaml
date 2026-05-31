@@ -1,0 +1,41 @@
+# TLS hygiene for internet-facing services.
+
+- id: AWS_CLOUDFRONT_OUTDATED_TLS
+  severity: high
+  resource: aws_cloudfront_distribution
+  on: [create, update]
+  when: |
+    has(after.viewer_certificate) && after.viewer_certificate.exists(v,
+      has(v.minimum_protocol_version) &&
+      v.minimum_protocol_version in ["SSLv3", "TLSv1", "TLSv1_2016", "TLSv1.1_2016"])
+  title: "CloudFront distribution uses an outdated minimum TLS version"
+  fix: "Set viewer_certificate.minimum_protocol_version to TLSv1.2_2021 or newer."
+
+- id: AWS_APIGW_OUTDATED_TLS
+  severity: high
+  resource: aws_api_gateway_domain_name
+  on: [create, update]
+  when: |
+    has(after.security_policy) && after.security_policy == "TLS_1_0"
+  title: "API Gateway custom domain uses outdated TLS 1.0"
+  fix: "Set security_policy = \"TLS_1_2\"."
+
+- id: AWS_ES_OUTDATED_TLS
+  severity: high
+  on: [create, update]
+  when: |
+    type in ["aws_elasticsearch_domain", "aws_opensearch_domain"] &&
+    has(after.domain_endpoint_options) && after.domain_endpoint_options.exists(o,
+      has(o.tls_security_policy) && o.tls_security_policy.contains("TLS-1-0"))
+  title: "Elasticsearch/OpenSearch domain uses an outdated TLS policy (TLS 1.0)"
+  fix: "Set domain_endpoint_options.tls_security_policy to a TLS-1-2 policy."
+
+- id: AWS_ES_NODE_TO_NODE_UNENCRYPTED
+  severity: high
+  on: [create, update]
+  when: |
+    type in ["aws_elasticsearch_domain", "aws_opensearch_domain"] &&
+    has(after.node_to_node_encryption) && after.node_to_node_encryption.exists(n,
+      has(n.enabled) && n.enabled == false)
+  title: "Elasticsearch/OpenSearch node-to-node traffic is not encrypted"
+  fix: "Set node_to_node_encryption.enabled = true."

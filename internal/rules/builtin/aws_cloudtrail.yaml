@@ -1,0 +1,22 @@
+# CloudTrail tamper-protection (the aws_cloudtrail resource itself — NOT the
+# account-level "is CloudTrail enabled everywhere" posture check, which belongs
+# to the continuous account scanner, not the plan gate).
+- id: AWS_CLOUDTRAIL_NO_LOG_VALIDATION
+  severity: high
+  resource: aws_cloudtrail
+  on: [create, update]
+  when: |
+    !has(after.enable_log_file_validation) || after.enable_log_file_validation == false
+  title: "CloudTrail log file validation is disabled (log tampering not detectable)"
+  fix: "Set enable_log_file_validation = true."
+  refs:
+    - "https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudtrail-log-file-validation-intro.html"
+
+- id: AWS_CLOUDTRAIL_NO_CMK
+  severity: medium
+  resource: aws_cloudtrail
+  on: [create, update]
+  when: |
+    !has(after.kms_key_id) || after.kms_key_id == ""
+  title: "CloudTrail logs are not encrypted with a customer-managed KMS key"
+  fix: "Set kms_key_id to a customer-managed KMS key."
