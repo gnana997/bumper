@@ -1,0 +1,84 @@
+[
+  {
+    "tool": "checkov",
+    "id": "CKV_LIN_1",
+    "severity": "",
+    "title": "Ensure no hard coded Linode tokens exist in provider",
+    "service": "(unmapped)",
+    "category": "SECRETS",
+    "resources": [],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/provider/linode/credentials.py",
+    "service_group": "(unmapped)"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_LIN_5",
+    "severity": "",
+    "title": "Ensure Inbound Firewall Policy is not set to ACCEPT",
+    "service": "firewall",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "linode_firewall"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/linode/firewall_inbound_policy.py",
+    "service_group": "firewall"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_LIN_6",
+    "severity": "",
+    "title": "Ensure Outbound Firewall Policy is not set to ACCEPT",
+    "service": "firewall",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "linode_firewall"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/linode/firewall_outbound_policy.py",
+    "service_group": "firewall"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_LIN_2",
+    "severity": "",
+    "title": "Ensure SSH key set in authorized_keys",
+    "service": "instance",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "linode_instance"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/linode/authorized_keys.py",
+    "service_group": "instance"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_LIN_3",
+    "severity": "",
+    "title": "Ensure email is set",
+    "service": "user",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "linode_user"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/linode/user_email_set.py",
+    "service_group": "user"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_LIN_4",
+    "severity": "",
+    "title": "Ensure username is set",
+    "service": "user",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "linode_user"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/linode/user_username_set.py",
+    "service_group": "user"
+  }
+]

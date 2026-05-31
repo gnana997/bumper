@@ -1,0 +1,5185 @@
+[
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_107",
+    "severity": "",
+    "title": "Ensure that API management services use virtual networks",
+    "service": "api",
+    "category": "NETWORKING",
+    "resources": [
+      "azurerm_api_management"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/APIServicesUseVirtualNetwork.py",
+    "service_group": "api"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_152",
+    "severity": "",
+    "title": "Ensure Client Certificates are enforced for API management",
+    "service": "api",
+    "category": "ENCRYPTION",
+    "resources": [
+      "azurerm_api_management"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/APIManagementCertsEnforced.py",
+    "service_group": "api"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_173",
+    "severity": "",
+    "title": "Ensure API management uses at least TLS 1.2",
+    "service": "api",
+    "category": "ENCRYPTION",
+    "resources": [
+      "azurerm_api_management"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/APIManagementMinTLS12.py",
+    "service_group": "api"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_174",
+    "severity": "",
+    "title": "Ensure API management public access is disabled",
+    "service": "api",
+    "category": "NETWORKING",
+    "resources": [
+      "azurerm_api_management"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/APIManagementPublicAccess.py",
+    "service_group": "api"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_215",
+    "severity": "",
+    "title": "Ensure API management backend uses https",
+    "service": "api",
+    "category": "ENCRYPTION",
+    "resources": [
+      "azurerm_api_management_backend"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/APIManagementBackendHTTPS.py",
+    "service_group": "api"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_184",
+    "severity": "",
+    "title": "Ensure 'local_auth_enabled' is set to 'False'",
+    "service": "app",
+    "category": "IAM",
+    "resources": [
+      "azurerm_app_configuration"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/AppConfigLocalAuth.py",
+    "service_group": "app"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_185",
+    "severity": "",
+    "title": "Ensure 'Public Access' is not Enabled for App configuration",
+    "service": "app",
+    "category": "NETWORKING",
+    "resources": [
+      "azurerm_app_configuration"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/AppConfigPublicAccess.py",
+    "service_group": "app"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_186",
+    "severity": "",
+    "title": "Ensure App configuration encryption block is set.",
+    "service": "app",
+    "category": "ENCRYPTION",
+    "resources": [
+      "azurerm_app_configuration"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/AppConfigEncryption.py",
+    "service_group": "app"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_187",
+    "severity": "",
+    "title": "Ensure App configuration purge protection is enabled",
+    "service": "app",
+    "category": "BACKUP_AND_RECOVERY",
+    "resources": [
+      "azurerm_app_configuration"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/AppConfigPurgeProtection.py",
+    "service_group": "app"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_188",
+    "severity": "",
+    "title": "Ensure App configuration Sku is standard",
+    "service": "app",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "azurerm_app_configuration"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/AppConfigSku.py",
+    "service_group": "app"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_249",
+    "severity": "",
+    "title": "Ensure Azure GitHub Actions OIDC trust policy is configured securely",
+    "service": "application",
+    "category": "IAM",
+    "resources": [
+      "azuread_application_federated_identity_credential"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/GithubActionsOIDCTrustPolicy.py",
+    "service_group": "application"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_13",
+    "severity": "",
+    "title": "Ensure App Service Authentication is set on Azure App Service",
+    "service": "appservice",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "azurerm_app_service",
+      "azurerm_linux_web_app",
+      "azurerm_windows_web_app"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/AppServiceAuthentication.py",
+    "service_group": "appservice"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_14",
+    "severity": "",
+    "title": "Ensure web app redirects all HTTP traffic to HTTPS in Azure App Service",
+    "service": "appservice",
+    "category": "NETWORKING",
+    "resources": [
+      "azurerm_app_service",
+      "azurerm_linux_web_app",
+      "azurerm_windows_web_app"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/AppServiceHTTPSOnly.py",
+    "service_group": "appservice"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_145",
+    "severity": "",
+    "title": "Ensure Function app is using the latest version of TLS encryption",
+    "service": "appservice",
+    "category": "NETWORKING",
+    "resources": [
+      "azurerm_function_app",
+      "azurerm_linux_function_app",
+      "azurerm_windows_function_app",
+      "azurerm_function_app_slot",
+      "azurerm_linux_function_app_slot",
+      "azurerm_windows_function_app_slot"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/FunctionAppMinTLSVersion.py",
+    "service_group": "appservice"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_15",
+    "severity": "",
+    "title": "Ensure web app is using the latest version of TLS encryption",
+    "service": "appservice",
+    "category": "NETWORKING",
+    "resources": [
+      "azurerm_app_service",
+      "azurerm_linux_web_app",
+      "azurerm_windows_web_app"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/AppServiceMinTLSVersion.py",
+    "service_group": "appservice"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_153",
+    "severity": "",
+    "title": "Ensure web app redirects all HTTP traffic to HTTPS in Azure App Service Slot",
+    "service": "appservice",
+    "category": "NETWORKING",
+    "resources": [
+      "azurerm_app_service_slot",
+      "azurerm_linux_web_app_slot",
+      "azurerm_windows_web_app_slot"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/AppServiceSlotHTTPSOnly.py",
+    "service_group": "appservice"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_154",
+    "severity": "",
+    "title": "Ensure the App service slot is using the latest version of TLS encryption",
+    "service": "appservice",
+    "category": "NETWORKING",
+    "resources": [
+      "azurerm_app_service_slot"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/AppServiceSlotMinTLS.py",
+    "service_group": "appservice"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_155",
+    "severity": "",
+    "title": "Ensure debugging is disabled for the App service slot",
+    "service": "appservice",
+    "category": "NETWORKING",
+    "resources": [
+      "azurerm_app_service_slot"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/AppServiceSlotDebugDisabled.py",
+    "service_group": "appservice"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_159",
+    "severity": "",
+    "title": "Ensure function app builtin logging is enabled",
+    "service": "appservice",
+    "category": "LOGGING",
+    "resources": [
+      "azurerm_function_app",
+      "azurerm_function_app_slot"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/FunctionAppEnableLogging.py",
+    "service_group": "appservice"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_16",
+    "severity": "",
+    "title": "Ensure that Register with Azure Active Directory is enabled on App Service",
+    "service": "appservice",
+    "category": "IAM",
+    "resources": [
+      "azurerm_app_service",
+      "azurerm_linux_web_app",
+      "azurerm_windows_web_app"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/AppServiceIdentity.py",
+    "service_group": "appservice"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_17",
+    "severity": "",
+    "title": "Ensure the web app has 'Client Certificates (Incoming client certificates)' set",
+    "service": "appservice",
+    "category": "NETWORKING",
+    "resources": [
+      "azurerm_app_service",
+      "azurerm_linux_web_app",
+      "azurerm_windows_web_app"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/AppServiceClientCertificate.py",
+    "service_group": "appservice"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_18",
+    "severity": "",
+    "title": "Ensure that 'HTTP Version' is the latest if used to run the web app",
+    "service": "appservice",
+    "category": "NETWORKING",
+    "resources": [
+      "azurerm_app_service",
+      "azurerm_linux_web_app",
+      "azurerm_windows_web_app"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/AppServiceHttps20Enabled.py",
+    "service_group": "appservice"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_213",
+    "severity": "",
+    "title": "Ensure that App Service configures health check",
+    "service": "appservice",
+    "category": "NETWORKING",
+    "resources": [
+      "azurerm_app_service",
+      "azurerm_linux_web_app",
+      "azurerm_windows_web_app"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/AppServiceSetHealthCheck.py",
+    "service_group": "appservice"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_214",
+    "severity": "",
+    "title": "Ensure App Service is set to be always on",
+    "service": "appservice",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "azurerm_linux_web_app",
+      "azurerm_windows_web_app"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/AppServiceAlwaysOn.py",
+    "service_group": "appservice"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_221",
+    "severity": "",
+    "title": "Ensure that Azure Function App public network access is disabled",
+    "service": "appservice",
+    "category": "NETWORKING",
+    "resources": [
+      "azurerm_linux_function_app",
+      "azurerm_linux_function_app_slot",
+      "azurerm_windows_function_app",
+      "azurerm_windows_function_app_slot"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/FunctionAppPublicAccessDisabled.py",
+    "service_group": "appservice"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_222",
+    "severity": "",
+    "title": "Ensure that Azure Web App public network access is disabled",
+    "service": "appservice",
+    "category": "NETWORKING",
+    "resources": [
+      "azurerm_linux_web_app",
+      "azurerm_windows_web_app"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/AppServicePublicAccessDisabled.py",
+    "service_group": "appservice"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_231",
+    "severity": "",
+    "title": "Ensure App Service Environment is zone redundant",
+    "service": "appservice",
+    "category": "BACKUP_AND_RECOVERY",
+    "resources": [
+      "azurerm_app_service_environment_v3"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/AppServiceEnvironmentZoneRedundant.py",
+    "service_group": "appservice"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_56",
+    "severity": "",
+    "title": "Ensure that function apps enables Authentication",
+    "service": "appservice",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "azurerm_function_app"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/FunctionAppsEnableAuthentication.py",
+    "service_group": "appservice"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_57",
+    "severity": "",
+    "title": "Ensure that CORS disallows every resource to access app services",
+    "service": "appservice",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "azurerm_app_service",
+      "azurerm_linux_web_app",
+      "azurerm_windows_web_app"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/AppServiceDisallowCORS.py",
+    "service_group": "appservice"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_62",
+    "severity": "",
+    "title": "Ensure function apps are not accessible from all regions",
+    "service": "appservice",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "azurerm_function_app"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/FunctionAppDisallowCORS.py",
+    "service_group": "appservice"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_63",
+    "severity": "",
+    "title": "Ensure that App service enables HTTP logging",
+    "service": "appservice",
+    "category": "LOGGING",
+    "resources": [
+      "azurerm_app_service",
+      "azurerm_linux_web_app",
+      "azurerm_windows_web_app"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/AppServiceHttpLoggingEnabled.py",
+    "service_group": "appservice"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_65",
+    "severity": "",
+    "title": "Ensure that App service enables detailed error messages",
+    "service": "appservice",
+    "category": "LOGGING",
+    "resources": [
+      "azurerm_app_service",
+      "azurerm_linux_web_app",
+      "azurerm_windows_web_app"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/AppServiceDetailedErrorMessagesEnabled.py",
+    "service_group": "appservice"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_66",
+    "severity": "",
+    "title": "Ensure that App service enables failed request tracing",
+    "service": "appservice",
+    "category": "LOGGING",
+    "resources": [
+      "azurerm_linux_web_app",
+      "azurerm_windows_web_app",
+      "azurerm_app_service"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/AppServiceEnableFailedRequest.py",
+    "service_group": "appservice"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_67",
+    "severity": "",
+    "title": "Ensure that 'HTTP Version' is the latest, if used to run the Function app",
+    "service": "appservice",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "azurerm_function_app",
+      "azurerm_function_app_slot"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/FunctionAppHttpVersionLatest.py",
+    "service_group": "appservice"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_70",
+    "severity": "",
+    "title": "Ensure that Function apps is only accessible over HTTPS",
+    "service": "appservice",
+    "category": "NETWORKING",
+    "resources": [
+      "azurerm_function_app",
+      "azurerm_linux_function_app",
+      "azurerm_windows_function_app",
+      "azurerm_function_app_slot",
+      "azurerm_linux_function_app_slot",
+      "azurerm_windows_function_app_slot"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/FunctionAppsAccessibleOverHttps.py",
+    "service_group": "appservice"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_71",
+    "severity": "",
+    "title": "Ensure that Managed identity provider is enabled for app services",
+    "service": "appservice",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "azurerm_app_service",
+      "azurerm_linux_web_app",
+      "azurerm_windows_web_app"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/AppServiceIdentityProviderEnabled.py",
+    "service_group": "appservice"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_72",
+    "severity": "",
+    "title": "Ensure that remote debugging is not enabled for app services",
+    "service": "appservice",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "azurerm_app_service",
+      "azurerm_linux_function_app",
+      "azurerm_linux_function_app_slot",
+      "azurerm_linux_web_app",
+      "azurerm_linux_web_app_slot",
+      "azurerm_windows_function_app",
+      "azurerm_windows_function_app_slot",
+      "azurerm_windows_web_app",
+      "azurerm_windows_web_app_slot"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/AppServiceRemoteDebuggingNotEnabled.py",
+    "service_group": "appservice"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_78",
+    "severity": "",
+    "title": "Ensure FTP deployments are disabled",
+    "service": "appservice",
+    "category": "APPLICATION_SECURITY",
+    "resources": [
+      "azurerm_app_service",
+      "azurerm_linux_web_app",
+      "azurerm_windows_web_app"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/AppServiceFTPSState.py",
+    "service_group": "appservice"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_80",
+    "severity": "",
+    "title": "Ensure that 'Net Framework' version is the latest, if used as a part of the web app",
+    "service": "appservice",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "azurerm_app_service",
+      "azurerm_windows_web_app"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/AppServiceDotnetFrameworkVersion.py",
+    "service_group": "appservice"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_81",
+    "severity": "",
+    "title": "Ensure that 'PHP version' is the latest, if used to run the web app",
+    "service": "appservice",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "azurerm_app_service"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/AppServicePHPVersion.py",
+    "service_group": "appservice"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_82",
+    "severity": "",
+    "title": "Ensure that 'Python version' is the latest, if used to run the web app",
+    "service": "appservice",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "azurerm_app_service"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/AppServicePythonVersion.py",
+    "service_group": "appservice"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_83",
+    "severity": "",
+    "title": "Ensure that 'Java version' is the latest, if used to run the web app",
+    "service": "appservice",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "azurerm_app_service"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/AppServiceJavaVersion.py",
+    "service_group": "appservice"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_88",
+    "severity": "",
+    "title": "Ensure that app services use Azure Files",
+    "service": "appservice",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "azurerm_app_service",
+      "azurerm_linux_web_app",
+      "azurerm_windows_web_app"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/AppServiceUsedAzureFiles.py",
+    "service_group": "appservice"
+  },
+  {
+    "tool": "trivy",
+    "id": "AZU-0001",
+    "severity": "low",
+    "title": "Web App accepts incoming client certificate",
+    "service": "appservice",
+    "category": "",
+    "resources": [],
+    "fix": "Enable incoming certificates for clients",
+    "source_file": "checks/cloud/azure/appservice/require_client_cert.rego",
+    "service_group": "appservice"
+  },
+  {
+    "tool": "trivy",
+    "id": "AZU-0002",
+    "severity": "low",
+    "title": "Web App has registration with AD enabled",
+    "service": "appservice",
+    "category": "",
+    "resources": [],
+    "fix": "Register the app identity with AD",
+    "source_file": "checks/cloud/azure/appservice/account_identity_registered.rego",
+    "service_group": "appservice"
+  },
+  {
+    "tool": "trivy",
+    "id": "AZU-0003",
+    "severity": "medium",
+    "title": "App Service authentication is activated",
+    "service": "appservice",
+    "category": "",
+    "resources": [],
+    "fix": "Enable authentication to prevent anonymous request being accepted",
+    "source_file": "checks/cloud/azure/appservice/authentication_enabled.rego",
+    "service_group": "appservice"
+  },
+  {
+    "tool": "trivy",
+    "id": "AZU-0004",
+    "severity": "critical",
+    "title": "Ensure the Function App can only be accessed via HTTPS. The default is false.",
+    "service": "appservice",
+    "category": "",
+    "resources": [],
+    "fix": "You can redirect all HTTP requests to the HTTPS port.",
+    "source_file": "checks/cloud/azure/appservice/enforce_https.rego",
+    "service_group": "appservice"
+  },
+  {
+    "tool": "trivy",
+    "id": "AZU-0005",
+    "severity": "low",
+    "title": "Web App uses the latest HTTP version",
+    "service": "appservice",
+    "category": "",
+    "resources": [],
+    "fix": "Use the latest version of HTTP",
+    "source_file": "checks/cloud/azure/appservice/enable_http2.rego",
+    "service_group": "appservice"
+  },
+  {
+    "tool": "trivy",
+    "id": "AZU-0006",
+    "severity": "high",
+    "title": "Web App uses latest TLS version",
+    "service": "appservice",
+    "category": "",
+    "resources": [],
+    "fix": "The TLS version being outdated and has known vulnerabilities",
+    "source_file": "checks/cloud/azure/appservice/use_secure_tls_policy.rego",
+    "service_group": "appservice"
+  },
+  {
+    "tool": "trivy",
+    "id": "AZU-0069",
+    "severity": "medium",
+    "title": "App Service Using Unsupported PHP Version",
+    "service": "appservice",
+    "category": "",
+    "resources": [],
+    "fix": "Update to a supported PHP version (8.1 or higher). Consider migrating from azurerm_app_service to azurerm_linux_web_app for access to modern PHP versions.",
+    "source_file": "checks/cloud/azure/appservice/latest_php_version.rego",
+    "service_group": "appservice"
+  },
+  {
+    "tool": "trivy",
+    "id": "AZU-0070",
+    "severity": "medium",
+    "title": "App Service Using Unsupported Python Version",
+    "service": "appservice",
+    "category": "",
+    "resources": [],
+    "fix": "Update to a supported Python version (3.9 or higher). Consider migrating from azurerm_app_service to azurerm_linux_web_app for access to modern Python versions.",
+    "source_file": "checks/cloud/azure/appservice/latest_python_version.rego",
+    "service_group": "appservice"
+  },
+  {
+    "tool": "trivy",
+    "id": "AZU-0071",
+    "severity": "medium",
+    "title": "App Service FTPS Enforce Disabled",
+    "service": "appservice",
+    "category": "",
+    "resources": [],
+    "fix": "Set FTPS state to 'FTPS Only' in App Service settings to prevent plaintext FTP.",
+    "source_file": "checks/cloud/azure/appservice/enforce_ftps.rego",
+    "service_group": "appservice"
+  },
+  {
+    "tool": "trivy",
+    "id": "AZU-0072",
+    "severity": "medium",
+    "title": "Web App Accepting Traffic Other Than HTTPS",
+    "service": "appservice",
+    "category": "",
+    "resources": [],
+    "fix": "Set 'HTTPS Only' to true in App Service TLS settings to force encrypted transport.",
+    "source_file": "checks/cloud/azure/appservice/web_app_https_only.rego",
+    "service_group": "appservice"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_39",
+    "severity": "",
+    "title": "Ensure that no custom subscription owner roles are created",
+    "service": "authorization",
+    "category": "IAM",
+    "resources": [
+      "azurerm_role_definition"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/CutsomRoleDefinitionSubscriptionOwner.py",
+    "service_group": "authorization"
+  },
+  {
+    "tool": "trivy",
+    "id": "AZU-0030",
+    "severity": "medium",
+    "title": "Roles limited to the required actions",
+    "service": "authorization",
+    "category": "",
+    "resources": [],
+    "fix": "Use targeted permissions for roles",
+    "source_file": "checks/cloud/azure/authorization/limit_role_actions.rego",
+    "service_group": "authorization"
+  },
+  {
+    "tool": "trivy",
+    "id": "AZU-0052",
+    "severity": "medium",
+    "title": "Role Definition Allows Custom Role Creation",
+    "service": "authorization",
+    "category": "",
+    "resources": [],
+    "fix": "Avoid granting 'Microsoft.Authorization/roleDefinitions/write' permission in custom roles. Restrict role creation capability to core admins only.",
+    "source_file": "checks/cloud/azure/authorization/prevent_custom_role_creation.rego",
+    "service_group": "authorization"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV2_AZURE_24",
+    "severity": "",
+    "title": "Ensure Azure automation account does NOT have overly permissive network access",
+    "service": "automation",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "azurerm_automation_account"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/graph_checks/azure/AzureAutomationAccNotOverlyPermissiveNetAccess.yaml",
+    "service_group": "automation"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV2_AZURE_36",
+    "severity": "",
+    "title": "Ensure Azure automation account is configured with managed identity",
+    "service": "automation",
+    "category": "IAM",
+    "resources": [
+      "azurerm_automation_account"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/graph_checks/azure/AzureAutomationAccConfigManagedIdentity.yaml",
+    "service_group": "automation"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_73",
+    "severity": "",
+    "title": "Ensure that Automation account variables are encrypted",
+    "service": "automation",
+    "category": "ENCRYPTION",
+    "resources": [
+      "azurerm_automation_variable_bool",
+      "azurerm_automation_variable_string",
+      "azurerm_automation_variable_int",
+      "azurerm_automation_variable_datetime"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/AutomationEncrypted.py",
+    "service_group": "automation"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_248",
+    "severity": "",
+    "title": "Ensure that if Azure Batch account public network access in case 'enabled' then its account access must be 'deny'",
+    "service": "batch",
+    "category": "NETWORKING",
+    "resources": [
+      "azurerm_batch_account"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/AzureBatchAccountEndpointAccessDefaultAction.py",
+    "service_group": "batch"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_76",
+    "severity": "",
+    "title": "Ensure that Azure Batch account uses key vault to encrypt data",
+    "service": "batch",
+    "category": "ENCRYPTION",
+    "resources": [
+      "azurerm_batch_account"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/AzureBatchAccountUsesKeyVaultEncryption.py",
+    "service_group": "batch"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_197",
+    "severity": "",
+    "title": "Ensure the Azure CDN disables the HTTP endpoint",
+    "service": "cdn",
+    "category": "NETWORKING",
+    "resources": [
+      "azurerm_cdn_endpoint"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/CDNDisableHttpEndpoints.py",
+    "service_group": "cdn"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_198",
+    "severity": "",
+    "title": "Ensure the Azure CDN enables the HTTPS endpoint",
+    "service": "cdn",
+    "category": "NETWORKING",
+    "resources": [
+      "azurerm_cdn_endpoint"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/CDNEnableHttpsEndpoints.py",
+    "service_group": "cdn"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_200",
+    "severity": "",
+    "title": "Ensure the Azure CDN endpoint is using the latest version of TLS encryption",
+    "service": "cdn",
+    "category": "NETWORKING",
+    "resources": [
+      "azurerm_cdn_endpoint_custom_domain"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/CDNTLSProtocol12.py",
+    "service_group": "cdn"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV2_AZURE_22",
+    "severity": "",
+    "title": "Ensure that Cognitive Services enables customer-managed key for encryption",
+    "service": "cognitive",
+    "category": "ENCRYPTION",
+    "resources": [
+      "azurerm_cognitive_account",
+      "azurerm_cognitive_account_customer_managed_key"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/graph_checks/azure/CognitiveServicesCustomerManagedKey.yaml",
+    "service_group": "cognitive"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_134",
+    "severity": "",
+    "title": "Ensure that Cognitive Services accounts disable public network access",
+    "service": "cognitive",
+    "category": "NETWORKING",
+    "resources": [
+      "azurerm_cognitive_account"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/CognitiveServicesDisablesPublicNetwork.py",
+    "service_group": "cognitive"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_236",
+    "severity": "",
+    "title": "Ensure that Cognitive Services accounts disable local authentication",
+    "service": "cognitive",
+    "category": "NETWORKING",
+    "resources": [
+      "azurerm_cognitive_account"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/CognitiveServicesEnableLocalAuth.py",
+    "service_group": "cognitive"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_238",
+    "severity": "",
+    "title": "Ensure that all Azure Cognitive Services accounts are configured with a managed identity",
+    "service": "cognitive",
+    "category": "NETWORKING",
+    "resources": [
+      "azurerm_cognitive_account"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/CognitiveServicesConfigureIdentity.py",
+    "service_group": "cognitive"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_247",
+    "severity": "",
+    "title": "Ensure that Azure Cognitive Services account hosted with OpenAI is configured with data loss prevention",
+    "service": "cognitive",
+    "category": "NETWORKING",
+    "resources": [
+      "azurerm_cognitive_account"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/OpenAICognitiveServicesRestrictOutboundNetwork.py",
+    "service_group": "cognitive"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV2_AZURE_10",
+    "severity": "",
+    "title": "Ensure that Microsoft Antimalware is configured to automatically updates for Virtual Machines",
+    "service": "compute",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "azurerm_virtual_machine",
+      "azurerm_virtual_machine_extension"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/graph_checks/azure/AzureAntimalwareIsConfiguredWithAutoUpdatesForVMs.yaml",
+    "service_group": "compute"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV2_AZURE_12",
+    "severity": "",
+    "title": "Ensure that virtual machines are backed up using Azure Backup",
+    "service": "compute",
+    "category": "BACKUP_AND_RECOVERY",
+    "resources": [
+      "azurerm_virtual_machine"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/graph_checks/azure/VMHasBackUpMachine.yaml",
+    "service_group": "compute"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV2_AZURE_14",
+    "severity": "",
+    "title": "Ensure that Unattached disks are encrypted",
+    "service": "compute",
+    "category": "ENCRYPTION",
+    "resources": [
+      "azurerm_managed_disk",
+      "azurerm_virtual_machine"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/graph_checks/azure/AzureUnattachedDisksAreEncrypted.yaml",
+    "service_group": "compute"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV2_AZURE_39",
+    "severity": "",
+    "title": "Ensure Azure VM is not configured with public IP and serial console access",
+    "service": "compute",
+    "category": "NETWORKING",
+    "resources": [
+      "azurerm_linux_virtual_machine",
+      "azurerm_network_interface",
+      "azurerm_virtual_machine",
+      "azurerm_windows_virtual_machine"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/graph_checks/azure/AzureVMconfigPublicIP_SerialConsoleAccess.yaml",
+    "service_group": "compute"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV2_AZURE_9",
+    "severity": "",
+    "title": "Ensure Virtual Machines are utilizing Managed Disks",
+    "service": "compute",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "azurerm_virtual_machine"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/graph_checks/azure/VirtualMachinesUtilizingManagedDisks.yaml",
+    "service_group": "compute"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_1",
+    "severity": "",
+    "title": "Ensure Azure Instance does not use basic authentication(Use SSH Key Instead)",
+    "service": "compute",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "azurerm_virtual_machine",
+      "azurerm_linux_virtual_machine"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/AzureInstancePassword.py",
+    "service_group": "compute"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_149",
+    "severity": "",
+    "title": "Ensure that Virtual machine does not enable password authentication",
+    "service": "compute",
+    "category": "ENCRYPTION",
+    "resources": [
+      "azurerm_linux_virtual_machine_scale_set",
+      "azurerm_linux_virtual_machine"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/VMDisablePasswordAuthentication.py",
+    "service_group": "compute"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_151",
+    "severity": "",
+    "title": "Ensure Windows VM enables encryption",
+    "service": "compute",
+    "category": "ENCRYPTION",
+    "resources": [
+      "azurerm_windows_virtual_machine"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/WinVMEncryptionAtHost.py",
+    "service_group": "compute"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_177",
+    "severity": "",
+    "title": "Ensure Windows VM enables automatic updates",
+    "service": "compute",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "azurerm_windows_virtual_machine",
+      "azurerm_windows_virtual_machine_scale_set"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/WinVMAutomaticUpdates.py",
+    "service_group": "compute"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_178",
+    "severity": "",
+    "title": "Ensure linux VM enables SSH with keys for secure communication",
+    "service": "compute",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "azurerm_linux_virtual_machine",
+      "azurerm_linux_virtual_machine_scale_set"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/LinuxVMUsesSSH.py",
+    "service_group": "compute"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_179",
+    "severity": "",
+    "title": "Ensure VM agent is installed",
+    "service": "compute",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "azurerm_windows_virtual_machine",
+      "azurerm_windows_virtual_machine_scale_set",
+      "azurerm_linux_virtual_machine_scale_set",
+      "azurerm_linux_virtual_machine"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/VMAgentIsInstalled.py",
+    "service_group": "compute"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_2",
+    "severity": "",
+    "title": "Ensure Azure managed disk has encryption enabled",
+    "service": "compute",
+    "category": "ENCRYPTION",
+    "resources": [
+      "azurerm_managed_disk"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/AzureManagedDiskEncryption.py",
+    "service_group": "compute"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_251",
+    "severity": "",
+    "title": "Ensure Azure Virtual Machine disks are configured without public network access",
+    "service": "compute",
+    "category": "NETWORKING",
+    "resources": [
+      "azurerm_managed_disk"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/VMDiskWithPublicAccess.py",
+    "service_group": "compute"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_45",
+    "severity": "",
+    "title": "Ensure that no sensitive credentials are exposed in VM custom_data",
+    "service": "compute",
+    "category": "SECRETS",
+    "resources": [
+      "azurerm_virtual_machine"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/VMCredsInCustomData.py",
+    "service_group": "compute"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_49",
+    "severity": "",
+    "title": "Ensure Azure linux scale set does not use basic authentication(Use SSH Key Instead)",
+    "service": "compute",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "azurerm_linux_virtual_machine_scale_set"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/AzureScaleSetPassword.py",
+    "service_group": "compute"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_50",
+    "severity": "",
+    "title": "Ensure Virtual Machine Extensions are not Installed",
+    "service": "compute",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "azurerm_linux_virtual_machine",
+      "azurerm_windows_virtual_machine"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/AzureInstanceExtensions.py",
+    "service_group": "compute"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_92",
+    "severity": "",
+    "title": "Ensure that Virtual Machines use managed disks",
+    "service": "compute",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "azurerm_linux_virtual_machine",
+      "azurerm_windows_virtual_machine"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/VMStorageOsDisk.py",
+    "service_group": "compute"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_93",
+    "severity": "",
+    "title": "Ensure that managed disks use a specific set of disk encryption sets for the customer-managed key encryption",
+    "service": "compute",
+    "category": "ENCRYPTION",
+    "resources": [
+      "azurerm_managed_disk"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/AzureManagedDiskEncryptionSet.py",
+    "service_group": "compute"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_95",
+    "severity": "",
+    "title": "Ensure that automatic OS image patching is enabled for Virtual Machine Scale Sets",
+    "service": "compute",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "azurerm_virtual_machine_scale_set"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/VMScaleSetsAutoOSImagePatchingEnabled.py",
+    "service_group": "compute"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_97",
+    "severity": "",
+    "title": "Ensure that Virtual machine scale sets have encryption at host enabled",
+    "service": "compute",
+    "category": "ENCRYPTION",
+    "resources": [
+      "azurerm_linux_virtual_machine_scale_set",
+      "azurerm_windows_virtual_machine_scale_set"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/VMEncryptionAtHostEnabled.py",
+    "service_group": "compute"
+  },
+  {
+    "tool": "trivy",
+    "id": "AZU-0037",
+    "severity": "medium",
+    "title": "Ensure that no sensitive credentials are exposed in VM custom_data",
+    "service": "compute",
+    "category": "",
+    "resources": [],
+    "fix": "Don't use sensitive credentials in the VM custom_data",
+    "source_file": "checks/cloud/azure/compute/no_secrets_in_custom_data.rego",
+    "service_group": "compute"
+  },
+  {
+    "tool": "trivy",
+    "id": "AZU-0038",
+    "severity": "high",
+    "title": "Enable disk encryption on managed disk",
+    "service": "compute",
+    "category": "",
+    "resources": [],
+    "fix": "Enable encryption on managed disks",
+    "source_file": "checks/cloud/azure/compute/enable_disk_encryption.rego",
+    "service_group": "compute"
+  },
+  {
+    "tool": "trivy",
+    "id": "AZU-0039",
+    "severity": "high",
+    "title": "Password authentication should be disabled on Azure virtual machines",
+    "service": "compute",
+    "category": "",
+    "resources": [],
+    "fix": "Use ssh authentication for virtual machines",
+    "source_file": "checks/cloud/azure/compute/disable_password_authentication.rego",
+    "service_group": "compute"
+  },
+  {
+    "tool": "trivy",
+    "id": "AZU-0068",
+    "severity": "medium",
+    "title": "VM Not Attached To Network",
+    "service": "compute",
+    "category": "",
+    "resources": [],
+    "fix": "Associate an NSG to the VM's NIC or subnet to control traffic.",
+    "source_file": "checks/cloud/azure/compute/vm_not_attached_to_network.rego",
+    "service_group": "compute"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV2_AZURE_28",
+    "severity": "",
+    "title": "Ensure Container Instance is configured with managed identity",
+    "service": "container",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "azurerm_container_group"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/graph_checks/azure/AzureContainerInstanceconfigManagedIdentity.yaml",
+    "service_group": "container"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV2_AZURE_29",
+    "severity": "",
+    "title": "Ensure AKS cluster has Azure CNI networking enabled",
+    "service": "container",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "azurerm_kubernetes_cluster"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/graph_checks/azure/AzureAKSclusterAzureCNIEnabled.yaml",
+    "service_group": "container"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV2_AZURE_30",
+    "severity": "",
+    "title": "Ensure Azure Container Registry (ACR) has HTTPS enabled for webhook",
+    "service": "container",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "azurerm_container_registry_webhook"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/graph_checks/azure/AzureACR_HTTPSwebhook.yaml",
+    "service_group": "container"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_115",
+    "severity": "",
+    "title": "Ensure that AKS enables private clusters",
+    "service": "container",
+    "category": "NETWORKING",
+    "resources": [
+      "azurerm_kubernetes_cluster"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/AKSEnablesPrivateClusters.py",
+    "service_group": "container"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_116",
+    "severity": "",
+    "title": "Ensure that AKS uses Azure Policies Add-on",
+    "service": "container",
+    "category": "NETWORKING",
+    "resources": [
+      "azurerm_kubernetes_cluster"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/AKSUsesAzurePoliciesAddon.py",
+    "service_group": "container"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_117",
+    "severity": "",
+    "title": "Ensure that AKS uses disk encryption set",
+    "service": "container",
+    "category": "NETWORKING",
+    "resources": [
+      "azurerm_kubernetes_cluster"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/AKSUsesDiskEncryptionSet.py",
+    "service_group": "container"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_137",
+    "severity": "",
+    "title": "Ensure ACR admin account is disabled",
+    "service": "container",
+    "category": "IAM",
+    "resources": [
+      "azurerm_container_registry"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/ACRAdminAccountDisabled.py",
+    "service_group": "container"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_138",
+    "severity": "",
+    "title": "Ensures that ACR disables anonymous pulling of images",
+    "service": "container",
+    "category": "IAM",
+    "resources": [
+      "azurerm_container_registry"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/ACRAnonymousPullDisabled.py",
+    "service_group": "container"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_139",
+    "severity": "",
+    "title": "Ensure ACR set to disable public networking",
+    "service": "container",
+    "category": "NETWORKING",
+    "resources": [
+      "azurerm_container_registry"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/ACRPublicNetworkAccessDisabled.py",
+    "service_group": "container"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_141",
+    "severity": "",
+    "title": "Ensure AKS local admin account is disabled",
+    "service": "container",
+    "category": "IAM",
+    "resources": [
+      "azurerm_kubernetes_cluster"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/AKSLocalAdminDisabled.py",
+    "service_group": "container"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_143",
+    "severity": "",
+    "title": "Ensure AKS cluster nodes do not have public IP addresses",
+    "service": "container",
+    "category": "NETWORKING",
+    "resources": [
+      "azurerm_kubernetes_cluster"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/AKSNodePublicIpDisabled.py",
+    "service_group": "container"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_163",
+    "severity": "",
+    "title": "Enable vulnerability scanning for container images.",
+    "service": "container",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "azurerm_container_registry"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/ACRContainerScanEnabled.py",
+    "service_group": "container"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_164",
+    "severity": "",
+    "title": "Ensures that ACR uses signed/trusted images",
+    "service": "container",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "azurerm_container_registry"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/ACRUseSignedImages.py",
+    "service_group": "container"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_165",
+    "severity": "",
+    "title": "Ensure geo-replicated container registries to match multi-region container deployments.",
+    "service": "container",
+    "category": "NETWORKING",
+    "resources": [
+      "azurerm_container_registry"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/ACRGeoreplicated.py",
+    "service_group": "container"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_166",
+    "severity": "",
+    "title": "Ensure container image quarantine, scan, and mark images verified",
+    "service": "container",
+    "category": "SUPPLY_CHAIN",
+    "resources": [
+      "azurerm_container_registry"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/ACREnableImageQuarantine.py",
+    "service_group": "container"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_167",
+    "severity": "",
+    "title": "Ensure a retention policy is set to cleanup untagged manifests.",
+    "service": "container",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "azurerm_container_registry"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/ACREnableRetentionPolicy.py",
+    "service_group": "container"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_168",
+    "severity": "",
+    "title": "Ensure Azure Kubernetes Cluster (AKS) nodes should use a minimum number of 50 pods.",
+    "service": "container",
+    "category": "KUBERNETES",
+    "resources": [
+      "azurerm_kubernetes_cluster",
+      "azurerm_kubernetes_cluster_node_pool"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/AKSMaxPodsMinimum.py",
+    "service_group": "container"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_169",
+    "severity": "",
+    "title": "Ensure Azure Kubernetes Cluster (AKS) nodes use scale sets",
+    "service": "container",
+    "category": "KUBERNETES",
+    "resources": [
+      "azurerm_kubernetes_cluster"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/AKSPoolTypeIsScaleSet.py",
+    "service_group": "container"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_170",
+    "severity": "",
+    "title": "Ensure that AKS use the Paid Sku for its SLA",
+    "service": "container",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "azurerm_kubernetes_cluster"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/AKSIsPaidSku.py",
+    "service_group": "container"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_171",
+    "severity": "",
+    "title": "Ensure AKS cluster upgrade channel is chosen",
+    "service": "container",
+    "category": "NETWORKING",
+    "resources": [
+      "azurerm_kubernetes_cluster"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/AKSUpgradeChannel.py",
+    "service_group": "container"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_172",
+    "severity": "",
+    "title": "Ensure autorotation of Secrets Store CSI Driver secrets for AKS clusters",
+    "service": "container",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "azurerm_kubernetes_cluster"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/AKSSecretStoreRotation.py",
+    "service_group": "container"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_226",
+    "severity": "",
+    "title": "Ensure ephemeral disks are used for OS disks",
+    "service": "container",
+    "category": "KUBERNETES",
+    "resources": [
+      "azurerm_kubernetes_cluster"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/AKSEphemeralOSDisks.py",
+    "service_group": "container"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_227",
+    "severity": "",
+    "title": "Ensure that the AKS cluster encrypt temp disks, caches, and data flows ",
+    "service": "container",
+    "category": "KUBERNETES",
+    "resources": [
+      "azurerm_kubernetes_cluster",
+      "azurerm_kubernetes_cluster_node_pool"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/AKSEncryptionAtHostEnabled.py",
+    "service_group": "container"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_232",
+    "severity": "",
+    "title": "Ensure that only critical system pods run on system nodes",
+    "service": "container",
+    "category": "KUBERNETES",
+    "resources": [
+      "azurerm_kubernetes_cluster"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/AKSOnlyCriticalPodsOnSystemNodes.py",
+    "service_group": "container"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_233",
+    "severity": "",
+    "title": "Ensure Azure Container Registry (ACR) is zone redundant",
+    "service": "container",
+    "category": "BACKUP_AND_RECOVERY",
+    "resources": [
+      "azurerm_container_registry"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/ACREnableZoneRedundancy.py",
+    "service_group": "container"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_235",
+    "severity": "",
+    "title": "Ensure that Azure container environment variables are configured with secure values only",
+    "service": "container",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "azurerm_container_group"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/AzureContainerInstanceEnvVarSecureValueType.py",
+    "service_group": "container"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_237",
+    "severity": "",
+    "title": "Ensure dedicated data endpoints are enabled.",
+    "service": "container",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "azurerm_container_registry"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/ACRDedicatedDataEndpointEnabled.py",
+    "service_group": "container"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_245",
+    "severity": "",
+    "title": "Ensure that Azure Container group is deployed into virtual network",
+    "service": "container",
+    "category": "NETWORKING",
+    "resources": [
+      "azurerm_container_group"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/AzureContainerInstancePublicIPAddressType.py",
+    "service_group": "container"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_246",
+    "severity": "",
+    "title": "Ensure Azure AKS cluster HTTP application routing is disabled",
+    "service": "container",
+    "category": "NETWORKING",
+    "resources": [
+      "azurerm_kubernetes_cluster"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/KubernetesClusterHTTPApplicationRouting.py",
+    "service_group": "container"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_4",
+    "severity": "",
+    "title": "Ensure AKS logging to Azure Monitoring is Configured",
+    "service": "container",
+    "category": "KUBERNETES",
+    "resources": [
+      "azurerm_kubernetes_cluster"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/AKSLoggingEnabled.py",
+    "service_group": "container"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_5",
+    "severity": "",
+    "title": "Ensure RBAC is enabled on AKS clusters",
+    "service": "container",
+    "category": "KUBERNETES",
+    "resources": [
+      "azurerm_kubernetes_cluster"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/AKSRbacEnabled.py",
+    "service_group": "container"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_6",
+    "severity": "",
+    "title": "Ensure AKS has an API Server Authorized IP Ranges enabled",
+    "service": "container",
+    "category": "KUBERNETES",
+    "resources": [
+      "azurerm_kubernetes_cluster"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/AKSApiServerAuthorizedIpRanges.py",
+    "service_group": "container"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_7",
+    "severity": "",
+    "title": "Ensure AKS cluster has Network Policy configured",
+    "service": "container",
+    "category": "KUBERNETES",
+    "resources": [
+      "azurerm_kubernetes_cluster"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/AKSNetworkPolicy.py",
+    "service_group": "container"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_8",
+    "severity": "",
+    "title": "Ensure Kubernetes Dashboard is disabled",
+    "service": "container",
+    "category": "KUBERNETES",
+    "resources": [
+      "azurerm_kubernetes_cluster"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/AKSDashboardDisabled.py",
+    "service_group": "container"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_98",
+    "severity": "",
+    "title": "Ensure that Azure Container group is deployed into virtual network",
+    "service": "container",
+    "category": "NETWORKING",
+    "resources": [
+      "azurerm_container_group"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/AzureContainerGroupDeployedIntoVirtualNetwork.py",
+    "service_group": "container"
+  },
+  {
+    "tool": "trivy",
+    "id": "AZU-0040",
+    "severity": "medium",
+    "title": "Ensure AKS logging to Azure Monitoring is Configured",
+    "service": "container",
+    "category": "",
+    "resources": [],
+    "fix": "Enable logging for AKS",
+    "source_file": "checks/cloud/azure/container/logging.rego",
+    "service_group": "container"
+  },
+  {
+    "tool": "trivy",
+    "id": "AZU-0041",
+    "severity": "critical",
+    "title": "Ensure AKS has an API Server Authorized IP Ranges enabled",
+    "service": "container",
+    "category": "",
+    "resources": [],
+    "fix": "Limit the access to the API server to a limited IP range",
+    "source_file": "checks/cloud/azure/container/limit_authorized_ips.rego",
+    "service_group": "container"
+  },
+  {
+    "tool": "trivy",
+    "id": "AZU-0042",
+    "severity": "high",
+    "title": "Ensure RBAC is enabled on AKS clusters",
+    "service": "container",
+    "category": "",
+    "resources": [],
+    "fix": "Enable RBAC",
+    "source_file": "checks/cloud/azure/container/use_rbac_permissions.rego",
+    "service_group": "container"
+  },
+  {
+    "tool": "trivy",
+    "id": "AZU-0043",
+    "severity": "high",
+    "title": "Ensure AKS cluster has Network Policy configured",
+    "service": "container",
+    "category": "",
+    "resources": [],
+    "fix": "Configure a network policy",
+    "source_file": "checks/cloud/azure/container/configured_network_policy.rego",
+    "service_group": "container"
+  },
+  {
+    "tool": "trivy",
+    "id": "AZU-0065",
+    "severity": "medium",
+    "title": "Ensure AKS cluster has private cluster enabled",
+    "service": "container",
+    "category": "",
+    "resources": [],
+    "fix": "Provision the AKS cluster with `private_cluster_enabled = true` and use private endpoints.",
+    "source_file": "checks/cloud/azure/container/enable_private_cluster.rego",
+    "service_group": "container"
+  },
+  {
+    "tool": "trivy",
+    "id": "AZU-0066",
+    "severity": "low",
+    "title": "Ensure AKS cluster has Azure Policy add-on enabled",
+    "service": "container",
+    "category": "",
+    "resources": [],
+    "fix": "Enable Azure Policy add-on on the AKS cluster to enforce governance policies.",
+    "source_file": "checks/cloud/azure/container/enable_azure_policy_addon.rego",
+    "service_group": "container"
+  },
+  {
+    "tool": "trivy",
+    "id": "AZU-0067",
+    "severity": "low",
+    "title": "Ensure AKS cluster has disk encryption set ID configured",
+    "service": "container",
+    "category": "",
+    "resources": [],
+    "fix": "Configure a disk encryption set ID for the AKS cluster to enable customer-managed key encryption.",
+    "source_file": "checks/cloud/azure/container/enable_disk_encryption.rego",
+    "service_group": "container"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_105",
+    "severity": "",
+    "title": "Ensure that Data Lake Store accounts enables encryption",
+    "service": "data",
+    "category": "ENCRYPTION",
+    "resources": [
+      "azurerm_data_lake_store"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/DataLakeStoreEncryption.py",
+    "service_group": "data"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV2_AZURE_13",
+    "severity": "",
+    "title": "Ensure that sql servers enables data security policy",
+    "service": "database",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "azurerm_mssql_server_security_alert_policy",
+      "azurerm_sql_server"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/graph_checks/azure/AzureMSSQLServerHasSecurityAlertPolicy.yaml",
+    "service_group": "database"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV2_AZURE_16",
+    "severity": "",
+    "title": "Ensure that MySQL server enables customer-managed key for encryption",
+    "service": "database",
+    "category": "ENCRYPTION",
+    "resources": [
+      "azurerm_mysql_server",
+      "azurerm_mysql_server_key"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/graph_checks/azure/MSQLenablesCustomerManagedKey.yaml",
+    "service_group": "database"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV2_AZURE_17",
+    "severity": "",
+    "title": "Ensure that PostgreSQL server enables customer-managed key for encryption",
+    "service": "database",
+    "category": "ENCRYPTION",
+    "resources": [
+      "azurerm_postgresql_server",
+      "azurerm_postgresql_server_key"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/graph_checks/azure/PGSQLenablesCustomerManagedKey.yaml",
+    "service_group": "database"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV2_AZURE_2",
+    "severity": "",
+    "title": "Ensure that Vulnerability Assessment (VA) is enabled on a SQL server by setting a Storage Account",
+    "service": "database",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "azurerm_mssql_server",
+      "azurerm_mssql_server_security_alert_policy",
+      "azurerm_sql_server"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/graph_checks/azure/VAisEnabledInStorageAccount.yaml",
+    "service_group": "database"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV2_AZURE_25",
+    "severity": "",
+    "title": "Ensure Azure SQL database Transparent Data Encryption (TDE) is enabled",
+    "service": "database",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "azurerm_mssql_database"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/graph_checks/azure/AzureSqlDbEnableTransparentDataEncryption.yaml",
+    "service_group": "database"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV2_AZURE_26",
+    "severity": "",
+    "title": "Ensure Azure PostgreSQL Flexible server is not configured with overly permissive network access",
+    "service": "database",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "azurerm_postgresql_flexible_server_firewall_rule"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/graph_checks/azure/AzurePostgreSQLFlexServerNotOverlyPermissive.yaml",
+    "service_group": "database"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV2_AZURE_27",
+    "severity": "",
+    "title": "Ensure Azure AD authentication is enabled for Azure SQL (MSSQL)",
+    "service": "database",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "azurerm_mssql_server"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/graph_checks/azure/AzureConfigMSSQLwithAD.yaml",
+    "service_group": "database"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV2_AZURE_3",
+    "severity": "",
+    "title": "Ensure that VA setting Periodic Recurring Scans is enabled on a SQL server",
+    "service": "database",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "azurerm_mssql_server",
+      "azurerm_mssql_server_security_alert_policy",
+      "azurerm_mssql_server_vulnerability_assessment",
+      "azurerm_sql_server"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/graph_checks/azure/VAsetPeriodicScansOnSQL.yaml",
+    "service_group": "database"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV2_AZURE_34",
+    "severity": "",
+    "title": "Ensure Azure SQL server firewall is not overly permissive",
+    "service": "database",
+    "category": "NETWORKING",
+    "resources": [
+      "azurerm_mssql_firewall_rule",
+      "azurerm_sql_firewall_rule"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/graph_checks/azure/AzureSQLserverNotOverlyPermissive.yaml",
+    "service_group": "database"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV2_AZURE_37",
+    "severity": "",
+    "title": "Ensure Azure MariaDB server is using latest TLS (1.2)",
+    "service": "database",
+    "category": "ENCRYPTION",
+    "resources": [
+      "azurerm_mariadb_server"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/graph_checks/azure/AzureMariaDBserverUsingTLS_1_2.yaml",
+    "service_group": "database"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV2_AZURE_4",
+    "severity": "",
+    "title": "Ensure Azure SQL server ADS VA Send scan reports to is configured",
+    "service": "database",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "azurerm_mssql_server",
+      "azurerm_mssql_server_security_alert_policy",
+      "azurerm_mssql_server_vulnerability_assessment",
+      "azurerm_sql_server"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/graph_checks/azure/VAconfiguredToSendReports.yaml",
+    "service_group": "database"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV2_AZURE_42",
+    "severity": "",
+    "title": "Ensure Azure PostgreSQL server is configured with private endpoint",
+    "service": "database",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "azurerm_postgresql_server"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/graph_checks/azure/AzurePostgreSQLserverConfigPrivEndpt.yaml",
+    "service_group": "database"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV2_AZURE_43",
+    "severity": "",
+    "title": "Ensure Azure MariaDB server is configured with private endpoint",
+    "service": "database",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "azurerm_mariadb_server"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/graph_checks/azure/AzureMariaDBserverConfigPrivEndpt.yaml",
+    "service_group": "database"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV2_AZURE_44",
+    "severity": "",
+    "title": "Ensure Azure MySQL server is configured with private endpoint",
+    "service": "database",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "azurerm_mysql_server"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/graph_checks/azure/AzureMySQLserverConfigPrivEndpt.yaml",
+    "service_group": "database"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV2_AZURE_45",
+    "severity": "",
+    "title": "Ensure Microsoft SQL server is configured with private endpoint",
+    "service": "database",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "azurerm_mssql_server"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/graph_checks/azure/AzureMSSQLserverConfigPrivEndpt.yaml",
+    "service_group": "database"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV2_AZURE_5",
+    "severity": "",
+    "title": "Ensure that VA setting 'Also send email notifications to admins and subscription owners' is set for a SQL server",
+    "service": "database",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "azurerm_mssql_server",
+      "azurerm_mssql_server_security_alert_policy",
+      "azurerm_mssql_server_vulnerability_assessment",
+      "azurerm_sql_server"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/graph_checks/azure/VAconfiguredToSendReportsToAdmins.yaml",
+    "service_group": "database"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV2_AZURE_56",
+    "severity": "",
+    "title": "Ensure Azure MySQL Flexible Server is configured with private endpoint",
+    "service": "database",
+    "category": "NETWORKING",
+    "resources": [
+      "azurerm_mysql_flexible_server"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/graph_checks/azure/AzureMySQLFlexibleServerConfigPrivEndpt.yaml",
+    "service_group": "database"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV2_AZURE_57",
+    "severity": "",
+    "title": "Ensure PostgreSQL Flexible Server is configured with private endpoint",
+    "service": "database",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "azurerm_postgresql_flexible_server"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/graph_checks/azure/AzurePostgreSQLFlexibleServerConfigPrivEndpt.yaml",
+    "service_group": "database"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV2_AZURE_6",
+    "severity": "",
+    "title": "Ensure 'Allow access to Azure services' for PostgreSQL Database Server is disabled",
+    "service": "database",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "azurerm_sql_firewall_rule",
+      "azurerm_sql_server"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/graph_checks/azure/AccessToPostgreSQLFromAzureServicesIsDisabled.yaml",
+    "service_group": "database"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV2_AZURE_7",
+    "severity": "",
+    "title": "Ensure that Azure Active Directory Admin is configured",
+    "service": "database",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "azurerm_sql_server"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/graph_checks/azure/AzureActiveDirectoryAdminIsConfigured.yaml",
+    "service_group": "database"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_100",
+    "severity": "",
+    "title": "Ensure that Cosmos DB accounts have customer-managed keys to encrypt data at rest",
+    "service": "database",
+    "category": "NETWORKING",
+    "resources": [
+      "azurerm_cosmosdb_account"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/CosmosDBHaveCMK.py",
+    "service_group": "database"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_101",
+    "severity": "",
+    "title": "Ensure that Azure Cosmos DB disables public network access",
+    "service": "database",
+    "category": "NETWORKING",
+    "resources": [
+      "azurerm_cosmosdb_account"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/CosmosDBDisablesPublicNetwork.py",
+    "service_group": "database"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_102",
+    "severity": "",
+    "title": "Ensure that PostgreSQL server enables geo-redundant backups",
+    "service": "database",
+    "category": "BACKUP_AND_RECOVERY",
+    "resources": [
+      "azurerm_postgresql_server"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/PostgressSQLGeoBackupEnabled.py",
+    "service_group": "database"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_11",
+    "severity": "",
+    "title": "Ensure no SQL Databases allow ingress from 0.0.0.0/0 (ANY IP)",
+    "service": "database",
+    "category": "NETWORKING",
+    "resources": [
+      "azurerm_mariadb_firewall_rule",
+      "azurerm_sql_firewall_rule",
+      "azurerm_postgresql_firewall_rule",
+      "azurerm_mysql_firewall_rule",
+      "azurerm_mysql_flexible_server_firewall_rule",
+      "azurerm_mssql_firewall_rule"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/SQLServerNoPublicAccess.py",
+    "service_group": "database"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_113",
+    "severity": "",
+    "title": "Ensure that SQL server disables public network access",
+    "service": "database",
+    "category": "NETWORKING",
+    "resources": [
+      "azurerm_mssql_server"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/SQLServerPublicAccessDisabled.py",
+    "service_group": "database"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_127",
+    "severity": "",
+    "title": "Ensure that My SQL server enables Threat detection policy",
+    "service": "database",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "azurerm_mysql_server"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/MySQLTreatDetectionEnabled.py",
+    "service_group": "database"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_128",
+    "severity": "",
+    "title": "Ensure that PostgreSQL server enables Threat detection policy",
+    "service": "database",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "azurerm_postgresql_server"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/PostgresSQLTreatDetectionEnabled.py",
+    "service_group": "database"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_129",
+    "severity": "",
+    "title": "Ensure that MariaDB server enables geo-redundant backups",
+    "service": "database",
+    "category": "BACKUP_AND_RECOVERY",
+    "resources": [
+      "azurerm_mariadb_server"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/MariaDBGeoBackupEnabled.py",
+    "service_group": "database"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_130",
+    "severity": "",
+    "title": "Ensure that PostgreSQL server enables infrastructure encryption",
+    "service": "database",
+    "category": "ENCRYPTION",
+    "resources": [
+      "azurerm_postgresql_server"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/PostgreSQLEncryptionEnabled.py",
+    "service_group": "database"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_132",
+    "severity": "",
+    "title": "Ensure cosmosdb does not allow privileged escalation by restricting management plane changes",
+    "service": "database",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "azurerm_cosmosdb_account"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/CosmosDBDisableAccessKeyWrite.py",
+    "service_group": "database"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_136",
+    "severity": "",
+    "title": "Ensure that PostgreSQL Flexible server enables geo-redundant backups",
+    "service": "database",
+    "category": "BACKUP_AND_RECOVERY",
+    "resources": [
+      "azurerm_postgresql_flexible_server"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/PostgreSQLFlexiServerGeoBackupEnabled.py",
+    "service_group": "database"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_140",
+    "severity": "",
+    "title": "Ensure that Local Authentication is disabled on CosmosDB",
+    "service": "database",
+    "category": "IAM",
+    "resources": [
+      "azurerm_cosmosdb_account"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/CosmosDBLocalAuthDisabled.py",
+    "service_group": "database"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_146",
+    "severity": "",
+    "title": "Ensure server parameter 'log_retention' is set to 'ON' for PostgreSQL Database Server",
+    "service": "database",
+    "category": "LOGGING",
+    "resources": [
+      "azurerm_postgresql_configuration"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/PostgreSQLServerLogRetentionEnabled.py",
+    "service_group": "database"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_147",
+    "severity": "",
+    "title": "Ensure PostgreSQL is using the latest version of TLS encryption",
+    "service": "database",
+    "category": "NETWORKING",
+    "resources": [
+      "azurerm_postgresql_server"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/PostgreSQLMinTLSVersion.py",
+    "service_group": "database"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_156",
+    "severity": "",
+    "title": "Ensure default Auditing policy for a SQL Server is configured to capture and retain the activity logs",
+    "service": "database",
+    "category": "LOGGING",
+    "resources": [
+      "azurerm_mssql_database_extended_auditing_policy"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/MSSQLServerAuditPolicyLogMonitor.py",
+    "service_group": "database"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_224",
+    "severity": "",
+    "title": "Ensure that the Ledger feature is enabled on database that ",
+    "service": "database",
+    "category": "LOGGING",
+    "resources": [
+      "azurerm_mssql_database"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/SQLDatabaseLedgerEnabled.py",
+    "service_group": "database"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_229",
+    "severity": "",
+    "title": "Ensure the Azure SQL Database Namespace is zone redundant",
+    "service": "database",
+    "category": "BACKUP_AND_RECOVERY",
+    "resources": [
+      "azurerm_mssql_database"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/SQLDatabaseZoneRedundant.py",
+    "service_group": "database"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_23",
+    "severity": "",
+    "title": "Ensure that 'Auditing' is set to 'On' for SQL servers",
+    "service": "database",
+    "category": "LOGGING",
+    "resources": [
+      "azurerm_mssql_server",
+      "azurerm_mssql_server_extended_auditing_policy",
+      "azurerm_sql_server"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/graph_checks/azure/SQLServerAuditingEnabled.yaml",
+    "service_group": "database"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_24",
+    "severity": "",
+    "title": "Ensure that 'Auditing' Retention is 'greater than 90 days' for SQL servers",
+    "service": "database",
+    "category": "LOGGING",
+    "resources": [
+      "azurerm_mssql_server",
+      "azurerm_mssql_server_extended_auditing_policy",
+      "azurerm_sql_server"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/graph_checks/azure/SQLServerAuditingRetention90Days.yaml",
+    "service_group": "database"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_25",
+    "severity": "",
+    "title": "Ensure that 'Threat Detection types' is set to 'All'",
+    "service": "database",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "azurerm_mssql_server_security_alert_policy"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/SQLServerThreatDetectionTypes.py",
+    "service_group": "database"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_26",
+    "severity": "",
+    "title": "Ensure that 'Send Alerts To' is enabled for MSSQL servers",
+    "service": "database",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "azurerm_mssql_server_security_alert_policy"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/SQLServerEmailAlertsEnabled.py",
+    "service_group": "database"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_27",
+    "severity": "",
+    "title": "Ensure that 'Email service and co-administrators' is 'Enabled' for MSSQL servers",
+    "service": "database",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "azurerm_mssql_server_security_alert_policy"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/SQLServerEmailAlertsToAdminsEnabled.py",
+    "service_group": "database"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_28",
+    "severity": "",
+    "title": "Ensure 'Enforce SSL connection' is set to 'ENABLED' for MySQL Database Server",
+    "service": "database",
+    "category": "NETWORKING",
+    "resources": [
+      "azurerm_mysql_server"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/MySQLServerSSLEnforcementEnabled.py",
+    "service_group": "database"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_29",
+    "severity": "",
+    "title": "Ensure 'Enforce SSL connection' is set to 'ENABLED' for PostgreSQL Database Server",
+    "service": "database",
+    "category": "NETWORKING",
+    "resources": [
+      "azurerm_postgresql_server"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/PostgreSQLServerSSLEnforcementEnabled.py",
+    "service_group": "database"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_30",
+    "severity": "",
+    "title": "Ensure server parameter 'log_checkpoints' is set to 'ON' for PostgreSQL Database Server",
+    "service": "database",
+    "category": "LOGGING",
+    "resources": [
+      "azurerm_postgresql_configuration"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/PostgreSQLServerLogCheckpointsEnabled.py",
+    "service_group": "database"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_31",
+    "severity": "",
+    "title": "Ensure server parameter 'log_connections' is set to 'ON' for PostgreSQL Database Server",
+    "service": "database",
+    "category": "LOGGING",
+    "resources": [
+      "azurerm_postgresql_configuration"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/PostgreSQLServerLogConnectionsEnabled.py",
+    "service_group": "database"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_32",
+    "severity": "",
+    "title": "Ensure server parameter 'connection_throttling' is set to 'ON' for PostgreSQL Database Server",
+    "service": "database",
+    "category": "NETWORKING",
+    "resources": [
+      "azurerm_postgresql_configuration"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/PostgreSQLServerConnectionThrottlingEnabled.py",
+    "service_group": "database"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_47",
+    "severity": "",
+    "title": "Ensure 'Enforce SSL connection' is set to 'ENABLED' for MariaDB servers",
+    "service": "database",
+    "category": "NETWORKING",
+    "resources": [
+      "azurerm_mariadb_server"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/MariaDBSSLEnforcementEnabled.py",
+    "service_group": "database"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_48",
+    "severity": "",
+    "title": "Ensure 'public network access enabled' is set to 'False' for MariaDB servers",
+    "service": "database",
+    "category": "NETWORKING",
+    "resources": [
+      "azurerm_mariadb_server"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/MariaDBPublicAccessDisabled.py",
+    "service_group": "database"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_52",
+    "severity": "",
+    "title": "Ensure MSSQL is using the latest version of TLS encryption",
+    "service": "database",
+    "category": "NETWORKING",
+    "resources": [
+      "azurerm_mssql_server"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/MSSQLServerMinTLSVersion.py",
+    "service_group": "database"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_53",
+    "severity": "",
+    "title": "Ensure 'public network access enabled' is set to 'False' for mySQL servers",
+    "service": "database",
+    "category": "NETWORKING",
+    "resources": [
+      "azurerm_mysql_server"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/MySQLPublicAccessDisabled.py",
+    "service_group": "database"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_54",
+    "severity": "",
+    "title": "Ensure MySQL is using the latest version of TLS encryption",
+    "service": "database",
+    "category": "NETWORKING",
+    "resources": [
+      "azurerm_mysql_server"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/MySQLServerMinTLSVersion.py",
+    "service_group": "database"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_68",
+    "severity": "",
+    "title": "Ensure that PostgreSQL server disables public network access",
+    "service": "database",
+    "category": "NETWORKING",
+    "resources": [
+      "azurerm_postgresql_server"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/PostgreSQLServerPublicAccessDisabled.py",
+    "service_group": "database"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_94",
+    "severity": "",
+    "title": "Ensure that My SQL server enables geo-redundant backups",
+    "service": "database",
+    "category": "BACKUP_AND_RECOVERY",
+    "resources": [
+      "azurerm_mysql_server",
+      "azurerm_mysql_flexible_server"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/MySQLGeoBackupEnabled.py",
+    "service_group": "database"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_96",
+    "severity": "",
+    "title": "Ensure that MySQL server enables infrastructure encryption",
+    "service": "database",
+    "category": "ENCRYPTION",
+    "resources": [
+      "azurerm_mysql_server"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/MySQLEncryptionEnabled.py",
+    "service_group": "database"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_99",
+    "severity": "",
+    "title": "Ensure Cosmos DB accounts have restricted access",
+    "service": "database",
+    "category": "NETWORKING",
+    "resources": [
+      "azurerm_cosmosdb_account"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/CosmosDBAccountsRestrictedAccess.py",
+    "service_group": "database"
+  },
+  {
+    "tool": "trivy",
+    "id": "AZU-0018",
+    "severity": "medium",
+    "title": "At least one email address is set for threat alerts",
+    "service": "database",
+    "category": "",
+    "resources": [],
+    "fix": "Provide at least one email address for threat alerts",
+    "source_file": "checks/cloud/azure/database/threat_alert_email_set.rego",
+    "service_group": "database"
+  },
+  {
+    "tool": "trivy",
+    "id": "AZU-0019",
+    "severity": "medium",
+    "title": "Ensure server parameter 'log_connections' is set to 'ON' for PostgreSQL Database Server",
+    "service": "database",
+    "category": "",
+    "resources": [],
+    "fix": "Enable connection logging",
+    "source_file": "checks/cloud/azure/database/postgres_configuration_log_connections.rego",
+    "service_group": "database"
+  },
+  {
+    "tool": "trivy",
+    "id": "AZU-0020",
+    "severity": "medium",
+    "title": "SSL should be enforced on database connections where applicable",
+    "service": "database",
+    "category": "",
+    "resources": [],
+    "fix": "Enable SSL enforcement",
+    "source_file": "checks/cloud/azure/database/enable_ssl_enforcement.rego",
+    "service_group": "database"
+  },
+  {
+    "tool": "trivy",
+    "id": "AZU-0021",
+    "severity": "medium",
+    "title": "Ensure server parameter 'connection_throttling' is set to 'ON' for PostgreSQL Database Server",
+    "service": "database",
+    "category": "",
+    "resources": [],
+    "fix": "Enable connection throttling logging",
+    "source_file": "checks/cloud/azure/database/postgres_configuration_connection_throttling.rego",
+    "service_group": "database"
+  },
+  {
+    "tool": "trivy",
+    "id": "AZU-0022",
+    "severity": "medium",
+    "title": "Ensure databases are not publicly accessible",
+    "service": "database",
+    "category": "",
+    "resources": [],
+    "fix": "Disable public access to database when not required",
+    "source_file": "checks/cloud/azure/database/no_public_access.rego",
+    "service_group": "database"
+  },
+  {
+    "tool": "trivy",
+    "id": "AZU-0023",
+    "severity": "low",
+    "title": "Security threat alerts go to subscription owners and co-administrators",
+    "service": "database",
+    "category": "",
+    "resources": [],
+    "fix": "Enable email to subscription owners",
+    "source_file": "checks/cloud/azure/database/threat_alert_email_to_owner.rego",
+    "service_group": "database"
+  },
+  {
+    "tool": "trivy",
+    "id": "AZU-0024",
+    "severity": "medium",
+    "title": "Ensure server parameter 'log_checkpoints' is set to 'ON' for PostgreSQL Database Server",
+    "service": "database",
+    "category": "",
+    "resources": [],
+    "fix": "Enable checkpoint logging",
+    "source_file": "checks/cloud/azure/database/postgres_configuration_log_checkpoints.rego",
+    "service_group": "database"
+  },
+  {
+    "tool": "trivy",
+    "id": "AZU-0025",
+    "severity": "medium",
+    "title": "Database auditing retention period should be longer than 90 days",
+    "service": "database",
+    "category": "",
+    "resources": [],
+    "fix": "Set retention periods of database auditing to greater than 90 days",
+    "source_file": "checks/cloud/azure/database/retention_period_set.rego",
+    "service_group": "database"
+  },
+  {
+    "tool": "trivy",
+    "id": "AZU-0026",
+    "severity": "medium",
+    "title": "Databases should have the minimum TLS set for connections",
+    "service": "database",
+    "category": "",
+    "resources": [],
+    "fix": "Use the most modern TLS policies available",
+    "source_file": "checks/cloud/azure/database/secure_tls_policy.rego",
+    "service_group": "database"
+  },
+  {
+    "tool": "trivy",
+    "id": "AZU-0027",
+    "severity": "medium",
+    "title": "Auditing should be enabled on Azure SQL Databases",
+    "service": "database",
+    "category": "",
+    "resources": [],
+    "fix": "Enable auditing on Azure SQL databases",
+    "source_file": "checks/cloud/azure/database/enable_audit.rego",
+    "service_group": "database"
+  },
+  {
+    "tool": "trivy",
+    "id": "AZU-0028",
+    "severity": "medium",
+    "title": "No threat detections are set",
+    "service": "database",
+    "category": "",
+    "resources": [],
+    "fix": "Use all provided threat alerts",
+    "source_file": "checks/cloud/azure/database/all_threat_alerts_enabled.rego",
+    "service_group": "database"
+  },
+  {
+    "tool": "trivy",
+    "id": "AZU-0029",
+    "severity": "high",
+    "title": "Ensure database firewalls do not permit public access",
+    "service": "database",
+    "category": "",
+    "resources": [],
+    "fix": "Don't use wide ip ranges for the sql firewall",
+    "source_file": "checks/cloud/azure/database/no_public_firewall_access.rego",
+    "service_group": "database"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV2_AZURE_48",
+    "severity": "",
+    "title": "Ensure that Databricks Workspaces enables customer-managed key for root DBFS encryption",
+    "service": "databricks",
+    "category": "ENCRYPTION",
+    "resources": [
+      "azurerm_databricks_workspace"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/graph_checks/azure/DatabricksWorkspaceDBFSRootEncryptedWithCustomerManagedKey.yaml",
+    "service_group": "databricks"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_158",
+    "severity": "",
+    "title": "Ensure Databricks Workspace data plane to control plane communication happens over private link",
+    "service": "databricks",
+    "category": "NETWORKING",
+    "resources": [
+      "azurerm_databricks_workspace"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/DatabricksWorkspaceIsNotPublic.py",
+    "service_group": "databricks"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV2_AZURE_15",
+    "severity": "",
+    "title": "Ensure that Azure data factories are encrypted with a customer-managed key",
+    "service": "datafactory",
+    "category": "ENCRYPTION",
+    "resources": [
+      "azurerm_data_factory"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/graph_checks/azure/AzureDataFactoriesEncryptedWithCustomerManagedKey.yaml",
+    "service_group": "datafactory"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_103",
+    "severity": "",
+    "title": "Ensure that Azure Data Factory uses Git repository for source control",
+    "service": "datafactory",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "azurerm_data_factory"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/DataFactoryUsesGitRepository.py",
+    "service_group": "datafactory"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_104",
+    "severity": "",
+    "title": "Ensure that Azure Data factory public network access is disabled",
+    "service": "datafactory",
+    "category": "NETWORKING",
+    "resources": [
+      "azurerm_data_factory"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/DataFactoryNoPublicNetworkAccess.py",
+    "service_group": "datafactory"
+  },
+  {
+    "tool": "trivy",
+    "id": "AZU-0035",
+    "severity": "critical",
+    "title": "Data Factory should have public access disabled, the default is enabled.",
+    "service": "datafactory",
+    "category": "",
+    "resources": [],
+    "fix": "Set public access to disabled for Data Factory",
+    "source_file": "checks/cloud/azure/datafactory/no_public_access.rego",
+    "service_group": "datafactory"
+  },
+  {
+    "tool": "trivy",
+    "id": "AZU-0036",
+    "severity": "high",
+    "title": "Unencrypted data lake storage.",
+    "service": "datalake",
+    "category": "",
+    "resources": [],
+    "fix": "Enable encryption of data lake storage",
+    "source_file": "checks/cloud/azure/datalake/enable_at_rest_encryption.rego",
+    "service_group": "datalake"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_106",
+    "severity": "",
+    "title": "Ensure that Azure Event Grid Domain public network access is disabled",
+    "service": "eventgrid",
+    "category": "NETWORKING",
+    "resources": [
+      "azurerm_eventgrid_domain"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/EventgridDomainNetworkAccess.py",
+    "service_group": "eventgrid"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_191",
+    "severity": "",
+    "title": "Ensure that Managed identity provider is enabled for Azure Event Grid Topic",
+    "service": "eventgrid",
+    "category": "IAM",
+    "resources": [
+      "azurerm_eventgrid_topic"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/EventgridTopicIdentityProviderEnabled.py",
+    "service_group": "eventgrid"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_192",
+    "severity": "",
+    "title": "Ensure that Azure Event Grid Topic local Authentication is disabled",
+    "service": "eventgrid",
+    "category": "IAM",
+    "resources": [
+      "azurerm_eventgrid_topic"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/EventgridTopicLocalAuthentication.py",
+    "service_group": "eventgrid"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_193",
+    "severity": "",
+    "title": "Ensure public network access is disabled for Azure Event Grid Topic",
+    "service": "eventgrid",
+    "category": "NETWORKING",
+    "resources": [
+      "azurerm_eventgrid_topic"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/EventgridTopicNetworkAccess.py",
+    "service_group": "eventgrid"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_194",
+    "severity": "",
+    "title": "Ensure that Managed identity provider is enabled for Azure Event Grid Domain",
+    "service": "eventgrid",
+    "category": "IAM",
+    "resources": [
+      "azurerm_eventgrid_domain"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/EventgridDomainIdentityProviderEnabled.py",
+    "service_group": "eventgrid"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_195",
+    "severity": "",
+    "title": "Ensure that Azure Event Grid Domain local Authentication is disabled",
+    "service": "eventgrid",
+    "category": "IAM",
+    "resources": [
+      "azurerm_eventgrid_domain"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/EventgridDomainLocalAuthentication.py",
+    "service_group": "eventgrid"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_223",
+    "severity": "",
+    "title": "Ensure Event Hub Namespace uses at least TLS 1.2",
+    "service": "eventhub",
+    "category": "ENCRYPTION",
+    "resources": [
+      "azurerm_eventhub_namespace"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/EventHubNamespaceMinTLS12.py",
+    "service_group": "eventhub"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_228",
+    "severity": "",
+    "title": "Ensure the Azure Event Hub Namespace is zone redundant",
+    "service": "eventhub",
+    "category": "BACKUP_AND_RECOVERY",
+    "resources": [
+      "azurerm_eventhub_namespace"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/EventHubNamespaceZoneRedundant.py",
+    "service_group": "eventhub"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_216",
+    "severity": "",
+    "title": "Ensure DenyIntelMode is set to Deny for Azure Firewalls",
+    "service": "firewall",
+    "category": "NETWORKING",
+    "resources": [
+      "azurerm_firewall"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/AzureFirewallDenyThreatIntelMode.py",
+    "service_group": "firewall"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_219",
+    "severity": "",
+    "title": "Ensure Firewall defines a firewall policy",
+    "service": "firewall",
+    "category": "NETWORKING",
+    "resources": [
+      "azurerm_firewall"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/AzureFirewallDefinesPolicy.py",
+    "service_group": "firewall"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_220",
+    "severity": "",
+    "title": "Ensure Firewall policy has IDPS mode as deny",
+    "service": "firewall",
+    "category": "NETWORKING",
+    "resources": [
+      "azurerm_firewall_policy"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/AzureFirewallPolicyIDPSDeny.py",
+    "service_group": "firewall"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_121",
+    "severity": "",
+    "title": "Ensure that Azure Front Door enables WAF",
+    "service": "frontdoor",
+    "category": "NETWORKING",
+    "resources": [
+      "azurerm_frontdoor"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/AzureFrontDoorEnablesWAF.py",
+    "service_group": "frontdoor"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_123",
+    "severity": "",
+    "title": "Ensure that Azure Front Door uses WAF in \"Detection\" or \"Prevention\" modes",
+    "service": "frontdoor",
+    "category": "NETWORKING",
+    "resources": [
+      "azurerm_frontdoor_firewall_policy"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/FrontdoorUseWAFMode.py",
+    "service_group": "frontdoor"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_133",
+    "severity": "",
+    "title": "Ensure Front Door WAF prevents message lookup in Log4j2. See CVE-2021-44228 aka log4jshell",
+    "service": "frontdoor",
+    "category": "APPLICATION_SECURITY",
+    "resources": [
+      "azurerm_frontdoor_firewall_policy"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/FrontDoorWAFACLCVE202144228.py",
+    "service_group": "frontdoor"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_108",
+    "severity": "",
+    "title": "Ensure that Azure IoT Hub disables public network access",
+    "service": "iothub",
+    "category": "NETWORKING",
+    "resources": [
+      "azurerm_iothub"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/IoTNoPublicNetworkAccess.py",
+    "service_group": "iothub"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV2_AZURE_32",
+    "severity": "",
+    "title": "Ensure private endpoint is configured to key vault",
+    "service": "keyvault",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "azurerm_key_vault"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/graph_checks/azure/AzureKeyVaultConfigPrivateEndpoint.yaml",
+    "service_group": "keyvault"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_109",
+    "severity": "",
+    "title": "Ensure that key vault allows firewall rules settings",
+    "service": "keyvault",
+    "category": "NETWORKING",
+    "resources": [
+      "azurerm_key_vault"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/KeyVaultEnablesFirewallRulesSettings.py",
+    "service_group": "keyvault"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_110",
+    "severity": "",
+    "title": "Ensure that key vault enables purge protection",
+    "service": "keyvault",
+    "category": "NETWORKING",
+    "resources": [
+      "azurerm_key_vault"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/KeyVaultEnablesPurgeProtection.py",
+    "service_group": "keyvault"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_111",
+    "severity": "",
+    "title": "Ensure that key vault enables soft delete",
+    "service": "keyvault",
+    "category": "LOGGING",
+    "resources": [
+      "azurerm_key_vault"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/KeyVaultEnablesSoftDelete.py",
+    "service_group": "keyvault"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_112",
+    "severity": "",
+    "title": "Ensure that key vault key is backed by HSM",
+    "service": "keyvault",
+    "category": "BACKUP_AND_RECOVERY",
+    "resources": [
+      "azurerm_key_vault_key"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/KeyBackedByHSM.py",
+    "service_group": "keyvault"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_114",
+    "severity": "",
+    "title": "Ensure that key vault secrets have \"content_type\" set",
+    "service": "keyvault",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "azurerm_key_vault_secret"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/SecretContentType.py",
+    "service_group": "keyvault"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_189",
+    "severity": "",
+    "title": "Ensure that Azure Key Vault disables public network access",
+    "service": "keyvault",
+    "category": "NETWORKING",
+    "resources": [
+      "azurerm_key_vault"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/KeyVaultDisablesPublicNetworkAccess.py",
+    "service_group": "keyvault"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_40",
+    "severity": "",
+    "title": "Ensure that the expiration date is set on all keys",
+    "service": "keyvault",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "azurerm_key_vault_key"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/KeyExpirationDate.py",
+    "service_group": "keyvault"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_41",
+    "severity": "",
+    "title": "Ensure that the expiration date is set on all secrets",
+    "service": "keyvault",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "azurerm_key_vault_secret"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/SecretExpirationDate.py",
+    "service_group": "keyvault"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_42",
+    "severity": "",
+    "title": "Ensure the key vault is recoverable",
+    "service": "keyvault",
+    "category": "BACKUP_AND_RECOVERY",
+    "resources": [
+      "azurerm_key_vault"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/KeyvaultRecoveryEnabled.py",
+    "service_group": "keyvault"
+  },
+  {
+    "tool": "trivy",
+    "id": "AZU-0013",
+    "severity": "critical",
+    "title": "Key vault should have the network acl block specified",
+    "service": "keyvault",
+    "category": "",
+    "resources": [],
+    "fix": "Set a network ACL for the key vault",
+    "source_file": "checks/cloud/azure/keyvault/specify_network_acl.rego",
+    "service_group": "keyvault"
+  },
+  {
+    "tool": "trivy",
+    "id": "AZU-0014",
+    "severity": "medium",
+    "title": "Ensure that the expiration date is set on all keys",
+    "service": "keyvault",
+    "category": "",
+    "resources": [],
+    "fix": "Set an expiration date on the vault key",
+    "source_file": "checks/cloud/azure/keyvault/ensure_key_expiry.rego",
+    "service_group": "keyvault"
+  },
+  {
+    "tool": "trivy",
+    "id": "AZU-0015",
+    "severity": "low",
+    "title": "Key vault Secret should have a content type set",
+    "service": "keyvault",
+    "category": "",
+    "resources": [],
+    "fix": "Provide content type for secrets to aid interpretation on retrieval",
+    "source_file": "checks/cloud/azure/keyvault/content_type_for_secret.rego",
+    "service_group": "keyvault"
+  },
+  {
+    "tool": "trivy",
+    "id": "AZU-0016",
+    "severity": "medium",
+    "title": "Key vault should have purge protection enabled",
+    "service": "keyvault",
+    "category": "",
+    "resources": [],
+    "fix": "Enable purge protection for key vaults",
+    "source_file": "checks/cloud/azure/keyvault/no_purge.rego",
+    "service_group": "keyvault"
+  },
+  {
+    "tool": "trivy",
+    "id": "AZU-0017",
+    "severity": "low",
+    "title": "Key Vault Secret should have an expiration date set",
+    "service": "keyvault",
+    "category": "",
+    "resources": [],
+    "fix": "Set an expiry for secrets",
+    "source_file": "checks/cloud/azure/keyvault/ensure_secret_expiry.rego",
+    "service_group": "keyvault"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV2_AZURE_11",
+    "severity": "",
+    "title": "Ensure that Azure Data Explorer encryption at rest uses a customer-managed key",
+    "service": "kusto",
+    "category": "ENCRYPTION",
+    "resources": [
+      "azurerm_kusto_cluster"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/graph_checks/azure/DataExplorerEncryptionUsesCustomKey.yaml",
+    "service_group": "kusto"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_180",
+    "severity": "",
+    "title": "Ensure that data explorer uses Sku with an SLA",
+    "service": "kusto",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "azurerm_kusto_cluster"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/DataExplorerSKUHasSLA.py",
+    "service_group": "kusto"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_181",
+    "severity": "",
+    "title": "Ensure that data explorer/Kusto uses managed identities to access Azure resources securely.",
+    "service": "kusto",
+    "category": "IAM",
+    "resources": [
+      "azurerm_kusto_cluster"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/DataExplorerServiceIdentity.py",
+    "service_group": "kusto"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_74",
+    "severity": "",
+    "title": "Ensure that Azure Data Explorer (Kusto) uses disk encryption",
+    "service": "kusto",
+    "category": "ENCRYPTION",
+    "resources": [
+      "azurerm_kusto_cluster"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/DataExplorerUsesDiskEncryption.py",
+    "service_group": "kusto"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_75",
+    "severity": "",
+    "title": "Ensure that Azure Data Explorer uses double encryption",
+    "service": "kusto",
+    "category": "ENCRYPTION",
+    "resources": [
+      "azurerm_kusto_cluster"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/AzureDataExplorerDoubleEncryptionEnabled.py",
+    "service_group": "kusto"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV2_AZURE_20",
+    "severity": "",
+    "title": "Ensure Storage logging is enabled for Table service for read requests",
+    "service": "log",
+    "category": "LOGGING",
+    "resources": [
+      "azurerm_log_analytics_storage_insights",
+      "azurerm_storage_account",
+      "azurerm_storage_table"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/graph_checks/azure/StorageLoggingIsEnabledForTableService.yaml",
+    "service_group": "log"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV2_AZURE_21",
+    "severity": "",
+    "title": "Ensure Storage logging is enabled for Blob service for read requests",
+    "service": "log",
+    "category": "LOGGING",
+    "resources": [
+      "azurerm_log_analytics_storage_insights",
+      "azurerm_storage_account",
+      "azurerm_storage_container"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/graph_checks/azure/StorageLoggingIsEnabledForBlobService.yaml",
+    "service_group": "log"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV2_AZURE_49",
+    "severity": "",
+    "title": "Ensure that Azure Machine learning workspace is not configured with overly permissive network access",
+    "service": "machine",
+    "category": "NETWORKING",
+    "resources": [
+      "azurerm_machine_learning_workspace"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/graph_checks/azure/AzureMLWorkspacePublicNetwork.yaml",
+    "service_group": "machine"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV2_AZURE_50",
+    "severity": "",
+    "title": "Ensure Azure Storage Account storing Machine Learning workspace high business impact data is not publicly accessible",
+    "service": "machine",
+    "category": "NETWORKING",
+    "resources": [
+      "azurerm_machine_learning_workspace",
+      "azurerm_storage_account"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/graph_checks/azure/AzureMLWorkspaceHBIPublicNetwork.yaml",
+    "service_group": "machine"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_142",
+    "severity": "",
+    "title": "Ensure Machine Learning Compute Cluster Local Authentication is disabled",
+    "service": "machine",
+    "category": "IAM",
+    "resources": [
+      "azurerm_machine_learning_compute_cluster"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/MLCCLADisabled.py",
+    "service_group": "machine"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_144",
+    "severity": "",
+    "title": "Ensure that Public Access is disabled for Machine Learning Workspace",
+    "service": "machine",
+    "category": "NETWORKING",
+    "resources": [
+      "azurerm_machine_learning_workspace"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/MLPublicAccess.py",
+    "service_group": "machine"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_150",
+    "severity": "",
+    "title": "Ensure Machine Learning Compute Cluster Minimum Nodes Set To 0",
+    "service": "machine",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "azurerm_machine_learning_compute_cluster"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/MLComputeClusterMinNodes.py",
+    "service_group": "machine"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV2_AZURE_8",
+    "severity": "",
+    "title": "Ensure the storage container storing the activity logs is not publicly accessible",
+    "service": "monitor",
+    "category": "LOGGING",
+    "resources": [
+      "azurerm_monitor_activity_log_alert",
+      "azurerm_storage_account",
+      "azurerm_storage_container"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/graph_checks/azure/StorageContainerActivityLogsNotPublic.yaml",
+    "service_group": "monitor"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_37",
+    "severity": "",
+    "title": "Ensure that Activity Log Retention is set 365 days or greater",
+    "service": "monitor",
+    "category": "LOGGING",
+    "resources": [
+      "azurerm_monitor_log_profile"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/MonitorLogProfileRetentionDays.py",
+    "service_group": "monitor"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_38",
+    "severity": "",
+    "title": "Ensure audit profile captures all the activities",
+    "service": "monitor",
+    "category": "LOGGING",
+    "resources": [
+      "azurerm_monitor_log_profile"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/MonitorLogProfileCategories.py",
+    "service_group": "monitor"
+  },
+  {
+    "tool": "trivy",
+    "id": "AZU-0031",
+    "severity": "medium",
+    "title": "Ensure the activity retention log is set to at least a year",
+    "service": "monitor",
+    "category": "",
+    "resources": [],
+    "fix": "Set a retention period that will allow for delayed investigation",
+    "source_file": "checks/cloud/azure/monitor/activity_log_retention_set.rego",
+    "service_group": "monitor"
+  },
+  {
+    "tool": "trivy",
+    "id": "AZU-0032",
+    "severity": "medium",
+    "title": "Ensure activitys are captured for all locations",
+    "service": "monitor",
+    "category": "",
+    "resources": [],
+    "fix": "Enable capture for all locations",
+    "source_file": "checks/cloud/azure/monitor/capture_all_regions.rego",
+    "service_group": "monitor"
+  },
+  {
+    "tool": "trivy",
+    "id": "AZU-0033",
+    "severity": "medium",
+    "title": "Ensure log profile captures all activities",
+    "service": "monitor",
+    "category": "",
+    "resources": [],
+    "fix": "Configure log profile to capture all activities",
+    "source_file": "checks/cloud/azure/monitor/capture_all_activities.rego",
+    "service_group": "monitor"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV2_AZURE_31",
+    "severity": "",
+    "title": "Ensure VNET subnet is configured with a Network Security Group (NSG)",
+    "service": "network",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "azurerm_subnet"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/graph_checks/azure/AzureSubnetConfigWithNSG.yaml",
+    "service_group": "network"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_118",
+    "severity": "",
+    "title": "Ensure that Network Interfaces disable IP forwarding",
+    "service": "network",
+    "category": "NETWORKING",
+    "resources": [
+      "azurerm_network_interface"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/NetworkInterfaceEnableIPForwarding.py",
+    "service_group": "network"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_119",
+    "severity": "",
+    "title": "Ensure that Network Interfaces don't use public IPs",
+    "service": "network",
+    "category": "NETWORKING",
+    "resources": [
+      "azurerm_network_interface"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/graph_checks/azure/AzureNetworkInterfacePublicIPAddressId.yaml",
+    "service_group": "network"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_12",
+    "severity": "",
+    "title": "Ensure that Network Security Group Flow Log retention period is 'greater than 90 days'",
+    "service": "network",
+    "category": "LOGGING",
+    "resources": [
+      "azurerm_network_watcher_flow_log"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/NetworkWatcherFlowLogPeriod.py",
+    "service_group": "network"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_120",
+    "severity": "",
+    "title": "Ensure that Application Gateway enables WAF",
+    "service": "network",
+    "category": "APPLICATION_SECURITY",
+    "resources": [
+      "azurerm_application_gateway",
+      "azurerm_web_application_firewall_policy"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/graph_checks/azure/ApplicationGatewayEnablesWAF.yaml",
+    "service_group": "network"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_182",
+    "severity": "",
+    "title": "Ensure that VNET has at least 2 connected DNS Endpoints",
+    "service": "network",
+    "category": "NETWORKING",
+    "resources": [
+      "azurerm_virtual_network",
+      "azurerm_virtual_network_dns_servers"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/VnetSingleDNSServer.py",
+    "service_group": "network"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_183",
+    "severity": "",
+    "title": "Ensure that VNET uses local DNS addresses",
+    "service": "network",
+    "category": "NETWORKING",
+    "resources": [
+      "azurerm_virtual_network"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/VnetLocalDNS.py",
+    "service_group": "network"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_217",
+    "severity": "",
+    "title": "Ensure Azure Application gateways listener that allow connection requests over HTTP",
+    "service": "network",
+    "category": "ENCRYPTION",
+    "resources": [
+      "azurerm_application_gateway"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/AppGWUsesHttps.py",
+    "service_group": "network"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_218",
+    "severity": "",
+    "title": "Ensure Application Gateway defines secure protocols for in transit communication",
+    "service": "network",
+    "category": "ENCRYPTION",
+    "resources": [
+      "azurerm_application_gateway"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/AppGWDefinesSecureProtocols.py",
+    "service_group": "network"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_77",
+    "severity": "",
+    "title": "Ensure that UDP Services are restricted from the Internet ",
+    "service": "network",
+    "category": "NETWORKING",
+    "resources": [
+      "azurerm_network_security_group",
+      "azurerm_network_security_rule"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/NSGRuleUDPAccessRestricted.py",
+    "service_group": "network"
+  },
+  {
+    "tool": "trivy",
+    "id": "AZU-0047",
+    "severity": "critical",
+    "title": "A security group rule should not allow unrestricted ingress from any IP address.",
+    "service": "network",
+    "category": "",
+    "resources": [],
+    "fix": "Set a more restrictive cidr range",
+    "source_file": "checks/cloud/azure/network/no_public_ingress.rego",
+    "service_group": "network"
+  },
+  {
+    "tool": "trivy",
+    "id": "AZU-0048",
+    "severity": "critical",
+    "title": "A security group should not allow unrestricted ingress to the RDP port from any IP address.",
+    "service": "network",
+    "category": "",
+    "resources": [],
+    "fix": "Block RDP port from internet",
+    "source_file": "checks/cloud/azure/network/disable_rdp_from_internet.rego",
+    "service_group": "network"
+  },
+  {
+    "tool": "trivy",
+    "id": "AZU-0049",
+    "severity": "low",
+    "title": "Retention policy for flow logs should be enabled and set to greater than 90 days",
+    "service": "network",
+    "category": "",
+    "resources": [],
+    "fix": "Ensure flow log retention is turned on with an expiry of >90 days",
+    "source_file": "checks/cloud/azure/network/retention_policy_set.rego",
+    "service_group": "network"
+  },
+  {
+    "tool": "trivy",
+    "id": "AZU-0050",
+    "severity": "critical",
+    "title": "Security group should not allow unrestricted ingress to SSH port from any IP address.",
+    "service": "network",
+    "category": "",
+    "resources": [],
+    "fix": "Block port 22 access from the internet",
+    "source_file": "checks/cloud/azure/network/ssh_blocked_from_internet.rego",
+    "service_group": "network"
+  },
+  {
+    "tool": "trivy",
+    "id": "AZU-0051",
+    "severity": "critical",
+    "title": "A security rule should not allow unrestricted egress to any IP address.",
+    "service": "network",
+    "category": "",
+    "resources": [],
+    "fix": "Set a more restrictive cidr range",
+    "source_file": "checks/cloud/azure/network/no_public_egress.rego",
+    "service_group": "network"
+  },
+  {
+    "tool": "trivy",
+    "id": "AZU-0073",
+    "severity": "medium",
+    "title": "Network Watcher Flow Disabled",
+    "service": "network",
+    "category": "",
+    "resources": [],
+    "fix": "Enable NSG flow logs via Network Watcher and configure a storage account for log export.",
+    "source_file": "checks/cloud/azure/network/network_watcher_flow_disabled.rego",
+    "service_group": "network"
+  },
+  {
+    "tool": "trivy",
+    "id": "AZU-0074",
+    "severity": "high",
+    "title": "Sensitive Port Is Exposed To Entire Network",
+    "service": "network",
+    "category": "",
+    "resources": [],
+    "fix": "Remove NSG rules allowing legacy or unencrypted protocols on broad scopes.",
+    "source_file": "checks/cloud/azure/network/sensitive_port_exposed_to_network.rego",
+    "service_group": "network"
+  },
+  {
+    "tool": "trivy",
+    "id": "AZU-0075",
+    "severity": "medium",
+    "title": "Network Interfaces IP Forwarding Enabled",
+    "service": "network",
+    "category": "",
+    "resources": [],
+    "fix": "Disable IP forwarding on network interfaces unless specifically required for routing purposes.",
+    "source_file": "checks/cloud/azure/network/network_ip_forwarding_enabled.rego",
+    "service_group": "network"
+  },
+  {
+    "tool": "trivy",
+    "id": "AZU-0076",
+    "severity": "medium",
+    "title": "Network Interfaces With Public IP",
+    "service": "network",
+    "category": "",
+    "resources": [],
+    "fix": "Remove public IP addresses from network interfaces unless they are specifically required for internet connectivity.",
+    "source_file": "checks/cloud/azure/network/network_interface_public_ip.rego",
+    "service_group": "network"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV2_AZURE_35",
+    "severity": "",
+    "title": "Ensure Azure recovery services vault is configured with managed identity",
+    "service": "recovery",
+    "category": "IAM",
+    "resources": [
+      "azurerm_recovery_services_vault"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/graph_checks/azure/AzureRecoveryServicesvaultConfigManagedIdentity.yaml",
+    "service_group": "recovery"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_148",
+    "severity": "",
+    "title": "Ensure Redis Cache is using the latest version of TLS encryption",
+    "service": "redis",
+    "category": "NETWORKING",
+    "resources": [
+      "azurerm_redis_cache"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/RedisCacheMinTLSVersion.py",
+    "service_group": "redis"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_230",
+    "severity": "",
+    "title": "Standard Replication should be enabled",
+    "service": "redis",
+    "category": "BACKUP_AND_RECOVERY",
+    "resources": [
+      "azurerm_redis_cache"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/RedisCacheStandardReplicationEnabled.py",
+    "service_group": "redis"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_89",
+    "severity": "",
+    "title": "Ensure that Azure Cache for Redis disables public network access",
+    "service": "redis",
+    "category": "NETWORKING",
+    "resources": [
+      "azurerm_redis_cache"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/RedisCachePublicNetworkAccessEnabled.py",
+    "service_group": "redis"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_91",
+    "severity": "",
+    "title": "Ensure that only SSL are enabled for Cache for Redis",
+    "service": "redis",
+    "category": "NETWORKING",
+    "resources": [
+      "azurerm_redis_cache"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/RedisCacheEnableNonSSLPort.py",
+    "service_group": "redis"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_124",
+    "severity": "",
+    "title": "Ensure that Azure Cognitive Search disables public network access",
+    "service": "search",
+    "category": "NETWORKING",
+    "resources": [
+      "azurerm_search_service"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/AzureSearchPublicNetworkAccessDisabled.py",
+    "service_group": "search"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_207",
+    "severity": "",
+    "title": "Ensure Azure Cognitive Search service uses managed identities to access Azure resources",
+    "service": "search",
+    "category": "IAM",
+    "resources": [
+      "azurerm_search_service"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/AzureSearchManagedIdentity.py",
+    "service_group": "search"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_208",
+    "severity": "",
+    "title": "Ensure that Azure Cognitive Search maintains SLA for index updates",
+    "service": "search",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "azurerm_search_service"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/AzureSearchSLAIndex.py",
+    "service_group": "search"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_209",
+    "severity": "",
+    "title": "Ensure that Azure Cognitive Search maintains SLA for search index queries",
+    "service": "search",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "azurerm_search_service"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/AzureSearchSLAQueryUpdates.py",
+    "service_group": "search"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_210",
+    "severity": "",
+    "title": "Ensure Azure Cognitive Search service allowed IPS does not give public Access",
+    "service": "search",
+    "category": "NETWORKING",
+    "resources": [
+      "azurerm_search_service"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/AzureSearchAllowedIPsNotGlobal.py",
+    "service_group": "search"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_131",
+    "severity": "",
+    "title": "Ensure that 'Security contact emails' is set",
+    "service": "security",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "azurerm_security_center_contact"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/SecurityCenterContactEmails.py",
+    "service_group": "security"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_19",
+    "severity": "",
+    "title": "Ensure that standard pricing tier is selected",
+    "service": "security",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "azurerm_security_center_subscription_pricing"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/SecurityCenterStandardPricing.py",
+    "service_group": "security"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_20",
+    "severity": "",
+    "title": "Ensure that security contact 'Phone number' is set",
+    "service": "security",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "azurerm_security_center_contact"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/SecurityCenterContactPhone.py",
+    "service_group": "security"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_21",
+    "severity": "",
+    "title": "Ensure that 'Send email notification for high severity alerts' is set to 'On'",
+    "service": "security",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "azurerm_security_center_contact"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/SecurityCenterContactEmailAlert.py",
+    "service_group": "security"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_22",
+    "severity": "",
+    "title": "Ensure that 'Send email notification for high severity alerts' is set to 'On'",
+    "service": "security",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "azurerm_security_center_contact"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/SecurityCenterContactEmailAlertAdmins.py",
+    "service_group": "security"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_234",
+    "severity": "",
+    "title": "Ensure that Azure Defender for cloud is set to On for Resource Manager",
+    "service": "security",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "azurerm_security_center_subscription_pricing"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/AzureDefenderDisabledForResManager.py",
+    "service_group": "security"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_55",
+    "severity": "",
+    "title": "Ensure that Azure Defender is set to On for Servers",
+    "service": "security",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "azurerm_security_center_subscription_pricing"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/AzureDefenderOnServers.py",
+    "service_group": "security"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_61",
+    "severity": "",
+    "title": "Ensure that Azure Defender is set to On for App Service",
+    "service": "security",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "azurerm_security_center_subscription_pricing"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/AzureDefenderOnAppServices.py",
+    "service_group": "security"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_69",
+    "severity": "",
+    "title": "Ensure that Azure Defender is set to On for Azure SQL database servers",
+    "service": "security",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "azurerm_security_center_subscription_pricing"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/AzureDefenderOnSqlServers.py",
+    "service_group": "security"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_79",
+    "severity": "",
+    "title": "Ensure that Azure Defender is set to On for SQL servers on machines",
+    "service": "security",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "azurerm_security_center_subscription_pricing"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/AzureDefenderOnSqlServerVMS.py",
+    "service_group": "security"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_84",
+    "severity": "",
+    "title": "Ensure that Azure Defender is set to On for Storage",
+    "service": "security",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "azurerm_security_center_subscription_pricing"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/AzureDefenderOnStorage.py",
+    "service_group": "security"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_85",
+    "severity": "",
+    "title": "Ensure that Azure Defender is set to On for Kubernetes",
+    "service": "security",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "azurerm_security_center_subscription_pricing"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/AzureDefenderOnKubernetes.py",
+    "service_group": "security"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_86",
+    "severity": "",
+    "title": "Ensure that Azure Defender is set to On for Container Registries",
+    "service": "security",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "azurerm_security_center_subscription_pricing"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/AzureDefenderOnContainerRegistry.py",
+    "service_group": "security"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_87",
+    "severity": "",
+    "title": "Ensure that Azure Defender is set to On for Key Vault",
+    "service": "security",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "azurerm_security_center_subscription_pricing"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/AzureDefenderOnKeyVaults.py",
+    "service_group": "security"
+  },
+  {
+    "tool": "trivy",
+    "id": "AZU-0044",
+    "severity": "medium",
+    "title": "Send notification emails for high severity alerts",
+    "service": "security-center",
+    "category": "",
+    "resources": [],
+    "fix": "Set alert notifications to be on",
+    "source_file": "checks/cloud/azure/securitycenter/alert_on_severe_notifications.rego",
+    "service_group": "security_center"
+  },
+  {
+    "tool": "trivy",
+    "id": "AZU-0045",
+    "severity": "low",
+    "title": "Enable the standard security center subscription tier",
+    "service": "security-center",
+    "category": "",
+    "resources": [],
+    "fix": "Enable standard subscription tier to benefit from Azure Defender",
+    "source_file": "checks/cloud/azure/securitycenter/enable_standard_subscription.rego",
+    "service_group": "security_center"
+  },
+  {
+    "tool": "trivy",
+    "id": "AZU-0046",
+    "severity": "low",
+    "title": "The required contact details should be set for security center",
+    "service": "security-center",
+    "category": "",
+    "resources": [],
+    "fix": "Set a telephone number for security center contact",
+    "source_file": "checks/cloud/azure/securitycenter/set_required_contact_details.rego",
+    "service_group": "security_center"
+  },
+  {
+    "tool": "trivy",
+    "id": "AZU-0062",
+    "severity": "medium",
+    "title": "Security Contact Email",
+    "service": "security-center",
+    "category": "",
+    "resources": [],
+    "fix": "Set additional security contact emails in Defender for Cloud under Environment Settings > Email notifications.",
+    "source_file": "checks/cloud/azure/securitycenter/security_contact_email.rego",
+    "service_group": "security_center"
+  },
+  {
+    "tool": "trivy",
+    "id": "AZU-0063",
+    "severity": "medium",
+    "title": "Email Alerts Disabled",
+    "service": "security-center",
+    "category": "",
+    "resources": [],
+    "fix": "Enable alert notifications in Defender for Cloud and configure security contacts.",
+    "source_file": "checks/cloud/azure/securitycenter/email_alerts_disabled.rego",
+    "service_group": "security_center"
+  },
+  {
+    "tool": "trivy",
+    "id": "AZU-0064",
+    "severity": "high",
+    "title": "Security Contact Disabled",
+    "service": "security-center",
+    "category": "",
+    "resources": [],
+    "fix": "Enable the security contact to ensure security notifications are delivered.",
+    "source_file": "checks/cloud/azure/securitycenter/security_contact_disabled.rego",
+    "service_group": "security_center"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_125",
+    "severity": "",
+    "title": "Ensures that Service Fabric use three levels of protection available",
+    "service": "service",
+    "category": "ENCRYPTION",
+    "resources": [
+      "azurerm_service_fabric_cluster"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/AzureServiceFabricClusterProtectionLevel.py",
+    "service_group": "service"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_126",
+    "severity": "",
+    "title": "Ensures that Active Directory is used for authentication for Service Fabric",
+    "service": "service",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "azurerm_service_fabric_cluster"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/ActiveDirectoryUsedAuthenticationServiceFabric.py",
+    "service_group": "service"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_211",
+    "severity": "",
+    "title": "Ensure App Service plan suitable for production use",
+    "service": "service",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "azurerm_service_plan"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/AppServiceSkuMinimum.py",
+    "service_group": "service"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_212",
+    "severity": "",
+    "title": "Ensure App Service has a minimum number of instances for failover",
+    "service": "service",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "azurerm_service_plan"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/AppServiceInstanceMinimum.py",
+    "service_group": "service"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_225",
+    "severity": "",
+    "title": "Ensure the App Service Plan is zone redundant",
+    "service": "service",
+    "category": "BACKUP_AND_RECOVERY",
+    "resources": [
+      "azurerm_service_plan"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/AppServicePlanZoneRedundant.py",
+    "service_group": "service"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_199",
+    "severity": "",
+    "title": "Ensure that Azure Service Bus uses double encryption",
+    "service": "servicebus",
+    "category": "ENCRYPTION",
+    "resources": [
+      "azurerm_servicebus_namespace"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/AzureServicebusDoubleEncryptionEnabled.py",
+    "service_group": "servicebus"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_201",
+    "severity": "",
+    "title": "Ensure that Azure Service Bus uses a customer-managed key to encrypt data",
+    "service": "servicebus",
+    "category": "ENCRYPTION",
+    "resources": [
+      "azurerm_servicebus_namespace"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/AzureServicebusHasCMK.py",
+    "service_group": "servicebus"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_202",
+    "severity": "",
+    "title": "Ensure that Managed identity provider is enabled for Azure Service Bus",
+    "service": "servicebus",
+    "category": "IAM",
+    "resources": [
+      "azurerm_servicebus_namespace"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/AzureServicebusIdentityProviderEnabled.py",
+    "service_group": "servicebus"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_203",
+    "severity": "",
+    "title": "Ensure Azure Service Bus Local Authentication is disabled",
+    "service": "servicebus",
+    "category": "IAM",
+    "resources": [
+      "azurerm_servicebus_namespace"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/AzureServicebusLocalAuthDisabled.py",
+    "service_group": "servicebus"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_204",
+    "severity": "",
+    "title": "Ensure 'public network access enabled' is set to 'False' for Azure Service Bus",
+    "service": "servicebus",
+    "category": "NETWORKING",
+    "resources": [
+      "azurerm_servicebus_namespace"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/AzureServicebusPublicAccessDisabled.py",
+    "service_group": "servicebus"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_205",
+    "severity": "",
+    "title": "Ensure Azure Service Bus is using the latest version of TLS encryption",
+    "service": "servicebus",
+    "category": "NETWORKING",
+    "resources": [
+      "azurerm_servicebus_namespace"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/AzureServicebusMinTLSVersion.py",
+    "service_group": "servicebus"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_196",
+    "severity": "",
+    "title": "Ensure that SignalR uses a Paid Sku for its SLA",
+    "service": "signalr",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "azurerm_signalr_service"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/SignalRSKUSLA.py",
+    "service_group": "signalr"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV2_AZURE_23",
+    "severity": "",
+    "title": "Ensure Azure spring cloud is configured with Virtual network (Vnet)",
+    "service": "spring",
+    "category": "NETWORKING",
+    "resources": [
+      "azurerm_spring_cloud_service"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/graph_checks/azure/AzureSpringCloudConfigWithVnet.yaml",
+    "service_group": "spring"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV2_AZURE_55",
+    "severity": "",
+    "title": "Ensure Azure Spring Cloud app end-to-end TLS is enabled",
+    "service": "spring",
+    "category": "NETWORKING",
+    "resources": [
+      "azurerm_spring_cloud_app",
+      "azurerm_spring_cloud_service"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/graph_checks/azure/AzureSpringCloudTLSDisabled.yaml",
+    "service_group": "spring"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_161",
+    "severity": "",
+    "title": "Ensures Spring Cloud API Portal is enabled on for HTTPS",
+    "service": "spring",
+    "category": "NETWORKING",
+    "resources": [
+      "azurerm_spring_cloud_api_portal"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/SpringCloudAPIPortalHTTPSOnly.py",
+    "service_group": "spring"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_162",
+    "severity": "",
+    "title": "Ensures Spring Cloud API Portal Public Access Is Disabled",
+    "service": "spring",
+    "category": "NETWORKING",
+    "resources": [
+      "azurerm_spring_cloud_api_portal"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/SpringCloudAPIPortalPublicAccessIsDisabled.py",
+    "service_group": "spring"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV2_AZURE_1",
+    "severity": "",
+    "title": "Ensure storage for critical data are encrypted with Customer Managed Key",
+    "service": "storage",
+    "category": "ENCRYPTION",
+    "resources": [
+      "azurerm_storage_account"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/graph_checks/azure/StorageCriticalDataEncryptedCMK.yaml",
+    "service_group": "storage"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV2_AZURE_33",
+    "severity": "",
+    "title": "Ensure storage account is configured with private endpoint",
+    "service": "storage",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "azurerm_storage_account"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/graph_checks/azure/AzureStorageAccConfigWithPrivateEndpoint.yaml",
+    "service_group": "storage"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV2_AZURE_38",
+    "severity": "",
+    "title": "Ensure soft-delete is enabled on Azure storage account",
+    "service": "storage",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "azurerm_storage_account"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/graph_checks/azure/AzureStorageAccountEnableSoftDelete.yaml",
+    "service_group": "storage"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV2_AZURE_40",
+    "severity": "",
+    "title": "Ensure storage account is not configured with Shared Key authorization",
+    "service": "storage",
+    "category": "IAM",
+    "resources": [
+      "azurerm_storage_account"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/graph_checks/azure/AzureStorageAccConfigSharedKeyAuth.yaml",
+    "service_group": "storage"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV2_AZURE_41",
+    "severity": "",
+    "title": "Ensure storage account is configured with SAS expiration policy",
+    "service": "storage",
+    "category": "IAM",
+    "resources": [
+      "azurerm_storage_account"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/graph_checks/azure/AzureStorageAccConfig_SAS_expirePolicy.yaml",
+    "service_group": "storage"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV2_AZURE_47",
+    "severity": "",
+    "title": "Ensure storage account is configured without blob anonymous access",
+    "service": "storage",
+    "category": "IAM",
+    "resources": [
+      "azurerm_storage_account"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/graph_checks/azure/AzureStorageAccConfigWithoutBlobAnonymousAccess.yaml",
+    "service_group": "storage"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_190",
+    "severity": "",
+    "title": "Ensure that Storage blobs restrict public access",
+    "service": "storage",
+    "category": "NETWORKING",
+    "resources": [
+      "azurerm_storage_account"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/StorageBlobRestrictPublicAccess.py",
+    "service_group": "storage"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_206",
+    "severity": "",
+    "title": "Ensure that Storage Accounts use replication",
+    "service": "storage",
+    "category": "BACKUP_AND_RECOVERY",
+    "resources": [
+      "azurerm_storage_account"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/StorageAccountsUseReplication.py",
+    "service_group": "storage"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_244",
+    "severity": "",
+    "title": "Avoid the use of local users for Azure Storage unless necessary",
+    "service": "storage",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "azurerm_storage_account"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/StorageLocalUsers.py",
+    "service_group": "storage"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_250",
+    "severity": "",
+    "title": "Ensure Storage Sync Service is not configured with overly permissive network access",
+    "service": "storage",
+    "category": "NETWORKING",
+    "resources": [
+      "azurerm_storage_sync"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/StorageSyncServicePermissiveAccess.py",
+    "service_group": "storage"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_3",
+    "severity": "",
+    "title": "Ensure that 'enable_https_traffic_only' is enabled",
+    "service": "storage",
+    "category": "ENCRYPTION",
+    "resources": [
+      "azurerm_storage_account"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/StorageAccountsTransportEncryption.py",
+    "service_group": "storage"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_33",
+    "severity": "",
+    "title": "Ensure Storage logging is enabled for Queue service for read, write and delete requests",
+    "service": "storage",
+    "category": "LOGGING",
+    "resources": [
+      "azurerm_storage_account"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/StorageAccountLoggingQueueServiceEnabled.py",
+    "service_group": "storage"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_34",
+    "severity": "",
+    "title": "Ensure that 'Public access level' is set to Private for blob containers",
+    "service": "storage",
+    "category": "NETWORKING",
+    "resources": [
+      "azurerm_storage_container"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/StorageBlobServiceContainerPrivateAccess.py",
+    "service_group": "storage"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_35",
+    "severity": "",
+    "title": "Ensure default network access rule for Storage Accounts is set to deny",
+    "service": "storage",
+    "category": "NETWORKING",
+    "resources": [
+      "azurerm_storage_account",
+      "azurerm_storage_account_network_rules"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/StorageAccountDefaultNetworkAccessDeny.py",
+    "service_group": "storage"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_36",
+    "severity": "",
+    "title": "Ensure 'Trusted Microsoft Services' is enabled for Storage Account access",
+    "service": "storage",
+    "category": "NETWORKING",
+    "resources": [
+      "azurerm_storage_account",
+      "azurerm_storage_account_network_rules"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/StorageAccountAzureServicesAccessEnabled.py",
+    "service_group": "storage"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_43",
+    "severity": "",
+    "title": "Ensure Storage Accounts adhere to the naming rules",
+    "service": "storage",
+    "category": "CONVENTION",
+    "resources": [
+      "azurerm_storage_account"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/StorageAccountName.py",
+    "service_group": "storage"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_44",
+    "severity": "",
+    "title": "Ensure Storage Account is using the latest version of TLS encryption",
+    "service": "storage",
+    "category": "NETWORKING",
+    "resources": [
+      "azurerm_storage_account"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/StorageAccountMinimumTlsVersion.py",
+    "service_group": "storage"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_59",
+    "severity": "",
+    "title": "Ensure that Storage accounts disallow public access",
+    "service": "storage",
+    "category": "NETWORKING",
+    "resources": [
+      "azurerm_storage_account"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/StorageAccountDisablePublicAccess.py",
+    "service_group": "storage"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_64",
+    "severity": "",
+    "title": "Ensure that Azure File Sync disables public network access",
+    "service": "storage",
+    "category": "NETWORKING",
+    "resources": [
+      "azurerm_storage_sync"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/StorageSyncPublicAccessDisabled.py",
+    "service_group": "storage"
+  },
+  {
+    "tool": "trivy",
+    "id": "AZU-0007",
+    "severity": "high",
+    "title": "Storage containers in blob storage mode should not have public access",
+    "service": "storage",
+    "category": "",
+    "resources": [],
+    "fix": "Disable public access to storage containers",
+    "source_file": "checks/cloud/azure/storage/no_public_access.rego",
+    "service_group": "storage"
+  },
+  {
+    "tool": "trivy",
+    "id": "AZU-0008",
+    "severity": "high",
+    "title": "Storage accounts should be configured to only accept transfers that are over secure connections",
+    "service": "storage",
+    "category": "",
+    "resources": [],
+    "fix": "Only allow secure connection for transferring data into storage accounts",
+    "source_file": "checks/cloud/azure/storage/enforce_https.rego",
+    "service_group": "storage"
+  },
+  {
+    "tool": "trivy",
+    "id": "AZU-0009",
+    "severity": "medium",
+    "title": "When using Queue Services for a storage account, logging should be enabled.",
+    "service": "storage",
+    "category": "",
+    "resources": [],
+    "fix": "Enable logging for Queue Services",
+    "source_file": "checks/cloud/azure/storage/queue_services_logging_enabled.rego",
+    "service_group": "storage"
+  },
+  {
+    "tool": "trivy",
+    "id": "AZU-0010",
+    "severity": "high",
+    "title": "Trusted Microsoft Services should have bypass access to Storage accounts",
+    "service": "storage",
+    "category": "",
+    "resources": [],
+    "fix": "Allow Trusted Microsoft Services to bypass",
+    "source_file": "checks/cloud/azure/storage/allow_microsoft_service_bypass.rego",
+    "service_group": "storage"
+  },
+  {
+    "tool": "trivy",
+    "id": "AZU-0011",
+    "severity": "critical",
+    "title": "The minimum TLS version for Storage Accounts should be TLS1_2 or higher",
+    "service": "storage",
+    "category": "",
+    "resources": [],
+    "fix": "Use a more recent TLS version for the storage account",
+    "source_file": "checks/cloud/azure/storage/use_secure_tls_policy.rego",
+    "service_group": "storage"
+  },
+  {
+    "tool": "trivy",
+    "id": "AZU-0012",
+    "severity": "critical",
+    "title": "The default action on Storage account network rules should be set to deny",
+    "service": "storage",
+    "category": "",
+    "resources": [],
+    "fix": "Set network rules to deny",
+    "source_file": "checks/cloud/azure/storage/default_action_deny.rego",
+    "service_group": "storage"
+  },
+  {
+    "tool": "trivy",
+    "id": "AZU-0056",
+    "severity": "medium",
+    "title": "Storage account should have blob soft delete enabled",
+    "service": "storage",
+    "category": "",
+    "resources": [],
+    "fix": "Enable soft delete for blobs with an appropriate retention period",
+    "source_file": "checks/cloud/azure/storage/blobs_soft_deletion_enabled.rego",
+    "service_group": "storage"
+  },
+  {
+    "tool": "trivy",
+    "id": "AZU-0057",
+    "severity": "medium",
+    "title": "Storage account should have logging enabled",
+    "service": "storage",
+    "category": "",
+    "resources": [],
+    "fix": "Enable logging for at least one storage service (Queue, Table, or Blob)",
+    "source_file": "checks/cloud/azure/storage/storage_account_logging_enabled.rego",
+    "service_group": "storage"
+  },
+  {
+    "tool": "trivy",
+    "id": "AZU-0058",
+    "severity": "low",
+    "title": "Storage account should use geo-redundant replication",
+    "service": "storage",
+    "category": "",
+    "resources": [],
+    "fix": "Configure storage account to use geo-redundant replication (GRS, RAGRS, GZRS, or RAGZRS)",
+    "source_file": "checks/cloud/azure/storage/enable_geo_redundant_backups.rego",
+    "service_group": "storage"
+  },
+  {
+    "tool": "trivy",
+    "id": "AZU-0059",
+    "severity": "high",
+    "title": "Storage account should have secure transfer and minimum TLS version configured",
+    "service": "storage",
+    "category": "",
+    "resources": [],
+    "fix": "Enable secure transfer and set minimum TLS version to TLS1_2 or higher",
+    "source_file": "checks/cloud/azure/storage/log_storage_encryption.rego",
+    "service_group": "storage"
+  },
+  {
+    "tool": "trivy",
+    "id": "AZU-0060",
+    "severity": "medium",
+    "title": "Storage account should use customer-managed keys for encryption",
+    "service": "storage",
+    "category": "",
+    "resources": [],
+    "fix": "Configure customer-managed keys for storage account encryption",
+    "source_file": "checks/cloud/azure/storage/blob_container_cmk_encrypted.rego",
+    "service_group": "storage"
+  },
+  {
+    "tool": "trivy",
+    "id": "AZU-0061",
+    "severity": "medium",
+    "title": "Storage account should have infrastructure encryption enabled",
+    "service": "storage",
+    "category": "",
+    "resources": [],
+    "fix": "Enable infrastructure encryption for storage account",
+    "source_file": "checks/cloud/azure/storage/infrastructure_encryption_enabled.rego",
+    "service_group": "storage"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV2_AZURE_19",
+    "severity": "",
+    "title": "Ensure that Azure Synapse workspaces have no IP firewall rules attached",
+    "service": "synapse",
+    "category": "NETWORKING",
+    "resources": [
+      "azurerm_synapse_workspace"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/graph_checks/azure/AzureSynapseWorkspacesHaveNoIPFirewallRulesAttached.yaml",
+    "service_group": "synapse"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV2_AZURE_46",
+    "severity": "",
+    "title": "Ensure that Azure Synapse Workspace vulnerability assessment is enabled",
+    "service": "synapse",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "azurerm_synapse_workspace_security_alert_policy",
+      "azurerm_synapse_workspace_vulnerability_assessment"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/graph_checks/azure/AzureSynapseWorkspaceVAisEnabled.yaml",
+    "service_group": "synapse"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV2_AZURE_51",
+    "severity": "",
+    "title": "Ensure Synapse SQL Pool has a security alert policy",
+    "service": "synapse",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "azurerm_synapse_sql_pool",
+      "azurerm_synapse_sql_pool_security_alert_policy"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/graph_checks/azure/SynapseSQLPoolHasSecurityAlertPolicy.yaml",
+    "service_group": "synapse"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV2_AZURE_52",
+    "severity": "",
+    "title": "Ensure Synapse SQL Pool has vulnerability assessment attached",
+    "service": "synapse",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "azurerm_synapse_sql_pool",
+      "azurerm_synapse_sql_pool_security_alert_policy",
+      "azurerm_synapse_sql_pool_vulnerability_assessment"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/graph_checks/azure/SynapseSQLPoolHasVulnerabilityAssessment.yaml",
+    "service_group": "synapse"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV2_AZURE_53",
+    "severity": "",
+    "title": "Ensure Azure Synapse Workspace has extended audit logs",
+    "service": "synapse",
+    "category": "LOGGING",
+    "resources": [
+      "azurerm_synapse_workspace"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/graph_checks/azure/SynapseWorkspaceHasExtendedAuditLogs.yaml",
+    "service_group": "synapse"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV2_AZURE_54",
+    "severity": "",
+    "title": "Ensure log monitoring is enabled for Synapse SQL Pool",
+    "service": "synapse",
+    "category": "LOGGING",
+    "resources": [
+      "azurerm_synapse_sql_pool",
+      "azurerm_synapse_sql_pool_extended_auditing_policy"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/graph_checks/azure/SynapseLogMonitoringEnabledForSQLPool.yaml",
+    "service_group": "synapse"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_157",
+    "severity": "",
+    "title": "Ensure that Synapse workspace has data_exfiltration_protection_enabled",
+    "service": "synapse",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "azurerm_synapse_workspace"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/SynapseWorkspaceEnablesDataExfilProtection.py",
+    "service_group": "synapse"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_239",
+    "severity": "",
+    "title": "Ensure Azure Synapse Workspace administrator login password is not exposed",
+    "service": "synapse",
+    "category": "SECRETS",
+    "resources": [
+      "azurerm_synapse_workspace"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/SynapseWorkspaceAdministratorLoginPasswordHidden.py",
+    "service_group": "synapse"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_240",
+    "severity": "",
+    "title": "Ensure Azure Synapse Workspace is encrypted with a CMK",
+    "service": "synapse",
+    "category": "ENCRYPTION",
+    "resources": [
+      "azurerm_synapse_workspace"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/SynapseWorkspaceCMKEncryption.py",
+    "service_group": "synapse"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_241",
+    "severity": "",
+    "title": "Ensure Synapse SQL pools are encrypted",
+    "service": "synapse",
+    "category": "ENCRYPTION",
+    "resources": [
+      "azurerm_synapse_sql_pool"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/SynapseSQLPoolDataEncryption.py",
+    "service_group": "synapse"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_242",
+    "severity": "",
+    "title": "Ensure isolated compute is enabled for Synapse Spark pools",
+    "service": "synapse",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "azurerm_synapse_spark_pool"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/AzureSparkPoolIsolatedComputeEnabled.py",
+    "service_group": "synapse"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_58",
+    "severity": "",
+    "title": "Ensure that Azure Synapse workspaces enables managed virtual networks",
+    "service": "synapse",
+    "category": "NETWORKING",
+    "resources": [
+      "azurerm_synapse_workspace"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/SynapseWorkspaceEnablesManagedVirtualNetworks.py",
+    "service_group": "synapse"
+  },
+  {
+    "tool": "trivy",
+    "id": "AZU-0034",
+    "severity": "medium",
+    "title": "Synapse Workspace should have managed virtual network enabled, the default is disabled.",
+    "service": "synapse",
+    "category": "",
+    "resources": [],
+    "fix": "Set manage virtual network to enabled",
+    "source_file": "checks/cloud/azure/synapse/virtual_network_enabled.rego",
+    "service_group": "synapse"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_122",
+    "severity": "",
+    "title": "Ensure that Application Gateway uses WAF in \"Detection\" or \"Prevention\" modes",
+    "service": "web",
+    "category": "NETWORKING",
+    "resources": [
+      "azurerm_web_application_firewall_policy"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/AppGWUseWAFMode.py",
+    "service_group": "web"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_135",
+    "severity": "",
+    "title": "Ensure Application Gateway WAF prevents message lookup in Log4j2. See CVE-2021-44228 aka log4jshell",
+    "service": "web",
+    "category": "APPLICATION_SECURITY",
+    "resources": [
+      "azurerm_web_application_firewall_policy"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/AppGatewayWAFACLCVE202144228.py",
+    "service_group": "web"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_175",
+    "severity": "",
+    "title": "Ensure Web PubSub uses a SKU with an SLA",
+    "service": "web",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "azurerm_web_pubsub"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/PubsubSKUSLA.py",
+    "service_group": "web"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_AZURE_176",
+    "severity": "",
+    "title": "Ensure Web PubSub uses managed identities to access Azure resources",
+    "service": "web",
+    "category": "IAM",
+    "resources": [
+      "azurerm_web_pubsub"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/azure/PubsubSpecifyIdentity.py",
+    "service_group": "web"
+  }
+]

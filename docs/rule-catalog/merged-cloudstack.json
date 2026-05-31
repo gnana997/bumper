@@ -1,0 +1,14 @@
+[
+  {
+    "tool": "trivy",
+    "id": "CLDSTK-0001",
+    "severity": "high",
+    "title": "No sensitive data stored in user_data",
+    "service": "compute",
+    "category": "",
+    "resources": [],
+    "fix": "Don't use sensitive data in the user data section",
+    "source_file": "checks/cloud/cloudstack/compute/no_sensitive_info.rego",
+    "service_group": "compute"
+  }
+]

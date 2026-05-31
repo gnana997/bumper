@@ -1,0 +1,715 @@
+[
+  {
+    "tool": "checkov",
+    "id": "CKV_K8S_1",
+    "severity": "",
+    "title": "Do not admit containers wishing to share the host process ID namespace",
+    "service": "kubernetes",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "kubernetes_pod_security_policy"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/kubernetes/ShareHostPIDPSP.py",
+    "service_group": "kubernetes"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_K8S_10",
+    "severity": "",
+    "title": "CPU requests should be set",
+    "service": "kubernetes",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "kubernetes_pod",
+      "kubernetes_pod_v1",
+      "kubernetes_deployment",
+      "kubernetes_deployment_v1"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/kubernetes/CPURequests.py",
+    "service_group": "kubernetes"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_K8S_11",
+    "severity": "",
+    "title": "CPU Limits should be set",
+    "service": "kubernetes",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "kubernetes_pod",
+      "kubernetes_pod_v1",
+      "kubernetes_deployment",
+      "kubernetes_deployment_v1"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/kubernetes/CPULimits.py",
+    "service_group": "kubernetes"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_K8S_12",
+    "severity": "",
+    "title": "Memory Limits should be set",
+    "service": "kubernetes",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "kubernetes_pod",
+      "kubernetes_pod_v1",
+      "kubernetes_deployment",
+      "kubernetes_deployment_v1"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/kubernetes/MemoryLimits.py",
+    "service_group": "kubernetes"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_K8S_13",
+    "severity": "",
+    "title": "Memory requests should be set",
+    "service": "kubernetes",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "kubernetes_pod",
+      "kubernetes_pod_v1",
+      "kubernetes_deployment",
+      "kubernetes_deployment_v1"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/kubernetes/MemoryRequests.py",
+    "service_group": "kubernetes"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_K8S_14",
+    "severity": "",
+    "title": "Image Tag should be fixed - not latest or blank",
+    "service": "kubernetes",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "kubernetes_pod",
+      "kubernetes_pod_v1",
+      "kubernetes_deployment",
+      "kubernetes_deployment_v1"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/kubernetes/ImageTagFixed.py",
+    "service_group": "kubernetes"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_K8S_15",
+    "severity": "",
+    "title": "Image Pull Policy should be Always",
+    "service": "kubernetes",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "kubernetes_pod",
+      "kubernetes_pod_v1",
+      "kubernetes_deployment",
+      "kubernetes_deployment_v1"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/kubernetes/ImagePullPolicyAlways.py",
+    "service_group": "kubernetes"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_K8S_159",
+    "severity": "",
+    "title": "Do not admit privileged containers",
+    "service": "kubernetes",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "kubernetes_pod",
+      "kubernetes_pod_v1",
+      "kubernetes_deployment",
+      "kubernetes_deployment_v1"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/kubernetes/DangerousGitSync.py",
+    "service_group": "kubernetes"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_K8S_16",
+    "severity": "",
+    "title": "Do not admit privileged containers",
+    "service": "kubernetes",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "kubernetes_pod",
+      "kubernetes_pod_v1",
+      "kubernetes_deployment",
+      "kubernetes_deployment_v1"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/kubernetes/PrivilegedContainer.py",
+    "service_group": "kubernetes"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_K8S_17",
+    "severity": "",
+    "title": "Do not admit containers wishing to share the host process ID namespace",
+    "service": "kubernetes",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "kubernetes_pod",
+      "kubernetes_pod_v1",
+      "kubernetes_deployment",
+      "kubernetes_deployment_v1"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/kubernetes/ShareHostPID.py",
+    "service_group": "kubernetes"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_K8S_18",
+    "severity": "",
+    "title": "Do not admit containers wishing to share the host IPC namespace",
+    "service": "kubernetes",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "kubernetes_pod",
+      "kubernetes_pod_v1",
+      "kubernetes_deployment",
+      "kubernetes_deployment_v1"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/kubernetes/ShareHostIPC.py",
+    "service_group": "kubernetes"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_K8S_19",
+    "severity": "",
+    "title": "Do not admit containers wishing to share the host network namespace",
+    "service": "kubernetes",
+    "category": "NETWORKING",
+    "resources": [
+      "kubernetes_pod",
+      "kubernetes_pod_v1",
+      "kubernetes_deployment",
+      "kubernetes_deployment_v1"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/kubernetes/SharedHostNetworkNamespace.py",
+    "service_group": "kubernetes"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_K8S_2",
+    "severity": "",
+    "title": "Do not admit privileged containers",
+    "service": "kubernetes",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "kubernetes_pod_security_policy"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/kubernetes/PrivilegedContainerPSP.py",
+    "service_group": "kubernetes"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_K8S_20",
+    "severity": "",
+    "title": "Containers should not run with allowPrivilegeEscalation",
+    "service": "kubernetes",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "kubernetes_pod",
+      "kubernetes_pod_v1",
+      "kubernetes_deployment",
+      "kubernetes_deployment_v1"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/kubernetes/AllowPrivilegeEscalation.py",
+    "service_group": "kubernetes"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_K8S_21",
+    "severity": "",
+    "title": "The default namespace should not be used",
+    "service": "kubernetes",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "kubernetes_pod",
+      "kubernetes_pod_v1",
+      "kubernetes_deployment",
+      "kubernetes_deployment_v1",
+      "kubernetes_daemonset",
+      "kubernetes_daemon_set_v1",
+      "kubernetes_stateful_set",
+      "kubernetes_stateful_set_v1",
+      "kubernetes_replication_controller",
+      "kubernetes_replication_controller_v1",
+      "kubernetes_job",
+      "kubernetes_job_v1",
+      "kubernetes_cron_job",
+      "kubernetes_cron_job_v1",
+      "kubernetes_service",
+      "kubernetes_service_v1",
+      "kubernetes_secret",
+      "kubernetes_secret_v1",
+      "kubernetes_service_account",
+      "kubernetes_service_account_v1",
+      "kubernetes_role_binding",
+      "kubernetes_role_binding_v1",
+      "kubernetes_config_map",
+      "kubernetes_config_map_v1",
+      "kubernetes_ingress",
+      "kubernetes_ingress_v1"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/kubernetes/DefaultNamespace.py",
+    "service_group": "kubernetes"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_K8S_22",
+    "severity": "",
+    "title": "Use read-only filesystem for containers where possible",
+    "service": "kubernetes",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "kubernetes_pod",
+      "kubernetes_pod_v1",
+      "kubernetes_deployment",
+      "kubernetes_deployment_v1"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/kubernetes/ReadonlyRootFilesystem.py",
+    "service_group": "kubernetes"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_K8S_24",
+    "severity": "",
+    "title": "Do not allow containers with added capability",
+    "service": "kubernetes",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "kubernetes_pod_security_policy"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/kubernetes/AllowedCapabilitiesPSP.py",
+    "service_group": "kubernetes"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_K8S_25",
+    "severity": "",
+    "title": "Minimize the admission of containers with added capability",
+    "service": "kubernetes",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "kubernetes_pod",
+      "kubernetes_pod_v1",
+      "kubernetes_deployment",
+      "kubernetes_deployment_v1"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/kubernetes/AllowedCapabilities.py",
+    "service_group": "kubernetes"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_K8S_26",
+    "severity": "",
+    "title": "Do not specify hostPort unless absolutely necessary",
+    "service": "kubernetes",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "kubernetes_pod",
+      "kubernetes_pod_v1",
+      "kubernetes_deployment",
+      "kubernetes_deployment_v1"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/kubernetes/HostPort.py",
+    "service_group": "kubernetes"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_K8S_27",
+    "severity": "",
+    "title": "Do not expose the docker daemon socket to containers",
+    "service": "kubernetes",
+    "category": "NETWORKING",
+    "resources": [
+      "kubernetes_pod",
+      "kubernetes_pod_v1",
+      "kubernetes_deployment",
+      "kubernetes_deployment_v1",
+      "kubernetes_daemonset",
+      "kubernetes_daemon_set_v1"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/kubernetes/DockerSocketVolume.py",
+    "service_group": "kubernetes"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_K8S_28",
+    "severity": "",
+    "title": "Minimize the admission of containers with the NET_RAW capability",
+    "service": "kubernetes",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "kubernetes_pod",
+      "kubernetes_pod_v1",
+      "kubernetes_deployment",
+      "kubernetes_deployment_v1"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/kubernetes/DropCapabilities.py",
+    "service_group": "kubernetes"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_K8S_29",
+    "severity": "",
+    "title": "Apply security context to your pods, deployments and daemon_sets",
+    "service": "kubernetes",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "kubernetes_pod",
+      "kubernetes_pod_v1",
+      "kubernetes_deployment",
+      "kubernetes_deployment_v1",
+      "kubernetes_daemonset",
+      "kubernetes_daemon_set_v1"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/kubernetes/PodSecurityContext.py",
+    "service_group": "kubernetes"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_K8S_3",
+    "severity": "",
+    "title": "Do not admit containers wishing to share the host IPC namespace",
+    "service": "kubernetes",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "kubernetes_pod_security_policy"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/kubernetes/ShareHostIPCPSP.py",
+    "service_group": "kubernetes"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_K8S_30",
+    "severity": "",
+    "title": "Apply security context to your pods and containers",
+    "service": "kubernetes",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "kubernetes_pod",
+      "kubernetes_pod_v1",
+      "kubernetes_deployment",
+      "kubernetes_deployment_v1"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/kubernetes/ContainerSecurityContext.py",
+    "service_group": "kubernetes"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_K8S_32",
+    "severity": "",
+    "title": "Ensure default seccomp profile set to docker/default or runtime/default",
+    "service": "kubernetes",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "kubernetes_pod_security_policy"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/kubernetes/SeccompPSP.py",
+    "service_group": "kubernetes"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_K8S_34",
+    "severity": "",
+    "title": "Ensure that Tiller (Helm v2) is not deployed",
+    "service": "kubernetes",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "kubernetes_pod",
+      "kubernetes_pod_v1",
+      "kubernetes_deployment",
+      "kubernetes_deployment_v1"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/kubernetes/Tiller.py",
+    "service_group": "kubernetes"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_K8S_35",
+    "severity": "",
+    "title": "Prefer using secrets as files over secrets as environment variables",
+    "service": "kubernetes",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "kubernetes_pod",
+      "kubernetes_pod_v1",
+      "kubernetes_deployment",
+      "kubernetes_deployment_v1"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/kubernetes/Secrets.py",
+    "service_group": "kubernetes"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_K8S_36",
+    "severity": "",
+    "title": "Minimise the admission of containers with capabilities assigned",
+    "service": "kubernetes",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "kubernetes_pod_security_policy"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/kubernetes/MinimiseCapabilitiesPSP.py",
+    "service_group": "kubernetes"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_K8S_37",
+    "severity": "",
+    "title": "Minimise the admission of containers with capabilities assigned",
+    "service": "kubernetes",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "kubernetes_pod",
+      "kubernetes_pod_v1",
+      "kubernetes_deployment",
+      "kubernetes_deployment_v1"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/kubernetes/MinimiseCapabilities.py",
+    "service_group": "kubernetes"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_K8S_39",
+    "severity": "",
+    "title": "Do not use the CAP_SYS_ADMIN linux capability",
+    "service": "kubernetes",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "kubernetes_pod",
+      "kubernetes_pod_v1",
+      "kubernetes_deployment",
+      "kubernetes_deployment_v1"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/kubernetes/AllowedCapabilitiesSysAdmin.py",
+    "service_group": "kubernetes"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_K8S_4",
+    "severity": "",
+    "title": "Do not admit containers wishing to share the host network namespace",
+    "service": "kubernetes",
+    "category": "NETWORKING",
+    "resources": [
+      "kubernetes_pod_security_policy"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/kubernetes/SharedHostNetworkNamespacePSP.py",
+    "service_group": "kubernetes"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_K8S_41",
+    "severity": "",
+    "title": "Ensure that default service accounts are not actively used",
+    "service": "kubernetes",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "kubernetes_service_account",
+      "kubernetes_service_account_v1"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/kubernetes/DefaultServiceAccount.py",
+    "service_group": "kubernetes"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_K8S_42",
+    "severity": "",
+    "title": "Ensure that default service accounts are not actively used",
+    "service": "kubernetes",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "kubernetes_role_binding",
+      "kubernetes_role_binding_v1",
+      "kubernetes_cluster_role_binding",
+      "kubernetes_cluster_role_binding_v1"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/kubernetes/DefaultServiceAccountBinding.py",
+    "service_group": "kubernetes"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_K8S_43",
+    "severity": "",
+    "title": "Image should use digest",
+    "service": "kubernetes",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "kubernetes_pod",
+      "kubernetes_pod_v1",
+      "kubernetes_deployment",
+      "kubernetes_deployment_v1"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/kubernetes/ImageDigest.py",
+    "service_group": "kubernetes"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_K8S_44",
+    "severity": "",
+    "title": "Ensure that the Tiller Service (Helm v2) is deleted",
+    "service": "kubernetes",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "kubernetes_service",
+      "kubernetes_service_v1"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/kubernetes/TillerService.py",
+    "service_group": "kubernetes"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_K8S_49",
+    "severity": "",
+    "title": "Minimize wildcard use in Roles and ClusterRoles",
+    "service": "kubernetes",
+    "category": "IAM",
+    "resources": [
+      "kubernetes_role",
+      "kubernetes_role_v1",
+      "kubernetes_cluster_role",
+      "kubernetes_cluster_role_v1"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/kubernetes/WildcardRoles.py",
+    "service_group": "kubernetes"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_K8S_5",
+    "severity": "",
+    "title": "Containers should not run with allowPrivilegeEscalation",
+    "service": "kubernetes",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "kubernetes_pod_security_policy"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/kubernetes/AllowPrivilegeEscalationPSP.py",
+    "service_group": "kubernetes"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_K8S_6",
+    "severity": "",
+    "title": "Do not admit root containers",
+    "service": "kubernetes",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "kubernetes_pod_security_policy"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/kubernetes/RootContainerPSP.py",
+    "service_group": "kubernetes"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_K8S_7",
+    "severity": "",
+    "title": "Do not admit containers with the NET_RAW capability",
+    "service": "kubernetes",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "kubernetes_pod_security_policy"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/kubernetes/DropCapabilitiesPSP.py",
+    "service_group": "kubernetes"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_K8S_8",
+    "severity": "",
+    "title": "Liveness Probe Should be Configured",
+    "service": "kubernetes",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "kubernetes_pod",
+      "kubernetes_pod_v1",
+      "kubernetes_deployment",
+      "kubernetes_deployment_v1"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/kubernetes/LivenessProbe.py",
+    "service_group": "kubernetes"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_K8S_9",
+    "severity": "",
+    "title": "Readiness Probe Should be Configured",
+    "service": "kubernetes",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "kubernetes_pod",
+      "kubernetes_pod_v1",
+      "kubernetes_deployment",
+      "kubernetes_deployment_v1"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/kubernetes/ReadinessProbe.py",
+    "service_group": "kubernetes"
+  },
+  {
+    "tool": "trivy",
+    "id": "KUBE-0001",
+    "severity": "high",
+    "title": "A network policy should not allow unrestricted ingress from any IP address.",
+    "service": "network",
+    "category": "",
+    "resources": [],
+    "fix": "Remove public access except where explicitly required",
+    "source_file": "checks/cloud/kubernetes/network/no_public_ingress.rego",
+    "service_group": "network"
+  },
+  {
+    "tool": "trivy",
+    "id": "KUBE-0002",
+    "severity": "high",
+    "title": "A network policy should not allow unrestricted egress to any IP address.",
+    "service": "network",
+    "category": "",
+    "resources": [],
+    "fix": "Remove public access except where explicitly required",
+    "source_file": "checks/cloud/kubernetes/network/no_public_egress.rego",
+    "service_group": "network"
+  }
+]

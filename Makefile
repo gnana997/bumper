@@ -1,4 +1,4 @@
-.PHONY: build test run tidy fmt vet hooks tools
+.PHONY: build test run tidy fmt vet hooks tools corpus
 
 build:
 	go build -o bumper ./cmd/bumper
@@ -27,3 +27,7 @@ tools:
 # One-time setup after cloning: install hooks (pre-commit secret scan + gofmt).
 hooks: tools
 	lefthook install
+
+# Scan the multi-cloud anti-pattern corpus (needs terraform on PATH).
+corpus: build
+	BUMPER=$(CURDIR)/bumper tools/corpus_scan.sh

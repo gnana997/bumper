@@ -1,0 +1,4 @@
+# Terraform working state from corpus_scan.sh — never commit these.
+**/.terraform/
+**/.terraform.lock.hcl
+**/.corpus.tfplan

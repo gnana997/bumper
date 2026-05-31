@@ -1,0 +1,507 @@
+[
+  {
+    "tool": "checkov",
+    "id": "CKV_ALI_4",
+    "severity": "",
+    "title": "Ensure Action Trail Logging for all regions",
+    "service": "actiontrail",
+    "category": "LOGGING",
+    "resources": [
+      "alicloud_actiontrail_trail"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/alicloud/ActionTrailLogAllRegions.py",
+    "service_group": "actiontrail"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_ALI_5",
+    "severity": "",
+    "title": "Ensure Action Trail Logging for all events",
+    "service": "actiontrail",
+    "category": "LOGGING",
+    "resources": [
+      "alicloud_actiontrail_trail"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/alicloud/ActionTrailLogAllEvents.py",
+    "service_group": "actiontrail"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_ALI_29",
+    "severity": "",
+    "title": "Alibaba ALB ACL does not restrict Access",
+    "service": "alb",
+    "category": "NETWORKING",
+    "resources": [
+      "alicloud_alb_acl_entry_attachment"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/alicloud/ALBACLIsUnrestricted.py",
+    "service_group": "alb"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_ALI_21",
+    "severity": "",
+    "title": "Ensure API Gateway API Protocol HTTPS",
+    "service": "api",
+    "category": "NETWORKING",
+    "resources": [
+      "alicloud_api_gateway_api"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/alicloud/APIGatewayProtocolHTTPS.py",
+    "service_group": "api"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_ALI_26",
+    "severity": "",
+    "title": "Ensure Kubernetes installs plugin Terway or Flannel to support standard policies",
+    "service": "cs",
+    "category": "KUBERNETES",
+    "resources": [
+      "alicloud_cs_kubernetes"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/alicloud/K8sEnableNetworkPolicies.py",
+    "service_group": "cs"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_ALI_31",
+    "severity": "",
+    "title": "Ensure K8s nodepools are set to auto repair",
+    "service": "cs",
+    "category": "KUBERNETES",
+    "resources": [
+      "alicloud_cs_kubernetes_node_pool"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/alicloud/K8sNodePoolAutoRepair.py",
+    "service_group": "cs"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_ALI_20",
+    "severity": "",
+    "title": "Ensure RDS instance uses SSL",
+    "service": "db",
+    "category": "NETWORKING",
+    "resources": [
+      "alicloud_db_instance"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/alicloud/RDSInstanceSSL.py",
+    "service_group": "db"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_ALI_22",
+    "severity": "",
+    "title": "Ensure Transparent Data Encryption is Enabled on instance",
+    "service": "db",
+    "category": "LOGGING",
+    "resources": [
+      "alicloud_db_instance"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/alicloud/RDSTransparentDataEncryptionEnabled.py",
+    "service_group": "db"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_ALI_25",
+    "severity": "",
+    "title": "Ensure RDS Instance SQL Collector Retention Period should be greater than 180",
+    "service": "db",
+    "category": "LOGGING",
+    "resources": [
+      "alicloud_db_instance"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/alicloud/RDSRetention.py",
+    "service_group": "db"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_ALI_30",
+    "severity": "",
+    "title": "Ensure RDS instance auto upgrades for minor versions",
+    "service": "db",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "alicloud_db_instance"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/alicloud/RDSInstanceAutoUpgrade.py",
+    "service_group": "db"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_ALI_9",
+    "severity": "",
+    "title": "Ensure database instance is not public",
+    "service": "db",
+    "category": "ENCRYPTION",
+    "resources": [
+      "alicloud_db_instance"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/alicloud/RDSIsPublic.py",
+    "service_group": "db"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_ALI_7",
+    "severity": "",
+    "title": "Ensure disk is encrypted",
+    "service": "disk",
+    "category": "ENCRYPTION",
+    "resources": [
+      "alicloud_disk"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/alicloud/DiskIsEncrypted.py",
+    "service_group": "disk"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_ALI_8",
+    "severity": "",
+    "title": "Ensure Disk is encrypted with Customer Master Key",
+    "service": "disk",
+    "category": "ENCRYPTION",
+    "resources": [
+      "alicloud_disk"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/alicloud/DiskEncryptedWithCMK.py",
+    "service_group": "disk"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_ALI_32",
+    "severity": "",
+    "title": "Ensure launch template data disks are encrypted",
+    "service": "ecs",
+    "category": "ENCRYPTION",
+    "resources": [
+      "alicloud_ecs_launch_template"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/alicloud/LaunchTemplateDisksAreEncrypted.py",
+    "service_group": "ecs"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_ALI_27",
+    "severity": "",
+    "title": "Ensure KMS Key Rotation is enabled",
+    "service": "kms",
+    "category": "ENCRYPTION",
+    "resources": [
+      "alicloud_kms_key"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/alicloud/KMSKeyRotationIsEnabled.py",
+    "service_group": "kms"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_ALI_28",
+    "severity": "",
+    "title": "Ensure KMS Keys are enabled",
+    "service": "kms",
+    "category": "ENCRYPTION",
+    "resources": [
+      "alicloud_kms_key"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/alicloud/KMSKeyIsEnabled.py",
+    "service_group": "kms"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_ALI_38",
+    "severity": "",
+    "title": "Ensure log audit is enabled for RDS",
+    "service": "log",
+    "category": "LOGGING",
+    "resources": [
+      "alicloud_log_audit"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/alicloud/LogAuditRDSEnabled.py",
+    "service_group": "log"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_ALI_41",
+    "severity": "",
+    "title": "Ensure MongoDB is deployed inside a VPC",
+    "service": "mongodb",
+    "category": "NETWORKING",
+    "resources": [
+      "alicloud_mongodb_instance"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/alicloud/MongoDBInsideVPC.py",
+    "service_group": "mongodb"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_ALI_42",
+    "severity": "",
+    "title": "Ensure Mongodb instance uses SSL",
+    "service": "mongodb",
+    "category": "NETWORKING",
+    "resources": [
+      "alicloud_mongodb_instance"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/alicloud/MongoDBInstanceSSL.py",
+    "service_group": "mongodb"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_ALI_43",
+    "severity": "",
+    "title": "Ensure MongoDB instance is not public",
+    "service": "mongodb",
+    "category": "NETWORKING",
+    "resources": [
+      "alicloud_mongodb_instance"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/alicloud/MongoDBIsPublic.py",
+    "service_group": "mongodb"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_ALI_44",
+    "severity": "",
+    "title": "Ensure MongoDB has Transparent Data Encryption Enabled",
+    "service": "mongodb",
+    "category": "ENCRYPTION",
+    "resources": [
+      "alicloud_mongodb_instance"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/alicloud/MongoDBTransparentDataEncryptionEnabled.py",
+    "service_group": "mongodb"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_ALI_1",
+    "severity": "",
+    "title": "Alibaba Cloud OSS bucket accessible to public",
+    "service": "oss",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "alicloud_oss_bucket",
+      "alicloud_oss_bucket_acl"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/graph_checks/alicloud/OSSBucketPublic.yaml",
+    "service_group": "oss"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_ALI_10",
+    "severity": "",
+    "title": "Ensure OSS bucket has versioning enabled",
+    "service": "oss",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "alicloud_oss_bucket"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/alicloud/OSSBucketVersioning.py",
+    "service_group": "oss"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_ALI_11",
+    "severity": "",
+    "title": "Ensure OSS bucket has transfer Acceleration enabled",
+    "service": "oss",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "alicloud_oss_bucket"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/alicloud/OSSBucketTransferAcceleration.py",
+    "service_group": "oss"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_ALI_12",
+    "severity": "",
+    "title": "Ensure the OSS bucket has access logging enabled",
+    "service": "oss",
+    "category": "LOGGING",
+    "resources": [
+      "alicloud_oss_bucket"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/alicloud/OSSBucketAccessLogs.py",
+    "service_group": "oss"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_ALI_6",
+    "severity": "",
+    "title": "Ensure OSS bucket is encrypted with Customer Master Key",
+    "service": "oss",
+    "category": "ENCRYPTION",
+    "resources": [
+      "alicloud_oss_bucket"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/alicloud/OSSBucketEncryptedWithCMK.py",
+    "service_group": "oss"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_ALI_13",
+    "severity": "",
+    "title": "Ensure RAM password policy requires minimum length of 14 or greater",
+    "service": "ram",
+    "category": "IAM",
+    "resources": [
+      "alicloud_ram_account_password_policy"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/alicloud/RAMPasswordPolicyLength.py",
+    "service_group": "ram"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_ALI_14",
+    "severity": "",
+    "title": "Ensure RAM password policy requires at least one number",
+    "service": "ram",
+    "category": "IAM",
+    "resources": [
+      "alicloud_ram_account_password_policy"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/alicloud/RAMPasswordPolicyNumber.py",
+    "service_group": "ram"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_ALI_15",
+    "severity": "",
+    "title": "Ensure RAM password policy requires at least one symbol",
+    "service": "ram",
+    "category": "IAM",
+    "resources": [
+      "alicloud_ram_account_password_policy"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/alicloud/RAMPasswordPolicySymbol.py",
+    "service_group": "ram"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_ALI_16",
+    "severity": "",
+    "title": "Ensure RAM password policy expires passwords within 90 days or less",
+    "service": "ram",
+    "category": "IAM",
+    "resources": [
+      "alicloud_ram_account_password_policy"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/alicloud/RAMPasswordPolicyExpiration.py",
+    "service_group": "ram"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_ALI_17",
+    "severity": "",
+    "title": "Ensure RAM password policy requires at least one lowercase letter",
+    "service": "ram",
+    "category": "IAM",
+    "resources": [
+      "alicloud_ram_account_password_policy"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/alicloud/RAMPasswordPolicyLowercaseLetter.py",
+    "service_group": "ram"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_ALI_18",
+    "severity": "",
+    "title": "Ensure RAM password policy prevents password reuse",
+    "service": "ram",
+    "category": "IAM",
+    "resources": [
+      "alicloud_ram_account_password_policy"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/alicloud/RAMPasswordPolicyReuse.py",
+    "service_group": "ram"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_ALI_19",
+    "severity": "",
+    "title": "Ensure RAM password policy requires at least one uppercase letter",
+    "service": "ram",
+    "category": "IAM",
+    "resources": [
+      "alicloud_ram_account_password_policy"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/alicloud/RAMPasswordPolicyUppcaseLetter.py",
+    "service_group": "ram"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_ALI_23",
+    "severity": "",
+    "title": "Ensure Ram Account Password Policy Max Login Attempts not > 5",
+    "service": "ram",
+    "category": "IAM",
+    "resources": [
+      "alicloud_ram_account_password_policy"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/alicloud/RAMPasswordPolicyMaxLogin.py",
+    "service_group": "ram"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_ALI_24",
+    "severity": "",
+    "title": "Ensure RAM enforces MFA",
+    "service": "ram",
+    "category": "IAM",
+    "resources": [
+      "alicloud_ram_security_preference"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/alicloud/RAMSecurityEnforceMFA.py",
+    "service_group": "ram"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_ALI_33",
+    "severity": "",
+    "title": "Alibaba Cloud Cypher Policy are secure",
+    "service": "slb",
+    "category": "NETWORKING",
+    "resources": [
+      "alicloud_slb_tls_cipher_policy"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/alicloud/TLSPoliciesAreSecure.py",
+    "service_group": "slb"
+  }
+]

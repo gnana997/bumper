@@ -1,0 +1,59 @@
+{
+  "format_version": "1.2",
+  "terraform_version": "1.9.0",
+  "resource_changes": [
+    {
+      "address": "azurerm_network_security_rule.public_rdp",
+      "type": "azurerm_network_security_rule",
+      "name": "public_rdp",
+      "provider_name": "registry.terraform.io/hashicorp/azurerm",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": {
+          "name": "allow-rdp",
+          "priority": 100,
+          "direction": "Inbound",
+          "access": "Allow",
+          "protocol": "Tcp",
+          "source_address_prefix": "Internet",
+          "source_port_range": "*",
+          "destination_address_prefix": "*",
+          "destination_port_range": "3389"
+        }
+      }
+    },
+    {
+      "address": "azurerm_mssql_firewall_rule.allow_all",
+      "type": "azurerm_mssql_firewall_rule",
+      "name": "allow_all",
+      "provider_name": "registry.terraform.io/hashicorp/azurerm",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": {
+          "name": "allow-all",
+          "start_ip_address": "0.0.0.0",
+          "end_ip_address": "255.255.255.255"
+        }
+      }
+    },
+    {
+      "address": "azurerm_mssql_database.prod",
+      "type": "azurerm_mssql_database",
+      "name": "prod",
+      "provider_name": "registry.terraform.io/hashicorp/azurerm",
+      "change": {
+        "actions": ["delete", "create"],
+        "before": {
+          "name": "prod",
+          "sku_name": "S0"
+        },
+        "after": {
+          "name": "prod",
+          "sku_name": "P1"
+        }
+      }
+    }
+  ]
+}

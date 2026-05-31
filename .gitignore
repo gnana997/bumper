@@ -19,3 +19,6 @@ node_modules/
 package-lock.json
 # bumper verdict store (machine-specific)
 .bumper/
+
+# Cloned source repos for tools/build_merged_catalog.py (Trivy + Checkov)
+.catalog-src/

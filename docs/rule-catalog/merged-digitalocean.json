@@ -1,0 +1,166 @@
+[
+  {
+    "tool": "trivy",
+    "id": "DIG-0001",
+    "severity": "critical",
+    "title": "A firewall rule should not allow unrestricted ingress from any IP address.",
+    "service": "compute",
+    "category": "",
+    "resources": [],
+    "fix": "Set a more restrictive CIRDR range",
+    "source_file": "checks/cloud/digitalocean/compute/no_public_ingress.rego",
+    "service_group": "compute"
+  },
+  {
+    "tool": "trivy",
+    "id": "DIG-0002",
+    "severity": "critical",
+    "title": "The load balancer forwarding rule is using an insecure protocol as an entrypoint",
+    "service": "compute",
+    "category": "",
+    "resources": [],
+    "fix": "Switch to HTTPS to benefit from TLS security features",
+    "source_file": "checks/cloud/digitalocean/compute/enforce_https.rego",
+    "service_group": "compute"
+  },
+  {
+    "tool": "trivy",
+    "id": "DIG-0003",
+    "severity": "critical",
+    "title": "A firewall rule should not allow unrestricted egress to any IP address.",
+    "service": "compute",
+    "category": "",
+    "resources": [],
+    "fix": "Set a more restrictive cidr range",
+    "source_file": "checks/cloud/digitalocean/compute/no_public_egress.rego",
+    "service_group": "compute"
+  },
+  {
+    "tool": "trivy",
+    "id": "DIG-0004",
+    "severity": "high",
+    "title": "SSH Keys are the preferred way to connect to your droplet, no keys are supplied",
+    "service": "compute",
+    "category": "",
+    "resources": [],
+    "fix": "Use ssh keys for login",
+    "source_file": "checks/cloud/digitalocean/compute/use_ssh_keys.rego",
+    "service_group": "compute"
+  },
+  {
+    "tool": "trivy",
+    "id": "DIG-0005",
+    "severity": "medium",
+    "title": "The Kubernetes cluster does not enable surge upgrades",
+    "service": "compute",
+    "category": "",
+    "resources": [],
+    "fix": "Enable surge upgrades in your Kubernetes cluster",
+    "source_file": "checks/cloud/digitalocean/compute/kubernetes_surge_upgrades.rego",
+    "service_group": "compute"
+  },
+  {
+    "tool": "trivy",
+    "id": "DIG-0008",
+    "severity": "critical",
+    "title": "Kubernetes clusters should be auto-upgraded to ensure that they always contain the latest security patches.",
+    "service": "compute",
+    "category": "",
+    "resources": [],
+    "fix": "Set maintenance policy deterministically when auto upgrades are enabled",
+    "source_file": "checks/cloud/digitalocean/compute/auto_upgrade_no_maintenance_policy.rego",
+    "service_group": "compute"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_DIO_2",
+    "severity": "",
+    "title": "Ensure the droplet specifies an SSH key",
+    "service": "droplet",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "digitalocean_droplet"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/digitalocean/DropletSSHKeys.py",
+    "service_group": "droplet"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_DIO_4",
+    "severity": "",
+    "title": "Ensure the firewall ingress is not wide open",
+    "service": "firewall",
+    "category": "NETWORKING",
+    "resources": [
+      "digitalocean_firewall"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/digitalocean/FirewallIngressOpen.py",
+    "service_group": "firewall"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_DIO_1",
+    "severity": "",
+    "title": "Ensure the Spaces bucket has versioning enabled",
+    "service": "spaces",
+    "category": "BACKUP_AND_RECOVERY",
+    "resources": [
+      "digitalocean_spaces_bucket"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/digitalocean/SpacesBucketVersioning.py",
+    "service_group": "spaces"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_DIO_3",
+    "severity": "",
+    "title": "Ensure the Spaces bucket is private",
+    "service": "spaces",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "digitalocean_spaces_bucket"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/digitalocean/SpacesBucketPublicRead.py",
+    "service_group": "spaces"
+  },
+  {
+    "tool": "trivy",
+    "id": "DIG-0006",
+    "severity": "critical",
+    "title": "Spaces bucket or bucket object has public read acl set",
+    "service": "spaces",
+    "category": "",
+    "resources": [],
+    "fix": "Apply a more restrictive ACL",
+    "source_file": "checks/cloud/digitalocean/spaces/acl_no_public_read.rego",
+    "service_group": "spaces"
+  },
+  {
+    "tool": "trivy",
+    "id": "DIG-0007",
+    "severity": "medium",
+    "title": "Spaces buckets should have versioning enabled",
+    "service": "spaces",
+    "category": "",
+    "resources": [],
+    "fix": "Enable versioning to protect against accidental or malicious removal or modification",
+    "source_file": "checks/cloud/digitalocean/spaces/versioning_enabled.rego",
+    "service_group": "spaces"
+  },
+  {
+    "tool": "trivy",
+    "id": "DIG-0009",
+    "severity": "medium",
+    "title": "Force destroy is enabled on Spaces bucket which is dangerous",
+    "service": "spaces",
+    "category": "",
+    "resources": [],
+    "fix": "Don't use force destroy on bucket configuration",
+    "source_file": "checks/cloud/digitalocean/spaces/disable_force_destroy.rego",
+    "service_group": "spaces"
+  }
+]

@@ -1,0 +1,378 @@
+[
+  {
+    "tool": "checkov",
+    "id": "CKV_OCI_1",
+    "severity": "",
+    "title": "Ensure no hard coded OCI private key in provider",
+    "service": "(unmapped)",
+    "category": "SECRETS",
+    "resources": [],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/provider/oci/credentials.py",
+    "service_group": "(unmapped)"
+  },
+  {
+    "tool": "trivy",
+    "id": "OCI-0001",
+    "severity": "critical",
+    "title": "Compute instance requests an IP reservation from a public pool",
+    "service": "compute",
+    "category": "",
+    "resources": [],
+    "fix": "Reconsider the use of an public IP",
+    "source_file": "checks/cloud/oracle/compute/no_public_ip.rego",
+    "service_group": "compute"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV2_OCI_3",
+    "severity": "",
+    "title": "Ensure Kubernetes engine cluster is configured with NSG(s)",
+    "service": "containerengine",
+    "category": "NETWORKING",
+    "resources": [
+      "oci_containerengine_cluster"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/graph_checks/oci/OCI_KubernetesEngineClusterEndpointConfigWithNSG.yaml",
+    "service_group": "containerengine"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV2_OCI_5",
+    "severity": "",
+    "title": "Ensure Kubernetes Engine Cluster boot volume is configured with in-transit data encryption",
+    "service": "containerengine",
+    "category": "ENCRYPTION",
+    "resources": [
+      "oci_containerengine_node_pool"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/graph_checks/oci/OCI_K8EngineClusterBootVolConfigInTransitEncryption.yaml",
+    "service_group": "containerengine"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV2_OCI_6",
+    "severity": "",
+    "title": "Ensure Kubernetes Engine Cluster pod security policy is enforced",
+    "service": "containerengine",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "oci_containerengine_cluster"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/graph_checks/oci/OCI_K8EngineClusterPodSecPolicyEnforced.yaml",
+    "service_group": "containerengine"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV2_OCI_2",
+    "severity": "",
+    "title": "Ensure NSG does not allow all traffic on RDP port (3389)",
+    "service": "core",
+    "category": "NETWORKING",
+    "resources": [
+      "oci_core_network_security_group_security_rule"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/graph_checks/oci/OCI_NSGNotAllowRDP.yaml",
+    "service_group": "core"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_OCI_16",
+    "severity": "",
+    "title": "Ensure VCN has an inbound security list",
+    "service": "core",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "oci_core_security_list"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/oci/SecurityListIngress.py",
+    "service_group": "core"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_OCI_17",
+    "severity": "",
+    "title": "Ensure VCN inbound security lists are stateless",
+    "service": "core",
+    "category": "NETWORKING",
+    "resources": [
+      "oci_core_security_list"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/oci/SecurityListIngressStateless.py",
+    "service_group": "core"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_OCI_2",
+    "severity": "",
+    "title": "Ensure OCI Block Storage Block Volume has backup enabled",
+    "service": "core",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "oci_core_volume"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/oci/StorageBlockBackupEnabled.py",
+    "service_group": "core"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_OCI_21",
+    "severity": "",
+    "title": "Ensure security group has stateless ingress security rules",
+    "service": "core",
+    "category": "NETWORKING",
+    "resources": [
+      "oci_core_network_security_group_security_rule"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/oci/SecurityGroupsIngressStatelessSecurityRules.py",
+    "service_group": "core"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_OCI_3",
+    "severity": "",
+    "title": "OCI Block Storage Block Volumes are not encrypted with a Customer Managed Key (CMK)",
+    "service": "core",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "oci_core_volume"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/oci/StorageBlockEncryption.py",
+    "service_group": "core"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_OCI_4",
+    "severity": "",
+    "title": "Ensure OCI Compute Instance boot volume has in-transit data encryption enabled",
+    "service": "core",
+    "category": "ENCRYPTION",
+    "resources": [
+      "oci_core_instance"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/oci/InstanceBootVolumeIntransitEncryption.py",
+    "service_group": "core"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_OCI_5",
+    "severity": "",
+    "title": "Ensure OCI Compute Instance has Legacy MetaData service endpoint disabled",
+    "service": "core",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "oci_core_instance"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/oci/InstanceMetadataServiceEnabled.py",
+    "service_group": "core"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_OCI_6",
+    "severity": "",
+    "title": "Ensure OCI Compute Instance has monitoring enabled",
+    "service": "core",
+    "category": "LOGGING",
+    "resources": [
+      "oci_core_instance"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/oci/InstanceMonitoringEnabled.py",
+    "service_group": "core"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_OCI_23",
+    "severity": "",
+    "title": "Ensure OCI Data Catalog is configured without overly permissive network access",
+    "service": "datacatalog",
+    "category": "NETWORKING",
+    "resources": [
+      "oci_datacatalog_catalog"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/oci/DataCatalogWithPublicAccess.py",
+    "service_group": "datacatalog"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV2_OCI_4",
+    "severity": "",
+    "title": "Ensure File Storage File System access is restricted to root users",
+    "service": "file",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "oci_file_storage_export"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/graph_checks/oci/OCI_NFSaccessRestrictedToRootUsers.yaml",
+    "service_group": "file"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_OCI_15",
+    "severity": "",
+    "title": "Ensure OCI File System is Encrypted with a customer Managed Key",
+    "service": "file",
+    "category": "ENCRYPTION",
+    "resources": [
+      "oci_file_storage_file_system"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/oci/FileSystemEncryption.py",
+    "service_group": "file"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV2_OCI_1",
+    "severity": "",
+    "title": "Ensure administrator users are not associated with API keys",
+    "service": "identity",
+    "category": "IAM",
+    "resources": [
+      "oci_identity_group",
+      "oci_identity_user",
+      "oci_identity_user_group_membership"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/graph_checks/oci/AdministratorUserNotAssociatedWithAPIKey.yaml",
+    "service_group": "identity"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_OCI_11",
+    "severity": "",
+    "title": "OCI IAM password policy - must contain lower case",
+    "service": "identity",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "oci_identity_authentication_policy"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/oci/IAMPasswordPolicyLowerCase.py",
+    "service_group": "identity"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_OCI_12",
+    "severity": "",
+    "title": "OCI IAM password policy - must contain Numeric characters",
+    "service": "identity",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "oci_identity_authentication_policy"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/oci/IAMPasswordPolicyNumeric.py",
+    "service_group": "identity"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_OCI_13",
+    "severity": "",
+    "title": "OCI IAM password policy - must contain Special characters",
+    "service": "identity",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "oci_identity_authentication_policy"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/oci/IAMPasswordPolicySpecialCharacters.py",
+    "service_group": "identity"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_OCI_14",
+    "severity": "",
+    "title": "OCI IAM password policy - must contain Uppercase characters",
+    "service": "identity",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "oci_identity_authentication_policy"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/oci/IAMPasswordPolicyUpperCase.py",
+    "service_group": "identity"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_OCI_18",
+    "severity": "",
+    "title": "OCI IAM password policy for local (non-federated) users has a minimum length of 14 characters",
+    "service": "identity",
+    "category": "IAM",
+    "resources": [
+      "oci_identity_authentication_policy"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/oci/IAMPasswordLength.py",
+    "service_group": "identity"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_OCI_10",
+    "severity": "",
+    "title": "Ensure OCI Object Storage is not Public",
+    "service": "objectstorage",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "oci_objectstorage_bucket"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/oci/ObjectStoragePublic.py",
+    "service_group": "objectstorage"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_OCI_7",
+    "severity": "",
+    "title": "Ensure OCI Object Storage bucket can emit object events",
+    "service": "objectstorage",
+    "category": "LOGGING",
+    "resources": [
+      "oci_objectstorage_bucket"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/oci/ObjectStorageEmitEvents.py",
+    "service_group": "objectstorage"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_OCI_8",
+    "severity": "",
+    "title": "Ensure OCI Object Storage has versioning enabled",
+    "service": "objectstorage",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "oci_objectstorage_bucket"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/oci/ObjectStorageVersioning.py",
+    "service_group": "objectstorage"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_OCI_9",
+    "severity": "",
+    "title": "Ensure OCI Object Storage is encrypted with Customer Managed Key",
+    "service": "objectstorage",
+    "category": "ENCRYPTION",
+    "resources": [
+      "oci_objectstorage_bucket"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/oci/ObjectStorageEncryption.py",
+    "service_group": "objectstorage"
+  }
+]

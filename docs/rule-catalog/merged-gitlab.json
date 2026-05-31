@@ -1,0 +1,58 @@
+[
+  {
+    "tool": "checkov",
+    "id": "CKV_GLB_2",
+    "severity": "",
+    "title": "Ensure GitLab branch protection rules does not allow force pushes",
+    "service": "branch",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "gitlab_branch_protection"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/gitlab/ForcePushDisabled.py",
+    "service_group": "branch"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_GLB_1",
+    "severity": "",
+    "title": "Ensure at least two approving reviews are required to merge a GitLab MR",
+    "service": "project",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "gitlab_project"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/gitlab/RequireTwoApprovalsToMerge.py",
+    "service_group": "project"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_GLB_3",
+    "severity": "",
+    "title": "Ensure GitLab prevent secrets is enabled",
+    "service": "project",
+    "category": "SECRETS",
+    "resources": [
+      "gitlab_project"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/gitlab/PreventSecretsEnabled.py",
+    "service_group": "project"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_GLB_4",
+    "severity": "",
+    "title": "Ensure GitLab commits are signed",
+    "service": "project",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "gitlab_project"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/gitlab/RejectUnsignedCommits.py",
+    "service_group": "project"
+  }
+]

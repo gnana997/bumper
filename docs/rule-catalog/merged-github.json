@@ -1,0 +1,152 @@
+[
+  {
+    "tool": "checkov",
+    "id": "CKV_GIT_4",
+    "severity": "",
+    "title": "Ensure GitHub Actions secrets are encrypted",
+    "service": "actions",
+    "category": "ENCRYPTION",
+    "resources": [
+      "github_actions_environment_secret",
+      "github_actions_organization_secret",
+      "github_actions_secret"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/github/SecretsEncrypted.py",
+    "service_group": "actions"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_GIT_5",
+    "severity": "",
+    "title": "GitHub pull requests should require at least 2 approvals",
+    "service": "branch",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "github_branch_protection_v3",
+      "github_branch_protection"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/github/BranchProtectionReviewNumTwo.py",
+    "service_group": "branch"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_GIT_6",
+    "severity": "",
+    "title": "Ensure GitHub branch protection rules requires signed commits",
+    "service": "branch",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "github_branch_protection_v3",
+      "github_branch_protection"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/github/BranchProtectionRequireSignedCommits.py",
+    "service_group": "branch"
+  },
+  {
+    "tool": "trivy",
+    "id": "GIT-0004",
+    "severity": "high",
+    "title": "GitHub branch protection does not require signed commits.",
+    "service": "branchprotections",
+    "category": "",
+    "resources": [],
+    "fix": "Require signed commits",
+    "source_file": "checks/cloud/github/branch_protections/require_signed_commits.rego",
+    "service_group": "branchprotections"
+  },
+  {
+    "tool": "trivy",
+    "id": "GIT-0002",
+    "severity": "high",
+    "title": "Ensure plaintext value is not used for GitHub Action Environment Secret.",
+    "service": "environmentsecrets",
+    "category": "",
+    "resources": [],
+    "fix": "Do not store plaintext values in your code but rather populate the encrypted_value using fields from a resource, data source or variable.",
+    "source_file": "checks/cloud/github/actions/no_plain_text_action_secrets.rego",
+    "service_group": "environmentsecrets"
+  },
+  {
+    "tool": "trivy",
+    "id": "GIT-0001",
+    "severity": "critical",
+    "title": "GitHub repository shouldn't be public.",
+    "service": "repositories",
+    "category": "",
+    "resources": [],
+    "fix": "Make sensitive or commercially important repositories private",
+    "source_file": "checks/cloud/github/repositories/private_repository.rego",
+    "service_group": "repositories"
+  },
+  {
+    "tool": "trivy",
+    "id": "GIT-0003",
+    "severity": "high",
+    "title": "GitHub repository has vulnerability alerts disabled.",
+    "service": "repositories",
+    "category": "",
+    "resources": [],
+    "fix": "Enable vulnerability alerts",
+    "source_file": "checks/cloud/github/repositories/enable_vulnerability_alerts.rego",
+    "service_group": "repositories"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV2_GIT_1",
+    "severity": "",
+    "title": "Ensure each Repository has branch protection associated",
+    "service": "repository",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "github_repository"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/graph_checks/github/RepositoryHasBranchProtection.yaml",
+    "service_group": "repository"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_GIT_1",
+    "severity": "",
+    "title": "Ensure GitHub repository is Private",
+    "service": "repository",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "github_repository"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/github/PrivateRepo.py",
+    "service_group": "repository"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_GIT_2",
+    "severity": "",
+    "title": "Ensure GitHub repository webhooks are using HTTPS",
+    "service": "repository",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "github_repository_webhook"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/github/WebhookInsecureSsl.py",
+    "service_group": "repository"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_GIT_3",
+    "severity": "",
+    "title": "Ensure GitHub repository has vulnerability alerts enabled",
+    "service": "repository",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "github_repository"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/github/RepositoryEnableVulnerabilityAlerts.py",
+    "service_group": "repository"
+  }
+]

@@ -1,0 +1,269 @@
+[
+  {
+    "tool": "checkov",
+    "id": "CKV_NCP_17",
+    "severity": "",
+    "title": "Ensure no hard coded NCP access key and secret key exists in provider",
+    "service": "(unmapped)",
+    "category": "SECRETS",
+    "resources": [],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/provider/ncp/credentials.py",
+    "service_group": "(unmapped)"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_NCP_2",
+    "severity": "",
+    "title": "Ensure every access control groups rule has a description",
+    "service": "access",
+    "category": "NETWORKING",
+    "resources": [
+      "ncloud_access_control_group",
+      "ncloud_access_control_group_rule"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/ncp/AccessControlGroupRuleDescription.py",
+    "service_group": "access"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_NCP_26",
+    "severity": "",
+    "title": "Ensure Access Control Group has Access Control Group Rule attached",
+    "service": "access",
+    "category": "NETWORKING",
+    "resources": [
+      "ncloud_access_control_group"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/graph_checks/ncp/AccessControlGroupRuleDefine.yaml",
+    "service_group": "access"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_NCP_3",
+    "severity": "",
+    "title": "Ensure no security group rules allow outbound traffic to 0.0.0.0/0",
+    "service": "access",
+    "category": "NETWORKING",
+    "resources": [
+      "ncloud_access_control_group_rule"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/ncp/AccessControlGroupOutboundRule.py",
+    "service_group": "access"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_NCP_18",
+    "severity": "",
+    "title": "Ensure that auto Scaling groups that are associated with a load balancer, are using Load Balancing health checks.",
+    "service": "auto",
+    "category": "NETWORKING",
+    "resources": [
+      "ncloud_auto_scaling_group",
+      "ncloud_lb_target_group"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/graph_checks/ncp/AutoScalingEnabledLB.yaml",
+    "service_group": "auto"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_NCP_7",
+    "severity": "",
+    "title": "Ensure Basic Block storage is encrypted.",
+    "service": "launch",
+    "category": "ENCRYPTION",
+    "resources": [
+      "ncloud_launch_configuration"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/ncp/LaunchConfigurationEncryptionVPC.py",
+    "service_group": "launch"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_NCP_1",
+    "severity": "",
+    "title": "Ensure HTTP HTTPS Target group defines Healthcheck",
+    "service": "lb",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "ncloud_lb_target_group"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/ncp/LBTargetGroupDefinesHealthCheck.py",
+    "service_group": "lb"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_NCP_13",
+    "severity": "",
+    "title": "Ensure LB Listener uses only secure protocols",
+    "service": "lb",
+    "category": "NETWORKING",
+    "resources": [
+      "ncloud_lb_listener"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/ncp/LBListenerUsesSecureProtocols.py",
+    "service_group": "lb"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_NCP_15",
+    "severity": "",
+    "title": "Ensure Load Balancer Target Group is not using HTTP",
+    "service": "lb",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "ncloud_lb_target_group"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/ncp/LBTargetGroupUsingHTTPS.py",
+    "service_group": "lb"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_NCP_16",
+    "severity": "",
+    "title": "Ensure Load Balancer isn't exposed to the internet",
+    "service": "lb",
+    "category": "NETWORKING",
+    "resources": [
+      "ncloud_lb"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/ncp/LBNetworkPrivate.py",
+    "service_group": "lb"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_NCP_24",
+    "severity": "",
+    "title": "Ensure Load Balancer Listener Using HTTPS",
+    "service": "lb",
+    "category": "GENERAL_SECURITY",
+    "resources": [
+      "ncloud_lb_listener"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/ncp/LBListenerUsingHTTPS.py",
+    "service_group": "lb"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_NCP_14",
+    "severity": "",
+    "title": "Ensure NAS is securely encrypted",
+    "service": "nas",
+    "category": "ENCRYPTION",
+    "resources": [
+      "ncloud_nas_volume"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/ncp/NASEncryptionEnabled.py",
+    "service_group": "nas"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_NCP_12",
+    "severity": "",
+    "title": "An inbound Network ACL rule should not allow ALL ports.",
+    "service": "network",
+    "category": "NETWORKING",
+    "resources": [
+      "ncloud_network_acl_rule"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/ncp/NACLPortCheck.py",
+    "service_group": "network"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_NCP_19",
+    "severity": "",
+    "title": "Ensure Naver Kubernetes Service public endpoint disabled",
+    "service": "nks",
+    "category": "KUBERNETES",
+    "resources": [
+      "ncloud_nks_cluster"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/ncp/NKSPublicAccess.py",
+    "service_group": "nks"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_NCP_22",
+    "severity": "",
+    "title": "Ensure NKS control plane logging enabled for all log types",
+    "service": "nks",
+    "category": "KUBERNETES",
+    "resources": [
+      "ncloud_nks_cluster"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/ncp/NKSControlPlaneLogging.py",
+    "service_group": "nks"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_NCP_23",
+    "severity": "",
+    "title": "Ensure Server instance should not have public IP.",
+    "service": "public",
+    "category": "NETWORKING",
+    "resources": [
+      "ncloud_public_ip"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/ncp/ServerPublicIP.py",
+    "service_group": "public"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_NCP_20",
+    "severity": "",
+    "title": "Ensure Routing Table associated with Web tier subnet have the default route (0.0.0.0/0) defined to allow connectivity ",
+    "service": "route",
+    "category": "NETWORKING",
+    "resources": [
+      "ncloud_route"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/ncp/RouteTableNATGatewayDefault.py",
+    "service_group": "route"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_NCP_22",
+    "severity": "",
+    "title": "Ensure a route table for the public subnets is created.",
+    "service": "route",
+    "category": "NETWORKING",
+    "resources": [
+      "ncloud_route_table",
+      "ncloud_subnet"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/graph_checks/ncp/RouteTablePublicSubnetConnection.yaml",
+    "service_group": "route"
+  },
+  {
+    "tool": "checkov",
+    "id": "CKV_NCP_6",
+    "severity": "",
+    "title": "Ensure Server instance is encrypted.",
+    "service": "server",
+    "category": "ENCRYPTION",
+    "resources": [
+      "ncloud_server"
+    ],
+    "fix": "",
+    "source_file": "checkov/terraform/checks/resource/ncp/ServerEncryptionVPC.py",
+    "service_group": "server"
+  }
+]

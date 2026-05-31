@@ -5,8 +5,8 @@
   resource: google_compute_firewall
   on: [create, update]
   when: |
-    (!has(after.direction) || after.direction == "INGRESS") &&
-    (!has(after.disabled) || after.disabled == false) &&
+    (!has(after.direction) || after.direction != "EGRESS") &&
+    (!has(after.disabled) || after.disabled != true) &&
     has(after.source_ranges) && "0.0.0.0/0" in after.source_ranges &&
     has(after.allow) && after.allow.exists(a,
       !has(a.ports) || ports_hit_sensitive(a.ports))
