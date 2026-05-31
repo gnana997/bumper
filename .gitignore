@@ -6,7 +6,6 @@
 *.tfplan
 *.tfstate
 *.tfstate.*
-plan.json
 
 # Go
 *.test
