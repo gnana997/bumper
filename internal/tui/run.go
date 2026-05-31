@@ -1,0 +1,41 @@
+package tui
+
+import (
+	"fmt"
+	"os"
+
+	tea "github.com/charmbracelet/bubbletea"
+
+	"github.com/gnana097/bumper/internal/engine"
+	"github.com/gnana097/bumper/internal/rules"
+)
+
+// isTTY reports whether stdout is an interactive terminal. The TUI refuses to
+// run when piped/redirected (CI) — the default text/json/sarif output is for
+// those cases.
+func isTTY() bool {
+	fi, err := os.Stdout.Stat()
+	if err != nil {
+		return false
+	}
+	return fi.Mode()&os.ModeCharDevice != 0
+}
+
+// RunFindings launches the hazard console for a scanned plan. target is the
+// plan name shown in the navbar.
+func RunFindings(fs []engine.Finding, set *rules.Set, llm, target string) error {
+	if !isTTY() {
+		return fmt.Errorf("the TUI needs an interactive terminal (stdout is not a TTY); use --format text instead")
+	}
+	_, err := tea.NewProgram(NewFindings(fs, set, llm, target), tea.WithAltScreen()).Run()
+	return err
+}
+
+// RunRules launches the hazard console as a rule-set browser.
+func RunRules(rs []*rules.Rule) error {
+	if !isTTY() {
+		return fmt.Errorf("the TUI needs an interactive terminal (stdout is not a TTY)")
+	}
+	_, err := tea.NewProgram(NewRules(rs), tea.WithAltScreen()).Run()
+	return err
+}

@@ -52,6 +52,23 @@ Exit codes: `0` = clean, `1` = findings present (CI-friendly), `2` = usage/parse
 Output formats: `--format text` (default), `json`, `sarif` (GitHub code scanning),
 `markdown` (a PR-comment body).
 
+## Interactive console (TUI)
+
+For the local "scary `apply`" moment, browse findings interactively:
+
+```sh
+bumper tui plan.json     # the "hazard console" — findings board with a severity spine
+bumper list --tui        # browse the whole rule set interactively
+```
+
+A two-pane board: a BLAST RADIUS severity histogram, findings down the left with
+a color-coded severity spine, full detail (fix, provenance, the CEL check) on the
+right, and `e` to pull a plain-English explanation from a local AI CLI. Keys:
+`↑↓` move · `→` detail · `f` filter · `/` search · `e` explain · `?` help · `q` quit.
+
+The TUI is **opt-in** and refuses to run when piped — the default `text`/`json`/
+`sarif` output is what CI uses. Built on Bubble Tea (pure Go, still one binary).
+
 ## Inspecting the rule set
 
 Every rule is inspectable — part of the trust story (you can see exactly what

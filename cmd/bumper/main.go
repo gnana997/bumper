@@ -12,6 +12,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"path/filepath"
 	"sort"
 	"strings"
 
@@ -20,13 +21,15 @@ import (
 	"github.com/gnana097/bumper/internal/plan"
 	"github.com/gnana097/bumper/internal/report"
 	"github.com/gnana097/bumper/internal/rules"
+	"github.com/gnana097/bumper/internal/tui"
 )
 
 const usage = `bumper — catch dangerous Terraform changes before you apply them.
 
 Usage:
   bumper [flags] plan.json        scan a plan (use "-" for stdin)
-  bumper list [flags]             list the rule set
+  bumper tui plan.json            scan + open the interactive hazard console
+  bumper list [flags] [--tui]     list the rule set (or browse it interactively)
   bumper explain <RULE_ID>        show one rule in detail
   bumper version
 
@@ -53,6 +56,8 @@ func run() int {
 			return cmdList(args[1:])
 		case "explain":
 			return cmdExplain(args[1:])
+		case "tui":
+			return cmdTUI(args[1:])
 		case "version", "--version", "-v":
 			fmt.Println("bumper " + report.Version)
 			return 0
@@ -134,6 +139,7 @@ func cmdList(args []string) int {
 	source := fs.String("source", "", "filter by source: trivy|custom")
 	service := fs.String("service", "", "filter by service/resource substring (e.g. rds, s3)")
 	format := fs.String("format", "text", "text|json")
+	useTUI := fs.Bool("tui", false, "open the interactive rule browser")
 	if err := fs.Parse(args); err != nil {
 		return 2
 	}
@@ -162,6 +168,12 @@ func cmdList(args []string) int {
 		return sel[i].ID < sel[j].ID
 	})
 
+	if *useTUI {
+		if err := tui.RunRules(sel); err != nil {
+			return fail("%v", err)
+		}
+		return 0
+	}
 	if err := report.RuleList(os.Stdout, sel, *format); err != nil {
 		return fail("%v", err)
 	}
@@ -183,6 +195,41 @@ func cmdExplain(args []string) int {
 		return fail("unknown rule %q (try: bumper list)", args[0])
 	}
 	report.RuleDetail(os.Stdout, r)
+	return 0
+}
+
+// cmdTUI scans a plan and opens the interactive hazard console.
+func cmdTUI(args []string) int {
+	fs := flag.NewFlagSet("tui", flag.ContinueOnError)
+	fs.SetOutput(os.Stderr)
+	rulesDir := fs.String("rules", "", "")
+	llm := fs.String("llm", "auto", "")
+	if err := fs.Parse(args); err != nil {
+		return 2
+	}
+	if fs.NArg() != 1 {
+		fmt.Fprintln(os.Stderr, "usage: bumper tui plan.json")
+		return 2
+	}
+	data, err := readInput(fs.Arg(0))
+	if err != nil {
+		return fail("%v", err)
+	}
+	changes, err := plan.Load(data)
+	if err != nil {
+		return fail("%v", err)
+	}
+	set, err := rules.Load(*rulesDir)
+	if err != nil {
+		return fail("%v", err)
+	}
+	findings, err := engine.Evaluate(changes, set)
+	if err != nil {
+		return fail("%v", err)
+	}
+	if err := tui.RunFindings(findings, set, *llm, filepath.Base(fs.Arg(0))); err != nil {
+		return fail("%v", err)
+	}
 	return 0
 }
 

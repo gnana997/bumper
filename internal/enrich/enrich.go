@@ -32,10 +32,16 @@ var known = []CLI{
 	{Name: "auggie", Bin: "auggie", Args: func(p string) []string { return []string{"-p", p} }},
 }
 
-// Detect returns the first CLI on PATH matching prefer ("auto" = first found).
+// matchesPrefer reports whether a CLI named name is eligible under prefer.
+// "" or "auto" means "any"; any other value pins a specific CLI by name.
+func matchesPrefer(prefer, name string) bool {
+	return prefer == "" || prefer == "auto" || prefer == name
+}
+
+// Detect returns the first CLI on PATH matching prefer.
 func Detect(prefer string) (CLI, bool) {
 	for _, c := range known {
-		if prefer != "auto" && prefer != c.Name {
+		if !matchesPrefer(prefer, c.Name) {
 			continue
 		}
 		if _, err := exec.LookPath(c.Bin); err == nil {
@@ -47,10 +53,15 @@ func Detect(prefer string) (CLI, bool) {
 
 // Explain asks the detected CLI to translate findings into plain English.
 func Explain(ctx context.Context, c CLI, findings []engine.Finding) (string, error) {
+	return Ask(ctx, c, buildPrompt(findings))
+}
+
+// Ask runs an arbitrary prompt through the detected CLI and returns its output.
+func Ask(ctx context.Context, c CLI, prompt string) (string, error) {
 	ctx, cancel := context.WithTimeout(ctx, 90*time.Second)
 	defer cancel()
 
-	cmd := exec.CommandContext(ctx, c.Bin, c.Args(buildPrompt(findings))...)
+	cmd := exec.CommandContext(ctx, c.Bin, c.Args(prompt)...)
 	var out, errb bytes.Buffer
 	cmd.Stdout = &out
 	cmd.Stderr = &errb
