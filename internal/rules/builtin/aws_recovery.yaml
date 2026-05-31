@@ -3,6 +3,8 @@
 # action itself.
 
 - id: AWS_DYNAMODB_PITR_DISABLED
+  source: trivy
+  avd: AVD-AWS-0024
   severity: medium
   resource: aws_dynamodb_table
   on: [create, update]
@@ -13,6 +15,8 @@
   fix: "Add point_in_time_recovery { enabled = true }."
 
 - id: AWS_S3_VERSIONING_DISABLED
+  source: trivy
+  avd: AVD-AWS-0090
   severity: medium
   resource: aws_s3_bucket_versioning
   on: [create, update]
@@ -23,6 +27,8 @@
   fix: "Set versioning_configuration { status = \"Enabled\" }."
 
 - id: AWS_RDS_SHORT_BACKUP_RETENTION
+  source: trivy
+  avd: AVD-AWS-0077
   severity: medium
   on: [create, update]
   when: |
@@ -32,6 +38,8 @@
   fix: "Set backup_retention_period to at least 7 days for production databases."
 
 - id: AWS_RDS_CLUSTER_NO_DELETION_PROTECTION
+  source: trivy
+  avd: AVD-AWS-0343
   severity: medium
   resource: aws_rds_cluster
   on: [create, update]
@@ -41,6 +49,8 @@
   fix: "Set deletion_protection = true for production clusters."
 
 - id: AWS_ELASTICACHE_NO_BACKUP
+  source: trivy
+  avd: AVD-AWS-0050
   severity: medium
   resource: aws_elasticache_replication_group
   on: [create, update]

@@ -1,6 +1,8 @@
 # TLS hygiene for internet-facing services.
 
 - id: AWS_CLOUDFRONT_OUTDATED_TLS
+  source: trivy
+  avd: AVD-AWS-0013
   severity: high
   resource: aws_cloudfront_distribution
   on: [create, update]
@@ -12,6 +14,8 @@
   fix: "Set viewer_certificate.minimum_protocol_version to TLSv1.2_2021 or newer."
 
 - id: AWS_APIGW_OUTDATED_TLS
+  source: trivy
+  avd: AVD-AWS-0005
   severity: high
   resource: aws_api_gateway_domain_name
   on: [create, update]
@@ -21,6 +25,8 @@
   fix: "Set security_policy = \"TLS_1_2\"."
 
 - id: AWS_ES_OUTDATED_TLS
+  source: trivy
+  avd: AVD-AWS-0126
   severity: high
   on: [create, update]
   when: |
@@ -31,6 +37,8 @@
   fix: "Set domain_endpoint_options.tls_security_policy to a TLS-1-2 policy."
 
 - id: AWS_ES_NODE_TO_NODE_UNENCRYPTED
+  source: trivy
+  avd: AVD-AWS-0043
   severity: high
   on: [create, update]
   when: |

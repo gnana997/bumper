@@ -1,6 +1,8 @@
 # ECS task definitions store container_definitions as a JSON string in the plan,
 # so we parse_json it and look for secret-looking plaintext environment vars.
 - id: AWS_ECS_PLAINTEXT_SECRETS
+  source: trivy
+  avd: AVD-AWS-0036
   severity: medium
   resource: aws_ecs_task_definition
   on: [create, update]

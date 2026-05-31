@@ -1,6 +1,8 @@
 # Misc encryption-at-rest / in-transit exposure checks.
 
 - id: AWS_EFS_UNENCRYPTED
+  source: trivy
+  avd: AVD-AWS-0037
   severity: high
   resource: aws_efs_file_system
   on: [create, update]
@@ -12,6 +14,8 @@
     - "https://docs.aws.amazon.com/efs/latest/ug/encryption.html"
 
 - id: AWS_ELASTICACHE_TRANSIT_UNENCRYPTED
+  source: trivy
+  avd: AVD-AWS-0051
   severity: high
   resource: aws_elasticache_replication_group
   on: [create, update]

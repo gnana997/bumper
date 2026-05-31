@@ -1,6 +1,8 @@
 # Public-exposure / plaintext-transport rules.
 
 - id: AWS_CLOUDFRONT_NO_HTTPS
+  source: trivy
+  avd: AVD-AWS-0012
   severity: critical
   resource: aws_cloudfront_distribution
   on: [create, update]
@@ -15,6 +17,8 @@
     - "https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/using-https-viewers-to-cloudfront.html"
 
 - id: AWS_ELB_PLAIN_HTTP_LISTENER
+  source: trivy
+  avd: AVD-AWS-0054
   severity: critical
   on: [create, update]
   when: |
@@ -27,6 +31,8 @@
     - "https://docs.aws.amazon.com/elasticloadbalancing/latest/application/create-https-listener.html"
 
 - id: AWS_ES_NO_HTTPS_ENFORCED
+  source: trivy
+  avd: AVD-AWS-0046
   severity: critical
   on: [create, update]
   when: |
@@ -39,6 +45,8 @@
     - "https://docs.aws.amazon.com/opensearch-service/latest/developerguide/infrastructure-security.html"
 
 - id: AWS_EKS_PUBLIC_ENDPOINT_OPEN
+  source: trivy
+  avd: AVD-AWS-0041
   severity: critical
   resource: aws_eks_cluster
   on: [create, update]
@@ -52,6 +60,8 @@
     - "https://docs.aws.amazon.com/eks/latest/userguide/cluster-endpoint.html"
 
 - id: AWS_MQ_BROKER_PUBLIC
+  source: trivy
+  avd: AVD-AWS-0072
   severity: high
   resource: aws_mq_broker
   on: [create, update]

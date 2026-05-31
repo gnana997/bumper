@@ -4,6 +4,8 @@
 
 # Inline ingress blocks on aws_security_group.
 - id: AWS_SG_PUBLIC_INGRESS
+  source: trivy
+  avd: AVD-AWS-0107
   severity: critical
   resource: aws_security_group
   on: [create, update]
@@ -25,6 +27,8 @@
 
 # Standalone aws_security_group_rule (fields at top level; type distinguishes direction).
 - id: AWS_SG_RULE_PUBLIC_INGRESS
+  source: trivy
+  avd: AVD-AWS-0107
   severity: critical
   resource: aws_security_group_rule
   on: [create, update]
@@ -45,6 +49,8 @@
 
 # Modern aws_vpc_security_group_ingress_rule (single cidr_ipv4/cidr_ipv6, ip_protocol).
 - id: AWS_VPC_SG_INGRESS_PUBLIC
+  source: trivy
+  avd: AVD-AWS-0107
   severity: critical
   resource: aws_vpc_security_group_ingress_rule
   on: [create, update]

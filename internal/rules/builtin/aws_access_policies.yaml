@@ -1,6 +1,8 @@
 # Resource-policy exposure (uses parse_json, like the IAM family).
 
 - id: AWS_ECR_PUBLIC_POLICY
+  source: trivy
+  avd: AVD-AWS-0032
   severity: high
   resource: aws_ecr_repository_policy
   on: [create, update]
@@ -15,6 +17,8 @@
   fix: "Restrict the repository policy Principal to specific accounts/roles."
 
 - id: AWS_SQS_POLICY_PUBLIC
+  source: trivy
+  avd: AVD-AWS-0097
   severity: high
   resource: aws_sqs_queue_policy
   on: [create, update]
@@ -29,6 +33,8 @@
   fix: "Restrict the queue policy Principal; avoid Principal '*'."
 
 - id: AWS_LAMBDA_PERMISSION_NO_SOURCE_ARN
+  source: trivy
+  avd: AVD-AWS-0067
   severity: high
   resource: aws_lambda_permission
   on: [create, update]

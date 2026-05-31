@@ -1,5 +1,7 @@
 # EBS encryption at rest (metadata informed by trivy-checks AVD AWS-0026/0027).
 - id: AWS_EBS_VOLUME_UNENCRYPTED
+  source: trivy
+  avd: AVD-AWS-0026
   severity: high
   resource: aws_ebs_volume
   on: [create, update]

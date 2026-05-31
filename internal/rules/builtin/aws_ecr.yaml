@@ -1,5 +1,7 @@
 # ECR repository hardening.
 - id: AWS_ECR_SCAN_ON_PUSH_DISABLED
+  source: trivy
+  avd: AVD-AWS-0030
   severity: high
   resource: aws_ecr_repository
   on: [create, update]

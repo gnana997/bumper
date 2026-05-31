@@ -3,6 +3,8 @@
 # missing field — guarded so they only apply to the right resource type.
 
 - id: AWS_SNS_UNENCRYPTED
+  source: trivy
+  avd: AVD-AWS-0095
   severity: high
   resource: aws_sns_topic
   on: [create, update]
@@ -12,6 +14,8 @@
   fix: "Set kms_master_key_id (e.g. alias/aws/sns or a customer-managed key)."
 
 - id: AWS_SQS_UNENCRYPTED
+  source: trivy
+  avd: AVD-AWS-0096
   severity: high
   resource: aws_sqs_queue
   on: [create, update]
@@ -22,6 +26,8 @@
   fix: "Set sqs_managed_sse_enabled = true, or provide kms_master_key_id."
 
 - id: AWS_KINESIS_UNENCRYPTED
+  source: trivy
+  avd: AVD-AWS-0064
   severity: high
   resource: aws_kinesis_stream
   on: [create, update]
@@ -31,6 +37,8 @@
   fix: "Set encryption_type = \"KMS\" and provide kms_key_id."
 
 - id: AWS_ES_UNENCRYPTED_AT_REST
+  source: trivy
+  avd: AVD-AWS-0048
   severity: high
   on: [create, update]
   when: |
@@ -41,6 +49,8 @@
   fix: "Set encrypt_at_rest.enabled = true."
 
 - id: AWS_REDSHIFT_UNENCRYPTED
+  source: trivy
+  avd: AVD-AWS-0084
   severity: high
   resource: aws_redshift_cluster
   on: [create, update]
@@ -50,6 +60,8 @@
   fix: "Set encrypted = true."
 
 - id: AWS_NEPTUNE_UNENCRYPTED
+  source: trivy
+  avd: AVD-AWS-0076
   severity: high
   resource: aws_neptune_cluster
   on: [create, update]
@@ -59,6 +71,8 @@
   fix: "Set storage_encrypted = true."
 
 - id: AWS_DOCDB_UNENCRYPTED
+  source: trivy
+  avd: AVD-AWS-0021
   severity: high
   resource: aws_docdb_cluster
   on: [create, update]
@@ -68,6 +82,8 @@
   fix: "Set storage_encrypted = true."
 
 - id: AWS_RDS_CLUSTER_UNENCRYPTED
+  source: trivy
+  avd: AVD-AWS-0079
   severity: high
   resource: aws_rds_cluster
   on: [create, update]
@@ -77,6 +93,8 @@
   fix: "Set storage_encrypted = true."
 
 - id: AWS_ELASTICACHE_AT_REST_UNENCRYPTED
+  source: trivy
+  avd: AVD-AWS-0045
   severity: high
   resource: aws_elasticache_replication_group
   on: [create, update]

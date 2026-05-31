@@ -6,8 +6,10 @@ import (
 	"fmt"
 	"io"
 	"strings"
+	"text/tabwriter"
 
 	"github.com/gnana097/bumper/internal/engine"
+	"github.com/gnana097/bumper/internal/rules"
 )
 
 // Text writes a human-readable report.
@@ -236,6 +238,87 @@ func SARIF(w io.Writer, findings []engine.Finding, artifactURI string) error {
 }
 
 // --- Markdown PR comment ---
+
+// --- Rule listing (`bumper list` / `bumper explain`) ---
+
+type ruleRow struct {
+	ID       string   `json:"id"`
+	Severity string   `json:"severity"`
+	Source   string   `json:"source"`
+	AVD      string   `json:"avd,omitempty"`
+	Resource string   `json:"resource,omitempty"`
+	Title    string   `json:"title"`
+	Fix      string   `json:"fix,omitempty"`
+	Refs     []string `json:"refs,omitempty"`
+}
+
+// RuleList renders a rule set as an aligned text table or JSON.
+func RuleList(w io.Writer, rs []*rules.Rule, format string) error {
+	if format == "json" {
+		rows := make([]ruleRow, 0, len(rs))
+		for _, r := range rs {
+			rows = append(rows, ruleRow{r.ID, r.Severity, r.Source, r.AVD, r.Resource, r.Title, r.Fix, r.Refs})
+		}
+		enc := json.NewEncoder(w)
+		enc.SetIndent("", "  ")
+		return enc.Encode(rows)
+	}
+
+	tw := tabwriter.NewWriter(w, 0, 0, 2, ' ', 0)
+	fmt.Fprintln(tw, "SEVERITY\tSOURCE\tID\tRESOURCE\tTITLE")
+	for _, r := range rs {
+		resource := r.Resource
+		if resource == "" {
+			resource = "(multiple)"
+		}
+		fmt.Fprintf(tw, "%s\t%s\t%s\t%s\t%s\n", r.Severity, r.Source, r.ID, resource, truncate(r.Title, 64))
+	}
+	if err := tw.Flush(); err != nil {
+		return err
+	}
+	fmt.Fprintf(w, "\n%d rule(s)\n", len(rs))
+	return nil
+}
+
+// RuleDetail prints one rule, including its CEL check (the spec's
+// "reproducible, explainable" pillar — you can see exactly what fires).
+func RuleDetail(w io.Writer, r *rules.Rule) {
+	fmt.Fprintf(w, "%s  [%s]\n", r.ID, r.Severity)
+	fmt.Fprintf(w, "%s\n\n", r.Title)
+
+	prov := r.Source
+	if r.AVD != "" {
+		prov += " · " + r.AVD
+	}
+	fmt.Fprintf(w, "  source:   %s\n", prov)
+
+	resource := r.Resource
+	if resource == "" {
+		resource = "(any resource — see check)"
+	}
+	actions := "any change"
+	if len(r.On) > 0 {
+		actions = strings.Join(r.On, ", ")
+	}
+	fmt.Fprintf(w, "  applies:  %s  on [%s]\n", resource, actions)
+	if r.Fix != "" {
+		fmt.Fprintf(w, "  fix:      %s\n", r.Fix)
+	}
+	for _, ref := range r.Refs {
+		fmt.Fprintf(w, "  ref:      %s\n", ref)
+	}
+	fmt.Fprintln(w, "  check (CEL):")
+	for _, line := range strings.Split(strings.TrimRight(r.When, "\n"), "\n") {
+		fmt.Fprintf(w, "    %s\n", line)
+	}
+}
+
+func truncate(s string, n int) string {
+	if len(s) <= n {
+		return s
+	}
+	return s[:n-1] + "…"
+}
 
 // Markdown writes a PR-comment body: a hidden marker (so the comment can be
 // updated in place), a severity summary, the critical/high findings inline, and

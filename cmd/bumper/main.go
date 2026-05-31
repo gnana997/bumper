@@ -1,7 +1,9 @@
 // Command bumper catches dangerous Terraform changes before you apply them.
 //
 //	terraform show -json plan.tfplan > plan.json
-//	bumper plan.json
+//	bumper plan.json          # scan
+//	bumper list               # show the ruleset
+//	bumper explain <RULE_ID>  # show one rule
 package main
 
 import (
@@ -10,6 +12,8 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"sort"
+	"strings"
 
 	"github.com/gnana097/bumper/internal/engine"
 	"github.com/gnana097/bumper/internal/enrich"
@@ -21,15 +25,19 @@ import (
 const usage = `bumper — catch dangerous Terraform changes before you apply them.
 
 Usage:
-  terraform show -json plan.tfplan > plan.json
-  bumper [flags] plan.json        (use "-" to read the plan from stdin)
+  bumper [flags] plan.json        scan a plan (use "-" for stdin)
+  bumper list [flags]             list the rule set
+  bumper explain <RULE_ID>        show one rule in detail
+  bumper version
 
-Flags:
-  --format string        output format: text|json|sarif|markdown (default "text")
+Produce a plan: terraform show -json plan.tfplan > plan.json
+
+Scan flags:
+  --format string        output: text|json|sarif|markdown (default "text")
   --min-severity string  report findings at or above: info|low|medium|high|critical (default "low")
   --rules string         directory of additional .yaml rules to load
   --explain              enrich findings via a locally-installed AI CLI (claude, gemini, ...)
-  --llm string           which AI CLI to use with --explain: auto|claude|gemini|codex|opencode|auggie (default "auto")
+  --llm string           AI CLI for --explain: auto|claude|gemini|codex|opencode|auggie (default "auto")
   --no-fail              always exit 0, even when findings are present
 
 Exit codes: 0 = clean, 1 = findings present, 2 = usage/parse error.
@@ -38,21 +46,44 @@ Exit codes: 0 = clean, 1 = findings present, 2 = usage/parse error.
 func main() { os.Exit(run()) }
 
 func run() int {
-	format := flag.String("format", "text", "")
-	minSeverity := flag.String("min-severity", "low", "")
-	rulesDir := flag.String("rules", "", "")
-	explain := flag.Bool("explain", false, "")
-	llm := flag.String("llm", "auto", "")
-	noFail := flag.Bool("no-fail", false, "")
-	flag.Usage = func() { fmt.Fprint(os.Stderr, usage) }
-	flag.Parse()
+	args := os.Args[1:]
+	if len(args) > 0 {
+		switch args[0] {
+		case "list":
+			return cmdList(args[1:])
+		case "explain":
+			return cmdExplain(args[1:])
+		case "version", "--version", "-v":
+			fmt.Println("bumper " + report.Version)
+			return 0
+		case "help", "-h", "--help":
+			fmt.Fprint(os.Stderr, usage)
+			return 0
+		}
+	}
+	return cmdScan(args)
+}
 
-	if flag.NArg() != 1 {
-		flag.Usage()
+func cmdScan(args []string) int {
+	fs := flag.NewFlagSet("bumper", flag.ContinueOnError)
+	fs.SetOutput(os.Stderr)
+	format := fs.String("format", "text", "")
+	minSeverity := fs.String("min-severity", "low", "")
+	rulesDir := fs.String("rules", "", "")
+	explainFindings := fs.Bool("explain", false, "")
+	llm := fs.String("llm", "auto", "")
+	noFail := fs.Bool("no-fail", false, "")
+	fs.Usage = func() { fmt.Fprint(os.Stderr, usage) }
+	if err := fs.Parse(args); err != nil {
 		return 2
 	}
+	if fs.NArg() != 1 {
+		fs.Usage()
+		return 2
+	}
+	planPath := fs.Arg(0)
 
-	data, err := readInput(flag.Arg(0))
+	data, err := readInput(planPath)
 	if err != nil {
 		return fail("%v", err)
 	}
@@ -76,7 +107,7 @@ func run() int {
 			return fail("%v", err)
 		}
 	case "sarif":
-		if err := report.SARIF(os.Stdout, findings, flag.Arg(0)); err != nil {
+		if err := report.SARIF(os.Stdout, findings, planPath); err != nil {
 			return fail("%v", err)
 		}
 	case "markdown", "md":
@@ -85,8 +116,8 @@ func run() int {
 		report.Text(os.Stdout, findings)
 	}
 
-	if *explain && len(findings) > 0 {
-		runExplain(*llm, findings)
+	if *explainFindings && len(findings) > 0 {
+		enrichFindings(*llm, findings)
 	}
 
 	if len(findings) > 0 && !*noFail {
@@ -95,7 +126,68 @@ func run() int {
 	return 0
 }
 
-func runExplain(llm string, findings []engine.Finding) {
+// cmdList prints the rule set, optionally filtered.
+func cmdList(args []string) int {
+	fs := flag.NewFlagSet("list", flag.ContinueOnError)
+	fs.SetOutput(os.Stderr)
+	severity := fs.String("severity", "", "filter by severity: critical|high|medium|low")
+	source := fs.String("source", "", "filter by source: trivy|custom")
+	service := fs.String("service", "", "filter by service/resource substring (e.g. rds, s3)")
+	format := fs.String("format", "text", "text|json")
+	if err := fs.Parse(args); err != nil {
+		return 2
+	}
+	set, err := rules.Load("")
+	if err != nil {
+		return fail("%v", err)
+	}
+
+	var sel []*rules.Rule
+	for _, r := range set.Rules {
+		if *severity != "" && r.Severity != *severity {
+			continue
+		}
+		if *source != "" && r.Source != *source {
+			continue
+		}
+		if *service != "" && !strings.Contains(strings.ToLower(r.ID+" "+r.Resource), strings.ToLower(*service)) {
+			continue
+		}
+		sel = append(sel, r)
+	}
+	sort.SliceStable(sel, func(i, j int) bool {
+		if ri, rj := engine.Rank(sel[i].Severity), engine.Rank(sel[j].Severity); ri != rj {
+			return ri > rj
+		}
+		return sel[i].ID < sel[j].ID
+	})
+
+	if err := report.RuleList(os.Stdout, sel, *format); err != nil {
+		return fail("%v", err)
+	}
+	return 0
+}
+
+// cmdExplain prints one rule in detail.
+func cmdExplain(args []string) int {
+	if len(args) != 1 || strings.HasPrefix(args[0], "-") {
+		fmt.Fprintln(os.Stderr, "usage: bumper explain <RULE_ID>   (see: bumper list)")
+		return 2
+	}
+	set, err := rules.Load("")
+	if err != nil {
+		return fail("%v", err)
+	}
+	r, ok := set.ByID(args[0])
+	if !ok {
+		return fail("unknown rule %q (try: bumper list)", args[0])
+	}
+	report.RuleDetail(os.Stdout, r)
+	return 0
+}
+
+// enrichFindings adds an AI plain-English explanation to a scan's findings.
+func enrichFindings(llm string, findings []engine.Finding) {
 	cli, ok := enrich.Detect(llm)
 	if !ok {
 		fmt.Fprintln(os.Stderr, "\nbumper: --explain requested but no AI CLI found on PATH "+

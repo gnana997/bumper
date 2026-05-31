@@ -3,6 +3,7 @@
 # the only way to catch "this apply will destroy data." No type filter here; we
 # match a set of stateful resource types via the `type` variable in CEL.
 - id: AWS_STATEFUL_RESOURCE_DESTROY
+  source: custom
   severity: high
   on: [delete, replace]
   when: |

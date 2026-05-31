@@ -2,6 +2,8 @@
 
 # Legacy canned ACL on the bucket resource itself.
 - id: AWS_S3_BUCKET_PUBLIC_ACL
+  source: trivy
+  avd: AVD-AWS-0092
   severity: high
   resource: aws_s3_bucket
   on: [create, update]
@@ -14,6 +16,8 @@
 
 # Modern standalone ACL resource.
 - id: AWS_S3_ACL_PUBLIC
+  source: trivy
+  avd: AVD-AWS-0092
   severity: high
   resource: aws_s3_bucket_acl
   on: [create, update]
@@ -26,6 +30,8 @@
 
 # Block Public Access not fully enabled.
 - id: AWS_S3_PUBLIC_ACCESS_BLOCK_WEAK
+  source: trivy
+  avd: AVD-AWS-0086
   severity: high
   resource: aws_s3_bucket_public_access_block
   on: [create, update]

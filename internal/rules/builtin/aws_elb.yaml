@@ -1,5 +1,7 @@
 # Application load balancer hardening.
 - id: AWS_ELB_DROP_INVALID_HEADERS
+  source: trivy
+  avd: AVD-AWS-0052
   severity: medium
   resource: aws_lb
   on: [create, update]

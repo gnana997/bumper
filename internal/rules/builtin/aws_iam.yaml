@@ -4,6 +4,8 @@
 
 # Wildcard admin: Allow Action "*"/"iam:*"/"*:*" on Resource "*".
 - id: AWS_IAM_WILDCARD_ADMIN
+  source: trivy
+  avd: AVD-AWS-0057
   severity: critical
   on: [create, update]
   when: |
@@ -21,6 +23,7 @@
 
 # Trust policy lets any AWS principal assume the role (Principal "*" or {"AWS":"*"}).
 - id: AWS_IAM_TRUST_POLICY_WILDCARD_PRINCIPAL
+  source: custom
   severity: critical
   resource: aws_iam_role
   on: [create, update]

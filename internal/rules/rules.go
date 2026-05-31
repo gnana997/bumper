@@ -30,15 +30,27 @@ type Rule struct {
 	Fix      string   `yaml:"fix"`
 	Refs     []string `yaml:"refs"`
 
+	// Provenance — where this rule came from.
+	Source string `yaml:"source"` // "custom" | "trivy"
+	AVD    string `yaml:"avd"`    // original Trivy/AVD id, e.g. AVD-AWS-0180 ("" for custom)
+
 	program cel.Program // compiled When
 }
 
 // Program returns the compiled CEL program for this rule.
 func (r *Rule) Program() cel.Program { return r.program }
 
-// Set is a loaded, compiled collection of rules.
+// Set is a loaded, compiled collection of rules with an id index for O(1)
+// lookup (used by `explain` and findings provenance).
 type Set struct {
 	Rules []*Rule
+	byID  map[string]*Rule
+}
+
+// ByID returns the rule with the given id, or (nil, false).
+func (s *Set) ByID(id string) (*Rule, bool) {
+	r, ok := s.byID[id]
+	return r, ok
 }
 
 // NewEnv builds the CEL environment exposing the variables a rule may read
@@ -74,11 +86,17 @@ func Load(extraDir string) (*Set, error) {
 		}
 	}
 
-	set := &Set{}
+	set := &Set{byID: make(map[string]*Rule, len(raw))}
 	for i := range raw {
 		r := raw[i]
 		if r.ID == "" {
 			return nil, fmt.Errorf("rule with empty id (title %q)", r.Title)
+		}
+		if r.Source != "custom" && r.Source != "trivy" {
+			return nil, fmt.Errorf("rule %s: source must be \"custom\" or \"trivy\", got %q", r.ID, r.Source)
+		}
+		if _, dup := set.byID[r.ID]; dup {
+			return nil, fmt.Errorf("duplicate rule id %s", r.ID)
 		}
 		prg, err := compile(env, r.When)
 		if err != nil {
@@ -86,6 +104,7 @@ func Load(extraDir string) (*Set, error) {
 		}
 		r.program = prg
 		set.Rules = append(set.Rules, &r)
+		set.byID[r.ID] = set.Rules[len(set.Rules)-1]
 	}
 	return set, nil
 }

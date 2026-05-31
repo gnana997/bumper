@@ -1,5 +1,7 @@
 # EC2 instance hardening.
 - id: AWS_EC2_IMDSV2_NOT_ENFORCED
+  source: trivy
+  avd: AVD-AWS-0028
   severity: high
   resource: aws_instance
   on: [create, update]

@@ -52,6 +52,24 @@ Exit codes: `0` = clean, `1` = findings present (CI-friendly), `2` = usage/parse
 Output formats: `--format text` (default), `json`, `sarif` (GitHub code scanning),
 `markdown` (a PR-comment body).
 
+## Inspecting the rule set
+
+Every rule is inspectable — part of the trust story (you can see exactly what
+fires and where it came from):
+
+```sh
+bumper list                          # all rules: severity · source · id · resource · title
+bumper list --source custom          # only bumper's own (non-Trivy) rules
+bumper list --severity critical      # filter by severity
+bumper list --service rds            # filter by service/resource substring
+bumper list --format json            # machine-readable catalog
+bumper explain AWS_RDS_PUBLICLY_ACCESSIBLE   # one rule: provenance, fix, and the CEL check
+```
+
+Each rule carries its **provenance** — `source: trivy` (with the original
+`AVD-AWS-NNNN` id) or `source: custom` for bumper's own checks (the
+destruction/plan-diff rules and a few others).
+
 ## CI / GitHub Action
 
 bumper ships a composite action that uploads SARIF to the **Security** tab and

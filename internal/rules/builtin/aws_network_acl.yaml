@@ -1,5 +1,7 @@
 # Network ACL public ingress (the stateless layer in front of security groups).
 - id: AWS_NACL_PUBLIC_INGRESS
+  source: trivy
+  avd: AVD-AWS-0105
   severity: high
   resource: aws_network_acl_rule
   on: [create, update]

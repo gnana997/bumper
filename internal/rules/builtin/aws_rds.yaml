@@ -1,5 +1,7 @@
 # RDS exposure / encryption (ported logic; metadata informed by trivy-checks AVD).
 - id: AWS_RDS_PUBLICLY_ACCESSIBLE
+  source: trivy
+  avd: AVD-AWS-0180
   severity: critical
   resource: aws_db_instance
   on: [create, update]
@@ -11,6 +13,8 @@
     - "https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_VPC.WorkingWithRDSInstanceinaVPC.html"
 
 - id: AWS_RDS_STORAGE_UNENCRYPTED
+  source: trivy
+  avd: AVD-AWS-0080
   severity: high
   resource: aws_db_instance
   on: [create, update]
@@ -22,6 +26,8 @@
     - "https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Overview.Encryption.html"
 
 - id: AWS_RDS_NO_DELETION_PROTECTION
+  source: trivy
+  avd: AVD-AWS-0177
   severity: medium
   resource: aws_db_instance
   on: [create, update]

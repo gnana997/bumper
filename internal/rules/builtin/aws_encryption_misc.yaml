@@ -1,6 +1,8 @@
 # Additional encryption-at-rest / key-management checks.
 
 - id: AWS_KMS_NO_ROTATION
+  source: trivy
+  avd: AVD-AWS-0065
   severity: medium
   resource: aws_kms_key
   on: [create, update]
@@ -10,6 +12,8 @@
   fix: "Set enable_key_rotation = true."
 
 - id: AWS_EC2_BLOCK_DEVICE_UNENCRYPTED
+  source: trivy
+  avd: AVD-AWS-0131
   severity: high
   resource: aws_instance
   on: [create, update]
@@ -22,6 +26,8 @@
   fix: "Set encrypted = true on root_block_device / ebs_block_device, or enable EBS default encryption."
 
 - id: AWS_DAX_UNENCRYPTED
+  source: trivy
+  avd: AVD-AWS-0023
   severity: high
   resource: aws_dax_cluster
   on: [create, update]
@@ -32,6 +38,8 @@
   fix: "Add server_side_encryption { enabled = true }."
 
 - id: AWS_MSK_TRANSIT_UNENCRYPTED
+  source: trivy
+  avd: AVD-AWS-0073
   severity: high
   resource: aws_msk_cluster
   on: [create, update]
@@ -43,6 +51,8 @@
   fix: "Set encryption_info.encryption_in_transit.client_broker = \"TLS\"."
 
 - id: AWS_WORKSPACES_UNENCRYPTED
+  source: trivy
+  avd: AVD-AWS-0109
   severity: high
   resource: aws_workspaces_workspace
   on: [create, update]
@@ -53,6 +63,8 @@
   fix: "Set root_volume_encryption_enabled = true and user_volume_encryption_enabled = true."
 
 - id: AWS_EKS_SECRETS_UNENCRYPTED
+  source: trivy
+  avd: AVD-AWS-0039
   severity: high
   resource: aws_eks_cluster
   on: [create, update]
@@ -63,6 +75,8 @@
   fix: "Add encryption_config with resources = [\"secrets\"] and a KMS key."
 
 - id: AWS_CODEBUILD_ARTIFACT_UNENCRYPTED
+  source: trivy
+  avd: AVD-AWS-0018
   severity: medium
   resource: aws_codebuild_project
   on: [create, update]
@@ -73,6 +87,7 @@
   fix: "Set artifacts.encryption_disabled = false."
 
 - id: AWS_EBS_DEFAULT_ENCRYPTION_DISABLED
+  source: custom
   severity: medium
   resource: aws_ebs_encryption_by_default
   on: [create, update]

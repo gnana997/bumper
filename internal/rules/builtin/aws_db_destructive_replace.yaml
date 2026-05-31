@@ -2,6 +2,7 @@
 # This is the class of check the existing static scanners largely miss, because
 # they look at resulting config rather than the plan's change actions.
 - id: AWS_DB_DESTRUCTIVE_REPLACE_NO_SNAPSHOT
+  source: custom
   severity: critical
   resource: aws_db_instance
   on: [replace]

@@ -2,6 +2,8 @@
 # account-level "is CloudTrail enabled everywhere" posture check, which belongs
 # to the continuous account scanner, not the plan gate).
 - id: AWS_CLOUDTRAIL_NO_LOG_VALIDATION
+  source: trivy
+  avd: AVD-AWS-0016
   severity: high
   resource: aws_cloudtrail
   on: [create, update]
@@ -13,6 +15,8 @@
     - "https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudtrail-log-file-validation-intro.html"
 
 - id: AWS_CLOUDTRAIL_NO_CMK
+  source: trivy
+  avd: AVD-AWS-0015
   severity: medium
   resource: aws_cloudtrail
   on: [create, update]
