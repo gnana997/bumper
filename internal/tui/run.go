@@ -8,6 +8,7 @@ import (
 
 	"github.com/gnana097/bumper/internal/engine"
 	"github.com/gnana097/bumper/internal/rules"
+	"github.com/gnana097/bumper/internal/setup"
 )
 
 // isTTY reports whether stdout is an interactive terminal. The TUI refuses to
@@ -38,4 +39,21 @@ func RunRules(rs []*rules.Rule) error {
 	}
 	_, err := tea.NewProgram(NewRules(rs), tea.WithAltScreen()).Run()
 	return err
+}
+
+// RunInit launches the interactive init wizard, seeded with the given default
+// scopes. It applies the chosen configuration itself; the returned InitResult
+// lets the caller leave a persistent record after the alt-screen is torn down.
+func RunInit(env setup.Env, mcp, hook setup.Scope) (InitResult, error) {
+	if !isTTY() {
+		return InitResult{}, fmt.Errorf("the init wizard needs an interactive terminal; re-run with --yes for non-interactive setup")
+	}
+	final, err := tea.NewProgram(newInitModel(env, mcp, hook), tea.WithAltScreen()).Run()
+	if err != nil {
+		return InitResult{}, err
+	}
+	if im, ok := final.(initModel); ok {
+		return im.result(), nil
+	}
+	return InitResult{}, nil
 }

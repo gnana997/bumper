@@ -64,6 +64,122 @@ func shellWord(abs, name string) string {
 	return abs
 }
 
+// Scope is where a piece of config is written.
+type Scope string
+
+const (
+	ScopeProject Scope = "project" // shared with the team (committed)
+	ScopeUser    Scope = "user"    // global, all projects
+	ScopeNone    Scope = "none"    // skip
+)
+
+// Next cycles a scope: project → user → none → project. Used by the TUI.
+func (s Scope) Next() Scope {
+	switch s {
+	case ScopeProject:
+		return ScopeUser
+	case ScopeUser:
+		return ScopeNone
+	default:
+		return ScopeProject
+	}
+}
+
+// ParseScope validates a scope string from a flag.
+func ParseScope(s string) (Scope, bool) {
+	switch Scope(s) {
+	case ScopeProject, ScopeUser, ScopeNone:
+		return Scope(s), true
+	}
+	return "", false
+}
+
+// Env is the detected environment `bumper init` wires into.
+type Env struct {
+	Bin         string // command to invoke bumper in generated config
+	ClaudeFound bool   // the `claude` CLI is on PATH
+	Cwd         string // project directory
+	Home        string // user home
+	GitRepo     bool   // cwd is a git repo
+}
+
+// Detect inspects the current environment.
+func Detect() (Env, error) {
+	cwd, err := os.Getwd()
+	if err != nil {
+		return Env{}, err
+	}
+	home, err := os.UserHomeDir()
+	if err != nil {
+		return Env{}, err
+	}
+	_, claudeErr := exec.LookPath("claude")
+	_, gitErr := os.Stat(filepath.Join(cwd, ".git"))
+	return Env{
+		Bin:         BinPath(),
+		ClaudeFound: claudeErr == nil,
+		Cwd:         cwd,
+		Home:        home,
+		GitRepo:     gitErr == nil,
+	}, nil
+}
+
+// Options is a chosen init configuration.
+type Options struct {
+	MCP  Scope
+	Hook Scope
+	Env  Env
+}
+
+// Step is one file mutation, deferred so a plan can be previewed before applying.
+type Step struct {
+	Title string
+	Path  string
+	Run   func() (Action, error)
+}
+
+// RelPath returns the step's path relative to the project dir when it's inside
+// it, else the absolute path (so user-scope ~/.claude paths stay readable).
+func (s Step) RelPath(env Env) string {
+	if r, err := filepath.Rel(env.Cwd, s.Path); err == nil && !strings.HasPrefix(r, "..") {
+		return r
+	}
+	if home := env.Home; home != "" && strings.HasPrefix(s.Path, home) {
+		return "~" + strings.TrimPrefix(s.Path, home)
+	}
+	return s.Path
+}
+
+// Plan turns options into the ordered list of file mutations. The same plan
+// drives the preview (Title/Path) and the apply (Run) in both the TUI and the
+// flag-driven path. .gitignore and CLAUDE.md are always included (project-local
+// helpers for the verify workflow).
+func Plan(o Options) []Step {
+	bin := o.Env.Bin
+	var steps []Step
+	switch o.MCP {
+	case ScopeProject:
+		p := filepath.Join(o.Env.Cwd, ".mcp.json")
+		steps = append(steps, Step{"register MCP server · project", p, func() (Action, error) { return MergeMCP(p, bin) }})
+	case ScopeUser:
+		p := filepath.Join(o.Env.Home, ".claude.json")
+		steps = append(steps, Step{"register MCP server · user", p, func() (Action, error) { return MergeMCP(p, bin) }})
+	}
+	switch o.Hook {
+	case ScopeProject:
+		p := filepath.Join(o.Env.Cwd, ".claude", "settings.json")
+		steps = append(steps, Step{"install guard hook · project", p, func() (Action, error) { return MergeHook(p, bin) }})
+	case ScopeUser:
+		p := filepath.Join(o.Env.Home, ".claude", "settings.json")
+		steps = append(steps, Step{"install guard hook · user", p, func() (Action, error) { return MergeHook(p, bin) }})
+	}
+	gi := filepath.Join(o.Env.Cwd, ".gitignore")
+	steps = append(steps, Step{"ignore .bumper/ verdict store", gi, func() (Action, error) { return EnsureGitignore(gi) }})
+	cm := filepath.Join(o.Env.Cwd, "CLAUDE.md")
+	steps = append(steps, Step{"note verify workflow in CLAUDE.md", cm, func() (Action, error) { return EnsureClaudeMd(cm) }})
+	return steps
+}
+
 // MergeMCP registers the bumper MCP server in an .mcp.json / ~/.claude.json file.
 func MergeMCP(path, binPath string) (Action, error) {
 	m, existed, err := loadJSONMap(path)

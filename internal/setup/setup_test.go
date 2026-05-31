@@ -170,6 +170,53 @@ func TestEnsureGitignore(t *testing.T) {
 	}
 }
 
+func TestPlanScopePaths(t *testing.T) {
+	env := Env{Bin: "bumper", Cwd: "/proj", Home: "/home/u"}
+
+	steps := Plan(Options{MCP: ScopeProject, Hook: ScopeUser, Env: env})
+	got := map[string]string{}
+	for _, s := range steps {
+		got[s.Title] = s.Path
+	}
+	if p := got["register MCP server · project"]; p != "/proj/.mcp.json" {
+		t.Errorf("project MCP path = %q", p)
+	}
+	if p := got["install guard hook · user"]; p != "/home/u/.claude/settings.json" {
+		t.Errorf("user hook path = %q", p)
+	}
+	// gitignore + CLAUDE.md are always present.
+	if _, ok := got["ignore .bumper/ verdict store"]; !ok {
+		t.Error("plan missing gitignore step")
+	}
+	if _, ok := got["note verify workflow in CLAUDE.md"]; !ok {
+		t.Error("plan missing CLAUDE.md step")
+	}
+
+	// RelPath collapses project + home paths.
+	mcp := Step{Path: "/proj/.mcp.json"}
+	if r := mcp.RelPath(env); r != ".mcp.json" {
+		t.Errorf("RelPath project = %q, want .mcp.json", r)
+	}
+	hook := Step{Path: "/home/u/.claude/settings.json"}
+	if r := hook.RelPath(env); r != "~/.claude/settings.json" {
+		t.Errorf("RelPath home = %q, want ~/.claude/settings.json", r)
+	}
+}
+
+func TestParseScope(t *testing.T) {
+	for _, ok := range []string{"project", "user", "none"} {
+		if _, valid := ParseScope(ok); !valid {
+			t.Errorf("ParseScope(%q) should be valid", ok)
+		}
+	}
+	if _, valid := ParseScope("bogus"); valid {
+		t.Error("ParseScope(bogus) should be invalid")
+	}
+	if ScopeProject.Next() != ScopeUser || ScopeUser.Next() != ScopeNone || ScopeNone.Next() != ScopeProject {
+		t.Error("Scope.Next cycle is wrong")
+	}
+}
+
 func TestEnsureClaudeMd(t *testing.T) {
 	path := filepath.Join(t.TempDir(), "CLAUDE.md")
 	if a, err := EnsureClaudeMd(path); err != nil || a != Created {

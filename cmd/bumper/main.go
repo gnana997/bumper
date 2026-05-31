@@ -7,14 +7,12 @@
 package main
 
 import (
-	"bufio"
 	"context"
 	"errors"
 	"flag"
 	"fmt"
 	"io"
 	"os"
-	"os/exec"
 	"os/signal"
 	"path/filepath"
 	"sort"
@@ -256,120 +254,82 @@ func cmdTUI(args []string) int {
 	return 0
 }
 
-// initStep is one file mutation `bumper init` will perform.
-type initStep struct {
-	desc  string
-	path  string
-	apply func() (setup.Action, error)
-}
-
 // cmdInit wires bumper into Claude Code: registers the MCP server, installs the
 // guard hook, ignores the verdict store, and notes the workflow in CLAUDE.md.
+// Interactive terminals get the wizard; --print/--yes/non-TTY are flag-driven.
 func cmdInit(args []string) int {
 	fs := flag.NewFlagSet("init", flag.ContinueOnError)
 	fs.SetOutput(os.Stderr)
-	mcpScope := fs.String("mcp", "project", "where to register the MCP server: project|user|none")
-	hookScope := fs.String("hook", "project", "where to install the guard hook: project|user|none")
+	mcpFlag := fs.String("mcp", "project", "MCP server scope: project|user|none")
+	hookFlag := fs.String("hook", "project", "guard hook scope: project|user|none")
 	printOnly := fs.Bool("print", false, "show what would change and exit without writing")
-	assumeYes := fs.Bool("yes", false, "apply without the confirmation prompt")
+	assumeYes := fs.Bool("yes", false, "apply non-interactively (no wizard)")
+	noTUI := fs.Bool("no-tui", false, "skip the wizard even on a TTY")
 	if err := fs.Parse(args); err != nil {
 		return 2
 	}
-	for name, v := range map[string]string{"--mcp": *mcpScope, "--hook": *hookScope} {
-		if v != "project" && v != "user" && v != "none" {
-			return fail("%s must be project|user|none, got %q", name, v)
-		}
+	mcp, ok := setup.ParseScope(*mcpFlag)
+	if !ok {
+		return fail("--mcp must be project|user|none, got %q", *mcpFlag)
+	}
+	hook, ok := setup.ParseScope(*hookFlag)
+	if !ok {
+		return fail("--hook must be project|user|none, got %q", *hookFlag)
 	}
 
-	home, err := os.UserHomeDir()
-	if err != nil {
-		return fail("cannot locate home directory: %v", err)
-	}
-	cwd, err := os.Getwd()
+	env, err := setup.Detect()
 	if err != nil {
 		return fail("%v", err)
 	}
-	bin := setup.BinPath()
-
-	var steps []initStep
-	switch *mcpScope {
-	case "project":
-		p := filepath.Join(cwd, ".mcp.json")
-		steps = append(steps, initStep{"register MCP server (project, shareable)", p, func() (setup.Action, error) { return setup.MergeMCP(p, bin) }})
-	case "user":
-		p := filepath.Join(home, ".claude.json")
-		steps = append(steps, initStep{"register MCP server (user, all projects)", p, func() (setup.Action, error) { return setup.MergeMCP(p, bin) }})
-	}
-	switch *hookScope {
-	case "project":
-		p := filepath.Join(cwd, ".claude", "settings.json")
-		steps = append(steps, initStep{"install guard hook (project, shareable)", p, func() (setup.Action, error) { return setup.MergeHook(p, bin) }})
-	case "user":
-		p := filepath.Join(home, ".claude", "settings.json")
-		steps = append(steps, initStep{"install guard hook (user, always-on)", p, func() (setup.Action, error) { return setup.MergeHook(p, bin) }})
-	}
-	gi := filepath.Join(cwd, ".gitignore")
-	steps = append(steps, initStep{"ignore the verdict store (.bumper/)", gi, func() (setup.Action, error) { return setup.EnsureGitignore(gi) }})
-	cm := filepath.Join(cwd, "CLAUDE.md")
-	steps = append(steps, initStep{"note the verify workflow for the agent", cm, func() (setup.Action, error) { return setup.EnsureClaudeMd(cm) }})
-
-	fmt.Printf("bumper init — wiring bumper (%s) into Claude Code:\n\n", bin)
-	for _, s := range steps {
-		fmt.Printf("  • %-44s %s\n", s.desc, rel(cwd, s.path))
-	}
-	if _, err := exec.LookPath("claude"); err != nil {
-		fmt.Fprintln(os.Stderr, "\nnote: the `claude` CLI was not found on PATH. Config is still written; "+
-			"install Claude Code to use it. Restart Claude Code after init to load the MCP server.")
-	}
+	steps := setup.Plan(setup.Options{MCP: mcp, Hook: hook, Env: env})
 
 	if *printOnly {
+		fmt.Printf("bumper init — would wire bumper (%s) into Claude Code:\n\n", env.Bin)
+		for _, s := range steps {
+			fmt.Printf("  • %-34s %s\n", s.Title, s.RelPath(env))
+		}
 		fmt.Println("\n(--print) no files were changed.")
 		return 0
 	}
-	if !*assumeYes {
-		if !isInteractive() {
-			fmt.Fprintln(os.Stderr, "\nrefusing to modify files without confirmation; re-run with --yes (or --print to preview).")
-			return 2
+
+	// Interactive: launch the wizard.
+	if !*assumeYes && !*noTUI && isInteractive() {
+		res, err := tui.RunInit(env, mcp, hook)
+		if err != nil {
+			return fail("%v", err)
 		}
-		fmt.Print("\nProceed? [y/N] ")
-		if !confirmed(os.Stdin) {
+		if !res.Applied {
 			fmt.Println("aborted; no files changed.")
 			return 0
 		}
+		for _, line := range res.Lines {
+			fmt.Println("  " + line)
+		}
+		fmt.Println("\n✓ bumper is wired in. Commit .mcp.json and .claude/settings.json to share the gate with your team.")
+		return 0
 	}
 
-	fmt.Println()
+	// Non-interactive: require an explicit --yes rather than writing silently.
+	if !*assumeYes {
+		fmt.Fprintln(os.Stderr, "refusing to modify files without confirmation; re-run with --yes (or --print to preview).")
+		return 2
+	}
+	fmt.Printf("bumper init — wiring bumper (%s) into Claude Code:\n\n", env.Bin)
 	for _, s := range steps {
-		act, err := s.apply()
+		act, err := s.Run()
 		if err != nil {
-			return fail("%s: %v", s.desc, err)
+			return fail("%s: %v", s.Title, err)
 		}
-		fmt.Printf("  %-9s %s\n", act, rel(cwd, s.path))
+		fmt.Printf("  %-10s %s\n", act, s.RelPath(env))
 	}
 	fmt.Println("\n✓ bumper is wired in. Commit .mcp.json and .claude/settings.json to share the gate with your team.")
-	fmt.Println("  Restart Claude Code to load the MCP server. The guard blocks unverified terraform apply/destroy.")
 	return 0
 }
 
-func rel(base, path string) string {
-	if r, err := filepath.Rel(base, path); err == nil && !strings.HasPrefix(r, "..") {
-		return r
-	}
-	return path
-}
-
+// isInteractive reports whether stdin is a terminal (so the wizard can read keys).
 func isInteractive() bool {
 	fi, err := os.Stdin.Stat()
 	return err == nil && fi.Mode()&os.ModeCharDevice != 0
-}
-
-func confirmed(r io.Reader) bool {
-	line, _ := bufio.NewReader(r).ReadString('\n')
-	switch strings.ToLower(strings.TrimSpace(line)) {
-	case "y", "yes":
-		return true
-	}
-	return false
 }
 
 // cmdMCP runs bumper as a stdio MCP server, exposing scan/list/explain as tools
