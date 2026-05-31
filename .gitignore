@@ -17,3 +17,5 @@ lefthook-local.yml
 # Node (not used by the project; guard against accidental husky/npm installs)
 node_modules/
 package-lock.json
+# bumper verdict store (machine-specific)
+.bumper/

@@ -1,0 +1,15 @@
+# DB firewall public-access rule — no resource filter; matches every
+# azurerm_*_firewall_rule (mssql/sql/postgresql/mysql/mariadb, incl. flexible
+# servers) via a type guard, since they all share start_ip_address/end_ip_address.
+- id: AZURE_DB_FIREWALL_PUBLIC
+  source: trivy
+  avd: AVD-AZU-0029
+  severity: high
+  on: [create, update]
+  when: |
+    type.startsWith("azurerm_") && type.endsWith("_firewall_rule") &&
+    has(after.start_ip_address) && has(after.end_ip_address) &&
+    after.start_ip_address == "0.0.0.0" && after.end_ip_address == "255.255.255.255"
+  title: "Database firewall rule allows access from any IP (0.0.0.0–255.255.255.255)"
+  fix: "Restrict start_ip_address/end_ip_address to known ranges; do not open the database to the internet."
+  refs: ["https://learn.microsoft.com/azure/azure-sql/database/firewall-configure"]

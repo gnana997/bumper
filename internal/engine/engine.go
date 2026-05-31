@@ -18,6 +18,8 @@ type Finding struct {
 	Address  string   `json:"address"`
 	Fix      string   `json:"fix,omitempty"`
 	Refs     []string `json:"refs,omitempty"`
+	Provider string   `json:"provider,omitempty"`
+	Source   string   `json:"source,omitempty"`
 }
 
 var severityRank = map[string]int{
@@ -66,6 +68,8 @@ func Evaluate(changes []plan.ResourceChange, set *rules.Set) ([]Finding, error) 
 					Address:  c.Address,
 					Fix:      r.Fix,
 					Refs:     r.Refs,
+					Provider: r.Provider,
+					Source:   r.Source,
 				})
 			}
 		}

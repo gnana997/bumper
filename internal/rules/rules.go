@@ -15,7 +15,7 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-//go:embed builtin/*.yaml
+//go:embed builtin
 var builtinFS embed.FS
 
 // Rule is one declarative check. When (a CEL expression) is evaluated against a
@@ -31,8 +31,9 @@ type Rule struct {
 	Refs     []string `yaml:"refs"`
 
 	// Provenance — where this rule came from.
-	Source string `yaml:"source"` // "custom" | "trivy"
-	AVD    string `yaml:"avd"`    // original Trivy/AVD id, e.g. AVD-AWS-0180 ("" for custom)
+	Source   string `yaml:"source"`   // "custom" | "trivy"
+	AVD      string `yaml:"avd"`      // original Trivy/AVD id, e.g. AVD-AWS-0180 ("" for custom)
+	Provider string `yaml:"provider"` // "aws" | "gcp" | ... ("" = infer from resource prefix)
 
 	program cel.Program // compiled When
 }
@@ -103,6 +104,9 @@ func Load(extraDir string) (*Set, error) {
 			return nil, fmt.Errorf("rule %s: %w", r.ID, err)
 		}
 		r.program = prg
+		if r.Provider == "" {
+			r.Provider = providerFromType(r.Resource)
+		}
 		set.Rules = append(set.Rules, &r)
 		set.byID[r.ID] = set.Rules[len(set.Rules)-1]
 	}
@@ -156,4 +160,20 @@ func appendYAML(b []byte, out *[]Rule) error {
 	}
 	*out = append(*out, rs...)
 	return nil
+}
+
+// providerFromType infers the cloud from a resource-type prefix, so existing
+// rules need no `provider:` field. Type-less rules (the destruction family that
+// matches via `type in [...]` in CEL) fall back to "" and can set it explicitly.
+func providerFromType(resource string) string {
+	switch {
+	case strings.HasPrefix(resource, "aws_"):
+		return "aws"
+	case strings.HasPrefix(resource, "google_"):
+		return "gcp"
+	case strings.HasPrefix(resource, "digitalocean_"):
+		return "do"
+	default:
+		return ""
+	}
 }

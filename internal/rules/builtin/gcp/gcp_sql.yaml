@@ -1,0 +1,9 @@
+- id: GCP_SQL_DESTROY_DELETION_PROTECTION_OFF
+  source: custom
+  severity: critical
+  resource: google_sql_database_instance
+  on: [replace, delete]
+  when: |
+    has(after.deletion_protection) && after.deletion_protection == false
+  title: "This apply will destroy a Cloud SQL instance with deletion protection off"
+  fix: "Set deletion_protection = true and confirm intent before applying."

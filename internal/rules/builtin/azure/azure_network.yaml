@@ -1,0 +1,32 @@
+# Network security rule public-ingress flagship — the Azure analog of the AWS
+# security-group / GCP firewall exposure rules. Covers the standalone
+# azurerm_network_security_rule (flat attributes); inline NSG security_rule
+# blocks are a follow-up.
+- id: AZURE_NSG_PUBLIC_INGRESS_SENSITIVE
+  source: trivy
+  avd: AVD-AZU-0047
+  severity: critical
+  resource: azurerm_network_security_rule
+  on: [create, update]
+  when: |
+    has(after.direction) && after.direction == "Inbound" &&
+    has(after.access) && after.access == "Allow" &&
+    (!has(after.protocol) || after.protocol == "Tcp" || after.protocol == "*") &&
+    (
+      (has(after.source_address_prefix) &&
+        (after.source_address_prefix == "*" || after.source_address_prefix == "0.0.0.0/0" ||
+         after.source_address_prefix == "Internet")) ||
+      (has(after.source_address_prefixes) &&
+        as_list(after.source_address_prefixes).exists(s,
+          s == "*" || s == "0.0.0.0/0" || s == "Internet"))
+    ) &&
+    (
+      (has(after.destination_port_range) &&
+        (after.destination_port_range == "*" || ports_hit_sensitive([after.destination_port_range]))) ||
+      (has(after.destination_port_ranges) &&
+        (as_list(after.destination_port_ranges).exists(p, p == "*") ||
+         ports_hit_sensitive(as_list(after.destination_port_ranges))))
+    )
+  title: "Network security rule allows a sensitive port inbound from the entire internet"
+  fix: "Restrict source_address_prefix(es) to known CIDRs, or narrow destination_port_range(s) away from admin/db ports."
+  refs: ["https://learn.microsoft.com/azure/virtual-network/network-security-groups-overview"]

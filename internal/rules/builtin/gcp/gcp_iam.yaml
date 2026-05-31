@@ -1,0 +1,12 @@
+- id: GCP_IAM_PUBLIC_MEMBER
+  source: custom
+  severity: critical
+  on: [create, update]
+  when: |
+    type.startsWith("google_") && type.contains("_iam_") && (
+      (has(after.members) && as_list(after.members).exists(m,
+        m == "allUsers" || m == "allAuthenticatedUsers")) ||
+      (has(after.member) && (after.member == "allUsers" || after.member == "allAuthenticatedUsers"))
+    )
+  title: "IAM binding grants public access (allUsers / allAuthenticatedUsers)"
+  fix: "Remove allUsers/allAuthenticatedUsers; grant to specific principals."

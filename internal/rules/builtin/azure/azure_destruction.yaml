@@ -1,0 +1,17 @@
+# Destruction / plan-diff rule — the Azure analog of AWS_STATEFUL_RESOURCE_DESTROY.
+# Reads the change ACTIONS (delete/replace), not end-state, to catch data loss.
+- id: AZURE_STATEFUL_RESOURCE_DESTROY
+  source: custom
+  severity: high
+  on: [delete, replace]
+  when: |
+    type in [
+      "azurerm_mssql_database", "azurerm_mssql_server",
+      "azurerm_sql_database", "azurerm_sql_server",
+      "azurerm_postgresql_server", "azurerm_postgresql_flexible_server",
+      "azurerm_mysql_server", "azurerm_mysql_flexible_server",
+      "azurerm_cosmosdb_account", "azurerm_storage_account",
+      "azurerm_managed_disk", "azurerm_key_vault"
+    ]
+  title: "This apply will DELETE or REPLACE a stateful Azure data resource (potential data loss)"
+  fix: "Confirm the destruction is intended. Check backups, soft-delete/purge protection, and snapshots before applying."

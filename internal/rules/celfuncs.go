@@ -2,10 +2,13 @@ package rules
 
 import (
 	"encoding/json"
+	"strconv"
+	"strings"
 
 	"github.com/google/cel-go/cel"
 	"github.com/google/cel-go/common/types"
 	"github.com/google/cel-go/common/types/ref"
+	"github.com/google/cel-go/common/types/traits"
 )
 
 // adapter converts native Go values (the shape terraform-json/encoding-json
@@ -59,6 +62,13 @@ func customFuncs() []cel.EnvOption {
 			cel.Overload("hits_sensitive_port_double_double",
 				[]*cel.Type{cel.DoubleType, cel.DoubleType}, cel.BoolType,
 				cel.BinaryBinding(hitsSensitivePort))),
+
+		// ports_hit_sensitive(list<string>) — GCP firewall `ports` are strings and may
+		// be ranges ("8080-8090"). True if any entry covers a sensitive port.
+		cel.Function("ports_hit_sensitive",
+			cel.Overload("ports_hit_sensitive_list",
+				[]*cel.Type{cel.ListType(cel.DynType)}, cel.BoolType,
+				cel.UnaryBinding(portsHitSensitive))),
 	}
 }
 
@@ -97,6 +107,34 @@ func hitsSensitivePort(a, b ref.Val) ref.Val {
 	for _, p := range sensitivePorts {
 		if from <= p && p <= to {
 			return types.True
+		}
+	}
+	return types.False
+}
+
+func portsHitSensitive(v ref.Val) ref.Val {
+	list, ok := v.(traits.Lister)
+	if !ok {
+		return types.False
+	}
+	for it := list.Iterator(); it.HasNext() == types.True; {
+		s, ok := it.Next().Value().(string)
+		if !ok {
+			continue
+		}
+		from, to := s, s
+		if i := strings.IndexByte(s, '-'); i >= 0 {
+			from, to = s[:i], s[i+1:]
+		}
+		lo, e1 := strconv.ParseFloat(from, 64)
+		hi, e2 := strconv.ParseFloat(to, 64)
+		if e1 != nil || e2 != nil {
+			continue
+		}
+		for _, p := range sensitivePorts {
+			if lo <= p && p <= hi {
+				return types.True
+			}
 		}
 	}
 	return types.False

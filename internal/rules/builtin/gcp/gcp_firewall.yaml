@@ -1,0 +1,15 @@
+- id: GCP_FIREWALL_PUBLIC_INGRESS_SENSITIVE
+  source: trivy
+  avd: AVD-GCP-0027
+  severity: critical
+  resource: google_compute_firewall
+  on: [create, update]
+  when: |
+    (!has(after.direction) || after.direction == "INGRESS") &&
+    (!has(after.disabled) || after.disabled == false) &&
+    has(after.source_ranges) && "0.0.0.0/0" in after.source_ranges &&
+    has(after.allow) && after.allow.exists(a,
+      !has(a.ports) || ports_hit_sensitive(a.ports))
+  title: "Firewall rule exposes a sensitive port to the entire internet (0.0.0.0/0)"
+  fix: "Restrict source_ranges to known CIDRs, or narrow the allowed ports."
+  refs: ["https://cloud.google.com/vpc/docs/firewalls"]

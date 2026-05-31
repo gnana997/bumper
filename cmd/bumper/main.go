@@ -7,20 +7,29 @@
 package main
 
 import (
+	"bufio"
 	"context"
+	"errors"
 	"flag"
 	"fmt"
 	"io"
 	"os"
+	"os/exec"
+	"os/signal"
 	"path/filepath"
 	"sort"
 	"strings"
+	"syscall"
+	"time"
 
 	"github.com/gnana097/bumper/internal/engine"
 	"github.com/gnana097/bumper/internal/enrich"
+	"github.com/gnana097/bumper/internal/mcpserver"
 	"github.com/gnana097/bumper/internal/plan"
 	"github.com/gnana097/bumper/internal/report"
 	"github.com/gnana097/bumper/internal/rules"
+	"github.com/gnana097/bumper/internal/safety"
+	"github.com/gnana097/bumper/internal/setup"
 	"github.com/gnana097/bumper/internal/tui"
 )
 
@@ -31,7 +40,13 @@ Usage:
   bumper tui plan.json            scan + open the interactive hazard console
   bumper list [flags] [--tui]     list the rule set (or browse it interactively)
   bumper explain <RULE_ID>        show one rule in detail
+  bumper init [flags]             wire bumper into Claude Code (MCP server + apply-guard hook)
+  bumper verify <plan.tfplan>     scan a saved plan and record a verdict that unblocks its apply
+  bumper guard                    PreToolUse hook: block unverified terraform apply/destroy (reads stdin)
+  bumper mcp                      run as an MCP server (scan/list/explain tools over stdio)
   bumper version
+
+Enforce (agent context): terraform plan -out tfplan && bumper verify tfplan && terraform apply tfplan
 
 Produce a plan: terraform show -json plan.tfplan > plan.json
 
@@ -58,6 +73,14 @@ func run() int {
 			return cmdExplain(args[1:])
 		case "tui":
 			return cmdTUI(args[1:])
+		case "mcp":
+			return cmdMCP(args[1:])
+		case "verify":
+			return cmdVerify(args[1:])
+		case "guard":
+			return cmdGuard(args[1:])
+		case "init":
+			return cmdInit(args[1:])
 		case "version", "--version", "-v":
 			fmt.Println("bumper " + report.Version)
 			return 0
@@ -229,6 +252,209 @@ func cmdTUI(args []string) int {
 	}
 	if err := tui.RunFindings(findings, set, *llm, filepath.Base(fs.Arg(0))); err != nil {
 		return fail("%v", err)
+	}
+	return 0
+}
+
+// initStep is one file mutation `bumper init` will perform.
+type initStep struct {
+	desc  string
+	path  string
+	apply func() (setup.Action, error)
+}
+
+// cmdInit wires bumper into Claude Code: registers the MCP server, installs the
+// guard hook, ignores the verdict store, and notes the workflow in CLAUDE.md.
+func cmdInit(args []string) int {
+	fs := flag.NewFlagSet("init", flag.ContinueOnError)
+	fs.SetOutput(os.Stderr)
+	mcpScope := fs.String("mcp", "project", "where to register the MCP server: project|user|none")
+	hookScope := fs.String("hook", "project", "where to install the guard hook: project|user|none")
+	printOnly := fs.Bool("print", false, "show what would change and exit without writing")
+	assumeYes := fs.Bool("yes", false, "apply without the confirmation prompt")
+	if err := fs.Parse(args); err != nil {
+		return 2
+	}
+	for name, v := range map[string]string{"--mcp": *mcpScope, "--hook": *hookScope} {
+		if v != "project" && v != "user" && v != "none" {
+			return fail("%s must be project|user|none, got %q", name, v)
+		}
+	}
+
+	home, err := os.UserHomeDir()
+	if err != nil {
+		return fail("cannot locate home directory: %v", err)
+	}
+	cwd, err := os.Getwd()
+	if err != nil {
+		return fail("%v", err)
+	}
+	bin := setup.BinPath()
+
+	var steps []initStep
+	switch *mcpScope {
+	case "project":
+		p := filepath.Join(cwd, ".mcp.json")
+		steps = append(steps, initStep{"register MCP server (project, shareable)", p, func() (setup.Action, error) { return setup.MergeMCP(p, bin) }})
+	case "user":
+		p := filepath.Join(home, ".claude.json")
+		steps = append(steps, initStep{"register MCP server (user, all projects)", p, func() (setup.Action, error) { return setup.MergeMCP(p, bin) }})
+	}
+	switch *hookScope {
+	case "project":
+		p := filepath.Join(cwd, ".claude", "settings.json")
+		steps = append(steps, initStep{"install guard hook (project, shareable)", p, func() (setup.Action, error) { return setup.MergeHook(p, bin) }})
+	case "user":
+		p := filepath.Join(home, ".claude", "settings.json")
+		steps = append(steps, initStep{"install guard hook (user, always-on)", p, func() (setup.Action, error) { return setup.MergeHook(p, bin) }})
+	}
+	gi := filepath.Join(cwd, ".gitignore")
+	steps = append(steps, initStep{"ignore the verdict store (.bumper/)", gi, func() (setup.Action, error) { return setup.EnsureGitignore(gi) }})
+	cm := filepath.Join(cwd, "CLAUDE.md")
+	steps = append(steps, initStep{"note the verify workflow for the agent", cm, func() (setup.Action, error) { return setup.EnsureClaudeMd(cm) }})
+
+	fmt.Printf("bumper init — wiring bumper (%s) into Claude Code:\n\n", bin)
+	for _, s := range steps {
+		fmt.Printf("  • %-44s %s\n", s.desc, rel(cwd, s.path))
+	}
+	if _, err := exec.LookPath("claude"); err != nil {
+		fmt.Fprintln(os.Stderr, "\nnote: the `claude` CLI was not found on PATH. Config is still written; "+
+			"install Claude Code to use it. Restart Claude Code after init to load the MCP server.")
+	}
+
+	if *printOnly {
+		fmt.Println("\n(--print) no files were changed.")
+		return 0
+	}
+	if !*assumeYes {
+		if !isInteractive() {
+			fmt.Fprintln(os.Stderr, "\nrefusing to modify files without confirmation; re-run with --yes (or --print to preview).")
+			return 2
+		}
+		fmt.Print("\nProceed? [y/N] ")
+		if !confirmed(os.Stdin) {
+			fmt.Println("aborted; no files changed.")
+			return 0
+		}
+	}
+
+	fmt.Println()
+	for _, s := range steps {
+		act, err := s.apply()
+		if err != nil {
+			return fail("%s: %v", s.desc, err)
+		}
+		fmt.Printf("  %-9s %s\n", act, rel(cwd, s.path))
+	}
+	fmt.Println("\n✓ bumper is wired in. Commit .mcp.json and .claude/settings.json to share the gate with your team.")
+	fmt.Println("  Restart Claude Code to load the MCP server. The guard blocks unverified terraform apply/destroy.")
+	return 0
+}
+
+func rel(base, path string) string {
+	if r, err := filepath.Rel(base, path); err == nil && !strings.HasPrefix(r, "..") {
+		return r
+	}
+	return path
+}
+
+func isInteractive() bool {
+	fi, err := os.Stdin.Stat()
+	return err == nil && fi.Mode()&os.ModeCharDevice != 0
+}
+
+func confirmed(r io.Reader) bool {
+	line, _ := bufio.NewReader(r).ReadString('\n')
+	switch strings.ToLower(strings.TrimSpace(line)) {
+	case "y", "yes":
+		return true
+	}
+	return false
+}
+
+// cmdMCP runs bumper as a stdio MCP server, exposing scan/list/explain as tools
+// for agentic assistants (Claude Code, etc.).
+func cmdMCP(args []string) int {
+	fs := flag.NewFlagSet("mcp", flag.ContinueOnError)
+	fs.SetOutput(os.Stderr)
+	rulesDir := fs.String("rules", "", "")
+	if err := fs.Parse(args); err != nil {
+		return 2
+	}
+	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
+	defer stop()
+	err := mcpserver.Serve(ctx, *rulesDir)
+	// A client disconnecting (stdin EOF → the SDK's unexported "server is closing"
+	// error) or a shutdown signal (context cancelled) is a normal end of session,
+	// not a failure.
+	if err == nil || errors.Is(err, io.EOF) || errors.Is(err, context.Canceled) ||
+		strings.Contains(err.Error(), "server is closing") {
+		return 0
+	}
+	return fail("%v", err)
+}
+
+// cmdVerify scans a saved plan and, on a pass, records a verdict bound to the
+// plan's sha256 so a later `terraform apply <plan>` is unblocked by the guard.
+func cmdVerify(args []string) int {
+	fs := flag.NewFlagSet("verify", flag.ContinueOnError)
+	fs.SetOutput(os.Stderr)
+	minSeverity := fs.String("min-severity", safety.DefaultMinSeverity, "")
+	accept := fs.Bool("accept", false, "")
+	rulesDir := fs.String("rules", "", "")
+	fs.Usage = func() {
+		fmt.Fprintln(os.Stderr, "usage: bumper verify <plan.tfplan> [--min-severity high] [--accept] [--rules dir]")
+	}
+	if err := fs.Parse(args); err != nil {
+		return 2
+	}
+	if fs.NArg() != 1 {
+		fs.Usage()
+		return 2
+	}
+	planPath := fs.Arg(0)
+
+	set, err := rules.Load(*rulesDir)
+	if err != nil {
+		return fail("%v", err)
+	}
+	res, err := safety.Verify(set, planPath, *minSeverity, *accept, time.Now())
+	if err != nil {
+		return fail("%v", err)
+	}
+
+	if !res.Passed {
+		report.Text(os.Stdout, res.Blocking)
+		fmt.Fprintf(os.Stderr, "\nbumper: %s NOT verified — %d finding(s) at or above %q. "+
+			"Fix them, or record an explicit override with `bumper verify --accept %s`.\n",
+			planPath, len(res.Blocking), *minSeverity, planPath)
+		return 1
+	}
+
+	if res.Verdict.Accepted {
+		fmt.Printf("⚠ bumper: %s verified WITH OVERRIDE (%d blocking finding(s) accepted). apply unblocked.\n",
+			planPath, res.Verdict.Blocking)
+	} else {
+		fmt.Printf("✓ bumper: %s verified (%d finding(s), none blocking). apply unblocked.\n",
+			planPath, res.Verdict.FindingsTotal)
+	}
+	fmt.Printf("  plan sha256: %s\n", res.Verdict.PlanSHA)
+	return 0
+}
+
+// cmdGuard is the Claude Code PreToolUse hook entrypoint: it reads a tool-call
+// payload on stdin and blocks unverified `terraform apply`/`destroy`. It always
+// exits 0 — a block is conveyed via the hook's JSON output, not the exit code.
+func cmdGuard(args []string) int {
+	fs := flag.NewFlagSet("guard", flag.ContinueOnError)
+	fs.SetOutput(os.Stderr)
+	maxAge := fs.Duration("max-age", safety.DefaultMaxAge, "how long a verdict stays valid (0 = no expiry)")
+	if err := fs.Parse(args); err != nil {
+		return 2
+	}
+	if err := safety.Guard(os.Stdin, os.Stdout, time.Now(), *maxAge); err != nil {
+		// Fail-open: never wedge the user's shell on a guard error.
+		fmt.Fprintf(os.Stderr, "bumper guard: %v\n", err)
 	}
 	return 0
 }

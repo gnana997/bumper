@@ -19,12 +19,12 @@ func TestProvenance(t *testing.T) {
 		t.Fatalf("expected the full built-in set, got %d rules", len(set.Rules))
 	}
 
-	avd := regexp.MustCompile(`^AVD-AWS-\d{4}$`)
+	avd := regexp.MustCompile(`^AVD-(AWS|GCP|AZU)-\d{4}$`)
 	for _, r := range set.Rules {
 		switch r.Source {
 		case "trivy":
 			if !avd.MatchString(r.AVD) {
-				t.Errorf("%s: trivy rule needs an AVD-AWS-NNNN id, got %q", r.ID, r.AVD)
+				t.Errorf("%s: trivy rule needs an AVD-{AWS,GCP,AZU}-NNNN id, got %q", r.ID, r.AVD)
 			}
 		case "custom":
 			if r.AVD != "" {
