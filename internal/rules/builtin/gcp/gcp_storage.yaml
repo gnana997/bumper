@@ -1,0 +1,33 @@
+# Cloud Storage exposure / hardening. Bucket IAM granting allUsers /
+# allAuthenticatedUsers is already caught by GCP_IAM_PUBLIC_MEMBER (it matches
+# any google_*_iam_* resource); these cover the ACL and posture surfaces.
+
+# Legacy object/bucket ACL granting public access.
+- id: GCP_STORAGE_BUCKET_PUBLIC_ACL
+  source: trivy
+  avd: AVD-GCP-0001
+  severity: high
+  resource: google_storage_bucket_access_control
+  on: [create, update]
+  when: |
+    has(after.entity) && (after.entity == "allUsers" || after.entity == "allAuthenticatedUsers")
+  title: "Cloud Storage ACL grants public access (allUsers / allAuthenticatedUsers)"
+  fix: "Remove the allUsers/allAuthenticatedUsers grant; use IAM with specific principals and enable uniform bucket-level access."
+  refs:
+    - "https://cloud.google.com/storage/docs/access-control/making-data-public"
+
+# Uniform bucket-level access disables per-object ACLs, which are the usual way
+# buckets leak. It defaults off, so absence is the finding. Advisory (medium):
+# surfaced, not blocking.
+- id: GCP_STORAGE_UNIFORM_ACCESS_OFF
+  source: trivy
+  avd: AVD-GCP-0002
+  severity: medium
+  resource: google_storage_bucket
+  on: [create, update]
+  when: |
+    !has(after.uniform_bucket_level_access) || after.uniform_bucket_level_access != true
+  title: "Cloud Storage bucket does not enforce uniform bucket-level access"
+  fix: "Set uniform_bucket_level_access = true to disable per-object ACLs."
+  refs:
+    - "https://cloud.google.com/storage/docs/uniform-bucket-level-access"

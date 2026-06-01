@@ -1,0 +1,18 @@
+# Destruction / plan-diff rule — bumper's differentiator. Reads the change
+# ACTION (delete/replace), not end-state config, to catch "this apply will
+# destroy data." No resource filter; matches a set of stateful types via `type`.
+# provider is set explicitly because there is no resource prefix to infer from.
+- id: GCP_STATEFUL_RESOURCE_DESTROY
+  source: custom
+  provider: gcp
+  severity: high
+  on: [delete, replace]
+  when: |
+    type in [
+      "google_sql_database_instance", "google_bigquery_dataset", "google_bigquery_table",
+      "google_storage_bucket", "google_bigtable_instance", "google_bigtable_table",
+      "google_redis_instance", "google_spanner_database", "google_spanner_instance",
+      "google_filestore_instance"
+    ]
+  title: "This apply will DELETE or REPLACE a stateful GCP data resource (potential data loss)"
+  fix: "Confirm the destruction is intended. Check deletion_protection, lifecycle prevent_destroy, and backups before applying."

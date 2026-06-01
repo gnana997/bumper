@@ -25,7 +25,7 @@ inputs:
     required: false
     default: "true"
   bumper-version:
-    description: "Version (git ref or module version) of bumper to install."
+    description: "Release tag of bumper to install (e.g. v1.0.0), or 'latest'."
     required: false
     default: "latest"
   working-directory:
@@ -36,14 +36,17 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: Set up Go
-      uses: actions/setup-go@v5
-      with:
-        go-version: "1.26"
-
+    # Download the signed, checksummed release binary (no Go toolchain needed).
+    # install.sh verifies the sha256 against the release's checksums.txt before
+    # installing; we then put it on PATH for the steps below.
     - name: Install bumper
       shell: bash
-      run: go install github.com/gnana997/bumper/cmd/bumper@${{ inputs.bumper-version }}
+      env:
+        BUMPER_VERSION: ${{ inputs.bumper-version }}
+        BUMPER_INSTALL_DIR: ${{ runner.temp }}/bumper-bin
+      run: |
+        bash "${{ github.action_path }}/install.sh"
+        echo "${{ runner.temp }}/bumper-bin" >> "$GITHUB_PATH"
 
     - name: Run bumper (SARIF)
       id: sarif

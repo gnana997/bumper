@@ -1,0 +1,349 @@
+{
+  "format_version": "1.2",
+  "terraform_version": "1.9.0",
+  "resource_changes": [
+    {
+      "address": "google_sql_database_instance.public",
+      "mode": "managed",
+      "type": "google_sql_database_instance",
+      "name": "public",
+      "provider_name": "registry.terraform.io/hashicorp/google",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": {
+          "name": "public-db",
+          "database_version": "MYSQL_8_0",
+          "deletion_protection": true,
+          "settings": [
+            {
+              "tier": "db-f1-micro",
+              "ip_configuration": [
+                {
+                  "ipv4_enabled": true,
+                  "ssl_mode": "ALLOW_UNENCRYPTED_AND_ENCRYPTED",
+                  "authorized_networks": [
+                    { "name": "world", "value": "0.0.0.0/0" }
+                  ]
+                }
+              ],
+              "database_flags": [
+                { "name": "local_infile", "value": "on" }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "address": "google_sql_database_instance.private",
+      "mode": "managed",
+      "type": "google_sql_database_instance",
+      "name": "private",
+      "provider_name": "registry.terraform.io/hashicorp/google",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": {
+          "name": "private-db",
+          "database_version": "POSTGRES_15",
+          "deletion_protection": true,
+          "settings": [
+            {
+              "tier": "db-custom-2-7680",
+              "ip_configuration": [
+                {
+                  "ipv4_enabled": false,
+                  "ssl_mode": "ENCRYPTED_ONLY",
+                  "authorized_networks": [
+                    { "name": "office", "value": "203.0.113.0/24" }
+                  ]
+                }
+              ],
+              "database_flags": [
+                { "name": "log_connections", "value": "on" }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "address": "google_sql_database_instance.legacy_dropped",
+      "mode": "managed",
+      "type": "google_sql_database_instance",
+      "name": "legacy_dropped",
+      "provider_name": "registry.terraform.io/hashicorp/google",
+      "change": {
+        "actions": ["delete"],
+        "before": {
+          "name": "legacy-db",
+          "deletion_protection": true
+        },
+        "after": null
+      }
+    },
+    {
+      "address": "google_storage_bucket_access_control.public",
+      "mode": "managed",
+      "type": "google_storage_bucket_access_control",
+      "name": "public",
+      "provider_name": "registry.terraform.io/hashicorp/google",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": {
+          "bucket": "my-bucket",
+          "role": "READER",
+          "entity": "allUsers"
+        }
+      }
+    },
+    {
+      "address": "google_storage_bucket.lake",
+      "mode": "managed",
+      "type": "google_storage_bucket",
+      "name": "lake",
+      "provider_name": "registry.terraform.io/hashicorp/google",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": {
+          "name": "data-lake",
+          "location": "US",
+          "uniform_bucket_level_access": false
+        }
+      }
+    },
+    {
+      "address": "google_storage_bucket.secure",
+      "mode": "managed",
+      "type": "google_storage_bucket",
+      "name": "secure",
+      "provider_name": "registry.terraform.io/hashicorp/google",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": {
+          "name": "secure-bucket",
+          "location": "US",
+          "uniform_bucket_level_access": true,
+          "public_access_prevention": "enforced"
+        }
+      }
+    },
+    {
+      "address": "google_bigquery_dataset.public",
+      "mode": "managed",
+      "type": "google_bigquery_dataset",
+      "name": "public",
+      "provider_name": "registry.terraform.io/hashicorp/google",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": {
+          "dataset_id": "public_ds",
+          "access": [
+            { "role": "READER", "special_group": "allAuthenticatedUsers", "iam_member": null, "user_by_email": null },
+            { "role": "OWNER", "special_group": "projectOwners", "iam_member": null, "user_by_email": null }
+          ]
+        }
+      }
+    },
+    {
+      "address": "google_bigquery_dataset.private",
+      "mode": "managed",
+      "type": "google_bigquery_dataset",
+      "name": "private",
+      "provider_name": "registry.terraform.io/hashicorp/google",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": {
+          "dataset_id": "private_ds",
+          "access": [
+            { "role": "OWNER", "special_group": "projectOwners", "iam_member": null, "user_by_email": null },
+            { "role": "READER", "special_group": null, "iam_member": null, "user_by_email": "analyst@example.com" }
+          ]
+        }
+      }
+    },
+    {
+      "address": "google_compute_instance.web",
+      "mode": "managed",
+      "type": "google_compute_instance",
+      "name": "web",
+      "provider_name": "registry.terraform.io/hashicorp/google",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": {
+          "name": "web-vm",
+          "machine_type": "e2-medium",
+          "can_ip_forward": true,
+          "network_interface": [
+            {
+              "network": "default",
+              "access_config": [
+                { "network_tier": "PREMIUM" }
+              ]
+            }
+          ],
+          "service_account": [
+            {
+              "email": "123456789-compute@developer.gserviceaccount.com",
+              "scopes": ["https://www.googleapis.com/auth/cloud-platform"]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "address": "google_compute_instance.private_vm",
+      "mode": "managed",
+      "type": "google_compute_instance",
+      "name": "private_vm",
+      "provider_name": "registry.terraform.io/hashicorp/google",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": {
+          "name": "private-vm",
+          "machine_type": "e2-medium",
+          "can_ip_forward": false,
+          "network_interface": [
+            {
+              "network": "default",
+              "access_config": []
+            }
+          ],
+          "service_account": [
+            {
+              "email": "app-sa@my-project.iam.gserviceaccount.com",
+              "scopes": ["https://www.googleapis.com/auth/devstorage.read_only"]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "address": "google_container_cluster.gke",
+      "mode": "managed",
+      "type": "google_container_cluster",
+      "name": "gke",
+      "provider_name": "registry.terraform.io/hashicorp/google",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": {
+          "name": "weak-cluster",
+          "enable_legacy_abac": true,
+          "enable_shielded_nodes": false,
+          "private_cluster_config": [
+            { "enable_private_nodes": true, "enable_private_endpoint": false }
+          ],
+          "network_policy": [
+            { "enabled": false }
+          ]
+        }
+      }
+    },
+    {
+      "address": "google_container_cluster.private_gke",
+      "mode": "managed",
+      "type": "google_container_cluster",
+      "name": "private_gke",
+      "provider_name": "registry.terraform.io/hashicorp/google",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": {
+          "name": "hardened-cluster",
+          "enable_legacy_abac": false,
+          "enable_shielded_nodes": true,
+          "private_cluster_config": [
+            { "enable_private_nodes": true, "enable_private_endpoint": true }
+          ],
+          "network_policy": [
+            { "enabled": true }
+          ]
+        }
+      }
+    },
+    {
+      "address": "google_kms_crypto_key.norotate",
+      "mode": "managed",
+      "type": "google_kms_crypto_key",
+      "name": "norotate",
+      "provider_name": "registry.terraform.io/hashicorp/google",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": {
+          "name": "app-key",
+          "key_ring": "projects/p/locations/us/keyRings/r"
+        }
+      }
+    },
+    {
+      "address": "google_kms_crypto_key.rotated",
+      "mode": "managed",
+      "type": "google_kms_crypto_key",
+      "name": "rotated",
+      "provider_name": "registry.terraform.io/hashicorp/google",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": {
+          "name": "rotated-key",
+          "key_ring": "projects/p/locations/us/keyRings/r",
+          "rotation_period": "7776000s"
+        }
+      }
+    },
+    {
+      "address": "google_compute_ssl_policy.lb",
+      "mode": "managed",
+      "type": "google_compute_ssl_policy",
+      "name": "lb",
+      "provider_name": "registry.terraform.io/hashicorp/google",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": {
+          "name": "weak-ssl",
+          "profile": "COMPATIBLE",
+          "min_tls_version": "TLS_1_0"
+        }
+      }
+    },
+    {
+      "address": "google_compute_ssl_policy.strong",
+      "mode": "managed",
+      "type": "google_compute_ssl_policy",
+      "name": "strong",
+      "provider_name": "registry.terraform.io/hashicorp/google",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": {
+          "name": "strong-ssl",
+          "profile": "RESTRICTED",
+          "min_tls_version": "TLS_1_2"
+        }
+      }
+    },
+    {
+      "address": "google_bigquery_dataset.dropped",
+      "mode": "managed",
+      "type": "google_bigquery_dataset",
+      "name": "dropped",
+      "provider_name": "registry.terraform.io/hashicorp/google",
+      "change": {
+        "actions": ["delete", "create"],
+        "before": { "dataset_id": "old_ds" },
+        "after": { "dataset_id": "old_ds" }
+      }
+    }
+  ]
+}

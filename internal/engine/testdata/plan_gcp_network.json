@@ -1,0 +1,311 @@
+{
+  "format_version": "1.2",
+  "terraform_version": "1.9.0",
+  "resource_changes": [
+    {
+      "address": "google_compute_network_firewall_policy_rule.open_ssh",
+      "mode": "managed",
+      "type": "google_compute_network_firewall_policy_rule",
+      "name": "open_ssh",
+      "provider_name": "registry.terraform.io/hashicorp/google",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": {
+          "action": "allow",
+          "direction": "INGRESS",
+          "disabled": false,
+          "priority": 1000,
+          "match": [
+            {
+              "src_ip_ranges": ["0.0.0.0/0"],
+              "layer4_configs": [
+                { "ip_protocol": "tcp", "ports": ["22"] }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "address": "google_compute_region_network_firewall_policy_rule.open_allproto",
+      "mode": "managed",
+      "type": "google_compute_region_network_firewall_policy_rule",
+      "name": "open_allproto",
+      "provider_name": "registry.terraform.io/hashicorp/google",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": {
+          "action": "allow",
+          "direction": "INGRESS",
+          "region": "us-central1",
+          "priority": 1000,
+          "match": [
+            {
+              "src_ip_ranges": ["0.0.0.0/0"],
+              "layer4_configs": [
+                { "ip_protocol": "all" }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "address": "google_compute_firewall_policy_rule.open_rdp_v6",
+      "mode": "managed",
+      "type": "google_compute_firewall_policy_rule",
+      "name": "open_rdp_v6",
+      "provider_name": "registry.terraform.io/hashicorp/google",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": {
+          "action": "allow",
+          "direction": "INGRESS",
+          "priority": 1000,
+          "match": [
+            {
+              "src_ip_ranges": ["::/0"],
+              "layer4_configs": [
+                { "ip_protocol": "tcp", "ports": ["3380-3400"] }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "address": "google_compute_network_firewall_policy_rule.https_ok",
+      "mode": "managed",
+      "type": "google_compute_network_firewall_policy_rule",
+      "name": "https_ok",
+      "provider_name": "registry.terraform.io/hashicorp/google",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": {
+          "action": "allow",
+          "direction": "INGRESS",
+          "priority": 1000,
+          "match": [
+            {
+              "src_ip_ranges": ["0.0.0.0/0"],
+              "layer4_configs": [
+                { "ip_protocol": "tcp", "ports": ["443"] }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "address": "google_compute_network_firewall_policy_rule.internal_ssh",
+      "mode": "managed",
+      "type": "google_compute_network_firewall_policy_rule",
+      "name": "internal_ssh",
+      "provider_name": "registry.terraform.io/hashicorp/google",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": {
+          "action": "allow",
+          "direction": "INGRESS",
+          "priority": 1000,
+          "match": [
+            {
+              "src_ip_ranges": ["10.0.0.0/8"],
+              "layer4_configs": [
+                { "ip_protocol": "tcp", "ports": ["22"] }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "address": "google_compute_network_firewall_policy_rule.deny_ssh",
+      "mode": "managed",
+      "type": "google_compute_network_firewall_policy_rule",
+      "name": "deny_ssh",
+      "provider_name": "registry.terraform.io/hashicorp/google",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": {
+          "action": "deny",
+          "direction": "INGRESS",
+          "priority": 1000,
+          "match": [
+            {
+              "src_ip_ranges": ["0.0.0.0/0"],
+              "layer4_configs": [
+                { "ip_protocol": "tcp", "ports": ["22"] }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "address": "google_compute_network_firewall_policy_rule.disabled_ssh",
+      "mode": "managed",
+      "type": "google_compute_network_firewall_policy_rule",
+      "name": "disabled_ssh",
+      "provider_name": "registry.terraform.io/hashicorp/google",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": {
+          "action": "allow",
+          "direction": "INGRESS",
+          "disabled": true,
+          "priority": 1000,
+          "match": [
+            {
+              "src_ip_ranges": ["0.0.0.0/0"],
+              "layer4_configs": [
+                { "ip_protocol": "tcp", "ports": ["22"] }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "address": "google_compute_network.auto",
+      "mode": "managed",
+      "type": "google_compute_network",
+      "name": "auto",
+      "provider_name": "registry.terraform.io/hashicorp/google",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": {
+          "name": "auto-vpc",
+          "auto_create_subnetworks": true,
+          "routing_mode": "REGIONAL"
+        }
+      }
+    },
+    {
+      "address": "google_compute_network.custom",
+      "mode": "managed",
+      "type": "google_compute_network",
+      "name": "custom",
+      "provider_name": "registry.terraform.io/hashicorp/google",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": {
+          "name": "custom-vpc",
+          "auto_create_subnetworks": false,
+          "routing_mode": "GLOBAL"
+        }
+      }
+    },
+    {
+      "address": "google_dns_managed_zone.public_plain",
+      "mode": "managed",
+      "type": "google_dns_managed_zone",
+      "name": "public_plain",
+      "provider_name": "registry.terraform.io/hashicorp/google",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": {
+          "name": "example-zone",
+          "dns_name": "example.com.",
+          "visibility": "public"
+        }
+      }
+    },
+    {
+      "address": "google_dns_managed_zone.public_signed",
+      "mode": "managed",
+      "type": "google_dns_managed_zone",
+      "name": "public_signed",
+      "provider_name": "registry.terraform.io/hashicorp/google",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": {
+          "name": "signed-zone",
+          "dns_name": "signed.example.com.",
+          "visibility": "public",
+          "dnssec_config": [
+            { "state": "on", "non_existence": "nsec3" }
+          ]
+        }
+      }
+    },
+    {
+      "address": "google_dns_managed_zone.private_zone",
+      "mode": "managed",
+      "type": "google_dns_managed_zone",
+      "name": "private_zone",
+      "provider_name": "registry.terraform.io/hashicorp/google",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": {
+          "name": "internal-zone",
+          "dns_name": "internal.example.",
+          "visibility": "private"
+        }
+      }
+    },
+    {
+      "address": "google_compute_subnetwork.nolog",
+      "mode": "managed",
+      "type": "google_compute_subnetwork",
+      "name": "nolog",
+      "provider_name": "registry.terraform.io/hashicorp/google",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": {
+          "name": "app-subnet",
+          "ip_cidr_range": "10.0.1.0/24",
+          "purpose": "PRIVATE"
+        }
+      }
+    },
+    {
+      "address": "google_compute_subnetwork.logged",
+      "mode": "managed",
+      "type": "google_compute_subnetwork",
+      "name": "logged",
+      "provider_name": "registry.terraform.io/hashicorp/google",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": {
+          "name": "logged-subnet",
+          "ip_cidr_range": "10.0.2.0/24",
+          "log_config": [
+            { "aggregation_interval": "INTERVAL_5_SEC", "flow_sampling": 0.5, "metadata": "INCLUDE_ALL_METADATA" }
+          ]
+        }
+      }
+    },
+    {
+      "address": "google_compute_subnetwork.proxy",
+      "mode": "managed",
+      "type": "google_compute_subnetwork",
+      "name": "proxy",
+      "provider_name": "registry.terraform.io/hashicorp/google",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": {
+          "name": "proxy-subnet",
+          "ip_cidr_range": "10.0.3.0/24",
+          "purpose": "REGIONAL_MANAGED_PROXY",
+          "role": "ACTIVE"
+        }
+      }
+    }
+  ]
+}

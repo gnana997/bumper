@@ -1,0 +1,52 @@
+# Compute Engine instance hardening. network_interface and access_config are
+# both blocks (arrays in plan JSON); we key on access_config *presence*, never on
+# nat_ip (which is computed/unknown at plan time).
+
+# An access_config block grants the instance an external (public) IP. Advisory
+# (medium): a public IP is common and often intended (bastion, public service).
+- id: GCP_COMPUTE_INSTANCE_PUBLIC_IP
+  source: trivy
+  avd: AVD-GCP-0031
+  severity: medium
+  resource: google_compute_instance
+  on: [create, update]
+  when: |
+    has(after.network_interface) && after.network_interface.exists(ni,
+      has(ni.access_config) && ni.access_config.exists(ac, true))
+  title: "Compute instance has a public IP (network_interface has an access_config)"
+  fix: "Remove the access_config block to drop the external IP; reach the VM via IAP or a bastion."
+  refs:
+    - "https://cloud.google.com/compute/docs/ip-addresses#externaladdresses"
+
+# IP forwarding lets a VM send/receive packets for other addresses — enabling
+# spoofing / man-in-the-middle. Rare and deliberate, so explicit-true is high.
+- id: GCP_COMPUTE_IP_FORWARDING
+  source: trivy
+  avd: AVD-GCP-0043
+  severity: high
+  resource: google_compute_instance
+  on: [create, update]
+  when: |
+    has(after.can_ip_forward) && after.can_ip_forward == true
+  title: "Compute instance has IP forwarding enabled"
+  fix: "Set can_ip_forward = false unless the VM is an intentional router/NAT appliance."
+  refs:
+    - "https://cloud.google.com/vpc/docs/using-routes#canipforward"
+
+# The default Compute Engine service account, or the cloud-platform scope, grants
+# the VM broad project access — a lateral-movement risk if the VM is compromised.
+- id: GCP_COMPUTE_DEFAULT_SERVICE_ACCOUNT
+  source: trivy
+  avd: AVD-GCP-0044
+  severity: high
+  resource: google_compute_instance
+  on: [create, update]
+  when: |
+    has(after.service_account) && after.service_account.exists(sa,
+      (has(sa.email) && sa.email.endsWith("-compute@developer.gserviceaccount.com")) ||
+      (has(sa.scopes) && sa.scopes.exists(sc,
+        sc == "cloud-platform" || sc.endsWith("/auth/cloud-platform"))))
+  title: "Compute instance uses the default service account or the cloud-platform scope"
+  fix: "Attach a dedicated least-privilege service account and scope it to only the APIs the VM needs."
+  refs:
+    - "https://cloud.google.com/compute/docs/access/service-accounts#default_service_account"

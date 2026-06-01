@@ -1,0 +1,18 @@
+# BigQuery dataset public access. `access` is a list of grant objects; a public
+# grant uses special_group == "allAuthenticatedUsers" or iam_member ==
+# allUsers/allAuthenticatedUsers. Only fires when the user explicitly authors a
+# public access block (implicit/computed grants stay unknown at plan time).
+- id: GCP_BIGQUERY_DATASET_PUBLIC
+  source: trivy
+  avd: AVD-GCP-0046
+  severity: critical
+  resource: google_bigquery_dataset
+  on: [create, update]
+  when: |
+    has(after.access) && after.access.exists(a,
+      (has(a.special_group) && a.special_group == "allAuthenticatedUsers") ||
+      (has(a.iam_member) && (a.iam_member == "allUsers" || a.iam_member == "allAuthenticatedUsers")))
+  title: "BigQuery dataset grants public access (allUsers / allAuthenticatedUsers)"
+  fix: "Remove the public access grant; share the dataset with specific principals only."
+  refs:
+    - "https://cloud.google.com/bigquery/docs/dataset-access-controls"

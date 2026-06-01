@@ -1,0 +1,15 @@
+# KMS key rotation. rotation_period is a string like "7776000s". Parsing the
+# numeric threshold in CEL is brittle, so we flag the clear case — no rotation
+# configured at all. Advisory (medium).
+- id: GCP_KMS_KEY_NO_ROTATION
+  source: trivy
+  avd: AVD-GCP-0065
+  severity: medium
+  resource: google_kms_crypto_key
+  on: [create, update]
+  when: |
+    !has(after.rotation_period) || after.rotation_period == ""
+  title: "KMS crypto key has no automatic rotation configured"
+  fix: "Set rotation_period (e.g. \"7776000s\" for 90 days)."
+  refs:
+    - "https://cloud.google.com/kms/docs/rotating-keys"

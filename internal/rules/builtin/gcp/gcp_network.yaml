@@ -1,0 +1,83 @@
+# GCP networking rules. The headline one closes a real coverage gap: our
+# existing firewall rule only matches the LEGACY google_compute_firewall
+# (source_ranges + allow{}). Orgs increasingly use network firewall policies,
+# whose rules have a different shape (match{ src_ip_ranges, layer4_configs{} }).
+# These three resources (global / regional / hierarchical) share that shape, so
+# one type-less rule covers all of them. No upstream Trivy check exists for the
+# policy-rule resources, so this is sourced as custom.
+- id: GCP_FW_POLICY_PUBLIC_INGRESS_SENSITIVE
+  source: custom
+  provider: gcp
+  severity: critical
+  on: [create, update]
+  when: |
+    type in [
+      "google_compute_network_firewall_policy_rule",
+      "google_compute_region_network_firewall_policy_rule",
+      "google_compute_firewall_policy_rule"
+    ] &&
+    has(after.action) && after.action == "allow" &&
+    (!has(after.direction) || after.direction != "EGRESS") &&
+    (!has(after.disabled) || after.disabled != true) &&
+    has(after.match) && after.match.exists(m,
+      has(m.src_ip_ranges) &&
+      (("0.0.0.0/0" in m.src_ip_ranges) || ("::/0" in m.src_ip_ranges)) &&
+      has(m.layer4_configs) && m.layer4_configs.exists(l4,
+        (has(l4.ip_protocol) && l4.ip_protocol == "all") ||
+        ((!has(l4.ip_protocol) || l4.ip_protocol == "tcp" || l4.ip_protocol == "udp") &&
+          (!has(l4.ports) || ports_hit_sensitive(l4.ports)))))
+  title: "Network firewall policy rule exposes a sensitive port to the entire internet (0.0.0.0/0)"
+  fix: "Restrict match.src_ip_ranges to known CIDRs, or narrow layer4_configs to non-sensitive ports."
+  refs:
+    - "https://cloud.google.com/firewall/docs/firewall-policies"
+
+# Auto-mode VPC creates a subnet in every region automatically, widening the
+# network surface and sprawl versus an explicit custom-mode VPC. The provider
+# default is auto-mode, so an unset field is the (insecure) default. Advisory.
+- id: GCP_NETWORK_AUTO_MODE
+  source: custom
+  severity: medium
+  resource: google_compute_network
+  on: [create, update]
+  when: |
+    !has(after.auto_create_subnetworks) || after.auto_create_subnetworks == true
+  title: "VPC network is auto-mode (auto_create_subnetworks); prefer custom-mode"
+  fix: "Set auto_create_subnetworks = false and define subnets explicitly per region."
+  refs:
+    - "https://cloud.google.com/vpc/docs/vpc#subnet-ranges"
+
+# DNSSEC protects a public zone from spoofing/cache-poisoning. It only applies to
+# public zones (private zones can't enable it), so we guard on visibility.
+- id: GCP_DNS_NO_DNSSEC
+  source: trivy
+  avd: AVD-GCP-0013
+  severity: medium
+  resource: google_dns_managed_zone
+  on: [create, update]
+  when: |
+    (!has(after.visibility) || after.visibility == "public") &&
+    (!has(after.dnssec_config) ||
+      !after.dnssec_config.exists(d, has(d.state) && d.state == "on"))
+  title: "Public Cloud DNS zone does not have DNSSEC enabled"
+  fix: "Set dnssec_config { state = \"on\" } on the managed zone."
+  refs:
+    - "https://cloud.google.com/dns/docs/dnssec"
+
+# VPC flow logs give network visibility for incident response. Absence = off.
+# Proxy-only / PSC subnets can't have flow logs, so they're excluded. Low/advisory.
+- id: GCP_SUBNETWORK_NO_FLOW_LOGS
+  source: trivy
+  avd: AVD-GCP-0029
+  severity: low
+  resource: google_compute_subnetwork
+  on: [create, update]
+  when: |
+    (!has(after.purpose) || !(after.purpose in [
+      "REGIONAL_MANAGED_PROXY", "GLOBAL_MANAGED_PROXY",
+      "INTERNAL_HTTPS_LOAD_BALANCER", "PRIVATE_SERVICE_CONNECT"
+    ])) &&
+    (!has(after.log_config) || !after.log_config.exists(l, true))
+  title: "VPC subnetwork does not have flow logs enabled"
+  fix: "Add a log_config block to enable VPC flow logs."
+  refs:
+    - "https://cloud.google.com/vpc/docs/flow-logs"

@@ -1,3 +1,64 @@
+# Cloud SQL rules. `settings`, `ip_configuration` are max-items-1 blocks, which
+# terraform-json still renders as arrays — so we traverse with .exists() rather
+# than indexing, which is also null-safe.
+
+# Public exposure: an authorized network of 0.0.0.0/0 opens the instance to the
+# whole internet. We key on the CIDR (always user-supplied) rather than
+# ipv4_enabled, which the provider often leaves computed/unknown at plan time.
+- id: GCP_SQL_PUBLIC_ACCESS
+  source: trivy
+  avd: AVD-GCP-0017
+  severity: high
+  resource: google_sql_database_instance
+  on: [create, update]
+  when: |
+    has(after.settings) && after.settings.exists(s,
+      has(s.ip_configuration) && s.ip_configuration.exists(ic,
+        has(ic.authorized_networks) && ic.authorized_networks.exists(n,
+          has(n.value) && n.value == "0.0.0.0/0")))
+  title: "Cloud SQL instance is exposed to the internet (authorized network 0.0.0.0/0)"
+  fix: "Replace the 0.0.0.0/0 authorized network with specific CIDRs, or use the Cloud SQL Auth Proxy / Private IP."
+  refs:
+    - "https://cloud.google.com/sql/docs/mysql/configure-ip"
+
+# SSL/TLS not enforced. Modern providers use ssl_mode; older ones require_ssl.
+# Fire only on an explicit permissive setting (not mere absence) to stay
+# low-false-positive.
+- id: GCP_SQL_NO_SSL
+  source: trivy
+  avd: AVD-GCP-0015
+  severity: high
+  resource: google_sql_database_instance
+  on: [create, update]
+  when: |
+    has(after.settings) && after.settings.exists(s,
+      has(s.ip_configuration) && s.ip_configuration.exists(ic,
+        (has(ic.ssl_mode) && ic.ssl_mode == "ALLOW_UNENCRYPTED_AND_ENCRYPTED") ||
+        ((!has(ic.ssl_mode) || ic.ssl_mode == "") &&
+          has(ic.require_ssl) && ic.require_ssl == false)))
+  title: "Cloud SQL instance does not enforce SSL/TLS for connections"
+  fix: "Set ssl_mode = \"ENCRYPTED_ONLY\" (or require_ssl = true on older providers)."
+  refs:
+    - "https://cloud.google.com/sql/docs/mysql/configure-ssl-instance"
+
+# MySQL local_infile lets a malicious server read local files — an SQLi
+# amplifier. database_flags is a list of {name, value} with string values.
+- id: GCP_SQL_LOCAL_INFILE_ON
+  source: trivy
+  avd: AVD-GCP-0026
+  severity: high
+  resource: google_sql_database_instance
+  on: [create, update]
+  when: |
+    has(after.settings) && after.settings.exists(s,
+      has(s.database_flags) && s.database_flags.exists(f,
+        has(f.name) && f.name == "local_infile" && has(f.value) && f.value == "on"))
+  title: "Cloud SQL (MySQL) has local_infile enabled"
+  fix: "Set the local_infile database flag to \"off\"."
+  refs:
+    - "https://cloud.google.com/sql/docs/mysql/flags"
+
+# Destruction guard — the differentiator. Reads the change ACTION, not end state.
 - id: GCP_SQL_DESTROY_DELETION_PROTECTION_OFF
   source: custom
   severity: critical

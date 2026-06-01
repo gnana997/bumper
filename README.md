@@ -9,15 +9,21 @@ ways: a **CLI/CI gate**, an **MCP server** your coding agent calls, and a **guar
 hook** that stops an agent from applying a plan it never verified. A locally
 installed AI CLI optionally explains each finding in plain English.
 
-> **v1.0.0.** Ships **63 curated rules** (15 critical / 36 high / 12 medium) across
-> **AWS** (57), **GCP** (3), and **Azure** (3): network exposure (security groups,
-> NACLs, GCP firewalls, Azure NSGs — IPv4/IPv6, port-range aware), public
-> endpoints (RDS/EKS/MQ, AKS, Cloud SQL), IAM & resource policies (wildcard admin,
-> open trust/ECR/SQS principals, `allUsers` bindings, lambda confused-deputy), TLS
-> hygiene, encryption at rest, EC2/ECR/EKS/CloudTrail hardening, ECS
-> plaintext-secret detection, and **destruction/recovery** checks
-> (stateful-resource destroy, no-final-snapshot, deletion-protection off, PITR,
-> versioning, backup retention). Rules are seeded from the Apache-2.0 Trivy +
+> **v1.0.0.** Ships **83 curated rules** (17 critical / 46 high / 19 medium / 1 low) across
+> **AWS** (57), **GCP** (23), and **Azure** (3): network exposure (security groups,
+> NACLs, GCP firewalls — both legacy `google_compute_firewall` and the modern
+> network/regional/hierarchical firewall **policy** rules — Azure NSGs; IPv4/IPv6,
+> port-range aware), VPC hygiene (auto-mode networks, public-zone DNSSEC, subnet
+> flow logs), public
+> endpoints (RDS/EKS/MQ, AKS, Cloud SQL public IP & authorized networks, BigQuery
+> & Cloud Storage public access, GKE public control plane), IAM & resource
+> policies (wildcard admin, open trust/ECR/SQS principals, `allUsers` bindings,
+> GCP default service account / cloud-platform scope, lambda confused-deputy), TLS
+> hygiene (incl. GCP SSL policies, Cloud SQL SSL enforcement), encryption at rest,
+> EC2/ECR/EKS/CloudTrail and GKE hardening (legacy ABAC, Shielded Nodes, network
+> policy), ECS plaintext-secret detection, KMS key rotation, and
+> **destruction/recovery** checks (stateful-resource destroy across AWS & GCP,
+> no-final-snapshot, deletion-protection off, PITR, versioning, backup retention). Rules are seeded from the Apache-2.0 Trivy +
 > Checkov catalogs (see [docs/rule-catalog/](docs/rule-catalog/)) and hand-ported
 > with tests. Account-posture checks (root MFA, credential rotation) are
 > intentionally out of scope — they belong to a continuous account scanner, not a

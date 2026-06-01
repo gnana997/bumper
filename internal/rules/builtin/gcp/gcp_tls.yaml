@@ -1,0 +1,15 @@
+# A compute SSL policy below TLS 1.2 allows deprecated, breakable TLS. The
+# provider default is TLS_1_0, so an unset min_tls_version is itself weak.
+- id: GCP_SSL_POLICY_WEAK_TLS
+  source: trivy
+  avd: AVD-GCP-0039
+  severity: high
+  resource: google_compute_ssl_policy
+  on: [create, update]
+  when: |
+    !has(after.min_tls_version) ||
+    after.min_tls_version == "TLS_1_0" || after.min_tls_version == "TLS_1_1"
+  title: "Compute SSL policy allows TLS below 1.2"
+  fix: "Set min_tls_version = \"TLS_1_2\" (and consider profile = \"RESTRICTED\")."
+  refs:
+    - "https://cloud.google.com/load-balancing/docs/ssl-policies-concepts"

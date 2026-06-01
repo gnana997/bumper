@@ -1,0 +1,65 @@
+# GKE cluster hardening. private_cluster_config / network_policy are blocks
+# (arrays in plan JSON); enable_legacy_abac / enable_shielded_nodes are
+# top-level bools.
+
+# A private_cluster_config block that leaves the control-plane endpoint public is
+# a clear misconfiguration (the user set up private networking but forgot the
+# endpoint). We require the block + explicit false to stay low-false-positive.
+- id: GCP_GKE_PUBLIC_CONTROL_PLANE
+  source: trivy
+  avd: AVD-GCP-0053
+  severity: high
+  resource: google_container_cluster
+  on: [create, update]
+  when: |
+    has(after.private_cluster_config) && after.private_cluster_config.exists(p,
+      has(p.enable_private_endpoint) && p.enable_private_endpoint == false)
+  title: "GKE cluster control plane is publicly accessible (enable_private_endpoint = false)"
+  fix: "Set enable_private_endpoint = true and configure master_authorized_networks."
+  refs:
+    - "https://cloud.google.com/kubernetes-engine/docs/concepts/private-cluster-concept"
+
+# Legacy ABAC bypasses Kubernetes RBAC and grants broad permissions.
+- id: GCP_GKE_LEGACY_ABAC
+  source: trivy
+  avd: AVD-GCP-0062
+  severity: high
+  resource: google_container_cluster
+  on: [create, update]
+  when: |
+    has(after.enable_legacy_abac) && after.enable_legacy_abac == true
+  title: "GKE cluster has legacy ABAC authorization enabled"
+  fix: "Set enable_legacy_abac = false (or remove it) and rely on RBAC."
+  refs:
+    - "https://cloud.google.com/kubernetes-engine/docs/how-to/role-based-access-control"
+
+# Shielded GKE nodes provide verifiable node identity / boot integrity. Default
+# is on; we only flag an explicit opt-out. Advisory (medium).
+- id: GCP_GKE_SHIELDED_NODES_OFF
+  source: trivy
+  avd: AVD-GCP-0055
+  severity: medium
+  resource: google_container_cluster
+  on: [create, update]
+  when: |
+    has(after.enable_shielded_nodes) && after.enable_shielded_nodes == false
+  title: "GKE cluster has Shielded Nodes disabled"
+  fix: "Remove enable_shielded_nodes = false to keep Shielded Nodes on."
+  refs:
+    - "https://cloud.google.com/kubernetes-engine/docs/how-to/shielded-gke-nodes"
+
+# Network policy enforcement controls pod-to-pod traffic. Flag explicit disable.
+# Advisory (medium).
+- id: GCP_GKE_NETWORK_POLICY_OFF
+  source: trivy
+  avd: AVD-GCP-0056
+  severity: medium
+  resource: google_container_cluster
+  on: [create, update]
+  when: |
+    has(after.network_policy) && after.network_policy.exists(np,
+      has(np.enabled) && np.enabled == false)
+  title: "GKE cluster has network policy enforcement disabled"
+  fix: "Enable a network policy provider (network_policy.enabled = true) to restrict pod traffic."
+  refs:
+    - "https://cloud.google.com/kubernetes-engine/docs/how-to/network-policy"
