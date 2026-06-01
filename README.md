@@ -1,28 +1,31 @@
 # bumper
 
-**Catch dangerous Terraform changes before you `apply` — and have them explained in plain English.**
+**Catch dangerous Terraform changes before you `apply` — and block the ones nobody reviewed.**
 
-bumper is a single static Go binary that reads a `terraform show -json` plan and
-flags changes that would **expose** or **destroy** your AWS infrastructure. The
-verdict is 100% deterministic (so it's safe to block a merge on); a locally
-installed AI CLI optionally translates each finding into plain English.
+bumper reads a `terraform show -json` plan and flags changes that would **expose**
+or **destroy** your cloud infrastructure (AWS, GCP, Azure). The verdict is 100%
+deterministic, so it's safe to block a merge — or an `apply` — on it. It runs three
+ways: a **CLI/CI gate**, an **MCP server** your coding agent calls, and a **guard
+hook** that stops an agent from applying a plan it never verified. A locally
+installed AI CLI optionally explains each finding in plain English.
 
-> Status: early but real. Ships with 57 curated rules (11 critical / 34 high /
-> 12 medium) spanning network exposure (security groups across 3 shapes + NACLs,
-> IPv4/IPv6, port-range aware), IAM & resource policies (wildcard admin, open
-> trust/ECR/SQS principals, lambda confused-deputy), TLS hygiene (CloudFront /
-> API Gateway / OpenSearch), encryption at rest across the data services,
-> EC2/ECR/EKS/CloudTrail hardening, ECS plaintext-secret detection, and
-> destruction/recovery checks (stateful-resource destroy, no-final-snapshot,
-> PITR, versioning, backup retention, deletion protection). Rules are seeded
-> from the Trivy catalog (see [docs/rule-catalog/](docs/rule-catalog/)) and
-> hand-ported with tests. Account-posture checks (root MFA, password policy,
-> credential rotation) are intentionally out of scope — they belong to a
-> continuous account scanner, not a plan gate.
+> **v1.0.0.** Ships **63 curated rules** (15 critical / 36 high / 12 medium) across
+> **AWS** (57), **GCP** (3), and **Azure** (3): network exposure (security groups,
+> NACLs, GCP firewalls, Azure NSGs — IPv4/IPv6, port-range aware), public
+> endpoints (RDS/EKS/MQ, AKS, Cloud SQL), IAM & resource policies (wildcard admin,
+> open trust/ECR/SQS principals, `allUsers` bindings, lambda confused-deputy), TLS
+> hygiene, encryption at rest, EC2/ECR/EKS/CloudTrail hardening, ECS
+> plaintext-secret detection, and **destruction/recovery** checks
+> (stateful-resource destroy, no-final-snapshot, deletion-protection off, PITR,
+> versioning, backup retention). Rules are seeded from the Apache-2.0 Trivy +
+> Checkov catalogs (see [docs/rule-catalog/](docs/rule-catalog/)) and hand-ported
+> with tests. Account-posture checks (root MFA, credential rotation) are
+> intentionally out of scope — they belong to a continuous account scanner, not a
+> plan gate.
 
 ## Install
 
-**Homebrew (macOS / Linux)** — recommended; puts `bumper` on your `PATH`:
+**Homebrew (macOS)** — recommended; puts `bumper` on your `PATH`:
 
 ```sh
 brew install gnana997/tap/bumper
@@ -65,11 +68,18 @@ bumper init
   resulting config. bumper also checks the *transition* (`create`/`delete`/
   `replace`), which is the only way to catch "this `apply` will destroy your
   database." That class of **destruction** rule is bumper's differentiator.
+- **It enforces, it doesn't just warn.** `bumper verify` binds a passing scan to
+  the exact plan by sha256; the `guard` hook then **blocks** a `terraform
+  apply`/`destroy` an agent tries to run against an unverified plan. A linter you
+  can ignore becomes a gate you can't.
+- **Built for the agent era.** A native MCP server exposes `scan_plan` /
+  `list_rules` / `explain_rule`, and `bumper init` wires both the server and the
+  guard into Claude Code in one command.
 - **AI enrichment with zero setup, zero cost.** If you already have `claude`,
   `gemini`, `codex`, `opencode`, or `auggie` installed and authenticated,
   `--explain` shells out to it. No API key to paste, no vendor account for us.
 - **Deterministic core stands alone.** The AI layer is pure garnish; if it's
-  absent or fails, the deterministic findings are still complete.
+  absent or fails, the deterministic findings are still complete and blocking.
 
 ## Quick start
 
@@ -88,6 +98,52 @@ Exit codes: `0` = clean, `1` = findings present (CI-friendly), `2` = usage/parse
 
 Output formats: `--format text` (default), `json`, `sarif` (GitHub code scanning),
 `markdown` (a PR-comment body).
+
+## Enforce the apply (verify + guard)
+
+Scanning tells you what's dangerous; **verify + guard make it unavoidable**. The
+binding is by sha256 of the saved plan, so you can't verify one plan and apply
+another:
+
+```sh
+terraform plan -out tfplan
+bumper verify tfplan        # scans; exits 1 (and writes no verdict) on high/critical findings
+terraform apply tfplan      # allowed only because verify recorded a verdict for this exact plan
+```
+
+- `bumper verify <plan>` runs `terraform show -json` itself, evaluates the rules,
+  and on a pass writes a verdict to `.bumper/verified/<sha256>` (gitignored).
+  Blocking findings (≥ `high` by default) exit non-zero and write nothing; record
+  an explicit override with `bumper verify --accept <plan>`.
+- `bumper guard` is a Claude Code **PreToolUse hook**. It reads each Bash tool
+  call and **denies** an unverified `terraform apply <plan>`, a bare
+  `terraform apply` (which re-plans and applies in one unreviewable step), or a
+  `terraform destroy`. Every other command passes through untouched — it never
+  blanket-approves, so it's safe to install globally.
+
+Because the guard lives in the agent's tool layer, it constrains the *agent* —
+when you plan and apply by hand in your own terminal, you're never gated.
+
+## Claude Code: MCP + one-command setup
+
+```sh
+bumper init     # interactive wizard: choose project/user scope for the MCP server + guard hook
+bumper mcp      # run the MCP server directly (stdio) — what init wires up
+```
+
+`bumper init` is a hazard-console wizard that registers the MCP server in
+`.mcp.json`, installs the guard in `.claude/settings.json`, ignores `.bumper/`,
+and drops the verify→apply workflow into `CLAUDE.md` — all merge-safe and
+idempotent. `--mcp`/`--hook` choose `project|user|none`; `--print` previews;
+`--yes` runs non-interactively.
+
+The MCP server exposes three tools to the agent:
+
+| Tool | Does |
+| --- | --- |
+| `scan_plan` | scan a plan (inline JSON or a `.tfplan` path) → structured findings + a `blocking` verdict |
+| `list_rules` | browse the rule set (filter by severity / source / service) |
+| `explain_rule` | one rule in full: the CEL check, fix, and provenance |
 
 ## Interactive console (TUI)
 
@@ -121,8 +177,8 @@ bumper explain AWS_RDS_PUBLICLY_ACCESSIBLE   # one rule: provenance, fix, and th
 ```
 
 Each rule carries its **provenance** — `source: trivy` (with the original
-`AVD-AWS-NNNN` id) or `source: custom` for bumper's own checks (the
-destruction/plan-diff rules and a few others).
+`AVD-AWS-NNNN` / `AVD-GCP-NNNN` / `AVD-AZU-NNNN` id) or `source: custom` for
+bumper's own checks (the destruction/plan-diff rules and a few others).
 
 ## CI / GitHub Action
 
@@ -154,21 +210,23 @@ find and replace its previous comment, so a PR only ever has one bumper comment.
 ## Rule format
 
 Rules are declarative YAML with a [CEL](https://github.com/google/cel-go)
-predicate. Built-ins are embedded in the binary (`internal/rules/builtin/`);
-add your own with `--rules ./my-rules/`.
+predicate. Built-ins are embedded in the binary
+(`internal/rules/builtin/<provider>/`); add your own with `--rules ./my-rules/`.
+The differentiator — a **destruction** rule that reads the change *actions*, not
+the end state:
 
 ```yaml
-- id: AWS_SG_PUBLIC_INGRESS_SENSITIVE
-  severity: critical
-  resource: aws_security_group   # resource-type filter ("" = any)
-  on: [create, update]           # change actions ("" = any); use [replace] for destruction rules
+- id: AWS_STATEFUL_RESOURCE_DESTROY
+  source: custom
+  severity: high
+  on: [delete, replace]          # change actions ("" = any)
   when: |                        # CEL predicate; true => finding
-    has(after.ingress) && after.ingress.exists(r,
-      has(r.cidr_blocks) && ("0.0.0.0/0" in r.cidr_blocks) &&
-      has(r.from_port) && (r.from_port in [22.0, 3389.0, 5432.0, 3306.0, 6379.0, 27017.0]))
-  title: "Security group exposes a sensitive port to the entire internet (0.0.0.0/0)"
-  fix: "Restrict cidr_blocks to your VPC CIDR or a known admin range."
-  refs: ["https://docs.aws.amazon.com/vpc/latest/userguide/security-group-rules.html"]
+    type in [
+      "aws_db_instance", "aws_rds_cluster", "aws_dynamodb_table",
+      "aws_s3_bucket", "aws_efs_file_system", "aws_redshift_cluster"
+    ]
+  title: "This apply will DELETE or REPLACE a stateful data resource (potential data loss)"
+  fix: "Confirm the destruction is intended. Check prevent_destroy, final snapshots, and backups before applying."
 ```
 
 Variables available to `when`: `address` (string), `type` (string),
@@ -179,51 +237,68 @@ Custom CEL functions (see [internal/rules/celfuncs.go](internal/rules/celfuncs.g
 
 - `parse_json(s)` — parse a JSON string (e.g. an IAM `policy`) into a value;
   returns `{}` on error so callers can `has(...)`-guard.
-- `as_list(x)` — normalize the IAM "string or array" idiom (`Action`,
-  `Resource`, `Principal.AWS`); scalar → `[scalar]`, null → `[]`.
-- `hits_sensitive_port(from, to)` — true if the inclusive port range covers any
+- `as_list(x)` — normalize the "string or array" idiom (`Action`, `Resource`,
+  `Principal.AWS`, GCP IAM `members`); scalar → `[scalar]`, null → `[]`.
+- `hits_sensitive_port(from, to)` — true if an inclusive port range covers any
   sensitive admin/db/cache port.
+- `ports_hit_sensitive(ports)` — same, for the string/range port lists used by
+  GCP firewalls and Azure NSGs (`"22"`, `"8080-8090"`).
 
 ## Architecture
 
 ```
-cmd/bumper/            CLI: flags, exit codes
+cmd/bumper/            CLI: subcommand dispatch, flags, exit codes
 internal/plan/         terraform-json -> normalized {address,type,actions,before,after}
-internal/rules/        YAML loader + CEL compile (go:embed built-ins + --rules dir)
+internal/rules/        YAML loader + CEL compile (go:embed builtins by provider + --rules dir)
 internal/engine/       evaluate changes x rules -> ranked findings
+internal/report/       text / json / sarif / markdown output
 internal/enrich/       AI-CLI adapters (claude/gemini/...) — optional enrichment
-internal/report/       text / json output
+internal/safety/       verify + guard — the sha256-bound apply gate
+internal/mcpserver/    MCP server: scan_plan / list_rules / explain_rule
+internal/setup/        `bumper init` — merge-safe MCP + hook wiring
+internal/tui/          the hazard-console TUI and the init wizard
 ```
 
 Built with Go 1.26, [cel-go](https://github.com/google/cel-go) for predicates,
-and [terraform-json](https://github.com/hashicorp/terraform-json) for plan
-parsing.
+[terraform-json](https://github.com/hashicorp/terraform-json) for plan parsing,
+the official [MCP Go SDK](https://github.com/modelcontextprotocol/go-sdk), and
+[Bubble Tea](https://github.com/charmbracelet/bubbletea) for the TUI. Single
+static binary, no CGO.
 
 ## Roadmap
 
-- Grow the curated rule set (exposure + destruction first), seeded against the
-  Apache-2.0 corpora (Checkov / Trivy / Prowler) as a coverage oracle.
-- SARIF output and a PR-comment surface.
-- Reachability beyond single security groups (SG → ENI → public subnet → IGW).
+- Grow the multi-cloud rule set from the merged Trivy + Checkov worklist in
+  [docs/rule-catalog/](docs/rule-catalog/) (GKE, Azure storage/keyvault next).
+- Reachability beyond a single security group (SG → ENI → public subnet → IGW),
+  to rank "actually reachable from the internet" above config-only exposure.
+- A continuous, read-only account-posture watcher (the stateful tier) — distinct
+  from this single-shot plan gate.
+
+## Security
+
+bumper takes its own supply chain seriously: releases are checksummed, signed
+with cosign (keyless), and carry SLSA build-provenance attestations (see
+[Install](#install) to verify). Dependencies are watched by Dependabot +
+`govulncheck`, and the code by CodeQL. To report a vulnerability, see
+[SECURITY.md](SECURITY.md) — please use private disclosure, not a public issue.
 
 ## Development
 
-Git hooks are managed by [lefthook](https://github.com/evilmartians/lefthook)
-(a single Go binary — no Node). After cloning:
+See [CONTRIBUTING.md](CONTRIBUTING.md) for the full workflow. In short:
 
 ```sh
-make hooks   # installs lefthook + gitleaks, then wires up the hooks
+make build   # go build -o bumper ./cmd/bumper
+make test    # go test ./...
+make hooks   # install lefthook + gitleaks and wire up the git hooks
 ```
 
-- **pre-commit** — [gitleaks](https://github.com/gitleaks/gitleaks) secret scan on
-  staged changes + `gofmt` check. Blocks the commit on a leak or unformatted Go.
-- **pre-push** — `go vet ./...` and `go test ./...`.
-
-`gitleaks` must be on `PATH` (`brew install gitleaks`, or
-`go install github.com/zricethezav/gitleaks/v8@latest`). Config lives in
-[lefthook.yml](lefthook.yml). To bypass in an emergency: `git commit --no-verify`.
+Git hooks (via [lefthook](https://github.com/evilmartians/lefthook), a single Go
+binary — no Node): **pre-commit** runs a
+[gitleaks](https://github.com/gitleaks/gitleaks) secret scan on staged changes +
+a `gofmt` check; **pre-push** runs `go vet ./...` and `go test ./...`.
 
 ## License
 
-TODO. Built-in rules that derive from Apache-2.0 sources will retain attribution
-in `NOTICE`.
+[Apache-2.0](LICENSE). Built-in rules adapted from Apache-2.0 sources (Trivy,
+Checkov) retain attribution in [NOTICE](NOTICE); CIS Benchmark content is not
+redistributed.
