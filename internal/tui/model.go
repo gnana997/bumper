@@ -10,9 +10,9 @@ import (
 	"github.com/charmbracelet/bubbles/viewport"
 	tea "github.com/charmbracelet/bubbletea"
 
-	"github.com/gnana097/bumper/internal/engine"
-	"github.com/gnana097/bumper/internal/enrich"
-	"github.com/gnana097/bumper/internal/rules"
+	"github.com/gnana997/bumper/internal/engine"
+	"github.com/gnana997/bumper/internal/enrich"
+	"github.com/gnana997/bumper/internal/rules"
 )
 
 type mode int

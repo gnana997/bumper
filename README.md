@@ -20,6 +20,45 @@ installed AI CLI optionally translates each finding into plain English.
 > credential rotation) are intentionally out of scope — they belong to a
 > continuous account scanner, not a plan gate.
 
+## Install
+
+**Homebrew (macOS / Linux)** — recommended; puts `bumper` on your `PATH`:
+
+```sh
+brew install gnana997/tap/bumper
+```
+
+**Install script** (macOS / Linux) — downloads the latest release binary and verifies its checksum:
+
+```sh
+curl -sSfL https://raw.githubusercontent.com/gnana997/bumper/main/install.sh | sh
+```
+
+**Pre-built binaries** — download a tarball from the [releases page](https://github.com/gnana997/bumper/releases). Every release is checksummed, the checksum file is signed with [cosign](https://docs.sigstore.dev/) (keyless), and each artifact carries a SLSA build-provenance attestation — so you can prove the binary you're about to trust with your infra came from this repo's CI:
+
+```sh
+cosign verify-blob \
+  --certificate checksums.txt.pem --signature checksums.txt.sig \
+  --certificate-identity-regexp 'https://github.com/gnana997/bumper/.*' \
+  --certificate-oidc-issuer 'https://token.actions.githubusercontent.com' \
+  checksums.txt
+sha256sum -c checksums.txt --ignore-missing
+# or verify the build provenance:
+gh attestation verify bumper_*_linux_amd64.tar.gz --repo gnana997/bumper
+```
+
+**Go developers**:
+
+```sh
+go install github.com/gnana997/bumper/cmd/bumper@latest
+```
+
+Then wire it into Claude Code (MCP server + apply-guard hook):
+
+```sh
+bumper init
+```
+
 ## Why bumper is different
 
 - **Reads the plan diff, not just the end state.** Most scanners check the
@@ -35,16 +74,14 @@ installed AI CLI optionally translates each finding into plain English.
 ## Quick start
 
 ```sh
-go build -o bumper ./cmd/bumper
-
 # produce plan JSON
 terraform plan -out plan.tfplan
 terraform show -json plan.tfplan > plan.json
 
 # scan it
-./bumper plan.json
-./bumper --explain plan.json        # add plain-English enrichment
-cat plan.json | ./bumper -          # or pipe via stdin
+bumper plan.json
+bumper --explain plan.json          # add plain-English enrichment
+cat plan.json | bumper -            # or pipe via stdin
 ```
 
 Exit codes: `0` = clean, `1` = findings present (CI-friendly), `2` = usage/parse error.
@@ -104,7 +141,7 @@ steps:
       terraform init -input=false
       terraform plan -input=false -out=plan.tfplan
       terraform show -json plan.tfplan > plan.json
-  - uses: gnana097/bumper@v1
+  - uses: gnana997/bumper@v1
     with:
       plan-json: plan.json
       fail-severity: high        # fail the check on any high+ finding

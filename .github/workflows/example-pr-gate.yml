@@ -33,7 +33,7 @@ jobs:
           terraform show -json plan.tfplan > plan.json
 
       - name: bumper
-        uses: gnana097/bumper@v1
+        uses: gnana997/bumper@v1
         with:
           plan-json: plan.json
           fail-severity: high

@@ -20,15 +20,15 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/gnana097/bumper/internal/engine"
-	"github.com/gnana097/bumper/internal/enrich"
-	"github.com/gnana097/bumper/internal/mcpserver"
-	"github.com/gnana097/bumper/internal/plan"
-	"github.com/gnana097/bumper/internal/report"
-	"github.com/gnana097/bumper/internal/rules"
-	"github.com/gnana097/bumper/internal/safety"
-	"github.com/gnana097/bumper/internal/setup"
-	"github.com/gnana097/bumper/internal/tui"
+	"github.com/gnana997/bumper/internal/engine"
+	"github.com/gnana997/bumper/internal/enrich"
+	"github.com/gnana997/bumper/internal/mcpserver"
+	"github.com/gnana997/bumper/internal/plan"
+	"github.com/gnana997/bumper/internal/report"
+	"github.com/gnana997/bumper/internal/rules"
+	"github.com/gnana997/bumper/internal/safety"
+	"github.com/gnana997/bumper/internal/setup"
+	"github.com/gnana997/bumper/internal/tui"
 )
 
 const usage = `bumper — catch dangerous Terraform changes before you apply them.

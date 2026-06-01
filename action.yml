@@ -43,7 +43,7 @@ runs:
 
     - name: Install bumper
       shell: bash
-      run: go install github.com/gnana097/bumper/cmd/bumper@${{ inputs.bumper-version }}
+      run: go install github.com/gnana997/bumper/cmd/bumper@${{ inputs.bumper-version }}
 
     - name: Run bumper (SARIF)
       id: sarif

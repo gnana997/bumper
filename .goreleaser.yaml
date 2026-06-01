@@ -1,0 +1,106 @@
+# GoReleaser config for bumper. One `git tag vX.Y.Z && git push --tags` builds
+# signed, attested binaries for macOS + Linux, an SBOM, and a Homebrew formula.
+# Validate locally with: goreleaser check
+version: 2
+
+project_name: bumper
+
+before:
+  hooks:
+    - go mod tidy
+
+builds:
+  - id: bumper
+    main: ./cmd/bumper
+    binary: bumper
+    env:
+      - CGO_ENABLED=0 # pure Go — clean cross-compile, no libc coupling
+    flags:
+      - -trimpath
+    ldflags:
+      - -s -w -X github.com/gnana997/bumper/internal/report.Version={{ .Version }}
+    goos: [linux, darwin]
+    goarch: [amd64, arm64]
+    mod_timestamp: "{{ .CommitTimestamp }}" # reproducible builds
+
+archives:
+  - id: bumper
+    formats: [tar.gz]
+    name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+    files:
+      - LICENSE
+      - NOTICE
+      - README.md
+
+checksum:
+  name_template: "checksums.txt"
+  algorithm: sha256
+
+# SBOM per archive (syft). Lets consumers/scanners see what's inside a release.
+sboms:
+  - artifacts: archive
+
+# Keyless signing of the checksum file via cosign + Sigstore (GitHub OIDC).
+# Verifying the signed checksums.txt transitively verifies every artifact.
+signs:
+  - cmd: cosign
+    certificate: "${artifact}.pem"
+    args:
+      - sign-blob
+      - "--output-certificate=${certificate}"
+      - "--output-signature=${signature}"
+      - "${artifact}"
+      - "--yes"
+    artifacts: checksum
+    output: true
+
+# Homebrew cask (macOS). Linux users install via install.sh — Homebrew casks
+# are macOS-only. The post-install hook strips the Gatekeeper quarantine xattr
+# so the (un-notarized) binary runs without the "unverified developer" block.
+homebrew_casks:
+  - name: bumper
+    binaries:
+      - bumper
+    repository:
+      owner: gnana997
+      name: homebrew-tap
+      token: "{{ .Env.HOMEBREW_TAP_GITHUB_TOKEN }}"
+    url:
+      verified: "github.com/gnana997/bumper/"
+    homepage: "https://github.com/gnana997/bumper"
+    description: "Catch dangerous Terraform changes before you apply them"
+    license: "Apache-2.0"
+    hooks:
+      post:
+        install: |
+          if system_command("/usr/bin/xattr", args: ["-h"]).exit_status == 0
+            system_command "/usr/bin/xattr", args: ["-dr", "com.apple.quarantine", "#{staged_path}/bumper"]
+          end
+
+release:
+  github:
+    owner: gnana997
+    name: bumper
+  draft: false
+  prerelease: auto
+  footer: |
+    ## Verify this release
+    ```sh
+    cosign verify-blob \
+      --certificate checksums.txt.pem \
+      --signature checksums.txt.sig \
+      --certificate-identity-regexp 'https://github.com/gnana997/bumper/.*' \
+      --certificate-oidc-issuer 'https://token.actions.githubusercontent.com' \
+      checksums.txt
+    sha256sum -c checksums.txt --ignore-missing
+    ```
+
+changelog:
+  sort: asc
+  use: github
+  filters:
+    exclude:
+      - "^docs:"
+      - "^test:"
+      - "^chore:"
+      - "^ci:"

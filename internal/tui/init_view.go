@@ -5,7 +5,7 @@ import (
 
 	"github.com/charmbracelet/lipgloss"
 
-	"github.com/gnana097/bumper/internal/setup"
+	"github.com/gnana997/bumper/internal/setup"
 )
 
 func (m initModel) View() string {

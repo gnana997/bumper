@@ -1,4 +1,4 @@
-module github.com/gnana097/bumper
+module github.com/gnana997/bumper
 
 go 1.26
 

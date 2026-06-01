@@ -9,7 +9,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/gnana097/bumper/internal/rules"
+	"github.com/gnana997/bumper/internal/rules"
 )
 
 func TestParseTerraformCommands(t *testing.T) {

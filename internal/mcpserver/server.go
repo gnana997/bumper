@@ -14,11 +14,11 @@ import (
 
 	"github.com/modelcontextprotocol/go-sdk/mcp"
 
-	"github.com/gnana097/bumper/internal/engine"
-	"github.com/gnana097/bumper/internal/plan"
-	"github.com/gnana097/bumper/internal/report"
-	"github.com/gnana097/bumper/internal/rules"
-	"github.com/gnana097/bumper/internal/safety"
+	"github.com/gnana997/bumper/internal/engine"
+	"github.com/gnana997/bumper/internal/plan"
+	"github.com/gnana997/bumper/internal/report"
+	"github.com/gnana997/bumper/internal/rules"
+	"github.com/gnana997/bumper/internal/safety"
 )
 
 // handlers carries the loaded rule set shared by every tool call.

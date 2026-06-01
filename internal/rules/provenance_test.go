@@ -4,7 +4,7 @@ import (
 	"regexp"
 	"testing"
 
-	"github.com/gnana097/bumper/internal/rules"
+	"github.com/gnana997/bumper/internal/rules"
 )
 
 // TestProvenance enforces the provenance invariants across the whole built-in

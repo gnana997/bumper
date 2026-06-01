@@ -8,8 +8,8 @@ import (
 	"strings"
 	"text/tabwriter"
 
-	"github.com/gnana097/bumper/internal/engine"
-	"github.com/gnana097/bumper/internal/rules"
+	"github.com/gnana997/bumper/internal/engine"
+	"github.com/gnana997/bumper/internal/rules"
 )
 
 // Text writes a human-readable report.
@@ -224,7 +224,7 @@ func SARIF(w io.Writer, findings []engine.Finding, artifactURI string) error {
 		Runs: []sarifRun{{
 			Tool: sarifTool{Driver: sarifDriver{
 				Name:           "bumper",
-				InformationURI: "https://github.com/gnana097/bumper",
+				InformationURI: "https://github.com/gnana997/bumper",
 				Version:        Version,
 				Rules:          rules,
 			}},

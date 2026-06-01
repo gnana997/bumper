@@ -6,8 +6,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gnana097/bumper/internal/report"
-	"github.com/gnana097/bumper/internal/rules"
+	"github.com/gnana997/bumper/internal/report"
+	"github.com/gnana997/bumper/internal/rules"
 )
 
 func TestRuleDetail(t *testing.T) {

@@ -5,9 +5,9 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/gnana097/bumper/internal/engine"
-	"github.com/gnana097/bumper/internal/plan"
-	"github.com/gnana097/bumper/internal/rules"
+	"github.com/gnana997/bumper/internal/engine"
+	"github.com/gnana997/bumper/internal/plan"
+	"github.com/gnana997/bumper/internal/rules"
 )
 
 // evalFixture runs the full pipeline (parse -> normalize -> evaluate) against a

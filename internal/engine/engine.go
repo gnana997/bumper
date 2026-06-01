@@ -6,8 +6,8 @@ package engine
 import (
 	"sort"
 
-	"github.com/gnana097/bumper/internal/plan"
-	"github.com/gnana097/bumper/internal/rules"
+	"github.com/gnana997/bumper/internal/plan"
+	"github.com/gnana997/bumper/internal/rules"
 )
 
 // Finding is one triggered rule against one resource.

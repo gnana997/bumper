@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/gnana097/bumper/internal/engine"
-	"github.com/gnana097/bumper/internal/plan"
-	"github.com/gnana097/bumper/internal/report"
-	"github.com/gnana097/bumper/internal/rules"
+	"github.com/gnana997/bumper/internal/engine"
+	"github.com/gnana997/bumper/internal/plan"
+	"github.com/gnana997/bumper/internal/report"
+	"github.com/gnana997/bumper/internal/rules"
 )
 
 // DefaultMinSeverity is the threshold at or above which a finding blocks an

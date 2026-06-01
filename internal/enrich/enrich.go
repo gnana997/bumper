@@ -13,7 +13,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/gnana097/bumper/internal/engine"
+	"github.com/gnana997/bumper/internal/engine"
 )
 
 // CLI describes how to invoke a local AI CLI for a one-shot prompt.

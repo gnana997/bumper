@@ -7,8 +7,8 @@ import (
 
 	tea "github.com/charmbracelet/bubbletea"
 
-	"github.com/gnana097/bumper/internal/engine"
-	"github.com/gnana097/bumper/internal/rules"
+	"github.com/gnana997/bumper/internal/engine"
+	"github.com/gnana997/bumper/internal/rules"
 )
 
 func sample() []engine.Finding {

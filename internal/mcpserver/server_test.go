@@ -5,7 +5,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/gnana097/bumper/internal/rules"
+	"github.com/gnana997/bumper/internal/rules"
 )
 
 func testHandlers(t *testing.T) *handlers {

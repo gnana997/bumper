@@ -5,7 +5,7 @@ import (
 
 	tea "github.com/charmbracelet/bubbletea"
 
-	"github.com/gnana097/bumper/internal/setup"
+	"github.com/gnana997/bumper/internal/setup"
 )
 
 // The init wizard: an interactive, hazard-console front end for `bumper init`.
