@@ -211,6 +211,7 @@
           "name": "private-vm",
           "machine_type": "e2-medium",
           "can_ip_forward": false,
+          "metadata": { "block-project-ssh-keys": "true", "enable-oslogin": "true" },
           "network_interface": [
             {
               "network": "default",
@@ -263,6 +264,9 @@
           "enable_shielded_nodes": true,
           "private_cluster_config": [
             { "enable_private_nodes": true, "enable_private_endpoint": true }
+          ],
+          "master_authorized_networks_config": [
+            { "cidr_blocks": [ { "cidr_block": "10.0.0.0/8", "display_name": "corp" } ] }
           ],
           "network_policy": [
             { "enabled": true }

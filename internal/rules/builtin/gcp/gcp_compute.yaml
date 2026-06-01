@@ -50,3 +50,87 @@
   fix: "Attach a dedicated least-privilege service account and scope it to only the APIs the VM needs."
   refs:
     - "https://cloud.google.com/compute/docs/access/service-accounts#default_service_account"
+
+# --- hardening additions ---
+# Compute Engine instance hardening. Two important schema quirks drive the CEL:
+#  * metadata is a MAP of string->string; values are the STRINGS "true"/"false"
+#    (never booleans), and may be absent. Always guard:
+#       has(after.metadata) && "<key>" in after.metadata before reading.
+#  * shielded_instance_config is an HCL block => an ARRAY of one object in plan
+#    JSON; traverse with .exists(), never [0].
+
+# Shielded VM Secure Boot ensures only signed/authentic boot software runs. We
+# only flag instances that DECLARE a shielded_instance_config block but leave
+# enable_secure_boot off — flagging every instance that omits the block entirely
+# would be too noisy (medium / defense-in-depth).
+- id: GCP_COMPUTE_SHIELDED_SECURE_BOOT_OFF
+  source: trivy
+  avd: AVD-GCP-0067
+  severity: medium
+  resource: google_compute_instance
+  on: [create, update]
+  when: |
+    has(after.shielded_instance_config) && after.shielded_instance_config.exists(sic,
+      !has(sic.enable_secure_boot) || sic.enable_secure_boot != true)
+  title: "Compute instance configures Shielded VM but leaves Secure Boot disabled"
+  fix: "Set enable_secure_boot = true inside the shielded_instance_config block."
+  refs:
+    - "https://avd.aquasec.com/misconfig/google/compute/avd-gcp-0067/"
+    - "https://cloud.google.com/compute/shielded-vm/docs/modifying-shielded-vm"
+
+# Serial-port access bypasses normal network controls and can expose an
+# interactive console publicly. The metadata value is a STRING; GCP treats both
+# "true" and "1" as enabled (medium).
+- id: GCP_COMPUTE_SERIAL_PORT_ENABLED
+  source: trivy
+  avd: AVD-GCP-0032
+  severity: medium
+  resource: google_compute_instance
+  on: [create, update]
+  when: |
+    has(after.metadata) && "serial-port-enable" in after.metadata &&
+      (after.metadata["serial-port-enable"] == "true" ||
+       after.metadata["serial-port-enable"] == "1")
+  title: "Compute instance enables interactive serial-port access"
+  fix: "Remove the serial-port-enable metadata key or set it to \"false\"; use IAP/SSH instead."
+  refs:
+    - "https://avd.aquasec.com/misconfig/google/compute/avd-gcp-0032/"
+    - "https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console"
+
+# OS Login ties SSH access to IAM, so revoking a user's IAM access revokes their
+# SSH access automatically. We fire only on an EXPLICIT "false" (an explicit
+# instance-level override that disables it), not on mere absence (medium).
+- id: GCP_COMPUTE_OS_LOGIN_DISABLED
+  source: trivy
+  avd: AVD-GCP-0042
+  severity: medium
+  resource: google_compute_instance
+  on: [create, update]
+  when: |
+    has(after.metadata) && "enable-oslogin" in after.metadata &&
+      after.metadata["enable-oslogin"] == "false"
+  title: "Compute instance explicitly disables OS Login (enable-oslogin = false)"
+  fix: "Set the enable-oslogin metadata value to \"true\" (or remove the override) so SSH access is governed by IAM."
+  refs:
+    - "https://avd.aquasec.com/misconfig/google/compute/avd-gcp-0042/"
+    - "https://cloud.google.com/compute/docs/oslogin/set-up-oslogin"
+
+# Project-wide SSH keys let a single shared key pair reach every instance in the
+# project. Blocking them is best-practice hygiene. This is ABSENCE-based: it
+# fires unless block-project-ssh-keys is explicitly "true", so it is advisory
+# (low) to limit noise.
+- id: GCP_COMPUTE_PROJECT_SSH_KEYS_ALLOWED
+  source: trivy
+  avd: AVD-GCP-0030
+  severity: low
+  resource: google_compute_instance
+  on: [create, update]
+  when: |
+    !has(after.metadata) ||
+      !("block-project-ssh-keys" in after.metadata) ||
+      after.metadata["block-project-ssh-keys"] != "true"
+  title: "Compute instance does not block project-wide SSH keys"
+  fix: "Add metadata block-project-ssh-keys = \"true\" so the VM ignores shared project-wide SSH keys."
+  refs:
+    - "https://avd.aquasec.com/misconfig/google/compute/avd-gcp-0030/"
+    - "https://cloud.google.com/compute/docs/connect/restrict-ssh-keys"

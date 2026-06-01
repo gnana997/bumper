@@ -63,3 +63,93 @@
   fix: "Enable a network policy provider (network_policy.enabled = true) to restrict pod traffic."
   refs:
     - "https://cloud.google.com/kubernetes-engine/docs/how-to/network-policy"
+
+# --- hardening additions ---
+# GKE node/cluster hardening. node_config is a block (array in plan JSON) and is
+# present on BOTH google_container_cluster (the default node pool's config) and
+# google_container_node_pool. Rules that read node_config are therefore type-less
+# over both types. metadata is a MAP of string->string (values are "true"/"false"
+# strings). workload_metadata_config is a block (array) nested inside node_config.
+# master_authorized_networks_config is a cluster-only block.
+
+# Master authorized networks restrict control-plane access to a fixed set of CIDR
+# ranges. When the block is entirely absent the cluster leaves the master open to
+# any source. This is an absence-based, advisory control (medium) — we only fire
+# when the block is not configured at all.
+- id: GCP_GKE_NO_MASTER_AUTHORIZED_NETWORKS
+  source: trivy
+  avd: AVD-GCP-0061
+  severity: medium
+  resource: google_container_cluster
+  on: [create, update]
+  when: |
+    !has(after.master_authorized_networks_config)
+  title: "GKE cluster has no master authorized networks configured"
+  fix: "Add a master_authorized_networks_config block restricting control-plane access to known CIDR ranges."
+  refs:
+    - "https://avd.aquasec.com/misconfig/google/gke/avd-gcp-0061/"
+    - "https://cloud.google.com/kubernetes-engine/docs/how-to/authorized-networks"
+
+# The legacy GCE metadata endpoints (v0.1 / v1beta1) do not enforce query headers
+# and can be used from inside a pod to extract node credentials. The provider
+# renders disable-legacy-endpoints in node_config.metadata as a STRING. We fire
+# only on the explicit insecure value "false". Type-less over cluster + node pool.
+- id: GCP_GKE_LEGACY_METADATA_ENDPOINTS
+  source: trivy
+  avd: AVD-GCP-0048
+  provider: gcp
+  severity: high
+  on: [create, update]
+  when: |
+    type in ["google_container_cluster", "google_container_node_pool"] &&
+    has(after.node_config) && after.node_config.exists(nc,
+      has(nc.metadata) && "disable-legacy-endpoints" in nc.metadata &&
+      nc.metadata["disable-legacy-endpoints"] == "false")
+  title: "GKE node config enables legacy Compute Engine metadata endpoints"
+  fix: "Set node_config.metadata = { \"disable-legacy-endpoints\" = \"true\" } (the secure default)."
+  refs:
+    - "https://avd.aquasec.com/misconfig/google/gke/avd-gcp-0048/"
+    - "https://cloud.google.com/kubernetes-engine/docs/how-to/protecting-cluster-metadata"
+
+# Metadata concealment / GKE metadata server protects the cluster metadata from
+# user pods. workload_metadata_config.mode should be GKE_METADATA. We ONLY fire
+# when the block is explicitly present with a non-GKE_METADATA mode (e.g.
+# GCE_METADATA) — the field is frequently computed/unknown, so absence must stay
+# silent to avoid noise. Type-less over cluster + node pool. Advisory (medium).
+- id: GCP_GKE_METADATA_CONCEALMENT_OFF
+  source: trivy
+  avd: AVD-GCP-0057
+  provider: gcp
+  severity: medium
+  on: [create, update]
+  when: |
+    type in ["google_container_cluster", "google_container_node_pool"] &&
+    has(after.node_config) && after.node_config.exists(nc,
+      has(nc.workload_metadata_config) && nc.workload_metadata_config.exists(w,
+        has(w.mode) && w.mode != "GKE_METADATA"))
+  title: "GKE node config disables metadata concealment (workload_metadata_config.mode is not GKE_METADATA)"
+  fix: "Set node_config.workload_metadata_config.mode = \"GKE_METADATA\" and use Workload Identity."
+  refs:
+    - "https://avd.aquasec.com/misconfig/google/gke/avd-gcp-0057/"
+    - "https://cloud.google.com/kubernetes-engine/docs/how-to/protecting-cluster-metadata"
+
+# A node pool running as the Compute Engine default service account inherits broad
+# project permissions; a compromised node/pod then has that wide access. Fire when
+# node_config.service_account is absent (defaults to the compute SA) or explicitly
+# "default". Type-less over cluster + node pool. Advisory (medium).
+- id: GCP_GKE_NODE_DEFAULT_SA
+  source: trivy
+  avd: AVD-GCP-0050
+  provider: gcp
+  severity: medium
+  on: [create, update]
+  when: |
+    type in ["google_container_cluster", "google_container_node_pool"] &&
+    has(after.node_config) && after.node_config.exists(nc,
+      !has(nc.service_account) || nc.service_account == null ||
+      nc.service_account == "default")
+  title: "GKE node pool runs as the default Compute Engine service account"
+  fix: "Set node_config.service_account to a dedicated, minimally privileged service account email."
+  refs:
+    - "https://avd.aquasec.com/misconfig/google/gke/avd-gcp-0050/"
+    - "https://cloud.google.com/kubernetes-engine/docs/how-to/service-accounts"

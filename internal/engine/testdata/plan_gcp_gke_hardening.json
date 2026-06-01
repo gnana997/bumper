@@ -1,0 +1,201 @@
+{
+  "format_version": "1.2",
+  "terraform_version": "1.9.0",
+  "resource_changes": [
+    {
+      "address": "google_container_cluster.no_master_networks",
+      "mode": "managed",
+      "type": "google_container_cluster",
+      "name": "no_master_networks",
+      "provider_name": "registry.terraform.io/hashicorp/google",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": {
+          "name": "no-master-networks",
+          "location": "us-central1",
+          "node_config": [
+            {
+              "service_account": "node-sa@proj.iam.gserviceaccount.com",
+              "metadata": { "disable-legacy-endpoints": "true" },
+              "workload_metadata_config": [
+                { "mode": "GKE_METADATA" }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "address": "google_container_cluster.hardened",
+      "mode": "managed",
+      "type": "google_container_cluster",
+      "name": "hardened",
+      "provider_name": "registry.terraform.io/hashicorp/google",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": {
+          "name": "hardened",
+          "location": "us-central1",
+          "master_authorized_networks_config": [
+            {
+              "cidr_blocks": [
+                { "cidr_block": "10.0.0.0/8", "display_name": "corp" }
+              ]
+            }
+          ],
+          "node_config": [
+            {
+              "service_account": "node-sa@proj.iam.gserviceaccount.com",
+              "metadata": { "disable-legacy-endpoints": "true" },
+              "workload_metadata_config": [
+                { "mode": "GKE_METADATA" }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "address": "google_container_cluster.legacy_metadata",
+      "mode": "managed",
+      "type": "google_container_cluster",
+      "name": "legacy_metadata",
+      "provider_name": "registry.terraform.io/hashicorp/google",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": {
+          "name": "legacy-metadata",
+          "location": "us-central1",
+          "master_authorized_networks_config": [
+            { "cidr_blocks": [ { "cidr_block": "10.0.0.0/8" } ] }
+          ],
+          "node_config": [
+            {
+              "service_account": "node-sa@proj.iam.gserviceaccount.com",
+              "metadata": { "disable-legacy-endpoints": "false" },
+              "workload_metadata_config": [
+                { "mode": "GKE_METADATA" }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "address": "google_container_node_pool.concealment_off",
+      "mode": "managed",
+      "type": "google_container_node_pool",
+      "name": "concealment_off",
+      "provider_name": "registry.terraform.io/hashicorp/google",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": {
+          "name": "concealment-off",
+          "cluster": "hardened",
+          "node_config": [
+            {
+              "service_account": "node-sa@proj.iam.gserviceaccount.com",
+              "metadata": { "disable-legacy-endpoints": "true" },
+              "workload_metadata_config": [
+                { "mode": "GCE_METADATA" }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "address": "google_container_node_pool.default_sa",
+      "mode": "managed",
+      "type": "google_container_node_pool",
+      "name": "default_sa",
+      "provider_name": "registry.terraform.io/hashicorp/google",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": {
+          "name": "default-sa",
+          "cluster": "hardened",
+          "node_config": [
+            {
+              "service_account": "default",
+              "metadata": { "disable-legacy-endpoints": "true" },
+              "workload_metadata_config": [
+                { "mode": "GKE_METADATA" }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "address": "google_container_node_pool.no_sa",
+      "mode": "managed",
+      "type": "google_container_node_pool",
+      "name": "no_sa",
+      "provider_name": "registry.terraform.io/hashicorp/google",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": {
+          "name": "no-sa",
+          "cluster": "hardened",
+          "node_config": [
+            {
+              "metadata": { "disable-legacy-endpoints": "true" }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "address": "google_container_node_pool.hardened",
+      "mode": "managed",
+      "type": "google_container_node_pool",
+      "name": "hardened",
+      "provider_name": "registry.terraform.io/hashicorp/google",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": {
+          "name": "hardened-pool",
+          "cluster": "hardened",
+          "node_config": [
+            {
+              "service_account": "node-sa@proj.iam.gserviceaccount.com",
+              "metadata": { "disable-legacy-endpoints": "true" },
+              "workload_metadata_config": [
+                { "mode": "GKE_METADATA" }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "address": "google_container_node_pool.no_wmc",
+      "mode": "managed",
+      "type": "google_container_node_pool",
+      "name": "no_wmc",
+      "provider_name": "registry.terraform.io/hashicorp/google",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": {
+          "name": "no-wmc-pool",
+          "cluster": "hardened",
+          "node_config": [
+            {
+              "service_account": "node-sa@proj.iam.gserviceaccount.com",
+              "metadata": { "disable-legacy-endpoints": "true" }
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

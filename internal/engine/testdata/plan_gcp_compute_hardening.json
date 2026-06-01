@@ -1,0 +1,207 @@
+{
+  "format_version": "1.2",
+  "terraform_version": "1.9.0",
+  "resource_changes": [
+    {
+      "address": "google_compute_instance.secureboot_off",
+      "mode": "managed",
+      "type": "google_compute_instance",
+      "name": "secureboot_off",
+      "provider_name": "registry.terraform.io/hashicorp/google",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": {
+          "name": "secureboot-off",
+          "machine_type": "e2-medium",
+          "can_ip_forward": false,
+          "metadata": {
+            "block-project-ssh-keys": "true"
+          },
+          "shielded_instance_config": [
+            {
+              "enable_secure_boot": false,
+              "enable_vtpm": true,
+              "enable_integrity_monitoring": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "address": "google_compute_instance.serial_on",
+      "mode": "managed",
+      "type": "google_compute_instance",
+      "name": "serial_on",
+      "provider_name": "registry.terraform.io/hashicorp/google",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": {
+          "name": "serial-on",
+          "machine_type": "e2-small",
+          "can_ip_forward": false,
+          "metadata": {
+            "serial-port-enable": "true",
+            "block-project-ssh-keys": "true"
+          }
+        }
+      }
+    },
+    {
+      "address": "google_compute_instance.serial_on_numeric",
+      "mode": "managed",
+      "type": "google_compute_instance",
+      "name": "serial_on_numeric",
+      "provider_name": "registry.terraform.io/hashicorp/google",
+      "change": {
+        "actions": ["update"],
+        "before": {
+          "name": "serial-on-numeric",
+          "metadata": {}
+        },
+        "after": {
+          "name": "serial-on-numeric",
+          "machine_type": "e2-small",
+          "can_ip_forward": false,
+          "metadata": {
+            "serial-port-enable": "1",
+            "block-project-ssh-keys": "true"
+          }
+        }
+      }
+    },
+    {
+      "address": "google_compute_instance.oslogin_off",
+      "mode": "managed",
+      "type": "google_compute_instance",
+      "name": "oslogin_off",
+      "provider_name": "registry.terraform.io/hashicorp/google",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": {
+          "name": "oslogin-off",
+          "machine_type": "e2-medium",
+          "can_ip_forward": false,
+          "metadata": {
+            "enable-oslogin": "false",
+            "block-project-ssh-keys": "true"
+          }
+        }
+      }
+    },
+    {
+      "address": "google_compute_instance.no_block_keys",
+      "mode": "managed",
+      "type": "google_compute_instance",
+      "name": "no_block_keys",
+      "provider_name": "registry.terraform.io/hashicorp/google",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": {
+          "name": "no-block-keys",
+          "machine_type": "e2-medium",
+          "can_ip_forward": false,
+          "metadata": {
+            "enable-oslogin": "true"
+          }
+        }
+      }
+    },
+    {
+      "address": "google_compute_instance.no_metadata",
+      "mode": "managed",
+      "type": "google_compute_instance",
+      "name": "no_metadata",
+      "provider_name": "registry.terraform.io/hashicorp/google",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": {
+          "name": "no-metadata",
+          "machine_type": "e2-medium",
+          "can_ip_forward": false
+        }
+      }
+    },
+    {
+      "address": "google_compute_instance.secureboot_on",
+      "mode": "managed",
+      "type": "google_compute_instance",
+      "name": "secureboot_on",
+      "provider_name": "registry.terraform.io/hashicorp/google",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": {
+          "name": "secureboot-on",
+          "machine_type": "e2-medium",
+          "can_ip_forward": false,
+          "metadata": {
+            "serial-port-enable": "false",
+            "enable-oslogin": "true",
+            "block-project-ssh-keys": "true"
+          },
+          "shielded_instance_config": [
+            {
+              "enable_secure_boot": true,
+              "enable_vtpm": true,
+              "enable_integrity_monitoring": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "address": "google_compute_instance.no_shielded_block",
+      "mode": "managed",
+      "type": "google_compute_instance",
+      "name": "no_shielded_block",
+      "provider_name": "registry.terraform.io/hashicorp/google",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": {
+          "name": "no-shielded-block",
+          "machine_type": "e2-medium",
+          "can_ip_forward": false,
+          "metadata": {
+            "serial-port-enable": "false",
+            "enable-oslogin": "true",
+            "block-project-ssh-keys": "true"
+          }
+        }
+      }
+    },
+    {
+      "address": "google_compute_instance.hardened",
+      "mode": "managed",
+      "type": "google_compute_instance",
+      "name": "hardened",
+      "provider_name": "registry.terraform.io/hashicorp/google",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": {
+          "name": "hardened",
+          "machine_type": "e2-medium",
+          "can_ip_forward": false,
+          "metadata": {
+            "serial-port-enable": "false",
+            "enable-oslogin": "true",
+            "block-project-ssh-keys": "true"
+          },
+          "shielded_instance_config": [
+            {
+              "enable_secure_boot": true,
+              "enable_vtpm": true,
+              "enable_integrity_monitoring": true
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

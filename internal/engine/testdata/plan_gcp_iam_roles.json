@@ -1,0 +1,172 @@
+{
+  "format_version": "1.2",
+  "terraform_version": "1.9.0",
+  "resource_changes": [
+    {
+      "address": "google_project_iam_member.owner",
+      "mode": "managed",
+      "type": "google_project_iam_member",
+      "name": "owner",
+      "provider_name": "registry.terraform.io/hashicorp/google",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": {
+          "project": "prod-app-001",
+          "role": "roles/owner",
+          "member": "user:ops@example.com"
+        }
+      }
+    },
+    {
+      "address": "google_organization_iam_binding.editor",
+      "mode": "managed",
+      "type": "google_organization_iam_binding",
+      "name": "editor",
+      "provider_name": "registry.terraform.io/hashicorp/google",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": {
+          "org_id": "123456789012",
+          "role": "roles/editor",
+          "members": ["group:platform@example.com"]
+        }
+      }
+    },
+    {
+      "address": "google_service_account_key.deploy",
+      "mode": "managed",
+      "type": "google_service_account_key",
+      "name": "deploy",
+      "provider_name": "registry.terraform.io/hashicorp/google",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": {
+          "service_account_id": "projects/prod-app-001/serviceAccounts/ci@prod-app-001.iam.gserviceaccount.com",
+          "key_algorithm": "KEY_ALG_RSA_2048",
+          "public_key_type": "TYPE_X509_PEM_FILE"
+        }
+      }
+    },
+    {
+      "address": "google_folder_iam_member.tokencreator",
+      "mode": "managed",
+      "type": "google_folder_iam_member",
+      "name": "tokencreator",
+      "provider_name": "registry.terraform.io/hashicorp/google",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": {
+          "folder": "folders/987654321098",
+          "role": "roles/iam.serviceAccountTokenCreator",
+          "member": "serviceAccount:automation@prod-app-001.iam.gserviceaccount.com"
+        }
+      }
+    },
+    {
+      "address": "google_project_iam_binding.sa_user",
+      "mode": "managed",
+      "type": "google_project_iam_binding",
+      "name": "sa_user",
+      "provider_name": "registry.terraform.io/hashicorp/google",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": {
+          "project": "prod-app-001",
+          "role": "roles/iam.serviceAccountUser",
+          "members": ["serviceAccount:runner@prod-app-001.iam.gserviceaccount.com"]
+        }
+      }
+    },
+    {
+      "address": "google_project_iam_member.default_compute",
+      "mode": "managed",
+      "type": "google_project_iam_member",
+      "name": "default_compute",
+      "provider_name": "registry.terraform.io/hashicorp/google",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": {
+          "project": "prod-app-001",
+          "role": "roles/storage.objectViewer",
+          "member": "serviceAccount:123456789012-compute@developer.gserviceaccount.com"
+        }
+      }
+    },
+    {
+      "address": "google_folder_iam_binding.default_appspot",
+      "mode": "managed",
+      "type": "google_folder_iam_binding",
+      "name": "default_appspot",
+      "provider_name": "registry.terraform.io/hashicorp/google",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": {
+          "folder": "folders/987654321098",
+          "role": "roles/logging.logWriter",
+          "members": [
+            "serviceAccount:dedicated@prod-app-001.iam.gserviceaccount.com",
+            "serviceAccount:prod-app-001@appspot.gserviceaccount.com"
+          ]
+        }
+      }
+    },
+    {
+      "address": "google_project_iam_member.viewer",
+      "mode": "managed",
+      "type": "google_project_iam_member",
+      "name": "viewer",
+      "provider_name": "registry.terraform.io/hashicorp/google",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": {
+          "project": "prod-app-001",
+          "role": "roles/viewer",
+          "member": "user:auditor@example.com"
+        }
+      }
+    },
+    {
+      "address": "google_project_iam_member.scoped",
+      "mode": "managed",
+      "type": "google_project_iam_member",
+      "name": "scoped",
+      "provider_name": "registry.terraform.io/hashicorp/google",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": {
+          "project": "prod-app-001",
+          "role": "roles/storage.objectViewer",
+          "member": "serviceAccount:app@prod-app-001.iam.gserviceaccount.com"
+        }
+      }
+    },
+    {
+      "address": "google_project_iam_binding.normal_users",
+      "mode": "managed",
+      "type": "google_project_iam_binding",
+      "name": "normal_users",
+      "provider_name": "registry.terraform.io/hashicorp/google",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": {
+          "project": "prod-app-001",
+          "role": "roles/pubsub.subscriber",
+          "members": [
+            "user:dev@example.com",
+            "serviceAccount:worker@prod-app-001.iam.gserviceaccount.com"
+          ]
+        }
+      }
+    }
+  ]
+}

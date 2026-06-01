@@ -10,3 +10,114 @@
     )
   title: "IAM binding grants public access (allUsers / allAuthenticatedUsers)"
   fix: "Remove allUsers/allAuthenticatedUsers; grant to specific principals."
+
+# --- hardening additions ---
+# GCP IAM hardening rules. These operate on the IAM "association" resources
+# (*_iam_member / *_iam_binding) at the project / folder / organization level,
+# plus user-managed service-account keys. In terraform plan JSON, *_iam_member
+# renders `member` as a STRING and *_iam_binding renders `members` as a LIST of
+# strings; `role` is a STRING on both. We always guard reads with has() and
+# never index blocks positionally.
+#
+# Note: GCP_IAM_PUBLIC_MEMBER already covers allUsers/allAuthenticatedUsers on
+# any google_*_iam_* resource, so none of these duplicate public-access intent.
+
+# Primitive ("basic") roles roles/owner and roles/editor grant sweeping,
+# project-wide mutate/admin power and are the canonical least-privilege
+# violation. Granting them at project/folder/org scope is broad and rarely
+# justified, so this is high. Type-less: matches the member+binding variants
+# across all three scopes. roles/viewer is intentionally NOT included (read-only
+# primitive is far less dangerous and would be noisy).
+- id: GCP_IAM_PRIMITIVE_ROLE
+  source: custom
+  provider: gcp
+  severity: high
+  on: [create, update]
+  when: |
+    type in [
+      "google_project_iam_member", "google_project_iam_binding",
+      "google_folder_iam_member", "google_folder_iam_binding",
+      "google_organization_iam_member", "google_organization_iam_binding"
+    ] &&
+    has(after.role) && (after.role == "roles/owner" || after.role == "roles/editor")
+  title: "Primitive role (roles/owner or roles/editor) granted at project/folder/org scope"
+  fix: "Replace the basic role with a predefined or custom role scoped to only the permissions the principal needs."
+  refs:
+    - "https://cloud.google.com/iam/docs/understanding-roles#basic"
+    - "https://cloud.google.com/iam/docs/using-iam-securely#least_privilege"
+
+# A user-managed service-account key is a long-lived, exportable credential and
+# the single most common GCP credential-leak vector. There is essentially no
+# secure variant of this resource (the secure posture is to not create one and
+# use workload identity / short-lived tokens instead), so the predicate matches
+# every instance of the resource. high.
+- id: GCP_SERVICE_ACCOUNT_KEY
+  source: custom
+  severity: high
+  resource: google_service_account_key
+  on: [create]
+  when: |
+    type == "google_service_account_key"
+  title: "User-managed service account key created (long-lived exportable credential)"
+  fix: "Avoid user-managed keys. Use Workload Identity Federation or short-lived tokens (serviceAccountTokenCreator) instead; if a key is unavoidable, rotate and store it in a secret manager."
+  refs:
+    - "https://cloud.google.com/iam/docs/best-practices-for-managing-service-account-keys"
+    - "https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/google_service_account_key"
+
+# Impersonation / token-minting roles let a principal act AS service accounts.
+# Granted at project/folder/org scope they become a privilege-escalation lever
+# across every SA in that scope. Less universally wrong than primitive roles
+# (these are legitimately needed for some workflows), so medium — surface it,
+# don't block by default. Distinct from GCP_IAM_PRIMITIVE_ROLE by role set.
+- id: GCP_IAM_SA_IMPERSONATION_ROLE
+  source: custom
+  provider: gcp
+  severity: medium
+  on: [create, update]
+  when: |
+    type in [
+      "google_project_iam_member", "google_project_iam_binding",
+      "google_folder_iam_member", "google_folder_iam_binding",
+      "google_organization_iam_member", "google_organization_iam_binding"
+    ] &&
+    has(after.role) && after.role in [
+      "roles/iam.serviceAccountTokenCreator",
+      "roles/iam.serviceAccountUser",
+      "roles/iam.serviceAccountKeyAdmin"
+    ]
+  title: "Service-account impersonation/escalation role granted at project/folder/org scope"
+  fix: "Grant impersonation roles on the specific target service account (resource-scoped binding), not at project/folder/org level."
+  refs:
+    - "https://cloud.google.com/iam/docs/service-account-permissions"
+    - "https://cloud.google.com/iam/docs/best-practices-service-accounts#impersonation"
+
+# Default service accounts (the Compute Engine and App Engine defaults) start
+# with broad Editor by default and are shared/automation-owned; granting them
+# additional roles compounds blast radius. Trivy splits this intent across
+# AVD-GCP-0004 (folder) / 0006 (project) / 0008 (org), so there is no single
+# clean AVD for the combined type-less rule -> source: custom. Handles both the
+# member (string) and members (list) shapes. medium (defense-in-depth).
+- id: GCP_IAM_DEFAULT_SA_GRANT
+  source: custom
+  provider: gcp
+  severity: medium
+  on: [create, update]
+  when: |
+    type in [
+      "google_project_iam_member", "google_project_iam_binding",
+      "google_folder_iam_member", "google_folder_iam_binding",
+      "google_organization_iam_member", "google_organization_iam_binding"
+    ] &&
+    (
+      (has(after.member) &&
+        (after.member.endsWith("-compute@developer.gserviceaccount.com") ||
+         after.member.endsWith("@appspot.gserviceaccount.com"))) ||
+      (has(after.members) && after.members.exists(m,
+        m.endsWith("-compute@developer.gserviceaccount.com") ||
+        m.endsWith("@appspot.gserviceaccount.com")))
+    )
+  title: "IAM role granted to a default service account (Compute/App Engine default)"
+  fix: "Create a dedicated least-privilege service account (google_service_account) and grant the role to it instead of the default SA."
+  refs:
+    - "https://cloud.google.com/iam/docs/best-practices-service-accounts#default-service-accounts"
+    - "https://avd.aquasec.com/misconfig/google/iam/avd-gcp-0006/"
