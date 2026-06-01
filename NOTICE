@@ -14,6 +14,27 @@ against the Terraform plan-JSON model; the original source is credited here.
   Licensed under the Apache License, Version 2.0.
   Used as a coverage cross-reference.
 
+bumper also embeds an ADVISORY catalog (internal/catalog/) — knowledge-only
+best-practice metadata (id, severity, title, resource type, remediation,
+references), normalized from the projects below. These entries are not executed
+against a plan; they power `bumper search` / the search_rules MCP tool.
+
+- trivy-checks (Aqua Security) — https://github.com/aquasecurity/trivy-checks
+  Apache-2.0. (see above)
+
+- Checkov (Prisma Cloud / Bridgecrew) — https://github.com/bridgecrewio/checkov
+  Apache-2.0. (see above)
+
+- KICS (Checkmarx) — https://github.com/Checkmarx/kics
+  Licensed under the Apache License, Version 2.0.
+  Query metadata (severity, category, description, CWE) normalized for the
+  advisory catalog.
+
+- Prowler (Prowler Inc.) — https://github.com/prowler-cloud/prowler
+  Licensed under the Apache License, Version 2.0.
+  Check metadata (severity, risk, and Terraform/CLI remediation code, with
+  <placeholder> tokens) normalized for the advisory catalog.
+
 A copy of the Apache License, Version 2.0 is available at:
   https://www.apache.org/licenses/LICENSE-2.0
 

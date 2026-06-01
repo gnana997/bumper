@@ -14,6 +14,7 @@ import (
 
 	"github.com/modelcontextprotocol/go-sdk/mcp"
 
+	"github.com/gnana997/bumper/internal/catalog"
 	"github.com/gnana997/bumper/internal/engine"
 	"github.com/gnana997/bumper/internal/plan"
 	"github.com/gnana997/bumper/internal/report"
@@ -22,8 +23,12 @@ import (
 	"github.com/gnana997/bumper/internal/search"
 )
 
-// handlers carries the loaded rule set shared by every tool call.
-type handlers struct{ set *rules.Set }
+// handlers carries the loaded enforced rule set and advisory catalog shared by
+// every tool call.
+type handlers struct {
+	set *rules.Set
+	idx *search.Index
+}
 
 // NewServer builds an MCP server with bumper's tools registered. rulesDir may be
 // "" (built-in rules only).
@@ -32,7 +37,11 @@ func NewServer(rulesDir string) (*mcp.Server, error) {
 	if err != nil {
 		return nil, err
 	}
-	h := &handlers{set: set}
+	cat, err := catalog.Load()
+	if err != nil {
+		return nil, err
+	}
+	h := &handlers{set: set, idx: search.New(set, cat)}
 
 	s := mcp.NewServer(&mcp.Implementation{
 		Name:    "bumper",
@@ -110,15 +119,17 @@ func (h *handlers) scanPlan(ctx context.Context, _ *mcp.CallToolRequest, in Scan
 
 // ---- search_rules ----------------------------------------------------------
 
-const searchDesc = `Search bumper's Terraform security rules by keyword, ` +
+const searchDesc = `Search bumper's Terraform security knowledge by keyword, ` +
 	`resource type, cloud, or severity. CALL THIS BEFORE WRITING OR EDITING ` +
-	`Terraform for a resource: it returns the security requirements bumper ` +
-	`enforces (severity, what's wrong, and the fix) so you can bake them in up ` +
-	`front and pass the gate, instead of being blocked after. Examples: query ` +
-	`"public storage" or "open ssh"; or resource ` +
-	`"google_sql_database_instance" / "aws_s3_bucket" / "azurerm_storage_account" ` +
-	`to get every rule for that type. Results are ranked by relevance. After you ` +
-	`generate the plan, verify with scan_plan.`
+	`Terraform for a resource: it returns the security requirements to bake in up ` +
+	`front so you pass the gate instead of being blocked after. Returns two ` +
+	`groups: "results" are bumper's ENFORCED rules (these actually fire on your ` +
+	`plan — treat as must-fix), and "advisory" are additional best-practice ` +
+	`checks from Trivy/Checkov/KICS/Prowler (knowledge only, not enforced — ` +
+	`severity may be empty and the same intent can appear from several sources). ` +
+	`Examples: query "public storage" or "open ssh"; or resource ` +
+	`"google_sql_database_instance" / "aws_s3_bucket" / "azurerm_storage_account". ` +
+	`After you generate the plan, verify with scan_plan.`
 
 // SearchRulesInput is a search query. Give a free-text query, a resource type,
 // or both, optionally narrowed by provider/severity.
@@ -144,23 +155,44 @@ type SearchResult struct {
 	Enforced bool     `json:"enforced" jsonschema:"True when bumper executes this rule against a plan (always true today). Advisory-only catalog entries would be false."`
 }
 
-// SearchRulesOutput is the ranked result set.
+// AdvisoryResult is one entry from the advisory catalog (knowledge only, not
+// enforced). Severity may be empty (Checkov ships none); the same intent can
+// appear from multiple sources.
+type AdvisoryResult struct {
+	Source       string   `json:"source" jsonschema:"Which corpus this came from: trivy|checkov|kics|prowler."`
+	SourceID     string   `json:"source_id"`
+	Provider     string   `json:"provider,omitempty"`
+	Resources    []string `json:"resources,omitempty"`
+	Severity     string   `json:"severity,omitempty" jsonschema:"May be empty when the source provides none."`
+	Title        string   `json:"title"`
+	Remediation  string   `json:"remediation,omitempty"`
+	FixTerraform string   `json:"fix_terraform,omitempty" jsonschema:"Sample Terraform for the fix (Prowler only); placeholders use <...>."`
+	Refs         []string `json:"refs,omitempty"`
+	Enforced     bool     `json:"enforced" jsonschema:"Always false — advisory knowledge, not executed against your plan."`
+}
+
+// SearchRulesOutput is the ranked result set: enforced rules first (must-fix),
+// then advisory best-practices.
 type SearchRulesOutput struct {
-	Results []SearchResult `json:"results"`
-	Count   int            `json:"count"`
+	Results       []SearchResult   `json:"results" jsonschema:"Enforced rules — these fire on your plan."`
+	Count         int              `json:"count"`
+	Advisory      []AdvisoryResult `json:"advisory" jsonschema:"Additional best-practice checks (knowledge only, not enforced)."`
+	AdvisoryCount int              `json:"advisory_count"`
 }
 
 func (h *handlers) searchRules(ctx context.Context, _ *mcp.CallToolRequest, in SearchRulesInput) (*mcp.CallToolResult, SearchRulesOutput, error) {
-	hits := search.Rules(h.set, search.Query{
+	hits := h.idx.Search(search.Query{
 		Text:     in.Query,
 		Resource: in.Resource,
 		Provider: in.Provider,
 		Severity: in.Severity,
 		Limit:    in.Limit,
 	})
-	out := SearchRulesOutput{Results: []SearchResult{}}
-	for _, hit := range hits {
-		r := hit.Rule
+	enforced, advisory := search.Split(hits)
+
+	out := SearchRulesOutput{Results: []SearchResult{}, Advisory: []AdvisoryResult{}}
+	for _, hit := range enforced {
+		r := hit.Doc.Rule
 		out.Results = append(out.Results, SearchResult{
 			ID:       r.ID,
 			Severity: r.Severity,
@@ -171,10 +203,27 @@ func (h *handlers) searchRules(ctx context.Context, _ *mcp.CallToolRequest, in S
 			Refs:     r.Refs,
 			Source:   r.Source,
 			AVD:      r.AVD,
-			Enforced: hit.Enforced,
+			Enforced: true,
 		})
 	}
 	out.Count = len(out.Results)
+
+	for _, hit := range advisory {
+		e := hit.Doc.Entry
+		out.Advisory = append(out.Advisory, AdvisoryResult{
+			Source:       e.Source,
+			SourceID:     e.SourceID,
+			Provider:     e.Provider,
+			Resources:    e.Resources,
+			Severity:     e.Severity,
+			Title:        e.Title,
+			Remediation:  e.Remediation,
+			FixTerraform: e.FixTerraform,
+			Refs:         e.Refs,
+			Enforced:     false,
+		})
+	}
+	out.AdvisoryCount = len(out.Advisory)
 	return nil, out, nil
 }
 

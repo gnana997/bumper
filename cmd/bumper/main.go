@@ -8,6 +8,7 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
 	"flag"
 	"fmt"
@@ -20,6 +21,7 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/gnana997/bumper/internal/catalog"
 	"github.com/gnana997/bumper/internal/engine"
 	"github.com/gnana997/bumper/internal/enrich"
 	"github.com/gnana997/bumper/internal/mcpserver"
@@ -215,14 +217,27 @@ func cmdSearch(args []string) int {
 	severity := fs.String("severity", "", "filter by severity: critical|high|medium|low")
 	resource := fs.String("resource", "", "resource type to get rules for, e.g. aws_s3_bucket")
 	limit := fs.Int("limit", search.DefaultLimit, "max results")
+	enforcedOnly := fs.Bool("enforced-only", false, "only bumper's enforced rules; skip the advisory catalog")
 	format := fs.String("format", "text", "text|json")
 	fs.Usage = func() {
 		fmt.Fprintln(os.Stderr, "usage: bumper search [--resource T] [--provider C] [--severity S] [--limit N] [query...]")
 	}
-	if err := fs.Parse(args); err != nil {
-		return 2
+	// Parse allowing flags and the query to interleave (Go's flag package stops
+	// at the first non-flag, so we collect positionals across repeated parses).
+	var positional []string
+	rest := args
+	for {
+		if err := fs.Parse(rest); err != nil {
+			return 2
+		}
+		rest = fs.Args()
+		if len(rest) == 0 {
+			break
+		}
+		positional = append(positional, rest[0])
+		rest = rest[1:]
 	}
-	query := strings.Join(fs.Args(), " ")
+	query := strings.Join(positional, " ")
 	if query == "" && *provider == "" && *severity == "" && *resource == "" {
 		fs.Usage()
 		return 2
@@ -231,18 +246,75 @@ func cmdSearch(args []string) int {
 	if err != nil {
 		return fail("%v", err)
 	}
-	hits := search.Rules(set, search.Query{
-		Text:     query,
-		Provider: *provider,
-		Severity: *severity,
-		Resource: *resource,
-		Limit:    *limit,
-	})
-	sel := make([]*rules.Rule, len(hits))
-	for i, h := range hits {
-		sel[i] = h.Rule
+	cat, err := catalog.Load()
+	if err != nil {
+		return fail("%v", err)
 	}
-	if err := report.RuleList(os.Stdout, sel, *format); err != nil {
+	idx := search.New(set, cat)
+	hits := idx.Search(search.Query{Text: query, Provider: *provider, Severity: *severity, Resource: *resource, Limit: *limit})
+	enforced, advisory := search.Split(hits)
+	if *enforcedOnly {
+		advisory = nil
+	}
+
+	if *format == "json" {
+		return searchJSON(enforced, advisory)
+	}
+	sel := make([]*rules.Rule, len(enforced))
+	for i, h := range enforced {
+		sel[i] = h.Doc.Rule
+	}
+	fmt.Printf("Enforced rules (%d) — these fire on your plan:\n\n", len(sel))
+	if err := report.RuleList(os.Stdout, sel, "text"); err != nil {
+		return fail("%v", err)
+	}
+	if !*enforcedOnly {
+		printAdvisory(advisory)
+	}
+	return 0
+}
+
+// printAdvisory renders the advisory hits as a compact, clearly-labeled section
+// so they never read as enforced.
+func printAdvisory(adv []search.Hit) {
+	fmt.Printf("\nAdvisory (%d) — best-practice knowledge, NOT enforced (Trivy/Checkov/KICS/Prowler):\n\n", len(adv))
+	for _, h := range adv {
+		e := h.Doc.Entry
+		sev := e.Severity
+		if sev == "" {
+			sev = "-"
+		}
+		res := ""
+		if len(e.Resources) > 0 {
+			res = e.Resources[0]
+		}
+		fmt.Printf("  %-9s %-8s %-38s %s\n", sev, e.Source, res, e.Title)
+	}
+}
+
+func searchJSON(enforced, advisory []search.Hit) int {
+	type advOut struct {
+		Source, SourceID, Provider, Severity, Title, Remediation string
+		Resources, Refs                                          []string
+		Enforced                                                 bool
+	}
+	out := struct {
+		Enforced []*rules.Rule `json:"enforced"`
+		Advisory []advOut      `json:"advisory"`
+	}{Enforced: []*rules.Rule{}}
+	for _, h := range enforced {
+		out.Enforced = append(out.Enforced, h.Doc.Rule)
+	}
+	for _, h := range advisory {
+		e := h.Doc.Entry
+		out.Advisory = append(out.Advisory, advOut{
+			Source: e.Source, SourceID: e.SourceID, Provider: e.Provider, Severity: e.Severity,
+			Title: e.Title, Remediation: e.Remediation, Resources: e.Resources, Refs: e.Refs, Enforced: false,
+		})
+	}
+	enc := json.NewEncoder(os.Stdout)
+	enc.SetIndent("", "  ")
+	if err := enc.Encode(out); err != nil {
 		return fail("%v", err)
 	}
 	return 0

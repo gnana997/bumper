@@ -1,4 +1,4 @@
-.PHONY: build test run tidy fmt vet hooks tools corpus
+.PHONY: build test run tidy fmt vet hooks tools corpus catalog
 
 build:
 	go build -o bumper ./cmd/bumper
@@ -31,3 +31,9 @@ hooks: tools
 # Scan the multi-cloud anti-pattern corpus (needs terraform on PATH).
 corpus: build
 	BUMPER=$(CURDIR)/bumper tools/corpus_scan.sh
+
+# Rebuild the embedded advisory catalog (internal/catalog/data) by cloning and
+# harvesting Trivy + Checkov + KICS + Prowler. Run after a source refresh.
+catalog:
+	python3 tools/build_catalog.py
+	@echo "regenerated internal/catalog/data — rebuild the binary to embed it"

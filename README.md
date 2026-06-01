@@ -32,8 +32,8 @@ installed AI CLI optionally explains each finding in plain English.
 > policy), ECS plaintext-secret detection, KMS key rotation, and
 > **destruction/recovery** checks (stateful-resource destroy across AWS & GCP,
 > no-final-snapshot, deletion-protection off, PITR, versioning, backup retention). Rules are seeded from the Apache-2.0 Trivy +
-> Checkov catalogs (see [docs/rule-catalog/](docs/rule-catalog/)) and hand-ported
-> with tests. Account-posture checks (root MFA, credential rotation) are
+> Checkov catalogs and hand-ported with tests (the broader advisory corpus is
+> embedded for `bumper search` — see below). Account-posture checks (root MFA, credential rotation) are
 > intentionally out of scope — they belong to a continuous account scanner, not a
 > plan gate.
 
@@ -156,11 +156,18 @@ The MCP server exposes three tools to the agent:
 | Tool | Does |
 | --- | --- |
 | `scan_plan` | scan a plan (inline JSON or a `.tfplan` path) → structured findings + a `blocking` verdict |
-| `search_rules` | **before** writing Terraform for a resource, get the rules to bake in (by keyword / resource / cloud) — ranked, with the fix |
+| `search_rules` | **before** writing Terraform for a resource, get what to bake in — returns bumper's **enforced** rules (must-fix) plus an **advisory** best-practice catalog, ranked |
 | `list_rules` | browse the rule set (filter by severity / source / service) |
 | `explain_rule` | one rule in full: the CEL check, fix, and provenance |
 
 This closes the loop for an agent: **`search_rules` (advise) → generate → `scan_plan` (verify) → guard (gate).**
+
+`search_rules` (and `bumper search`) span two corpora: the **112 enforced rules**
+that actually fire on a plan, and an embedded **advisory catalog** — ~2,600
+knowledge-only best-practice entries normalized from Trivy, Checkov, KICS, and
+Prowler (Apache-2.0, attributed in [NOTICE](NOTICE)). The catalog is federated
+(one map per source, no dedup) and ships in the binary, so search works fully
+offline. Advisory entries are clearly labeled and never executed.
 
 ## Interactive console (TUI)
 
@@ -192,9 +199,11 @@ bumper list --service rds            # filter by service/resource substring
 bumper list --format json            # machine-readable catalog
 
 # search ranks by relevance — "what should I bake in before writing TF for X?"
+# shows enforced rules (must-fix) + the advisory catalog (best-practice knowledge)
 bumper search "public storage"                      # by keyword
-bumper search --resource aws_s3_bucket              # every rule for a resource type
+bumper search --resource aws_s3_bucket              # everything for a resource type
 bumper search --provider azure --severity critical  # narrow by cloud + severity
+bumper search --enforced-only "open ssh"            # skip the advisory catalog
 bumper search "open ssh" --format json              # same data the search_rules MCP tool returns
 bumper explain AWS_RDS_PUBLICLY_ACCESSIBLE   # one rule: provenance, fix, and the CEL check
 ```
@@ -290,8 +299,9 @@ static binary, no CGO.
 
 ## Roadmap
 
-- Grow the multi-cloud rule set from the merged Trivy + Checkov worklist in
-  [docs/rule-catalog/](docs/rule-catalog/) (GKE, Azure storage/keyvault next).
+- Grow the multi-cloud rule set from the embedded advisory catalog
+  ([internal/catalog/](internal/catalog/), rebuilt with `make catalog`) — port
+  high-value intents into enforced CEL rules.
 - Reachability beyond a single security group (SG → ENI → public subnet → IGW),
   to rank "actually reachable from the internet" above config-only exposure.
 - A continuous, read-only account-posture watcher (the stateful tier) — distinct

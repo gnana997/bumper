@@ -32,8 +32,9 @@ Git hooks: **pre-commit** runs a gitleaks secret scan + `gofmt` check;
 
 Rules live in [internal/rules/builtin/&lt;provider&gt;/](internal/rules/builtin/)
 as declarative YAML with a [CEL](https://github.com/google/cel-go) predicate.
-There's a merged Trivy + Checkov worklist in
-[docs/rule-catalog/](docs/rule-catalog/) — pick an intent, then:
+The embedded advisory catalog ([internal/catalog/](internal/catalog/), ~2,600
+Trivy/Checkov/KICS/Prowler entries, rebuilt with `make catalog`) is a porting
+worklist — `bumper search <intent>` surfaces candidates. Pick an intent, then:
 
 1. **Write the rule** in `internal/rules/builtin/<provider>/<provider>_<service>.yaml`:
 

@@ -20,5 +20,5 @@ package-lock.json
 # bumper verdict store (machine-specific)
 .bumper/
 
-# Cloned source repos for tools/build_merged_catalog.py (Trivy + Checkov)
+# Cloned source repos for tools/build_catalog.py (Trivy, Checkov, KICS, Prowler)
 .catalog-src/

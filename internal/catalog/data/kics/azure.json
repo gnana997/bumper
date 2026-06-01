@@ -1,0 +1,2360 @@
+[
+ {
+  "category": "Insecure Configurations",
+  "cwe": "522",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/container_group"
+  ],
+  "remediation": "Azure Container Group should have managed identity enabled",
+  "resources": [
+   "azurerm_container_group"
+  ],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "02f0e3e7-2550-4d75-a23b-ab5254a3ebeb",
+  "title": "Beta - Container Group Managed Identity Disabled"
+ },
+ {
+  "category": "Encryption",
+  "cwe": "326",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/windows_function_app_slot"
+  ],
+  "remediation": "Ensure Function App Deployment Slot is using the latest version of TLS encryption",
+  "resources": [
+   "azurerm_windows_function_app_slot"
+  ],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "03928f0d-bff0-4feb-a31a-615d093e6026",
+  "title": "Beta - Function App Deployment Slot Not Using Latest TLS Encryption Version"
+ },
+ {
+  "category": "Encryption",
+  "cwe": "319",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/postgresql_server"
+  ],
+  "remediation": "Make sure that for PosgreSQL, the 'Enforce SSL connection' is set to 'ENABLED'",
+  "resources": [
+   "azurerm_postgresql_server"
+  ],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "0437633b-daa6-4bbc-8526-c0d2443b946e",
+  "title": "SSL Enforce Disabled"
+ },
+ {
+  "category": "Observability",
+  "cwe": "778",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/kubernetes_cluster"
+  ],
+  "remediation": "Kubernets Clusters should register 'audit logs' for analysis following security events",
+  "resources": [
+   "azurerm_kubernetes_cluster"
+  ],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "0493b840-50e8-430c-93bc-d794d72931a9",
+  "title": "Beta - AKS Without Audit Logs"
+ },
+ {
+  "category": "Resource Management",
+  "cwe": "922",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/linux_virtual_machine"
+  ],
+  "remediation": "Virtual machine resources should set a managed disk for encryption, resilience and reduction of costs",
+  "resources": [
+   "azurerm_linux_virtual_machine"
+  ],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "0536c90c-714e-4184-991e-3fed8d8b7b46",
+  "title": "Beta - VM Without Managed Disk"
+ },
+ {
+  "category": "Backup",
+  "cwe": "754",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/storage_account#delete_retention_policy-2"
+  ],
+  "remediation": "All 'azurerm_storage_account' resources should define a 'delete_retention_policy' block for their 'blob_properties' to allow data recovery",
+  "resources": [
+   "azurerm_storage_account"
+  ],
+  "severity": "high",
+  "source": "kics",
+  "source_id": "056d28cc-7ee9-4b12-b2d1-16b7b66db72d",
+  "title": "Beta - Blob Storage Without Soft Delete"
+ },
+ {
+  "category": "Networking and Firewall",
+  "cwe": "602",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/databricks_workspace#virtual_network_id-1"
+  ],
+  "remediation": "Resources of type 'azurerm_databricks_workspace' should use a custom virtual network",
+  "resources": [
+   "azurerm_databricks_workspace"
+  ],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "05d6b52e-11ca-453d-bb3a-21c7c853ee92",
+  "title": "Beta - Databricks Workspace Using Default Virtual Network"
+ },
+ {
+  "category": "Encryption",
+  "cwe": "312",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/mssql_database#transparent_data_encryption_enabled-1"
+  ],
+  "remediation": "All 'azurerm_mssql_database' resources should enable data encryption at rest through the 'transparent_data_encryption_enabled' field",
+  "resources": [
+   "azurerm_mssql_database"
+  ],
+  "severity": "high",
+  "source": "kics",
+  "source_id": "0745bb3f-60dc-43b6-90ae-67bb01fd1775",
+  "title": "Beta - SQL Database Without Data Encryption"
+ },
+ {
+  "category": "Observability",
+  "cwe": "778",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/postgresql_configuration"
+  ],
+  "remediation": "Make sure that for PostgreSQL Database, server parameter 'log_disconnections' is set to 'ON'",
+  "resources": [
+   "azurerm_postgresql_configuration"
+  ],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "07f7134f-9f37-476e-8664-670c218e4702",
+  "title": "PostgreSQL Log Disconnections Not Set"
+ },
+ {
+  "category": "Backup",
+  "cwe": "799",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/mariadb_server#geo_redundant_backup_enabled"
+  ],
+  "remediation": "MariaDB Server Geo-redundant Backup should be enabled",
+  "resources": [
+   "azurerm_mariadb_server"
+  ],
+  "severity": "low",
+  "source": "kics",
+  "source_id": "0a70d5f3-1ecd-4c8e-9292-928fc9a8c4f1",
+  "title": "MariaDB Server Geo-redundant Backup Disabled"
+ },
+ {
+  "category": "Backup",
+  "cwe": "754",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/recovery_services_vault#immutability-1"
+  ],
+  "remediation": "No 'azurerm_recovery_services_vault' resource should set 'immutability' to 'Disabled'. By locking the setting, malicious actors are prevented from disabling the setting and deleting backups.",
+  "resources": [
+   "azurerm_recovery_services_vault"
+  ],
+  "severity": "high",
+  "source": "kics",
+  "source_id": "0af1814d-23d7-472e-a1b8-b265e7b0d88f",
+  "title": "Beta - Recovery Services Vault Without Immutability"
+ },
+ {
+  "category": "Observability",
+  "cwe": "778",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/databricks_workspace"
+  ],
+  "remediation": "Ensure that logging for Azure Databricks is 'Enabled' for categories: 'accounts','Filesystem','clusters','notebook' and 'jobs', with one or more of the following destinations: 'Azure Log Analytics workspace', 'Azure Storage Account', 'Azure Event Hubs'",
+  "resources": [
+   "azurerm_databricks_workspace"
+  ],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "0bd3630a-2ae9-4522-9d66-04049654b1df",
+  "title": "Beta - Databricks Diagnostic Logging Not Configured"
+ },
+ {
+  "category": "Availability",
+  "cwe": "862",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/4.52.0/docs/resources/management_lock#lock_level-3"
+  ],
+  "remediation": "Resources of type 'azurerm_storage_account' should have a 'azurerm_management_lock' associated with them to prevent users from accidentally or maliciously deleting a storage account",
+  "resources": [
+   "azurerm_management_lock"
+  ],
+  "severity": "low",
+  "source": "kics",
+  "source_id": "0cc95bf8-9b98-4278-ad9f-fea4aed3d271",
+  "title": "Beta - Storage Account Without Delete Lock"
+ },
+ {
+  "category": "Insecure Configurations",
+  "cwe": "522",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/windows_web_app_slot"
+  ],
+  "remediation": "App Service Slot should have managed identity enabled",
+  "resources": [
+   "azurerm_windows_web_app_slot"
+  ],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "0f7964fa-96fd-4a72-9fb7-3cdef71479db",
+  "title": "Beta - App Service Slot Managed Identity Disabled"
+ },
+ {
+  "category": "Insecure Configurations",
+  "cwe": "319",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/app_service#https_only"
+  ],
+  "remediation": "Web app should only accept HTTPS traffic in Azure Web App Service.",
+  "resources": [
+   "azurerm_app_service"
+  ],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "11e9a948-c6c3-4a0f-8dcf-b5cf1763cdbe",
+  "title": "Web App Accepting Traffic Other Than HTTPS"
+ },
+ {
+  "category": "Observability",
+  "cwe": "778",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/monitor_activity_log_alert"
+  ],
+  "remediation": "There should be a 'azurerm_monitor_activity_log_alert' resource configured to capture 'create or update SQL server firewall rule' events",
+  "resources": [
+   "azurerm_monitor_activity_log_alert"
+  ],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "1219a37a-9a2c-420d-8b8c-30bdbc3bfeb1",
+  "title": "Beta - Activity Log Alert For Create or Update SQL Server Firewall Rule Not Configured"
+ },
+ {
+  "category": "Encryption",
+  "cwe": "319",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/storage_account"
+  ],
+  "remediation": "Storage Accounts should enforce the use of HTTPS",
+  "resources": [
+   "azurerm_storage_account"
+  ],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "12944ec4-1fa0-47be-8b17-42a034f937c2",
+  "title": "Storage Account Not Forcing HTTPS"
+ },
+ {
+  "category": "Backup",
+  "cwe": "754",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/storage_account#container_delete_retention_policy-1"
+  ],
+  "remediation": "All 'azurerm_storage_account' resources should define a 'container_delete_retention_policy' block for their 'blob_properties' to allow data recovery",
+  "resources": [
+   "azurerm_storage_account"
+  ],
+  "severity": "high",
+  "source": "kics",
+  "source_id": "12ecec8a-7961-48db-b644-86be8845d8fd",
+  "title": "Beta - Containers Without Soft Delete"
+ },
+ {
+  "category": "Observability",
+  "cwe": "778",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/postgresql_configuration"
+  ],
+  "remediation": "Make sure that for PostgreSQL Database, server parameter 'log_duration' is set to 'ON'",
+  "resources": [
+   "azurerm_postgresql_configuration"
+  ],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "16e0879a-c4ae-4ff8-a67d-a2eed5d67b8f",
+  "title": "PostgreSQL Log Duration Not Set"
+ },
+ {
+  "category": "Access Control",
+  "cwe": "285",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/storage_account"
+  ],
+  "remediation": "Storage Account should not be public to grant the principle of least privileges",
+  "resources": [
+   "azurerm_storage_account"
+  ],
+  "severity": "high",
+  "source": "kics",
+  "source_id": "17f75827-0684-48f4-8747-61129c7e4198",
+  "title": "Public Storage Account"
+ },
+ {
+  "category": "Best Practices",
+  "cwe": "1329",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/4.50.0/docs/resources/windows_virtual_machine.html#automatic_updates_enabled-3"
+  ],
+  "remediation": "Windows based VMs should enabled automatic updates",
+  "resources": [
+   "azurerm_windows_virtual_machine"
+  ],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "187e6d39-5e1e-4afa-9c0a-b79632eef346",
+  "title": "Beta - VM With Automatic Updates Disabled"
+ },
+ {
+  "category": "Observability",
+  "cwe": "778",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/monitor_activity_log_alert"
+  ],
+  "remediation": "There should be a 'azurerm_monitor_activity_log_alert' resource configured to capture 'create or update network security group' events",
+  "resources": [
+   "azurerm_monitor_activity_log_alert"
+  ],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "1ec163d0-a9be-4695-89a8-a4028a2cbae7",
+  "title": "Beta - Activity Log Alert For Create Or Update Network Security Group Not Configured"
+ },
+ {
+  "category": "Observability",
+  "cwe": "778",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/monitor_diagnostic_setting.html#enabled_log-1"
+  ],
+  "remediation": "All 'azurerm_monitor_diagnostic_setting' resources should have logging for all main categories: 'Administrative', 'Alert', 'Policy', and 'Security' enabled",
+  "resources": [
+   "azurerm_monitor_diagnostic_setting"
+  ],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "21fa1872-47b3-46ec-9775-f41e85d80cb4",
+  "title": "Beta - Diagnostic Settings Without Appropriate Logging"
+ },
+ {
+  "category": "Encryption",
+  "cwe": "326",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/mssql_server"
+  ],
+  "remediation": "Ensure MSSQL is using the latest version of TLS encryption",
+  "resources": [
+   "azurerm_mssql_server"
+  ],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "22cb3507-1ef4-44ac-9c9a-cab31167e31e",
+  "title": "Beta - MSSQL Not Using Latest TLS Encryption Version"
+ },
+ {
+  "category": "Encryption",
+  "cwe": "327",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/storage_account#channel_encryption_type-2"
+  ],
+  "remediation": "All 'azurerm_storage_account' resources should exclusively use 'AES-256-GCM' for channel encryption",
+  "resources": [
+   "azurerm_storage_account"
+  ],
+  "severity": "high",
+  "source": "kics",
+  "source_id": "233ab26d-8f17-4dce-9616-41479da9ffe3",
+  "title": "Beta - Storage Account Using Unsafe SMB Channel Encryption"
+ },
+ {
+  "category": "Networking and Firewall",
+  "cwe": "668",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/sql_firewall_rule"
+  ],
+  "remediation": "Check if all IPs are allowed, check from start 0.0.0.0 to end 255.255.255.255.",
+  "resources": [
+   "azurerm_sql_firewall_rule"
+  ],
+  "severity": "critical",
+  "source": "kics",
+  "source_id": "25c0ea09-f1c5-4380-b055-3b83863f2bb8",
+  "title": "SQLServer Ingress From Any IP"
+ },
+ {
+  "category": "Best Practices",
+  "cwe": "778",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/4.36.0/docs/resources/mssql_server_security_alert_policy"
+  ],
+  "remediation": "All Alerts should be enabled in MSSQL Database Server SecurityAlerts Policy Properties",
+  "resources": [
+   "azurerm_mssql_server_security_alert_policy"
+  ],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "25cd1853-7e80-4106-9ac3-03f8636c25be",
+  "title": "MSSQL Server Database With Alerts Disabled"
+ },
+ {
+  "category": "Observability",
+  "cwe": "778",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/postgresql_configuration"
+  ],
+  "remediation": "Check if PostgreSQL Database Server retains logs for less than 3 Days",
+  "resources": [
+   "azurerm_postgresql_configuration"
+  ],
+  "severity": "low",
+  "source": "kics",
+  "source_id": "261a83f8-dd72-4e8c-b5e1-ebf06e8fe606",
+  "title": "Small PostgreSQL DB Server Log Retention Period"
+ },
+ {
+  "category": "Best Practices",
+  "cwe": "522",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/sql_server"
+  ],
+  "remediation": "Azure SQL Server's Admin account login must avoid using names like 'Admin', that are too predictable, which means the attribute 'administrator_login' must be set to a name that is not easy to predict",
+  "resources": [
+   "azurerm_sql_server"
+  ],
+  "severity": "low",
+  "source": "kics",
+  "source_id": "2ab6de9a-0136-415c-be92-79d2e4fd750f",
+  "title": "SQL Server Predictable Admin Account Name"
+ },
+ {
+  "category": "Observability",
+  "cwe": "770",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/postgresql_configuration"
+  ],
+  "remediation": "Ensure that Connection Throttling is set for the PostgreSQL server",
+  "resources": [
+   "azurerm_postgresql_configuration"
+  ],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "2b3c671f-1b76-4741-8789-ed1fe0785dc4",
+  "title": "PostgreSQL Server Without Connection Throttling"
+ },
+ {
+  "category": "Observability",
+  "cwe": "778",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/monitor_log_profile"
+  ],
+  "remediation": "Ensure that Activity Log Retention is set 365 days or greater",
+  "resources": [
+   "azurerm_monitor_log_profile"
+  ],
+  "severity": "low",
+  "source": "kics",
+  "source_id": "2b856bf9-8e8c-4005-875f-303a8cba3918",
+  "title": "Small Activity Log Retention Period"
+ },
+ {
+  "category": "Networking and Firewall",
+  "cwe": "693",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/application_gateway"
+  ],
+  "remediation": "Check if Web Application Firewall is disabled or not configured for Azure's Application Gateway.",
+  "resources": [
+   "azurerm_application_gateway"
+  ],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "2e48d91c-50e4-45c8-9312-27b625868a72",
+  "title": "WAF Is Disabled For Azure Application Gateway"
+ },
+ {
+  "category": "Encryption",
+  "cwe": "326",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/windows_virtual_machine.html#encryption_at_host_enabled-1"
+  ],
+  "remediation": "VM resources should enable encryption at host for improved data security",
+  "resources": [
+   "azurerm_windows_virtual_machine"
+  ],
+  "severity": "low",
+  "source": "kics",
+  "source_id": "30c7c2f1-c048-49ba-81a4-ae465bbb3335",
+  "title": "Beta - VM Without Encryption At Host"
+ },
+ {
+  "category": "Best Practices",
+  "cwe": "778",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/security_center_contact#email"
+  ],
+  "remediation": "Security Contact Email should be defined",
+  "resources": [
+   "azurerm_security_center_contact"
+  ],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "34664094-59e0-4524-b69f-deaa1a68cce3",
+  "title": "Security Contact Email"
+ },
+ {
+  "category": "Observability",
+  "cwe": "778",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/postgresql_configuration"
+  ],
+  "remediation": "Make sure that for Postgre SQL Database Server, parameter 'log_checkpoints' is set to 'ON'",
+  "resources": [
+   "azurerm_postgresql_configuration"
+  ],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "3790d386-be81-4dcf-9850-eaa7df6c10d9",
+  "title": "PostgreSQL Log Checkpoints Disabled"
+ },
+ {
+  "category": "Observability",
+  "cwe": "778",
+  "provider": "azure",
+  "refs": [
+   "https://www.terraform.io/docs/providers/azurerm/r/key_vault.html"
+  ],
+  "remediation": "Ensure that logging for Azure KeyVault is 'Enabled'",
+  "resources": [],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "38c71c00-c177-4cd7-8d36-cd1007cdb190",
+  "title": "Vault Auditing Disabled"
+ },
+ {
+  "category": "Access Control",
+  "cwe": "732",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/storage_table#permissions"
+  ],
+  "remediation": "Azure Storage Table should not allow all ACL (Access Control List) permissions - r (read), w (write), d (delete), and l (list).",
+  "resources": [
+   "azurerm_storage_table"
+  ],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "3ac3e75c-6374-4a32-8ba0-6ed69bda404e",
+  "title": "Storage Table Allows All ACL Permissions"
+ },
+ {
+  "category": "Networking and Firewall",
+  "cwe": "668",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/network_security_rule"
+  ],
+  "remediation": "Port 22 (SSH) is exposed to the internet",
+  "resources": [
+   "azurerm_network_security_rule"
+  ],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "3e3c175e-aadf-4e2b-a464-3fdac5748d24",
+  "title": "SSH Is Exposed To The Internet"
+ },
+ {
+  "category": "Access Control",
+  "cwe": "284",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/role_definition#actions"
+  ],
+  "remediation": "Role Definition should not allow custom role creation (Microsoft.Authorization/roleDefinitions/write)",
+  "resources": [
+   "azurerm_role_definition"
+  ],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "3fa5900f-9aac-4982-96b2-a6143d9c99fb",
+  "title": "Role Definition Allows Custom Role Creation"
+ },
+ {
+  "category": "Encryption",
+  "cwe": "522",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/databricks_workspace#managed_services_cmk_key_vault_id-1"
+  ],
+  "remediation": "The 'azurerm_databricks_workspace' resource should enable CMK encryption",
+  "resources": [
+   "azurerm_databricks_workspace"
+  ],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "416ac446-9a2e-4f6d-84d2-82add788c7da",
+  "title": "Beta - Databricks Workspace Without CMK"
+ },
+ {
+  "category": "Access Control",
+  "cwe": "250",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/role_assignment"
+  ],
+  "remediation": "Unnecessary assignements increase the likelihood of privilege escalation and unauthorized access.",
+  "resources": [
+   "azurerm_role_assignment"
+  ],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "41d7989b-3be2-4081-8c79-cf903dd174c5",
+  "title": "Beta - Use Of User Access Administrator Role Is Not Restricted"
+ },
+ {
+  "category": "Networking and Firewall",
+  "cwe": "1188",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/network_interface#enable_ip_forwarding"
+  ],
+  "remediation": "Network Interfaces IP Forwarding should be disabled",
+  "resources": [
+   "azurerm_network_interface"
+  ],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "4216ebac-d74c-4423-b437-35025cb88af5",
+  "title": "Network Interfaces IP Forwarding Enabled"
+ },
+ {
+  "category": "Best Practices",
+  "cwe": "710",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/kubernetes_cluster#azure_policy"
+  ],
+  "remediation": "Azure Container Service (AKS) should use Azure Policies Add-On",
+  "resources": [
+   "azurerm_kubernetes_cluster"
+  ],
+  "severity": "low",
+  "source": "kics",
+  "source_id": "43789711-161b-4708-b5bb-9d1c626f7492",
+  "title": "AKS Uses Azure Policies Add-On Disabled"
+ },
+ {
+  "category": "Access Control",
+  "cwe": "1390",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/storage_account#shared_access_key_enabled-1"
+  ],
+  "remediation": "All 'azurerm_storage_account' resources should disable access key via 'Shared Key' for improved access control",
+  "resources": [
+   "azurerm_storage_account"
+  ],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "45f3e879-f8a7-4102-a3fa-46da5a849870",
+  "title": "Beta - Storage Account With Shared Access Key"
+ },
+ {
+  "category": "Encryption",
+  "cwe": "326",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/function_app#min_tls_version"
+  ],
+  "remediation": "Ensure Function App is using the latest version of TLS encryption",
+  "resources": [
+   "azurerm_function_app"
+  ],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "45fc717a-bd86-415c-bdd8-677901be1aa6",
+  "title": "Function App Not Using Latest TLS Encryption Version"
+ },
+ {
+  "category": "Networking and Firewall",
+  "cwe": "732",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/search_service#public_network_access_enabled"
+  ],
+  "remediation": "Public Network Access should be disabled for Azure Cognitive Search",
+  "resources": [
+   "azurerm_search_service"
+  ],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "4a9e0f00-0765-4f72-a0d4-d31110b78279",
+  "title": "Azure Cognitive Search Public Network Access Enabled"
+ },
+ {
+  "category": "Secret Management",
+  "cwe": "521",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/key_vault_key"
+  ],
+  "remediation": "Make sure that for all keys the expiration date is set",
+  "resources": [
+   "azurerm_key_vault_key"
+  ],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "4d080822-5ee2-49a4-8984-68f3d4c890fc",
+  "title": "Key Expiration Not Set"
+ },
+ {
+  "category": "Networking and Firewall",
+  "cwe": "285",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/redis_firewall_rule"
+  ],
+  "remediation": "Firewall rule allowing unrestricted access to Redis from other Azure sources",
+  "resources": [
+   "azurerm_redis_firewall_rule"
+  ],
+  "severity": "critical",
+  "source": "kics",
+  "source_id": "5089d055-53ff-421b-9482-a5267bdce629",
+  "title": "Redis Publicly Accessible"
+ },
+ {
+  "category": "Access Control",
+  "cwe": "281",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/storage_account#cross_tenant_replication_enabled-1"
+  ],
+  "remediation": "No resource of type 'azurerm_storage_account' should set 'cross_tenant_replication_enabled' to true, this increases risk of unauthorized data access",
+  "resources": [
+   "azurerm_storage_account"
+  ],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "50e0a9e3-7360-483c-9873-ba1ea1a7faf8",
+  "title": "Beta - Storage Account With Cross Tenant Replication Enabled"
+ },
+ {
+  "category": "Observability",
+  "cwe": "778",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/monitor_diagnostic_setting.html#target_resource_id-1"
+  ],
+  "remediation": "Resources that support diagnostic settings should be associated with a 'azurerm_monitor_diagnostic_setting' resource for exporting activity logs",
+  "resources": [
+   "azurerm_monitor_diagnostic_setting"
+  ],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "50f32d3c-096e-406a-bb26-71b3c91c11c0",
+  "title": "Beta - Resource Without Diagnostic Settings"
+ },
+ {
+  "category": "Insecure Configurations",
+  "cwe": "311",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/app_service#http2_enabled"
+  ],
+  "remediation": "App Service should have 'http2_enabled' enabled",
+  "resources": [
+   "azurerm_app_service"
+  ],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "525b53be-62ed-4244-b4df-41aecfcb4071",
+  "title": "App Service HTTP2 Disabled"
+ },
+ {
+  "category": "Networking and Firewall",
+  "cwe": "284",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/storage_account#bypass"
+  ],
+  "remediation": "Trusted Microsoft Services should be enabled for Storage Account access",
+  "resources": [
+   "azurerm_storage_account"
+  ],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "5400f379-a347-4bdd-a032-446465fdcc6f",
+  "title": "Trusted Microsoft Services Not Enabled"
+ },
+ {
+  "category": "Backup",
+  "cwe": "754",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/storage_account#retention_policy-2"
+  ],
+  "remediation": "All 'azurerm_storage_account' resources should define a 'retention_policy' block for their 'share_properties' to allow data recovery",
+  "resources": [
+   "azurerm_storage_account"
+  ],
+  "severity": "high",
+  "source": "kics",
+  "source_id": "54087baa-8719-48a8-8460-9cc0962117aa",
+  "title": "Beta - File Share Without Soft Delete"
+ },
+ {
+  "category": "Best Practices",
+  "cwe": "778",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/mssql_server_security_alert_policy#email_account_admins"
+  ],
+  "remediation": "SQL Server alert email should be enabled",
+  "resources": [
+   "azurerm_mssql_server_security_alert_policy"
+  ],
+  "severity": "",
+  "source": "kics",
+  "source_id": "55975007-f6e7-4134-83c3-298f1fe4b519",
+  "title": "SQL Server Alert Email Disabled"
+ },
+ {
+  "category": "Build Process",
+  "cwe": "665",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/cosmosdb_account"
+  ],
+  "remediation": "Cosmos DB Account must have a mapping of tags.",
+  "resources": [
+   "azurerm_cosmosdb_account"
+  ],
+  "severity": "low",
+  "source": "kics",
+  "source_id": "56dad03e-e94f-4dd6-93a4-c253a03ff7a0",
+  "title": "Cosmos DB Account Without Tags"
+ },
+ {
+  "category": "Networking and Firewall",
+  "cwe": "200",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/network_security_rule"
+  ],
+  "remediation": "A sensitive port, such as port 23 or port 110, is open for the whole network in either TCP or UDP protocol",
+  "resources": [
+   "azurerm_network_security_rule"
+  ],
+  "severity": "high",
+  "source": "kics",
+  "source_id": "594c198b-4d79-41b8-9b36-fde13348b619",
+  "title": "Sensitive Port Is Exposed To Entire Network"
+ },
+ {
+  "category": "Insecure Defaults",
+  "cwe": "250",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/linux_virtual_machine#allow_extension_operations-1"
+  ],
+  "remediation": "Virtual machine resources should disable extension_operations since they can provide administrative privileges to processes",
+  "resources": [
+   "azurerm_linux_virtual_machine"
+  ],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "59528fe9-0c8e-4153-8016-445911a2d933",
+  "title": "Beta - VM With Extension Operations Enabled"
+ },
+ {
+  "category": "Insecure Configurations",
+  "cwe": "732",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/kubernetes_cluster#private_cluster_enabled"
+  ],
+  "remediation": "Azure Kubernetes Service (AKS) API should not be exposed to the internet",
+  "resources": [
+   "azurerm_kubernetes_cluster"
+  ],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "599318f2-6653-4569-9e21-041d06c63a89",
+  "title": "AKS Private Cluster Disabled"
+ },
+ {
+  "category": "Observability",
+  "cwe": "778",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/sql_server"
+  ],
+  "remediation": "Make sure for SQL Servers that Auditing Retention is greater than 90 days",
+  "resources": [
+   "azurerm_sql_server"
+  ],
+  "severity": "low",
+  "source": "kics",
+  "source_id": "59acb56b-2b10-4c2c-ba38-f2223c3f5cfc",
+  "title": "Small MSSQL Server Audit Retention"
+ },
+ {
+  "category": "Insecure Configurations",
+  "cwe": "285",
+  "provider": "azure",
+  "refs": [
+   "https://www.terraform.io/docs/providers/azure/r/virtual_network.html"
+  ],
+  "remediation": "Azure Virtual Network subnet must be configured with a Network Security Group, which means the attribute 'security_group' must be defined and not empty",
+  "resources": [],
+  "severity": "high",
+  "source": "kics",
+  "source_id": "5c822443-e1ea-46b8-84eb-758ec602e844",
+  "title": "Security Group is Not Configured"
+ },
+ {
+  "category": "Access Control",
+  "cwe": "732",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/storage_share"
+  ],
+  "remediation": "Azure Storage Share should not allow all ACL (Access Control List) permissions - r (read), w (write), d (delete), and l (list).",
+  "resources": [
+   "azurerm_storage_share"
+  ],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "5ed0a5f3-6b81-4a6c-a7d1-0f1d8d9ae806",
+  "title": "Storage Share Allows All ACL Permissions"
+ },
+ {
+  "category": "Observability",
+  "cwe": "778",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/mssql_server"
+  ],
+  "remediation": "Make sure that for MSSQL Servers, 'Auditing' is set to 'On'",
+  "resources": [
+   "azurerm_mssql_server"
+  ],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "609839ae-bd81-4375-9910-5bce72ae7b92",
+  "title": "MSSQL Server Auditing Disabled"
+ },
+ {
+  "category": "Insecure Configurations",
+  "cwe": "779",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/kubernetes_cluster"
+  ],
+  "remediation": "Check if the Kubernetes Dashboard is enabled.",
+  "resources": [
+   "azurerm_kubernetes_cluster"
+  ],
+  "severity": "low",
+  "source": "kics",
+  "source_id": "61c3cb8b-0715-47e4-b788-86dde40dd2db",
+  "title": "Dashboard Is Enabled"
+ },
+ {
+  "category": "Insecure Configurations",
+  "cwe": "327",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/storage_account#smb-2"
+  ],
+  "remediation": "All 'azurerm_storage_account' resources should use the latest SMB protocol version to prevent exploitation of known vulnerabilities",
+  "resources": [
+   "azurerm_storage_account"
+  ],
+  "severity": "high",
+  "source": "kics",
+  "source_id": "621fc7c5-c342-4223-b3dd-d1530acb43ae",
+  "title": "Beta - Storage Account Not Using Latest SMB Protocol Version"
+ },
+ {
+  "category": "Observability",
+  "cwe": "778",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/monitor_activity_log_alert"
+  ],
+  "remediation": "There should be a 'azurerm_monitor_activity_log_alert' resource configured to capture 'delete network security group' events",
+  "resources": [
+   "azurerm_monitor_activity_log_alert"
+  ],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "62d120b1-b1e0-40ef-a81d-a4994ac88b3b",
+  "title": "Beta - Activity Log Alert For Delete Network Security Group Not Configured"
+ },
+ {
+  "category": "Encryption",
+  "cwe": "311",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/postgresql_server#infrastructure_encryption_enabled"
+  ],
+  "remediation": "PostgreSQL Server Infrastructure Encryption should be enabled",
+  "resources": [
+   "azurerm_postgresql_server"
+  ],
+  "severity": "low",
+  "source": "kics",
+  "source_id": "6425c98b-ca4e-41fe-896a-c78772c131f8",
+  "title": "PostgreSQL Server Infrastructure Encryption Disabled"
+ },
+ {
+  "category": "Encryption",
+  "cwe": "922",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/managed_disk#disk_encryption_set_id-1"
+  ],
+  "remediation": "Using disk encryption on managed disks data improves confidentiality, compliance, and control over encryption keys, ensuring sensitive information at rest is protected against unauthorized access",
+  "resources": [
+   "azurerm_managed_disk"
+  ],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "68403c84-8497-449b-9946-ae848765813f",
+  "title": "Beta - Disk Encryption On Managed Disk Disabled"
+ },
+ {
+  "category": "Networking and Firewall",
+  "cwe": "306",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/4.54.0/docs/resources/container_group"
+  ],
+  "remediation": "Ensuring container instances use private vNets reduces public exposure and limits potential security risks.",
+  "resources": [
+   "azurerm_container_group"
+  ],
+  "severity": "low",
+  "source": "kics",
+  "source_id": "71884fcb-ae03-41c8-87b9-22c90353f256",
+  "title": "Beta - Container Instances Not Using Private Virtual Networks"
+ },
+ {
+  "category": "Encryption",
+  "cwe": "319",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/mysql_server"
+  ],
+  "remediation": "Make sure that for MySQL Database Server, 'Enforce SSL connection' is enabled",
+  "resources": [
+   "azurerm_mysql_server"
+  ],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "73e42469-3a86-4f39-ad78-098f325b4e9f",
+  "title": "MySQL SSL Connection Disabled"
+ },
+ {
+  "category": "Insecure Configurations",
+  "cwe": "778",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/network_watcher_flow_log"
+  ],
+  "remediation": "Flow logs enable capturing information about IP traffic flowing in and out of the network security groups. Network Security Group Flow Logs must be enabled with retention period greater than or equal to 90 days. This is important, because these logs are used to check for anomalies and give information of suspected breaches",
+  "resources": [
+   "azurerm_network_watcher_flow_log"
+  ],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "7750fcca-dd03-4d38-b663-4b70289bcfd4",
+  "title": "Small Flow Logs Retention Period"
+ },
+ {
+  "category": "Access Control",
+  "cwe": "732",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/container_registry"
+  ],
+  "remediation": "Azure Container Registry resources should only have 'read' permissions",
+  "resources": [
+   "azurerm_container_registry"
+  ],
+  "severity": "high",
+  "source": "kics",
+  "source_id": "77deea6a-155e-4865-bf04-153d23e488e8",
+  "title": "Beta - Azure Container Registry With Broad Permissions"
+ },
+ {
+  "category": "Backup",
+  "cwe": "754",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/data_protection_backup_vault#immutability-1"
+  ],
+  "remediation": "No 'azurerm_data_protection_backup_vault' resource should set 'immutability' to 'Disabled'. By locking the setting, malicious actors are prevented from disabling the setting and deleting backups.",
+  "resources": [
+   "azurerm_data_protection_backup_vault"
+  ],
+  "severity": "high",
+  "source": "kics",
+  "source_id": "7a0164a5-ec6e-40b2-938d-ab3edfd37dcd",
+  "title": "Beta - Backup Vault Without Immutability"
+ },
+ {
+  "category": "Networking and Firewall",
+  "cwe": "732",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/mariadb_server#public_network_access_enabled"
+  ],
+  "remediation": "MariaDB Server Public Network Access should be disabled",
+  "resources": [
+   "azurerm_mariadb_server"
+  ],
+  "severity": "high",
+  "source": "kics",
+  "source_id": "7f0a8696-7159-4337-ad0d-8a3ab4a78195",
+  "title": "MariaDB Server Public Network Access Enabled"
+ },
+ {
+  "category": "Insecure Configurations",
+  "cwe": "522",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/logic_app_standard"
+  ],
+  "remediation": "Logic Apps should have managed identity enabled",
+  "resources": [
+   "azurerm_logic_app_standard"
+  ],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "7fa50094-0ca5-4253-aa71-f1a3b575d4a5",
+  "title": "Beta - Logic App Managed Identity Disabled"
+ },
+ {
+  "category": "Insecure Configurations",
+  "cwe": "665",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/security_center_subscription_pricing"
+  ],
+  "remediation": "Make sure that the 'Standard' pricing tiers were selected.",
+  "resources": [
+   "azurerm_security_center_subscription_pricing"
+  ],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "819d50fd-1cdf-45c3-9936-be408aaad93e",
+  "title": "Security Center Pricing Tier Is Not Standard"
+ },
+ {
+  "category": "Encryption",
+  "cwe": "326",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/storage_account"
+  ],
+  "remediation": "Ensure Storage Account is using the latest version of TLS encryption",
+  "resources": [
+   "azurerm_storage_account"
+  ],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "8263f146-5e03-43e0-9cfe-db960d56d1e7",
+  "title": "Storage Account Not Using Latest TLS Encryption Version"
+ },
+ {
+  "category": "Insecure Configurations",
+  "cwe": "522",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/container_app"
+  ],
+  "remediation": "Container Apps should have managed identity enabled",
+  "resources": [
+   "azurerm_container_app"
+  ],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "829246df-02c5-490c-993b-10a07a7242e9",
+  "title": "Beta - Container App Managed Identity Disabled"
+ },
+ {
+  "category": "Networking and Firewall",
+  "cwe": "693",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/frontdoor#web_application_firewall_policy_link_id"
+  ],
+  "remediation": "Azure Front Door WAF should be enabled",
+  "resources": [
+   "azurerm_frontdoor"
+  ],
+  "severity": "low",
+  "source": "kics",
+  "source_id": "835a4f2f-df43-437d-9943-545ccfc55961",
+  "title": "Azure Front Door WAF Disabled"
+ },
+ {
+  "category": "Resource Management",
+  "cwe": "778",
+  "provider": "azure",
+  "refs": [
+   "https://www.terraform.io/docs/providers/azurerm/r/sql_database.html"
+  ],
+  "remediation": "Ensure that 'Threat Detection' is enabled for Azure SQL Database",
+  "resources": [],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "83a229ba-483e-47c6-8db7-dc96969bce5a",
+  "title": "SQL Database Audit Disabled"
+ },
+ {
+  "category": "Observability",
+  "cwe": "778",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/monitor_activity_log_alert"
+  ],
+  "remediation": "There should be a 'azurerm_monitor_activity_log_alert' resource configured to capture 'create or update security solution' events",
+  "resources": [
+   "azurerm_monitor_activity_log_alert"
+  ],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "8553d83f-fe77-4c96-8850-a95c5895b336",
+  "title": "Beta - Activity Log Alert For Create or Update Security Solution Not Configured"
+ },
+ {
+  "category": "Insecure Configurations",
+  "cwe": "665",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/app_service#ftps_state"
+  ],
+  "remediation": "Azure App Service should only enforce FTPS when 'ftps_state' is enabled",
+  "resources": [
+   "azurerm_app_service"
+  ],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "85da374f-b00f-4832-9d44-84a1ca1e89f8",
+  "title": "App Service FTPS Enforce Disabled"
+ },
+ {
+  "category": "Access Control",
+  "cwe": "285",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/kubernetes_cluster#role_based_access_control"
+  ],
+  "remediation": "Azure Container Service (AKS) instance should have role-based access control (RBAC) enabled",
+  "resources": [
+   "azurerm_kubernetes_cluster"
+  ],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "86f92117-eed8-4614-9c6c-b26da20ff37f",
+  "title": "AKS RBAC Disabled"
+ },
+ {
+  "category": "Observability",
+  "cwe": "778",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/monitor_diagnostic_setting"
+  ],
+  "remediation": "Critical services that support logging through a 'azurerm_monitor_diagnostic_setting' resource should be associated with one",
+  "resources": [
+   "azurerm_monitor_diagnostic_setting"
+  ],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "8a0628ed-6256-4a24-a1ab-54696fb69197",
+  "title": "Beta - Service Without Resource Logging"
+ },
+ {
+  "category": "Backup",
+  "cwe": "754",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/postgresql_server"
+  ],
+  "remediation": "Make sure that on PostgreSQL Geo Redundant Backups is enabled",
+  "resources": [
+   "azurerm_postgresql_server"
+  ],
+  "severity": "low",
+  "source": "kics",
+  "source_id": "8b042c30-e441-453f-b162-7696982ebc58",
+  "title": "Geo Redundancy Is Disabled"
+ },
+ {
+  "category": "Observability",
+  "cwe": "778",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/monitor_activity_log_alert"
+  ],
+  "remediation": "There should be a 'azurerm_monitor_activity_log_alert' resource configured to capture 'delete SQL server firewall rule' events",
+  "resources": [
+   "azurerm_monitor_activity_log_alert"
+  ],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "8ce5c61f-5cd1-41bc-b7d9-b26b18efd505",
+  "title": "Beta - Activity Log Alert For Delete SQL Server Firewall Rule Not Configured"
+ },
+ {
+  "category": "Backup",
+  "cwe": "754",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/data_protection_backup_vault#soft_delete-1"
+  ],
+  "remediation": "No 'azurerm_data_protection_backup_vault' resource should set 'soft_delete' to off, this makes it impossible to recover backup data",
+  "resources": [
+   "azurerm_data_protection_backup_vault"
+  ],
+  "severity": "high",
+  "source": "kics",
+  "source_id": "8d407b28-c746-4650-8bbd-d27df54a795f",
+  "title": "Beta - Backup Vault Without Soft Delete"
+ },
+ {
+  "category": "Access Control",
+  "cwe": "284",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/role_assignment"
+  ],
+  "remediation": "Role Assignment should limit guest user permissions",
+  "resources": [
+   "azurerm_role_assignment"
+  ],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "8e75e431-449f-49e9-b56a-c8f1378025cf",
+  "title": "Role Assignment Not Limit Guest User Permissions"
+ },
+ {
+  "category": "Best Practices",
+  "cwe": "665",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/app_service#php_version"
+  ],
+  "remediation": "Periodically newer versions are released for PHP software either due to security flaws or to include additional functionality. Using the latest PHP version for web apps is recommended in order to take advantage of security fixes, if any, and/or additional functionalities of the newer version.",
+  "resources": [
+   "azurerm_app_service"
+  ],
+  "severity": "low",
+  "source": "kics",
+  "source_id": "96fe318e-d631-4156-99fa-9080d57280ae",
+  "title": "App Service Without Latest PHP Version"
+ },
+ {
+  "category": "Observability",
+  "cwe": "778",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/monitor_activity_log_alert"
+  ],
+  "remediation": "There should be a 'azurerm_monitor_activity_log_alert' resource configured to capture 'create or update public ip address rule' events",
+  "resources": [
+   "azurerm_monitor_activity_log_alert"
+  ],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "99b47957-c575-4555-b8c0-ff92384249b4",
+  "title": "Beta - Activity Log Alert For Create or Update Public IP Address Rule Not Configured"
+ },
+ {
+  "category": "Insecure Configurations",
+  "cwe": "522",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/kubernetes_cluster"
+  ],
+  "remediation": "Kubernetes Clusters should have managed identity enabled",
+  "resources": [
+   "azurerm_kubernetes_cluster"
+  ],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "9b0140d1-50c1-4deb-ba58-472315c7a1ae",
+  "title": "Beta - Kubernetes Cluster Managed Identity Disabled"
+ },
+ {
+  "category": "Insecure Configurations",
+  "cwe": "295",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/function_app#client_cert_mode"
+  ],
+  "remediation": "Azure Function App should have 'client_cert_mode' set to required",
+  "resources": [
+   "azurerm_function_app"
+  ],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "9bb3c639-5edf-458c-8ee5-30c17c7d671d",
+  "title": "Function App Client Certificates Unrequired"
+ },
+ {
+  "category": "Encryption",
+  "cwe": "522",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/storage_account"
+  ],
+  "remediation": "The 'azurerm_storage_account' resource should enable CMK encryption",
+  "resources": [
+   "azurerm_storage_account"
+  ],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "9bf1568d-4cd2-4581-81ef-d2efabee1178",
+  "title": "Beta - Storage Account Without CMK"
+ },
+ {
+  "category": "Observability",
+  "cwe": "778",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/mssql_server"
+  ],
+  "remediation": "Make sure that for MSSQL Server, the Auditing Retention is greater than 90 days",
+  "resources": [
+   "azurerm_mssql_server"
+  ],
+  "severity": "low",
+  "source": "kics",
+  "source_id": "9c301481-e6ec-44f7-8a49-8ec63e2969ea",
+  "title": "Small MSSQL Audit Retention Period"
+ },
+ {
+  "category": "Insecure Configurations",
+  "cwe": "665",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/function_app#ftps_state"
+  ],
+  "remediation": "Azure Function App should only enforce FTPS when 'ftps_state' is enabled",
+  "resources": [
+   "azurerm_function_app"
+  ],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "9dab0179-433d-4dff-af8f-0091025691df",
+  "title": "Function App FTPS Enforce Disabled"
+ },
+ {
+  "category": "Observability",
+  "cwe": "778",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/security_center_contact"
+  ],
+  "remediation": "Make sure that alerts notifications are set to 'On' in the Azure Security Center Contact",
+  "resources": [
+   "azurerm_security_center_contact"
+  ],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "9db38e87-f6aa-4b5e-a1ec-7266df259409",
+  "title": "Email Alerts Disabled"
+ },
+ {
+  "category": "Encryption",
+  "cwe": "326",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/postgresql_server"
+  ],
+  "remediation": "Ensure PostgreSQL is using the latest version of TLS encryption",
+  "resources": [
+   "azurerm_postgresql_server"
+  ],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "9f15ecc4-d9df-44ba-bb88-28c97e946114",
+  "title": "Beta - PostgreSQL Not Using Latest TLS Encryption Version"
+ },
+ {
+  "category": "Insecure Configurations",
+  "cwe": "639",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/container_registry"
+  ],
+  "remediation": "Azurerm Container Registry should contain associated locks, which means 'azurerm_management_lock.scope' should be associated with 'azurerm_container_registry'",
+  "resources": [
+   "azurerm_container_registry"
+  ],
+  "severity": "high",
+  "source": "kics",
+  "source_id": "a187ac47-8163-42ce-8a63-c115236be6fb",
+  "title": "Azure Container Registry With No Locks"
+ },
+ {
+  "category": "Access Control",
+  "cwe": "284",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/service_fabric_cluster#tenant_id"
+  ],
+  "remediation": "Azure Active Directory must be used for authentication for Service Fabric",
+  "resources": [
+   "azurerm_service_fabric_cluster"
+  ],
+  "severity": "low",
+  "source": "kics",
+  "source_id": "a21c8da9-41bf-40cf-941d-330cf0d11fc7",
+  "title": "Azure Active Directory Authentication"
+ },
+ {
+  "category": "Insecure Configurations",
+  "cwe": "732",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/sql_active_directory_administrator"
+  ],
+  "remediation": "The Active Directory Administrator is not configured for a SQL server",
+  "resources": [
+   "azurerm_sql_active_directory_administrator"
+  ],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "a3a055d2-9a2e-4cc9-b9fb-12850a1a3a4b",
+  "title": "AD Admin Not Configured For SQL Server"
+ },
+ {
+  "category": "Insecure Defaults",
+  "cwe": "285",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/storage_account_network_rules#default_action"
+  ],
+  "remediation": "Default Azure Storage Account network access should be set to Deny",
+  "resources": [
+   "azurerm_storage_account_network_rules"
+  ],
+  "severity": "high",
+  "source": "kics",
+  "source_id": "a5613650-32ec-4975-a305-31af783153ea",
+  "title": "Default Azure Storage Account Network Access Is Too Permissive"
+ },
+ {
+  "category": "Access Control",
+  "cwe": "521",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/linux_virtual_machine#public_key-1"
+  ],
+  "remediation": "All linux based virtual machines should set SSH keys for enchanced security",
+  "resources": [
+   "azurerm_linux_virtual_machine"
+  ],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "a5cfef8f-910e-4fd6-8155-f381b236a492",
+  "title": "Beta - VM Without Admin SSH Public Key Set"
+ },
+ {
+  "category": "Observability",
+  "cwe": "778",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/monitor_activity_log_alert"
+  ],
+  "remediation": "There should be a 'azurerm_monitor_activity_log_alert' resource configured to capture delete policy assignment events",
+  "resources": [
+   "azurerm_monitor_activity_log_alert"
+  ],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "a7b422e3-0b2f-4795-a43a-136dbbd6cbb3",
+  "title": "Beta - Activity Log Alert For Delete Policy Assignment Not Configured"
+ },
+ {
+  "category": "Insecure Configurations",
+  "cwe": "295",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/app_service#client_cert_enabled"
+  ],
+  "remediation": "Azure App Service client certificate should be enabled",
+  "resources": [
+   "azurerm_app_service"
+  ],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "a81573f9-3691-4d83-88a0-7d4af63e17a3",
+  "title": "Azure App Service Client Certificate Disabled"
+ },
+ {
+  "category": "Networking and Firewall",
+  "cwe": "284",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/redis_firewall_rule"
+  ],
+  "remediation": "Check if any firewall rule allows too many hosts to access Redis Cache",
+  "resources": [
+   "azurerm_redis_firewall_rule"
+  ],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "a829b715-cf75-4e92-b645-54c9b739edfb",
+  "title": "Firewall Rule Allows Too Many Hosts To Access Redis Cache"
+ },
+ {
+  "category": "Encryption",
+  "cwe": "311",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/managed_disk#encryption_settings"
+  ],
+  "remediation": "Ensure that the encryption is active on the disk",
+  "resources": [
+   "azurerm_managed_disk"
+  ],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "a99130ab-4c0e-43aa-97f8-78d4fcb30024",
+  "title": "Encryption On Managed Disk Disabled"
+ },
+ {
+  "category": "Insecure Configurations",
+  "cwe": "319",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/function_app#http2_enabled"
+  ],
+  "remediation": "Function App should have 'http2_enabled' enabled",
+  "resources": [
+   "azurerm_function_app"
+  ],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "ace823d1-4432-4dee-945b-cdf11a5a6bd0",
+  "title": "Function App HTTP2 Disabled"
+ },
+ {
+  "category": "Networking and Firewall",
+  "cwe": "732",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/mssql_server#public_network_access_enabled"
+  ],
+  "remediation": "MSSQL Server public network access should be disabled",
+  "resources": [
+   "azurerm_mssql_server"
+  ],
+  "severity": "high",
+  "source": "kics",
+  "source_id": "ade36cf4-329f-4830-a83d-9db72c800507",
+  "title": "MSSQL Server Public Network Access Enabled"
+ },
+ {
+  "category": "Encryption",
+  "cwe": "311",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/kubernetes_cluster#disk_encryption_set_id"
+  ],
+  "remediation": "Azure Container Service (AKS) should use Disk Encryption Set ID in supported types of disk",
+  "resources": [
+   "azurerm_kubernetes_cluster"
+  ],
+  "severity": "low",
+  "source": "kics",
+  "source_id": "b17d8bb8-4c08-4785-867e-cb9e62a622aa",
+  "title": "AKS Disk Encryption Set ID Undefined"
+ },
+ {
+  "category": "Backup",
+  "cwe": "754",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/recovery_services_vault#soft_delete_enabled-1"
+  ],
+  "remediation": "No 'azurerm_recovery_services_vault' resource should set 'soft_delete_enabled' to false, this makes it impossible to recover backup data",
+  "resources": [
+   "azurerm_recovery_services_vault"
+  ],
+  "severity": "high",
+  "source": "kics",
+  "source_id": "b373043c-f3bf-40db-b67a-c982732c7781",
+  "title": "Beta - Recovery Services Vault Without Soft Delete"
+ },
+ {
+  "category": "Observability",
+  "cwe": "778",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/monitor_activity_log_alert"
+  ],
+  "remediation": "There should be a 'azurerm_monitor_activity_log_alert' resource configured to capture 'delete public ip address rule' events",
+  "resources": [
+   "azurerm_monitor_activity_log_alert"
+  ],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "b3b9ce2f-c229-4133-9a2b-4e649cf2347e",
+  "title": "Beta - Activity Log Alert For Delete Public IP Address Rule Not Configured"
+ },
+ {
+  "category": "Availability",
+  "cwe": "693",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/virtual_network#ddos_protection_plan"
+  ],
+  "remediation": "Virtual Network should have DDoS Protection Plan enabled",
+  "resources": [
+   "azurerm_virtual_network"
+  ],
+  "severity": "low",
+  "source": "kics",
+  "source_id": "b4cc2c52-34a6-4b43-b57c-4bdeb4514a5a",
+  "title": "Virtual Network with DDoS Protection Plan disabled"
+ },
+ {
+  "category": "Resource Management",
+  "cwe": "285",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/app_service#identity"
+  ],
+  "remediation": "Azure App Service should have managed identity enabled",
+  "resources": [
+   "azurerm_app_service"
+  ],
+  "severity": "low",
+  "source": "kics",
+  "source_id": "b61cce4b-0cc4-472b-8096-15617a6d769b",
+  "title": "App Service Managed Identity Disabled"
+ },
+ {
+  "category": "Encryption",
+  "cwe": "326",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/app_service#min_tls_version"
+  ],
+  "remediation": "Ensure App Service is using the latest version of TLS encryption",
+  "resources": [
+   "azurerm_app_service"
+  ],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "b7b9d1c7-2d3b-49b4-b867-ebbe68d0b643",
+  "title": "App Service Not Using Latest TLS Encryption Version"
+ },
+ {
+  "category": "Access Control",
+  "cwe": "732",
+  "provider": "azure",
+  "refs": [
+   "https://www.terraform.io/docs/providers/azurerm/r/container_registry.html"
+  ],
+  "remediation": "Admin user is enabled for Container Registry",
+  "resources": [],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "b897dfbf-322c-45a8-b67c-1e698beeaa51",
+  "title": "Admin User Enabled For Container Registry"
+ },
+ {
+  "category": "Insecure Configurations",
+  "cwe": "779",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/network_watcher_flow_log"
+  ],
+  "remediation": "Check if enable field in the resource azurerm_network_watcher_flow_log is false.",
+  "resources": [
+   "azurerm_network_watcher_flow_log"
+  ],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "b90842e5-6779-44d4-9760-972f4c03ba1c",
+  "title": "Network Watcher Flow Disabled"
+ },
+ {
+  "category": "Insecure Configurations",
+  "cwe": "912",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/redis_cache#patch_schedule"
+  ],
+  "remediation": "Redis Cache is not configured to be updated regularly with security and operational updates",
+  "resources": [
+   "azurerm_redis_cache"
+  ],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "b947809d-dd2f-4de9-b724-04d101c515aa",
+  "title": "Redis Not Updated Regularly"
+ },
+ {
+  "category": "Observability",
+  "cwe": "778",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/monitor_activity_log_alert"
+  ],
+  "remediation": "There should be a 'azurerm_monitor_activity_log_alert' resource configured to capture 'delete security solution' events",
+  "resources": [
+   "azurerm_monitor_activity_log_alert"
+  ],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "b97a1065-a86b-442f-86c4-f95afd9b3ac6",
+  "title": "Beta - Activity Log Alert For Delete Security Solution Not Configured"
+ },
+ {
+  "category": "Insecure Configurations",
+  "cwe": "284",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/virtual_machine#network_interface_ids"
+  ],
+  "remediation": "No Network Security Group is attached to the Virtual Machine",
+  "resources": [
+   "azurerm_virtual_machine"
+  ],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "bbf6b3df-4b65-4f87-82cc-da9f30f8c033",
+  "title": "VM Not Attached To Network"
+ },
+ {
+  "category": "Best Practices",
+  "cwe": "522",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/sql_active_directory_administrator"
+  ],
+  "remediation": "Azure SQL Server must avoid using predictable Active Directory Administrator Account names, like 'Admin', which means the attribute 'login' must be set to a name that is not easy to predict",
+  "resources": [
+   "azurerm_sql_active_directory_administrator"
+  ],
+  "severity": "low",
+  "source": "kics",
+  "source_id": "bcd3fc01-5902-4f2a-b05a-227f9bbf5450",
+  "title": "SQL Server Predictable Active Directory Account Name"
+ },
+ {
+  "category": "Networking and Firewall",
+  "cwe": "200",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/network_interface#public_ip_address_id"
+  ],
+  "remediation": "Network Interfaces should not be exposed with a public IP address. If configured, additional security baselines should be followed (https://docs.microsoft.com/en-us/security/benchmark/azure/baselines/virtual-network-security-baseline, https://docs.microsoft.com/en-us/security/benchmark/azure/baselines/public-ip-security-baseline)",
+  "resources": [
+   "azurerm_network_interface"
+  ],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "c1573577-e494-4417-8854-7e119368dc8b",
+  "title": "Network Interfaces With Public IP"
+ },
+ {
+  "category": "Networking and Firewall",
+  "cwe": "285",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/cosmosdb_account#ip_range_filter"
+  ],
+  "remediation": "The IP range filter should be defined to secure the data stored",
+  "resources": [
+   "azurerm_cosmosdb_account"
+  ],
+  "severity": "critical",
+  "source": "kics",
+  "source_id": "c2a3efb6-8a58-481c-82f2-bfddf34bb4b7",
+  "title": "CosmosDB Account IP Range Filter Not Set"
+ },
+ {
+  "category": "Resource Management",
+  "cwe": "665",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/postgresql_server#threat_detection_policy"
+  ],
+  "remediation": "PostgreSQL Server Threat Detection Policy should be enabled",
+  "resources": [
+   "azurerm_postgresql_server"
+  ],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "c407c3cf-c409-4b29-b590-db5f4138d332",
+  "title": "PostgreSQL Server Threat Detection Policy Disabled"
+ },
+ {
+  "category": "Observability",
+  "cwe": "778",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/postgresql_configuration"
+  ],
+  "remediation": "Make sure that for PostgreSQL Database, server parameter 'log_connections' is set to 'ON'",
+  "resources": [
+   "azurerm_postgresql_configuration"
+  ],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "c640d783-10c5-4071-b6c1-23507300d333",
+  "title": "PostgreSQL Log Connections Not Set"
+ },
+ {
+  "category": "Networking and Firewall",
+  "cwe": "200",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/network_security_rule"
+  ],
+  "remediation": "A sensitive port, such as port 23 or port 110, is open for wide private network in either TCP or UDP protocol",
+  "resources": [
+   "azurerm_network_security_rule"
+  ],
+  "severity": "low",
+  "source": "kics",
+  "source_id": "c6c7b33d-d7f6-4ab8-8c82-ca0431ecdb7e",
+  "title": "Sensitive Port Is Exposed To Wide Private Network"
+ },
+ {
+  "category": "Access Control",
+  "cwe": "285",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/app_service#enabled"
+  ],
+  "remediation": "Azure App Service authentication settings should be enabled",
+  "resources": [
+   "azurerm_app_service"
+  ],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "c7fc1481-2899-4490-bbd8-544a3a61a2f3",
+  "title": "App Service Authentication Disabled"
+ },
+ {
+  "category": "Insecure Configurations",
+  "cwe": "284",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/function_app#identity"
+  ],
+  "remediation": "Azure Function App should have managed identity enabled",
+  "resources": [
+   "azurerm_function_app"
+  ],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "c87749b3-ff10-41f5-9df2-c421e8151759",
+  "title": "Function App Managed Identity Disabled"
+ },
+ {
+  "category": "Best Practices",
+  "cwe": "665",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/app_service#python_version"
+  ],
+  "remediation": "Periodically, newer versions are released for Python software either due to security flaws or to include additional functionality. Using the latest full Python version for web apps is recommended in order to take advantage of security fixes, if any, and/or additional functionalities of the newer version.",
+  "resources": [
+   "azurerm_app_service"
+  ],
+  "severity": "low",
+  "source": "kics",
+  "source_id": "cc4aaa9d-1070-461a-b519-04e00f42db8a",
+  "title": "App Service Without Latest Python Version"
+ },
+ {
+  "category": "Backup",
+  "cwe": "530",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/key_vault"
+  ],
+  "remediation": "Deleting an Azure Key Vault without purge protection enabled can cause permanent loss of keys, secrets, and certificates, leading to unrecoverable data loss and disruption of dependent services.",
+  "resources": [
+   "azurerm_key_vault"
+  ],
+  "severity": "high",
+  "source": "kics",
+  "source_id": "cec6e005-9309-46eb-b34b-456f6eae818b",
+  "title": "Beta - Key Vault Purge Protection Is Enabled"
+ },
+ {
+  "category": "Observability",
+  "cwe": "778",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/monitor_activity_log_alert"
+  ],
+  "remediation": "There should be a 'azurerm_monitor_activity_log_alert' resource configured to capture create policy assignment events",
+  "resources": [
+   "azurerm_monitor_activity_log_alert"
+  ],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "d0514e4b-9e95-4a7a-9bc5-0adb32514122",
+  "title": "Beta - Activity Log Alert For Create Policy Assignment Not Configured"
+ },
+ {
+  "category": "Access Control",
+  "cwe": "732",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/recovery_services_vault#public_network_access_enabled-1"
+  ],
+  "remediation": "All 'azurerm_recovery_services_vault' resources should set 'public_network_access_enabled' to false in order to prevent exposure to the internet and reduce the risk of unauthorized access",
+  "resources": [
+   "azurerm_recovery_services_vault"
+  ],
+  "severity": "high",
+  "source": "kics",
+  "source_id": "d3ba7d62-bd07-4102-88ca-9668e5f08e7d",
+  "title": "Beta - Recovery Services Vault With Public Network Access"
+ },
+ {
+  "category": "Insecure Configurations",
+  "cwe": "522",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/redis_cache"
+  ],
+  "remediation": "Without a System Assigned identity, the Redis instance cannot use Entra ID for secure RBAC access, increasing the risk of credential exposure or overly permissive access.",
+  "resources": [
+   "azurerm_redis_cache"
+  ],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "d501246e-45d4-48fd-8975-a23e7124bdfc",
+  "title": "Beta - Redis Cache Managed Identity Is Not Set To System Assigned"
+ },
+ {
+  "category": "Networking and Firewall",
+  "cwe": "284",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/sql_firewall_rule"
+  ],
+  "remediation": "Azure SQL Server Accessibility should be set to a minimal address range to grant the principle of least privileges, which means the difference between the values of the 'end_ip_address' and 'start_ip_address' must be less than 256. Additionally, both ips must be different from '0.0.0.0'.",
+  "resources": [
+   "azurerm_sql_firewall_rule"
+  ],
+  "severity": "critical",
+  "source": "kics",
+  "source_id": "d7ba74da-2da0-4d4b-83c8-2fd72a3f6c28",
+  "title": "Unrestricted SQL Server Access"
+ },
+ {
+  "category": "Best Practices",
+  "cwe": "284",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/linux_virtual_machine#admin_ssh_key"
+  ],
+  "remediation": "Azure Instances should use SSH Key instead of basic authentication",
+  "resources": [
+   "azurerm_linux_virtual_machine"
+  ],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "dafe30ec-325d-4516-85d1-e8e6776f012c",
+  "title": "Azure Instance Using Basic Authentication"
+ },
+ {
+  "category": "Access Control",
+  "cwe": "285",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/storage_container#container_access_type"
+  ],
+  "remediation": "Anonymous, public read access to a container and its blobs are enabled in Azure Blob Storage",
+  "resources": [
+   "azurerm_storage_container"
+  ],
+  "severity": "high",
+  "source": "kics",
+  "source_id": "dd5230f8-a577-4bbb-b7ac-f2c2fe7d5299",
+  "title": "Storage Container Is Publicly Accessible"
+ },
+ {
+  "category": "Secret Management",
+  "cwe": "521",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/key_vault_secret"
+  ],
+  "remediation": "Make sure that for all secrets the expiration date is set",
+  "resources": [
+   "azurerm_key_vault_secret"
+  ],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "dfa20ffa-f476-428f-a490-424b41e91c7f",
+  "title": "Secret Expiration Not Set"
+ },
+ {
+  "category": "Encryption",
+  "cwe": "326",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/redis_cache"
+  ],
+  "remediation": "Ensure Redis Cache is using the latest version of TLS encryption",
+  "resources": [
+   "azurerm_redis_cache"
+  ],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "e22e5620-3679-418e-bb74-c9f71731ab0f",
+  "title": "Beta - Redis Cache Not Using Latest TLS Encryption Version"
+ },
+ {
+  "category": "Insecure Configurations",
+  "cwe": "319",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/redis_cache"
+  ],
+  "remediation": "Redis Cache resources should not allow non-SSL connections",
+  "resources": [
+   "azurerm_redis_cache"
+  ],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "e29a75e6-aba3-4896-b42d-b87818c16b58",
+  "title": "Redis Cache Allows Non SSL Connections"
+ },
+ {
+  "category": "Access Control",
+  "cwe": "284",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/function_app#auth_settings"
+  ],
+  "remediation": "Azure Function App authentication settings should be enabled",
+  "resources": [
+   "azurerm_function_app"
+  ],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "e65a0733-94a0-4826-82f4-df529f4c593f",
+  "title": "Function App Authentication Disabled"
+ },
+ {
+  "category": "Networking and Firewall",
+  "cwe": "200",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/network_security_rule"
+  ],
+  "remediation": "A sensitive port, such as port 23 or port 110, is open for small public network in either TCP or UDP protocol",
+  "resources": [
+   "azurerm_network_security_rule"
+  ],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "e9dee01f-2505-4df2-b9bf-7804d1fd9082",
+  "title": "Sensitive Port Is Exposed To Small Public Network"
+ },
+ {
+  "category": "Networking and Firewall",
+  "cwe": "732",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/network_security_rule"
+  ],
+  "remediation": "Port 3389 (Remote Desktop) is exposed to the internet",
+  "resources": [
+   "azurerm_network_security_rule"
+  ],
+  "severity": "high",
+  "source": "kics",
+  "source_id": "efbf6449-5ec5-4cfe-8f15-acc51e0d787c",
+  "title": "RDP Is Exposed To The Internet"
+ },
+ {
+  "category": "Networking and Firewall",
+  "cwe": "732",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/mysql_server#public_network_access_enabled"
+  ],
+  "remediation": "MySQL Server public access should be disabled",
+  "resources": [
+   "azurerm_mysql_server"
+  ],
+  "severity": "high",
+  "source": "kics",
+  "source_id": "f118890b-2468-42b1-9ce9-af35146b425b",
+  "title": "MySQL Server Public Access Enabled"
+ },
+ {
+  "category": "Insecure Configurations",
+  "cwe": "285",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/kubernetes_cluster"
+  ],
+  "remediation": "Azure Kubernetes Service should have the proper network policy configuration to ensure the principle of least privileges, which means that 'network_profile.network_policy' should be defined",
+  "resources": [],
+  "severity": "low",
+  "source": "kics",
+  "source_id": "f5342045-b935-402d-adf1-8dbbd09c0eef",
+  "title": "AKS Network Policy Misconfigured"
+ },
+ {
+  "category": "Observability",
+  "cwe": "778",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/monitor_activity_log_alert"
+  ],
+  "remediation": "There should be a 'azurerm_monitor_activity_log_alert' resource configured to capture service health events",
+  "resources": [
+   "azurerm_monitor_activity_log_alert"
+  ],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "f677bd92-3922-4e75-8f0c-2c0f8fbc9609",
+  "title": "Beta - Activity Log Alert For Service Health Not Configured"
+ },
+ {
+  "category": "Observability",
+  "cwe": "778",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/sql_server"
+  ],
+  "remediation": "Make sure that for SQL Servers, 'Auditing' is set to 'On'",
+  "resources": [
+   "azurerm_sql_server"
+  ],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "f7e296b0-6660-4bc5-8f87-22ac4a815edf",
+  "title": "SQL Server Auditing Disabled"
+ },
+ {
+  "category": "Best Practices",
+  "cwe": "665",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/key_vault_secret#content_type"
+  ],
+  "remediation": "Key Vault Secrets should have set Content Type",
+  "resources": [
+   "azurerm_key_vault_secret"
+  ],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "f8e08a38-fc6e-4915-abbe-a7aadf1d59ef",
+  "title": "Key Vault Secrets Content Type Undefined"
+ },
+ {
+  "category": "Encryption",
+  "cwe": "326",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/key_vault_key#key_type-1"
+  ],
+  "remediation": "Key Vaults should set key type to one that uses HSM for added security",
+  "resources": [
+   "azurerm_key_vault_key"
+  ],
+  "severity": "low",
+  "source": "kics",
+  "source_id": "fbb8e5e0-6dea-41d3-8739-4f2405b0e22a",
+  "title": "Beta - Key Vault Without HSM Protection"
+ },
+ {
+  "category": "Networking and Firewall",
+  "cwe": "668",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/redis_firewall_rule"
+  ],
+  "remediation": "Firewall rule allowing unrestricted access to Redis from the Internet",
+  "resources": [
+   "azurerm_redis_firewall_rule"
+  ],
+  "severity": "critical",
+  "source": "kics",
+  "source_id": "fd8da341-6760-4450-b26c-9f6d8850575e",
+  "title": "Redis Entirely Accessible"
+ },
+ {
+  "category": "Observability",
+  "cwe": "778",
+  "provider": "azure",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/postgresql_configuration"
+  ],
+  "remediation": "Make sure that for PostgreSQL Database, server parameter 'log_retention' is set to 'ON'",
+  "resources": [
+   "azurerm_postgresql_configuration"
+  ],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "ffb02aca-0d12-475e-b77c-a726f7aeff4b",
+  "title": "Log Retention Is Not Set"
+ }
+]

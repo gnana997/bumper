@@ -1,0 +1,1595 @@
+[
+ {
+  "category": "secrets,gen-ai,identity-access",
+  "cwe": "",
+  "fix_terraform": "```hcl\nresource \"google_apikeys_key\" \"key\" {\n  display_name = \"<example_resource_name>\"\n\n  restrictions {\n    api_targets {\n      service = \"<SERVICE_NAME>\" # Critical: restricts the key to a specific API, removing any \"All Google APIs\" (cloudapis.googleapis.com)\n    }\n  }\n}\n```",
+  "provider": "gcp",
+  "refs": [
+   "https://hub.prowler.com/check/apikeys_api_restricted_with_gemini_api"
+  ],
+  "remediation": "Apply **API restrictions** so that each key only has access to specific APIs. Do *not* allow access to the \"Generative Language API\" in particular.\nIf access to the \"Generative Language API\" is required, be aware of the consequences. Only use the key for this specific purpose and ensure adequate **secrets storage**.\n\nAlternatively, completely disable the Gemini API (a.k.a. Generative Language API, `generativelanguage.googleapis.com`) in the project's enabled services.",
+  "resources": [
+   "google_apikeys_key"
+  ],
+  "severity": "high",
+  "source": "prowler",
+  "source_id": "apikeys_api_restricted_with_gemini_api",
+  "title": "API key is restricted to specific Google APIs when the Gemini (Generative Language) API is enabled"
+ },
+ {
+  "category": "secrets,identity-access",
+  "cwe": "",
+  "fix_terraform": "```hcl\nresource \"google_apikeys_key\" \"key\" {\n  display_name = \"<example_resource_name>\"\n\n  restrictions {\n    api_targets {\n      service = \"<SERVICE_NAME>\" # Critical: restricts the key to a specific API, removing any \"All Google APIs\" (cloudapis.googleapis.com)\n    }\n  }\n}\n```",
+  "provider": "gcp",
+  "refs": [
+   "https://hub.prowler.com/check/apikeys_api_restrictions_configured"
+  ],
+  "remediation": "Apply **least privilege**: restrict each API key to only the specific APIs it must access and never include `cloudapis.googleapis.com`. Add **application restrictions** (referrers, IPs, app IDs), rotate keys, and monitor usage. Prefer **service accounts** or short-lived tokens for production as part of **defense in depth**.",
+  "resources": [
+   "google_apikeys_key"
+  ],
+  "severity": "high",
+  "source": "prowler",
+  "source_id": "apikeys_api_restrictions_configured",
+  "title": "API key is restricted to specific Google APIs"
+ },
+ {
+  "category": "",
+  "cwe": "",
+  "fix_terraform": "```hcl\nresource \"google_project_service\" \"<example_resource_name>\" {\n  project = \"<example_project_id>\"\n  service = \"containeranalysis.googleapis.com\" # Enables Artifact Analysis (Container Analysis) API to pass the check\n}\n```",
+  "provider": "gcp",
+  "refs": [
+   "https://hub.prowler.com/check/artifacts_container_analysis_enabled"
+  ],
+  "remediation": "Enable **Artifact Analysis** (`containeranalysis.googleapis.com`) for projects hosting container images. Integrate scan results into CI/CD policy gates, apply **least privilege** to findings access, and rebuild images promptly to maintain **defense in depth**.",
+  "resources": [
+   "google_project_service"
+  ],
+  "severity": "medium",
+  "source": "prowler",
+  "source_id": "artifacts_container_analysis_enabled",
+  "title": "GCP project has Artifact Registry Container Analysis API enabled"
+ },
+ {
+  "category": "encryption",
+  "cwe": "",
+  "fix_terraform": "```hcl\nresource \"google_bigquery_dataset\" \"<example_resource_name>\" {\n  dataset_id = \"<example_resource_id>\"\n  location   = \"<LOCATION>\"\n\n  # Critical: apply CMEK at the dataset level so the check passes\n  default_encryption_configuration {\n    kms_key_name = \"projects/<KMS_PROJECT_ID>/locations/<LOCATION>/keyRings/<KEY_RING>/cryptoKeys/<KEY_NAME>\" # Critical: sets CMEK\n  }\n}\n```",
+  "provider": "gcp",
+  "refs": [
+   "https://hub.prowler.com/check/bigquery_dataset_cmk_encryption"
+  ],
+  "remediation": "Protect datasets with **CMEK** via Cloud KMS:\n- Set a dataset or project default key\n- Align key location with dataset region\n- Enforce **least privilege** and separation of duties on key usage\n- Rotate keys and define revocation procedures\n- Audit key usage and use org policies to require CMEK",
+  "resources": [
+   "google_bigquery_dataset"
+  ],
+  "severity": "high",
+  "source": "prowler",
+  "source_id": "bigquery_dataset_cmk_encryption",
+  "title": "BigQuery dataset is encrypted with Customer-Managed Keys (CMKs)"
+ },
+ {
+  "category": "internet-exposed,identity-access",
+  "cwe": "",
+  "fix_terraform": "```hcl\n# Ensure the dataset is not public by removing public principals from IAM (authoritative for this role)\nresource \"google_bigquery_dataset_iam_binding\" \"<example_resource_name>\" {\n  dataset_id = \"<example_resource_id>\"\n  role       = \"roles/bigquery.dataViewer\"\n  members    = [\n    \"user:<example_user_email>\" # CRITICAL: exclude allUsers/allAuthenticatedUsers to remove public access\n  ]\n}\n```",
+  "provider": "gcp",
+  "refs": [
+   "https://hub.prowler.com/check/bigquery_dataset_public_access"
+  ],
+  "remediation": "Apply **least privilege** on datasets:\n- Remove `allUsers` and `allAuthenticatedUsers`\n- Grant access only to required groups or service accounts\n- Use **authorized views** or controlled listings for sharing\n- Review access regularly and enforce org policies that block public identities for **defense in depth**",
+  "resources": [
+   "google_bigquery_dataset_iam_binding"
+  ],
+  "severity": "high",
+  "source": "prowler",
+  "source_id": "bigquery_dataset_public_access",
+  "title": "BigQuery dataset is not publicly accessible"
+ },
+ {
+  "category": "encryption",
+  "cwe": "",
+  "fix_terraform": "```hcl\nresource \"google_bigquery_table\" \"<example_resource_name>\" {\n  dataset_id = \"<DATASET_ID>\"\n  table_id   = \"<TABLE_ID>\"\n\n  schema = jsonencode([\n    { name = \"id\", type = \"INT64\", mode = \"NULLABLE\" }\n  ])\n\n  # Critical: enforce CMEK on the table using the specified KMS key\n  encryption_configuration {\n    kms_key_name = \"projects/<KMS_PROJECT_ID>/locations/<LOCATION>/keyRings/<KEY_RING>/cryptoKeys/<KEY>\"  # Enables CMK encryption\n  }\n}\n```",
+  "provider": "gcp",
+  "refs": [
+   "https://hub.prowler.com/check/bigquery_table_cmk_encryption"
+  ],
+  "remediation": "Protect BigQuery tables with **Cloud KMS CMEK** to retain key ownership and control.\n- Set dataset/project default keys\n- Match key location to dataset region\n- Enforce least-privilege on KMS and monitor usage\n- Rotate keys and define revocation procedures\n- Apply org policies to require CMEK and restrict permissible key projects",
+  "resources": [
+   "google_bigquery_table"
+  ],
+  "severity": "high",
+  "source": "prowler",
+  "source_id": "bigquery_table_cmk_encryption",
+  "title": "BigQuery table is encrypted with a Customer-Managed Key (CMK)"
+ },
+ {
+  "category": "resilience",
+  "cwe": "",
+  "fix_terraform": "```hcl\nresource \"google_sql_database_instance\" \"<example_resource_name>\" {\n  name             = \"<example_resource_id>\"\n  database_version = \"POSTGRES_14\"\n  region           = \"<REGION>\"\n\n  settings {\n    tier = \"db-custom-1-3840\"\n\n    backup_configuration {\n      enabled    = true      # Critical: turns on automated backups\n      start_time = \"02:00\"  # Critical: required to enable backups and set start time\n    }\n  }\n}\n```",
+  "provider": "gcp",
+  "refs": [
+   "https://hub.prowler.com/check/cloudsql_instance_automated_backups"
+  ],
+  "remediation": "Enable **automated backups** on all Cloud SQL instances holding important data. Set retention and schedules to meet `RPO`/`RTO`, and enable point-in-time recovery. Apply **least privilege** to backup access, use **separation of duties**, consider cross-region resilience, and regularly test restores with monitoring and alerts for failures.",
+  "resources": [
+   "google_sql_database_instance"
+  ],
+  "severity": "high",
+  "source": "prowler",
+  "source_id": "cloudsql_instance_automated_backups",
+  "title": "Cloud SQL database instance has automated backups configured"
+ },
+ {
+  "category": "encryption",
+  "cwe": "",
+  "fix_terraform": "```hcl\nresource \"google_sql_database_instance\" \"example\" {\n  name             = \"<instance_name>\"\n  database_version = \"<database_version>\"\n  region           = \"<region>\"\n\n  encryption_key_name = \"projects/<project>/locations/<region>/keyRings/<ring>/cryptoKeys/<key>\"\n\n  settings {\n    tier = \"db-custom-2-7680\"\n  }\n}\n```",
+  "provider": "gcp",
+  "refs": [
+   "https://hub.prowler.com/check/cloudsql_instance_cmek_encryption_enabled"
+  ],
+  "remediation": "For instances storing personal or sensitive data, create new Cloud SQL instances with CMEK using a Cloud KMS key in the same region. Ensure the Cloud SQL service account has the roles/cloudkms.cryptoKeyEncrypterDecrypter role on the key, and enable key rotation per your policy.",
+  "resources": [
+   "google_sql_database_instance"
+  ],
+  "severity": "medium",
+  "source": "prowler",
+  "source_id": "cloudsql_instance_cmek_encryption_enabled",
+  "title": "Cloud SQL instance is encrypted with a customer-managed key (CMEK)"
+ },
+ {
+  "category": "vulnerabilities",
+  "cwe": "",
+  "fix_terraform": "```hcl\nresource \"google_sql_database_instance\" \"<example_resource_name>\" {\n  name             = \"<example_resource_name>\"\n  database_version = \"MYSQL_8_0\"\n  region           = \"<example_region>\"\n\n  settings {\n    tier = \"<example_tier>\"\n    # Critical: disables LOCAL INFILE to pass the check\n    database_flags {\n      name  = \"local_infile\"  # sets the specific flag\n      value = \"off\"           # required value for compliance\n    }\n  }\n}\n```",
+  "provider": "gcp",
+  "refs": [
+   "https://hub.prowler.com/check/cloudsql_instance_mysql_local_infile_flag"
+  ],
+  "remediation": "Keep `local_infile` set to `off`. Use governed import channels (e.g., controlled object storage imports) and enforce **least privilege** for bulk-loading. Apply **separation of duties** between ingestion and admin roles, validate file sources and formats, and monitor high-volume loads. *If ever needed, enable only briefly for vetted tasks.*",
+  "resources": [
+   "google_sql_database_instance"
+  ],
+  "severity": "high",
+  "source": "prowler",
+  "source_id": "cloudsql_instance_mysql_local_infile_flag",
+  "title": "Cloud SQL MySQL instance has the local_infile database flag set to off"
+ },
+ {
+  "category": "identity-access",
+  "cwe": "",
+  "fix_terraform": "```hcl\nresource \"google_sql_database_instance\" \"<example_resource_name>\" {\n  name             = \"<example_resource_name>\"\n  database_version = \"MYSQL_8_0\"\n  region           = \"<example_region>\"\n\n  settings {\n    tier = \"db-custom-1-3840\"\n\n    database_flags {\n      name  = \"skip_show_database\"   # Critical: enforce hiding databases from users without SHOW DATABASES privilege\n      value = \"on\"                   # Critical: set flag to 'on' to pass the check\n    }\n  }\n}\n```",
+  "provider": "gcp",
+  "refs": [
+   "https://hub.prowler.com/check/cloudsql_instance_mysql_skip_show_database_flag"
+  ],
+  "remediation": "Set `skip_show_database` to `on` for all Cloud SQL MySQL instances. Enforce **least privilege** by granting `SHOW DATABASES` only when necessary and reviewing roles regularly. Use **defense in depth**: monitor access and admin actions, and plan changes in maintenance windows as flag updates may trigger restarts.",
+  "resources": [
+   "google_sql_database_instance"
+  ],
+  "severity": "low",
+  "source": "prowler",
+  "source_id": "cloudsql_instance_mysql_skip_show_database_flag",
+  "title": "Cloud SQL MySQL instance has skip_show_database flag set to on"
+ },
+ {
+  "category": "logging,forensics-ready",
+  "cwe": "",
+  "fix_terraform": "```hcl\nresource \"google_sql_database_instance\" \"<example_resource_name>\" {\n  name             = \"<example_resource_id>\"\n  region           = \"us-central1\"\n  database_version = \"POSTGRES_14\"\n\n  settings {\n    tier = \"db-custom-1-3840\"\n    database_flags {\n      name  = \"cloudsql.enable_pgaudit\"  # Critical: enable pgAudit\n      value = \"on\"                        # Critical: set flag to 'on' to pass the check\n    }\n  }\n}\n```",
+  "provider": "gcp",
+  "refs": [
+   "https://hub.prowler.com/check/cloudsql_instance_postgres_enable_pgaudit_flag"
+  ],
+  "remediation": "Enable `cloudsql.enable_pgaudit` and configure **pgAudit** to log required classes (e.g., `read`, `write`, `ddl`) under least privilege. Centralize logs, enforce retention and RBAC, and monitor with alerts. *Scope auditing to sensitive data to reduce noise and overhead, and review coverage regularly.*",
+  "resources": [
+   "google_sql_database_instance"
+  ],
+  "severity": "high",
+  "source": "prowler",
+  "source_id": "cloudsql_instance_postgres_enable_pgaudit_flag",
+  "title": "Cloud SQL PostgreSQL instance has 'cloudsql.enable_pgaudit' flag set to 'on'"
+ },
+ {
+  "category": "logging",
+  "cwe": "",
+  "fix_terraform": "```hcl\nresource \"google_sql_database_instance\" \"<example_resource_name>\" {\n  name             = \"<example_resource_name>\"\n  database_version = \"POSTGRES_14\"\n  region           = \"<region>\"\n\n  settings {\n    tier = \"db-f1-micro\"\n\n    # Critical: enables connection logging to pass the check\n    database_flags {\n      name  = \"log_connections\"  # critical\n      value = \"on\"                # critical\n    }\n  }\n}\n```",
+  "provider": "gcp",
+  "refs": [
+   "https://hub.prowler.com/check/cloudsql_instance_postgres_log_connections_flag"
+  ],
+  "remediation": "Enable `log_connections`=`on` for all PostgreSQL instances.\n- Apply **defense in depth**: also capture disconnects and audit events\n- Centralize logs, retain them, and alert on anomalies\n- Enforce **least privilege** and strong authentication to reduce exposure and improve detection",
+  "resources": [
+   "google_sql_database_instance"
+  ],
+  "severity": "medium",
+  "source": "prowler",
+  "source_id": "cloudsql_instance_postgres_log_connections_flag",
+  "title": "Cloud SQL PostgreSQL instance has log_connections flag set to on"
+ },
+ {
+  "category": "logging",
+  "cwe": "",
+  "fix_terraform": "```hcl\nresource \"google_sql_database_instance\" \"<example_resource_name>\" {\n  name             = \"<example_resource_name>\"\n  region           = \"<REGION>\"\n  database_version = \"POSTGRES_14\"\n\n  settings {\n    tier = \"<TIER>\"\n\n    # Critical: enable disconnect logging\n    database_flags {\n      name  = \"log_disconnections\"  # sets the required flag\n      value = \"on\"                   # ensures the check passes\n    }\n  }\n}\n```",
+  "provider": "gcp",
+  "refs": [
+   "https://hub.prowler.com/check/cloudsql_instance_postgres_log_disconnections_flag"
+  ],
+  "remediation": "Enable `log_disconnections=on` to ensure complete session auditing.\n- Pair with `log_connections` and a consistent `log_line_prefix`\n- Centralize and retain logs; alert on anomalies\n- Apply **defense in depth** with routine review of access and audit events",
+  "resources": [
+   "google_sql_database_instance"
+  ],
+  "severity": "medium",
+  "source": "prowler",
+  "source_id": "cloudsql_instance_postgres_log_disconnections_flag",
+  "title": "Cloud SQL PostgreSQL instance has log_disconnections flag set to on"
+ },
+ {
+  "category": "logging",
+  "cwe": "",
+  "fix_terraform": "```hcl\nresource \"google_sql_database_instance\" \"main\" {\n  name             = \"<example_resource_name>\"\n  region           = \"<example_region>\"\n  database_version = \"POSTGRES_14\"\n\n  settings {\n    tier = \"<example_machine_tier>\"\n\n    database_flags {\n      name  = \"log_error_verbosity\"\n      value = \"default\" # Critical: sets the flag to default to pass the check\n    }\n  }\n}\n```",
+  "provider": "gcp",
+  "refs": [
+   "https://hub.prowler.com/check/cloudsql_instance_postgres_log_error_verbosity_flag"
+  ],
+  "remediation": "Set `log_error_verbosity` to `default` to balance **data minimization** and **observability**.\n\n- Avoid `verbose` in production; restrict log access (least privilege)\n- Avoid `terse` except briefly to curb noise\n- Centralize logs with retention and tamper protection for **defense in depth**",
+  "resources": [
+   "google_sql_database_instance"
+  ],
+  "severity": "medium",
+  "source": "prowler",
+  "source_id": "cloudsql_instance_postgres_log_error_verbosity_flag",
+  "title": "Cloud SQL PostgreSQL instance has log_error_verbosity flag set to default"
+ },
+ {
+  "category": "logging",
+  "cwe": "",
+  "fix_terraform": "```hcl\nresource \"google_sql_database_instance\" \"<example_resource_name>\" {\n  name             = \"<example_resource_id>\"\n  region           = \"<region>\"\n  database_version = \"POSTGRES_14\"\n\n  settings {\n    tier = \"<tier>\"\n    # Critical: set to -1 to pass the check\n    database_flags {\n      name  = \"log_min_duration_statement\"  # Critical\n      value = \"-1\"                          # Critical\n    }\n  }\n}\n```",
+  "provider": "gcp",
+  "refs": [
+   "https://hub.prowler.com/check/cloudsql_instance_postgres_log_min_duration_statement_flag"
+  ],
+  "remediation": "Keep `log_min_duration_statement` at `-1` in production to avoid writing sensitive query text to logs. Apply **least privilege** to log access, enforce **data minimization** with redaction and short retention. *If troubleshooting is required*, enable narrowly and temporarily, prefer non-prod, and monitor access.",
+  "resources": [
+   "google_sql_database_instance"
+  ],
+  "severity": "medium",
+  "source": "prowler",
+  "source_id": "cloudsql_instance_postgres_log_min_duration_statement_flag",
+  "title": "Cloud SQL PostgreSQL instance has the log_min_duration_statement flag set to -1"
+ },
+ {
+  "category": "logging",
+  "cwe": "",
+  "fix_terraform": "```hcl\nresource \"google_sql_database_instance\" \"<example_resource_name>\" {\n  name             = \"<example_resource_name>\"\n  database_version = \"POSTGRES_14\"\n  region           = \"us-central1\"\n\n  settings {\n    tier = \"db-custom-2-7680\"\n    database_flags {\n      name  = \"log_min_error_statement\"  # critical: requires minimum 'error' level\n      value = \"error\"                     # sets the flag to pass the check\n    }\n  }\n}\n```",
+  "provider": "gcp",
+  "refs": [
+   "https://hub.prowler.com/check/cloudsql_instance_postgres_log_min_error_statement_flag"
+  ],
+  "remediation": "Set `log_min_error_statement` to `error` to balance insight and exposure. Enforce a **logging policy** that limits sensitive data in queries and supports **defense in depth**. Periodically review severity and retention to match workload and compliance needs and maintain reliable forensic readiness.",
+  "resources": [
+   "google_sql_database_instance"
+  ],
+  "severity": "medium",
+  "source": "prowler",
+  "source_id": "cloudsql_instance_postgres_log_min_error_statement_flag",
+  "title": "Cloud SQL for PostgreSQL instance has log_min_error_statement set to error"
+ },
+ {
+  "category": "logging",
+  "cwe": "",
+  "fix_terraform": "```hcl\nresource \"google_sql_database_instance\" \"<example_resource_name>\" {\n  name             = \"<example_resource_name>\"\n  region           = \"<example_region>\"\n  database_version = \"POSTGRES_14\"\n\n  settings {\n    tier = \"db-f1-micro\"\n\n    # Critical: sets the minimum PostgreSQL log level to WARNING (or higher) to pass the check\n    database_flags {\n      name  = \"log_min_messages\"  # sets the flag\n      value = \"warning\"            # acceptable level (WARNING or higher)\n    }\n  }\n}\n```",
+  "provider": "gcp",
+  "refs": [
+   "https://hub.prowler.com/check/cloudsql_instance_postgres_log_min_messages_flag"
+  ],
+  "remediation": "Set `log_min_messages` to **ERROR or stricter** to ensure error statements are captured with context. Align with centralized logging, retention, and review processes. Prefer **defense in depth** by preserving actionable error telemetry, while balancing verbosity and cost per your logging policy.",
+  "resources": [
+   "google_sql_database_instance"
+  ],
+  "severity": "medium",
+  "source": "prowler",
+  "source_id": "cloudsql_instance_postgres_log_min_messages_flag",
+  "title": "Cloud SQL PostgreSQL instance has the log_min_messages flag set to WARNING or higher"
+ },
+ {
+  "category": "logging",
+  "cwe": "",
+  "fix_terraform": "```hcl\nresource \"google_sql_database_instance\" \"<example_resource_name>\" {\n  name             = \"<example_resource_name>\"\n  region           = \"<region>\"\n  database_version = \"POSTGRES_14\"\n\n  settings {\n    tier = \"db-custom-2-7680\"\n\n    # Critical: sets PostgreSQL 'log_statement' to 'ddl' to pass the check\n    database_flags {\n      name  = \"log_statement\"   # required flag name\n      value = \"ddl\"             # required value\n    }\n  }\n}\n```",
+  "provider": "gcp",
+  "refs": [
+   "https://hub.prowler.com/check/cloudsql_instance_postgres_log_statement_flag"
+  ],
+  "remediation": "Configure `log_statement` to `ddl` to capture schema changes without excessive noise. Apply **defense in depth**: use targeted auditing for data access, restrict and monitor log access with **least privilege**, and enforce log retention and rotation to protect availability.",
+  "resources": [
+   "google_sql_database_instance"
+  ],
+  "severity": "medium",
+  "source": "prowler",
+  "source_id": "cloudsql_instance_postgres_log_statement_flag",
+  "title": "Cloud SQL PostgreSQL instance has 'log_statement' flag set to 'ddl'"
+ },
+ {
+  "category": "internet-exposed",
+  "cwe": "",
+  "fix_terraform": "```hcl\nresource \"google_sql_database_instance\" \"<example_resource_name>\" {\n  name             = \"<example_resource_name>\"\n  region           = \"<example_region>\"\n  database_version = \"POSTGRES_14\"\n\n  settings {\n    tier = \"db-f1-micro\"\n\n    ip_configuration {\n      ipv4_enabled    = false  # Critical: disables public IP\n      private_network = \"projects/<example_project_id>/global/networks/<example_resource_name>\"  # Critical: enables private IP on the specified VPC\n    }\n  }\n}\n```",
+  "provider": "gcp",
+  "refs": [
+   "https://hub.prowler.com/check/cloudsql_instance_private_ip_assignment"
+  ],
+  "remediation": "Use **private IP-only** connectivity for databases. Remove public IPs, segment access to required VPCs/subnets, and enforce **least privilege** with strong auth and TLS. For external access, use secure private channels (VPN/Interconnect) or a hardened bastion. Monitor connections as part of **defense in depth**.",
+  "resources": [
+   "google_sql_database_instance"
+  ],
+  "severity": "high",
+  "source": "prowler",
+  "source_id": "cloudsql_instance_private_ip_assignment",
+  "title": "Cloud SQL instance has no public IP addresses"
+ },
+ {
+  "category": "internet-exposed",
+  "cwe": "",
+  "fix_terraform": "```hcl\nresource \"google_sql_database_instance\" \"<example_resource_name>\" {\n  name             = \"<example_resource_name>\"\n  database_version = \"<DATABASE_VERSION>\"\n\n  settings {\n    tier = \"<TIER>\"\n\n    ip_configuration {\n      authorized_networks {\n        value = \"<ALLOWED_CIDR>\" # Critical: remove 0.0.0.0/0; allow only specific CIDR to pass the check\n      }\n    }\n  }\n}\n```",
+  "provider": "gcp",
+  "refs": [
+   "https://hub.prowler.com/check/cloudsql_instance_public_access"
+  ],
+  "remediation": "Enforce **least privilege** network access:\n- Remove `0.0.0.0/0`; allow only trusted, fixed IP ranges\n- Prefer **private IP** or **Private Service Connect** with VPC controls\n- Use proxied access (Cloud SQL Auth Proxy) over direct public connections\n- Apply org policies to prevent broad allowlists",
+  "resources": [
+   "google_sql_database_instance"
+  ],
+  "severity": "critical",
+  "source": "prowler",
+  "source_id": "cloudsql_instance_public_access",
+  "title": "Cloud SQL instance does not allow 0.0.0.0/0 in authorized networks"
+ },
+ {
+  "category": "internet-exposed",
+  "cwe": "",
+  "fix_terraform": "```hcl\n# Cloud SQL instance without public IP\nresource \"google_sql_database_instance\" \"<example_resource_name>\" {\n  name             = \"<example_resource_name>\"\n  region           = \"<REGION>\"\n  database_version = \"MYSQL_8_0\"\n\n  settings {\n    tier = \"db-f1-micro\"\n    ip_configuration {\n      ipv4_enabled   = false  # Critical: disables public (IPv4) IP\n      private_network = \"projects/<example_project_id>/global/networks/<example_resource_name>\"  # Critical: ensures private IP via specified VPC\n    }\n  }\n}\n```",
+  "provider": "gcp",
+  "refs": [
+   "https://hub.prowler.com/check/cloudsql_instance_public_ip"
+  ],
+  "remediation": "Prefer **private IP** and disable public endpoints. Access databases over VPC, VPN/Interconnect, or **Private Service Connect**. If `authorized networks` are required, restrict to specific sources-never `0.0.0.0/0`. Enforce **least privilege** IAM, use Cloud SQL connectors/proxy, and layer **defense in depth** with network controls and monitoring.",
+  "resources": [
+   "google_sql_database_instance"
+  ],
+  "severity": "high",
+  "source": "prowler",
+  "source_id": "cloudsql_instance_public_ip",
+  "title": "Cloud SQL database instance does not have a public IP address"
+ },
+ {
+  "category": "identity-access",
+  "cwe": "",
+  "fix_terraform": "```hcl\nresource \"google_sql_database_instance\" \"<example_resource_name>\" {\n  name             = \"<example_resource_name>\"\n  region           = \"<REGION>\"\n  database_version = \"SQLSERVER_2019_STANDARD\"\n\n  settings {\n    tier = \"<TIER>\"\n    database_flags {\n      name  = \"contained database authentication\" # critical: target flag\n      value = \"off\"                                # critical: disable contained DB auth\n    }\n  }\n}\n```",
+  "provider": "gcp",
+  "refs": [
+   "https://hub.prowler.com/check/cloudsql_instance_sqlserver_contained_database_authentication_flag"
+  ],
+  "remediation": "Keep `contained database authentication` set to `off`. Centralize authentication and auditing at the server layer or via directory integration, and apply **least privilege**. Avoid `USER WITH PASSWORD` contained users. If containment is unavoidable, tightly scope usage, enforce strong credentials, and monitor login activity.",
+  "resources": [
+   "google_sql_database_instance"
+  ],
+  "severity": "medium",
+  "source": "prowler",
+  "source_id": "cloudsql_instance_sqlserver_contained_database_authentication_flag",
+  "title": "Cloud SQL for SQL Server instance has 'contained database authentication' flag set to off"
+ },
+ {
+  "category": "identity-access,trust-boundaries",
+  "cwe": "",
+  "fix_terraform": "```hcl\nresource \"google_sql_database_instance\" \"<example_resource_name>\" {\n  name             = \"<example_resource_name>\"\n  region           = \"<REGION>\"\n  database_version = \"SQLSERVER_2019_STANDARD\"\n\n  settings {\n    tier = \"<TIER>\"\n\n    # Critical: ensures the flag is OFF to pass the check\n    database_flags {\n      name  = \"cross db ownership chaining\"  # disables cross-database ownership chaining\n      value = \"off\"\n    }\n  }\n}\n```",
+  "provider": "gcp",
+  "refs": [
+   "https://hub.prowler.com/check/cloudsql_instance_sqlserver_cross_db_ownership_chaining_flag"
+  ],
+  "remediation": "Keep `cross db ownership chaining` set to `off` to maintain database isolation. Enforce **least privilege** with explicit per-database permissions and **separation of duties**. Prefer controlled execution patterns (e.g., signed modules) over implicit trusts, and periodically review flags and access. *This flag is deprecated-do not enable it.*",
+  "resources": [
+   "google_sql_database_instance"
+  ],
+  "severity": "high",
+  "source": "prowler",
+  "source_id": "cloudsql_instance_sqlserver_cross_db_ownership_chaining_flag",
+  "title": "Cloud SQL SQL Server instance has 'cross db ownership chaining' flag set to off"
+ },
+ {
+  "category": "vulnerabilities",
+  "cwe": "",
+  "fix_terraform": "```hcl\nresource \"google_sql_database_instance\" \"<example_resource_name>\" {\n  name             = \"<example_resource_name>\"\n  region           = \"<REGION>\"\n  database_version = \"SQLSERVER_2019_STANDARD\"\n\n  settings {\n    tier = \"db-custom-2-7680\"\n\n    # Critical: disables external scripts on the SQL Server instance\n    database_flags {\n      name  = \"external scripts enabled\"  # sets the flag\n      value = \"off\"                        # required value to pass the check\n    }\n  }\n}\n```",
+  "provider": "gcp",
+  "refs": [
+   "https://hub.prowler.com/check/cloudsql_instance_sqlserver_external_scripts_enabled_flag"
+  ],
+  "remediation": "Keep `external scripts enabled` set to `off`. Apply **least privilege** and **defense in depth** by disabling code-execution features in the database. If analytics are required, use isolated instances, restrict outbound network access, and enforce change control and auditing to prevent misuse.",
+  "resources": [
+   "google_sql_database_instance"
+  ],
+  "severity": "high",
+  "source": "prowler",
+  "source_id": "cloudsql_instance_sqlserver_external_scripts_enabled_flag",
+  "title": "Cloud SQL SQL Server instance has 'external scripts enabled' flag set to 'off'"
+ },
+ {
+  "category": "trust-boundaries",
+  "cwe": "",
+  "fix_terraform": "```hcl\nresource \"google_sql_database_instance\" \"<example_resource_name>\" {\n  name             = \"<example_resource_name>\"\n  database_version = \"SQLSERVER_2019_STANDARD\"\n  region           = \"<example_region>\"\n\n  settings {\n    tier = \"<example_tier>\"\n\n    # Critical: disables SQL Server remote access to pass the check\n    database_flags {\n      name  = \"remote access\"\n      value = \"off\"  # sets the flag to off\n    }\n  }\n}\n```",
+  "provider": "gcp",
+  "refs": [
+   "https://hub.prowler.com/check/cloudsql_instance_sqlserver_remote_access_flag"
+  ],
+  "remediation": "Set `remote access` to `off` to reduce the attack surface. Apply **least privilege** and **defense in depth**: avoid remote stored procedures; if business-required, allow only trusted peers, enforce strong authentication, audit calls, and monitor for abuse.",
+  "resources": [
+   "google_sql_database_instance"
+  ],
+  "severity": "medium",
+  "source": "prowler",
+  "source_id": "cloudsql_instance_sqlserver_remote_access_flag",
+  "title": "Cloud SQL SQL Server instance has 'remote access' database flag set to 'off'"
+ },
+ {
+  "category": "vulnerabilities",
+  "cwe": "",
+  "fix_terraform": "```hcl\nresource \"google_sql_database_instance\" \"<example_resource_name>\" {\n  name             = \"<example_resource_name>\"\n  region           = \"<example_region>\"\n  database_version = \"SQLSERVER_2019_STANDARD\"\n\n  settings {\n    tier = \"<example_tier>\"\n\n    # Critical: enable SQL Server trace flag 3625\n    # This sets the flag to 'on' so the check passes\n    database_flags {\n      name  = \"3625\"\n      value = \"on\"\n    }\n  }\n}\n```",
+  "provider": "gcp",
+  "refs": [
+   "https://hub.prowler.com/check/cloudsql_instance_sqlserver_trace_flag"
+  ],
+  "remediation": "Set trace flag `3625` to `on` for all SQL Server instances in Cloud SQL to limit error details for non-admins. Apply **least privilege**, practice **defense in depth** with application-level error handling, and centralize diagnostics in logs rather than returning verbose messages to clients.",
+  "resources": [
+   "google_sql_database_instance"
+  ],
+  "severity": "medium",
+  "source": "prowler",
+  "source_id": "cloudsql_instance_sqlserver_trace_flag",
+  "title": "Cloud SQL for SQL Server instance has trace flag 3625 set to 'on'"
+ },
+ {
+  "category": "resilience",
+  "cwe": "",
+  "fix_terraform": "```hcl\nresource \"google_sql_database_instance\" \"<example_resource_name>\" {\n  name             = \"<example_resource_name>\"\n  region           = \"<region>\"\n  database_version = \"SQLSERVER_2019_STANDARD\"\n\n  settings {\n    tier = \"db-custom-1-3840\"\n\n    # Critical: ensure the 'user connections' flag is set to 0 to pass the check\n    database_flags {\n      name  = \"user connections\"  # Critical line: target flag\n      value = \"0\"                 # Critical line: set to 0\n    }\n  }\n}\n```",
+  "provider": "gcp",
+  "refs": [
+   "https://hub.prowler.com/check/cloudsql_instance_sqlserver_user_connections_flag"
+  ],
+  "remediation": "Set `user connections` to `0` to prevent artificial limits. Preserve **availability** with **connection pooling**, controlled retries, and **capacity planning** based on peak usage. *If a cap is required*, size it with ample headroom, monitor connection counts, and review regularly.",
+  "resources": [
+   "google_sql_database_instance"
+  ],
+  "severity": "medium",
+  "source": "prowler",
+  "source_id": "cloudsql_instance_sqlserver_user_connections_flag",
+  "title": "Cloud SQL SQL Server instance has the 'user connections' database flag set to 0"
+ },
+ {
+  "category": "vulnerabilities",
+  "cwe": "",
+  "fix_terraform": "```hcl\n# Cloud SQL for SQL Server instance with no 'user options' flag set\nresource \"google_sql_database_instance\" \"<example_resource_name>\" {\n  name             = \"<example_resource_name>\"\n  region           = \"<example_region>\"\n  database_version = \"SQLSERVER_2019_STANDARD\"\n\n  settings {\n    tier = \"db-custom-2-7680\"\n    # Remediation: Do NOT set a database_flags block for 'user options'\n    # This omission removes/unsets the 'user options' flag so the check passes.\n  }\n}\n```",
+  "provider": "gcp",
+  "refs": [
+   "https://hub.prowler.com/check/cloudsql_instance_sqlserver_user_options_flag"
+  ],
+  "remediation": "Leave `user options` unset at the instance level; keep default behavior. Control `SET` options explicitly at session or database scope.\n\n- Enforce **least privilege** for flag management\n- Use **change control** and testing before rollout\n- Monitor for configuration drift as part of **defense in depth**",
+  "resources": [
+   "google_sql_database_instance"
+  ],
+  "severity": "medium",
+  "source": "prowler",
+  "source_id": "cloudsql_instance_sqlserver_user_options_flag",
+  "title": "Cloud SQL for SQL Server instance does not have the 'user options' flag configured"
+ },
+ {
+  "category": "encryption",
+  "cwe": "",
+  "fix_terraform": "```hcl\nresource \"google_sql_database_instance\" \"<example_resource_name>\" {\n  name             = \"<example_resource_name>\"\n  region           = \"<region>\"\n  database_version = \"<database_version>\"\n\n  settings {\n    tier = \"<tier>\"\n    ip_configuration {\n      ssl_mode = \"ENCRYPTED_ONLY\" # Critical: only allow SSL/TLS-encrypted connections\n    }\n  }\n}\n```",
+  "provider": "gcp",
+  "refs": [
+   "https://hub.prowler.com/check/cloudsql_instance_ssl_connections"
+  ],
+  "remediation": "Require **TLS for all connections**. Prefer `TRUSTED_CLIENT_CERTIFICATE_REQUIRED` or use Cloud SQL Auth Proxy/Connectors for encrypted, authenticated channels.\n- Disallow mixed plaintext/SSL modes\n- Rotate and monitor certificates\n- Combine with **least privilege** and private access",
+  "resources": [
+   "google_sql_database_instance"
+  ],
+  "severity": "high",
+  "source": "prowler",
+  "source_id": "cloudsql_instance_ssl_connections",
+  "title": "Cloud SQL database instance requires SSL for all incoming connections"
+ },
+ {
+  "category": "logging",
+  "cwe": "",
+  "fix_terraform": "```hcl\nresource \"google_project_iam_audit_config\" \"storage_audit\" {\n  project = var.project_id\n  service = \"storage.googleapis.com\"\n\n  audit_log_config {\n    log_type = \"DATA_READ\"\n  }\n\n  audit_log_config {\n    log_type = \"DATA_WRITE\"\n  }\n}\n```",
+  "provider": "gcp",
+  "refs": [
+   "https://hub.prowler.com/check/cloudstorage_audit_logs_enabled"
+  ],
+  "remediation": "Enable Data Access audit logs (DATA_READ and DATA_WRITE) for Cloud Storage at the project level to track all read and write operations on storage objects for security monitoring and compliance.",
+  "resources": [
+   "google_project_iam_audit_config"
+  ],
+  "severity": "medium",
+  "source": "prowler",
+  "source_id": "cloudstorage_audit_logs_enabled",
+  "title": "Data Access audit logs are enabled for Cloud Storage"
+ },
+ {
+  "category": "",
+  "cwe": "",
+  "fix_terraform": "```hcl\nresource \"google_storage_bucket\" \"<example_resource_name>\" {\n  name     = \"<example_resource_name>\"\n  location = \"US\"\n\n  # Critical: add at least one lifecycle rule with a condition to pass the check\n  lifecycle_rule {\n    action { type = \"Delete\" }      # Critical: defines a supported action\n    condition { age = 1 }            # Critical: ensures the rule has a valid condition\n  }\n}\n```",
+  "provider": "gcp",
+  "refs": [
+   "https://hub.prowler.com/check/cloudstorage_bucket_lifecycle_management_enabled"
+  ],
+  "remediation": "Define lifecycle policies by data classification to enforce **least data retention**. Use `Delete` for TTL/age and `SetStorageClass` for archival, with version-aware conditions like `isLive=false` or `numNewerVersions`. Test on a limited dataset, review regularly, and align with **defense in depth**.",
+  "resources": [
+   "google_storage_bucket"
+  ],
+  "severity": "low",
+  "source": "prowler",
+  "source_id": "cloudstorage_bucket_lifecycle_management_enabled",
+  "title": "Cloud Storage bucket has lifecycle management enabled with at least one valid rule"
+ },
+ {
+  "category": "logging,forensics-ready",
+  "cwe": "",
+  "fix_terraform": "```hcl\nresource \"google_storage_bucket\" \"<example_resource_name>\" {\n  name     = \"<example_resource_name>\"\n  location = \"<LOCATION>\"\n\n  retention_policy {\n    retention_period = 86400         # Required: enable a retention policy (1 day)\n    is_locked        = true          # CRITICAL: locks the retention policy (Bucket Lock) to pass the check\n  }\n}\n```",
+  "provider": "gcp",
+  "refs": [
+   "https://hub.prowler.com/check/cloudstorage_bucket_log_retention_policy_lock"
+  ],
+  "remediation": "Set a **retention policy** on every log sink bucket and enable **Bucket Lock**. Choose durations that meet investigative and regulatory needs. Enforce **least privilege** and **separation of duties** for bucket and logging administration, and apply **defense in depth** so no single actor can weaken log retention.",
+  "resources": [
+   "google_storage_bucket"
+  ],
+  "severity": "high",
+  "source": "prowler",
+  "source_id": "cloudstorage_bucket_log_retention_policy_lock",
+  "title": "Cloud Storage log sink bucket has a retention policy with Bucket Lock enabled"
+ },
+ {
+  "category": "logging",
+  "cwe": "",
+  "fix_terraform": "```hcl\n# Example: enable Usage and Storage Logs on a Cloud Storage bucket\nresource \"google_storage_bucket\" \"example\" {\n  name     = var.bucket_name\n  location = var.location\n\n  logging {\n    log_bucket        = var.log_bucket_name\n    log_object_prefix = \"${var.bucket_name}/\"\n  }\n}\n```",
+  "provider": "gcp",
+  "refs": [
+   "https://hub.prowler.com/check/cloudstorage_bucket_logging_enabled"
+  ],
+  "remediation": "Enable Usage and Storage Logs for all Cloud Storage buckets to track access, detect anomalies, and maintain audit visibility of data operations.",
+  "resources": [
+   "google_storage_bucket"
+  ],
+  "severity": "medium",
+  "source": "prowler",
+  "source_id": "cloudstorage_bucket_logging_enabled",
+  "title": "Cloud Storage buckets have Usage and Storage Logs enabled"
+ },
+ {
+  "category": "internet-exposed",
+  "cwe": "",
+  "fix_terraform": "```hcl\nresource \"google_storage_bucket\" \"<example_resource_name>\" {\n  name     = \"<example_resource_name>\"\n  location = \"<LOCATION>\"\n\n  public_access_prevention = \"enforced\" # Critical: blocks allUsers/allAuthenticatedUsers, making the bucket not publicly accessible\n}\n```",
+  "provider": "gcp",
+  "refs": [
+   "https://hub.prowler.com/check/cloudstorage_bucket_public_access"
+  ],
+  "remediation": "Adopt **least privilege**: remove `allUsers`/`allAuthenticatedUsers` and grant only required identities. Enforce **Public Access Prevention** and use uniform bucket-level access. *If external sharing is needed*, issue **signed URLs** or use an authenticated proxy/CDN, and review permissions regularly.",
+  "resources": [
+   "google_storage_bucket"
+  ],
+  "severity": "critical",
+  "source": "prowler",
+  "source_id": "cloudstorage_bucket_public_access",
+  "title": "Cloud Storage bucket is not publicly accessible"
+ },
+ {
+  "category": "resilience",
+  "cwe": "",
+  "fix_terraform": "```hcl\nresource \"google_storage_bucket\" \"<example_resource_name>\" {\n  name     = \"<example_resource_id>\"\n  location = \"<LOCATION>\"\n\n  soft_delete_policy {\n    retention_duration_seconds = 604800 # Critical: >0 enables Soft Delete (7 days)\n  }\n}\n```",
+  "provider": "gcp",
+  "refs": [
+   "https://hub.prowler.com/check/cloudstorage_bucket_soft_delete_enabled"
+  ],
+  "remediation": "Enable **Soft Delete** with a retention window aligned to your RPO/RTO. Apply **least privilege** for delete/undelete actions and use **defense in depth** with object versioning and retention policies. Monitor deletion events and regularly test restore procedures to ensure recoverability.",
+  "resources": [
+   "google_storage_bucket"
+  ],
+  "severity": "medium",
+  "source": "prowler",
+  "source_id": "cloudstorage_bucket_soft_delete_enabled",
+  "title": "Cloud Storage bucket has Soft Delete enabled"
+ },
+ {
+  "category": "resilience",
+  "cwe": "",
+  "fix_terraform": "```hcl\nresource \"google_storage_bucket\" \"example\" {\n  name     = var.bucket_name\n  location = var.location\n\n  retention_policy {\n    retention_period = 7776000 # 90 days in seconds\n  }\n}\n```",
+  "provider": "gcp",
+  "refs": [
+   "https://hub.prowler.com/check/cloudstorage_bucket_sufficient_retention_period"
+  ],
+  "remediation": "Define and apply a bucket-level Retention Policy that meets your minimum retention requirement (e.g., 90 or 365 days) to enforce data recoverability and compliance.",
+  "resources": [
+   "google_storage_bucket"
+  ],
+  "severity": "medium",
+  "source": "prowler",
+  "source_id": "cloudstorage_bucket_sufficient_retention_period",
+  "title": "Cloud Storage bucket has a sufficient Retention Policy period"
+ },
+ {
+  "category": "identity-access",
+  "cwe": "",
+  "fix_terraform": "```hcl\nresource \"google_storage_bucket\" \"<example_resource_name>\" {\n  name     = \"<example_resource_name>\"\n  location = \"<LOCATION>\"\n\n  uniform_bucket_level_access = true # Critical: enables UBLA so the bucket passes the check\n}\n```",
+  "provider": "gcp",
+  "refs": [
+   "https://hub.prowler.com/check/cloudstorage_bucket_uniform_bucket_level_access"
+  ],
+  "remediation": "Enable **UBLA** on all buckets to centralize authorization and apply **least privilege** with IAM. Eliminate reliance on object ACLs; use **Public Access Prevention** and **organization policies** to enforce non-public defaults. Monitor access with logs and periodic reviews as part of **defense in depth**.",
+  "resources": [
+   "google_storage_bucket"
+  ],
+  "severity": "medium",
+  "source": "prowler",
+  "source_id": "cloudstorage_bucket_uniform_bucket_level_access",
+  "title": "Cloud Storage bucket has uniform bucket-level access enabled"
+ },
+ {
+  "category": "resilience",
+  "cwe": "",
+  "fix_terraform": "```hcl\nresource \"google_storage_bucket\" \"<example_resource_name>\" {\n  name     = \"<example_resource_name>\"\n  location = \"<LOCATION>\"\n\n  versioning {                 # Critical: enables Object Versioning\n    enabled = true             # This makes the check pass\n  }\n}\n```",
+  "provider": "gcp",
+  "refs": [
+   "https://hub.prowler.com/check/cloudstorage_bucket_versioning_enabled"
+  ],
+  "remediation": "Enable **Object Versioning** on buckets holding important data. Pair with `lifecycle` rules to expire noncurrent versions and control cost. Enforce **least privilege** for delete/overwrite actions, and add bucket `retention` policies or object holds for defense-in-depth and auditability.",
+  "resources": [
+   "google_storage_bucket"
+  ],
+  "severity": "medium",
+  "source": "prowler",
+  "source_id": "cloudstorage_bucket_versioning_enabled",
+  "title": "Cloud Storage bucket has Object Versioning enabled"
+ },
+ {
+  "category": "internet-exposed",
+  "cwe": "",
+  "fix_terraform": "```hcl\nresource \"google_compute_firewall\" \"<example_resource_name>\" {\n  name    = \"<example_resource_name>\"\n  network = \"<example_resource_id>\"\n\n  allow {\n    protocol = \"tcp\"\n    ports    = [\"3389\"]\n  }\n\n  source_ranges = [\"10.0.0.0/8\"] # CRITICAL: removes 0.0.0.0/0 so RDP is not exposed to the Internet\n}\n```",
+  "provider": "gcp",
+  "refs": [
+   "https://hub.prowler.com/check/compute_firewall_rdp_access_from_the_internet_allowed"
+  ],
+  "remediation": "Restrict **RDP** to trusted IP ranges or a hardened **bastion/IAP** proxy; prefer private access with no public IPs. Apply **least privilege** and network segmentation, use just-in-time access and strong authentication, and monitor logs. Aim for **defense in depth** to minimize exposure.",
+  "resources": [
+   "google_compute_firewall"
+  ],
+  "severity": "critical",
+  "source": "prowler",
+  "source_id": "compute_firewall_rdp_access_from_the_internet_allowed",
+  "title": "Firewall rule does not allow ingress from 0.0.0.0/0 to TCP port 3389 (RDP)"
+ },
+ {
+  "category": "internet-exposed",
+  "cwe": "",
+  "fix_terraform": "```hcl\nresource \"google_compute_firewall\" \"<example_resource_name>\" {\n  name    = \"<example_resource_name>\"\n  network = \"<example_resource_id>\"\n\n  source_ranges = [\"<TRUSTED_CIDR>\"] # Critical: removes 0.0.0.0/0 to stop exposing SSH to the Internet\n\n  allow {\n    protocol = \"tcp\"           # Critical: limit to SSH only\n    ports    = [\"22\"]\n  }\n}\n```",
+  "provider": "gcp",
+  "refs": [
+   "https://hub.prowler.com/check/compute_firewall_ssh_access_from_the_internet_allowed"
+  ],
+  "remediation": "Restrict **SSH** to trusted sources; avoid `0.0.0.0/0`. Prefer **bastion hosts** or **IAP TCP forwarding**, or use **VPN/peering**. Enforce **least privilege** and **defense in depth**: limit to required CIDRs, use **key-based auth**, disable `PasswordAuthentication`, and monitor/alert on access attempts.",
+  "resources": [
+   "google_compute_firewall"
+  ],
+  "severity": "critical",
+  "source": "prowler",
+  "source_id": "compute_firewall_ssh_access_from_the_internet_allowed",
+  "title": "Firewall does not expose TCP port 22 (SSH) to the Internet"
+ },
+ {
+  "category": "internet-exposed",
+  "cwe": "",
+  "fix_terraform": "```hcl\nresource \"google_compute_image_iam_binding\" \"example_resource\" {\n  project = \"your-project-id\"\n  image   = \"your-image-name\"\n  role    = \"roles/compute.imageUser\"\n  # Remove allAuthenticatedUsers and grant access only to specific members\n  members = [\n    \"user:specific-user@example.com\",\n  ]\n}\n```",
+  "provider": "gcp",
+  "refs": [
+   "https://hub.prowler.com/check/compute_image_not_publicly_shared"
+  ],
+  "remediation": "Restrict access to custom disk images by removing the **allAuthenticatedUsers** IAM binding. Apply the principle of least privilege by granting access only to specific users, groups, or service accounts that require it.",
+  "resources": [
+   "google_compute_image_iam_binding"
+  ],
+  "severity": "medium",
+  "source": "prowler",
+  "source_id": "compute_image_not_publicly_shared",
+  "title": "Compute Engine disk image is not publicly shared"
+ },
+ {
+  "category": "resilience",
+  "cwe": "",
+  "fix_terraform": "```hcl\n# Example: enable Automatic Restart for a Compute Engine VM instance\nresource \"google_compute_instance\" \"example\" {\n  name         = var.instance_name\n  machine_type = var.machine_type\n  zone         = var.zone\n\n  scheduling {\n    automatic_restart   = true\n    on_host_maintenance = \"MIGRATE\"\n  }\n}\n```",
+  "provider": "gcp",
+  "refs": [
+   "https://hub.prowler.com/check/compute_instance_automatic_restart_enabled"
+  ],
+  "remediation": "Enable the Automatic Restart feature for Compute Engine VM instances to enhance system reliability by automatically recovering from crashes or system-initiated terminations. This setting does not interfere with user-initiated shutdowns or stops.",
+  "resources": [
+   "google_compute_instance"
+  ],
+  "severity": "medium",
+  "source": "prowler",
+  "source_id": "compute_instance_automatic_restart_enabled",
+  "title": "Compute Engine VM instances have Automatic Restart enabled"
+ },
+ {
+  "category": "identity-access,secrets",
+  "cwe": "",
+  "fix_terraform": "```hcl\nresource \"google_compute_instance\" \"vm\" {\n  name         = \"<example_resource_name>\"\n  zone         = \"<ZONE>\"\n  machine_type = \"e2-micro\"\n\n  boot_disk {\n    initialize_params {\n      image = \"debian-cloud/debian-12\"\n    }\n  }\n\n  network_interface {\n    network = \"default\"\n  }\n\n  metadata = {\n    block-project-ssh-keys = \"true\" # Critical: blocks project-wide SSH keys for this VM\n  }\n}\n```",
+  "provider": "gcp",
+  "refs": [
+   "https://hub.prowler.com/check/compute_instance_block_project_wide_ssh_keys_disabled"
+  ],
+  "remediation": "Set `block-project-ssh-keys=true` to prevent shared key inheritance. Prefer **OS Login** or instance-specific keys, enforce **least privilege** and **separation of duties** for metadata changes, use **short-lived credentials** with rotation, limit direct SSH, and monitor access for anomalies.",
+  "resources": [
+   "google_compute_instance"
+  ],
+  "severity": "medium",
+  "source": "prowler",
+  "source_id": "compute_instance_block_project_wide_ssh_keys_disabled",
+  "title": "VM instance has Block project-wide SSH keys enabled"
+ },
+ {
+  "category": "encryption",
+  "cwe": "",
+  "fix_terraform": "```hcl\nresource \"google_compute_instance\" \"<example_resource_name>\" {\n  name         = \"<example_resource_name>\"\n  machine_type = \"n2d-standard-2\"  # Supported for Confidential VM\n  zone         = \"<ZONE>\"\n\n  boot_disk {\n    initialize_params {\n      image = \"debian-cloud/debian-12\"\n    }\n  }\n\n  network_interface {}\n\n  # Critical: Enables Confidential Computing on the VM\n  confidential_instance_config {\n    enable_confidential_compute = true  # Turns on Confidential VM\n  }\n}\n```",
+  "provider": "gcp",
+  "refs": [
+   "https://hub.prowler.com/check/compute_instance_confidential_computing_enabled"
+  ],
+  "remediation": "Enable **Confidential VMs** for workloads processing sensitive data to protect data-in-use. Apply **defense in depth**: enforce **least privilege** on administrative access, use disk encryption with `CMEK`, and require workload attestation/trusted images. *If unsupported*, isolate or refactor workloads to compatible options.",
+  "resources": [
+   "google_compute_instance"
+  ],
+  "severity": "medium",
+  "source": "prowler",
+  "source_id": "compute_instance_confidential_computing_enabled",
+  "title": "Compute instance has Confidential Computing enabled"
+ },
+ {
+  "category": "identity-access",
+  "cwe": "",
+  "fix_terraform": "```hcl\n# Create a non-default service account\nresource \"google_service_account\" \"<example_resource_name>\" {\n  account_id = \"<example_resource_id>\"  # CRITICAL: custom SA to avoid default \"-compute@developer.gserviceaccount.com\"\n}\n\n# Attach the non-default service account to the VM\nresource \"google_compute_instance\" \"<example_resource_name>\" {\n  name         = \"<example_resource_name>\"\n  machine_type = \"e2-micro\"\n  zone         = \"<ZONE>\"\n\n  boot_disk { initialize_params { image = \"debian-cloud/debian-12\" } }\n  network_interface { network = \"default\" }\n\n  service_account {\n    email = google_service_account.<example_resource_name>.email  # CRITICAL: use non-default SA so the check passes\n  }\n}\n```",
+  "provider": "gcp",
+  "refs": [
+   "https://hub.prowler.com/check/compute_instance_default_service_account_in_use"
+  ],
+  "remediation": "Avoid the default service account. Create per-workload service accounts and grant only required roles under **least privilege** and **separation of duties**. Remove broad roles like `roles/editor`. Prefer short-lived credentials and monitor service account usage to enforce **defense in depth**.",
+  "resources": [
+   "google_compute_instance",
+   "google_service_account"
+  ],
+  "severity": "medium",
+  "source": "prowler",
+  "source_id": "compute_instance_default_service_account_in_use",
+  "title": "Compute Engine instance does not use the default service account"
+ },
+ {
+  "category": "identity-access",
+  "cwe": "",
+  "fix_terraform": "```hcl\nresource \"google_compute_instance\" \"<example_resource_name>\" {\n  name         = \"<example_resource_name>\"\n  machine_type = \"e2-micro\"\n  zone         = \"us-central1-a\"\n\n  boot_disk { initialize_params { image = \"debian-cloud/debian-12\" } }\n  network_interface { network = \"default\" }\n\n  service_account {\n    email  = \"<example_service_account_email>\" # FIX: use a non-default service account to avoid the default SA\n    scopes = [\"https://www.googleapis.com/auth/devstorage.read_only\"] # FIX: avoid cloud-platform (full API access)\n  }\n}\n```",
+  "provider": "gcp",
+  "refs": [
+   "https://hub.prowler.com/check/compute_instance_default_service_account_in_use_with_full_api_access"
+  ],
+  "remediation": "Use a **custom, least-privileged service account** per VM and avoid the default account. Restrict Cloud API scopes-prefer minimal or per-API scopes, not `Allow full access to all Cloud APIs`. Enforce **least privilege** and **separation of duties**, and regularly review roles to remove excessive permissions.",
+  "resources": [
+   "google_compute_instance"
+  ],
+  "severity": "medium",
+  "source": "prowler",
+  "source_id": "compute_instance_default_service_account_in_use_with_full_api_access",
+  "title": "Compute Engine instance does not use the default service account with full access to all Cloud APIs"
+ },
+ {
+  "category": "resilience",
+  "cwe": "",
+  "fix_terraform": "```hcl\nresource \"google_compute_instance\" \"example_resource\" {\n  name         = \"example-instance\"\n  machine_type = \"e2-medium\"\n  zone         = \"us-central1-a\"\n\n  # Enable deletion protection\n  deletion_protection = true\n\n  boot_disk {\n    initialize_params {\n      image = \"debian-cloud/debian-11\"\n    }\n  }\n\n  network_interface {\n    network = \"default\"\n  }\n}\n```",
+  "provider": "gcp",
+  "refs": [
+   "https://hub.prowler.com/check/compute_instance_deletion_protection_enabled"
+  ],
+  "remediation": "Enable deletion protection on all production and business-critical VM instances to prevent accidental termination. Regularly review instances to ensure critical workloads are protected.",
+  "resources": [
+   "google_compute_instance"
+  ],
+  "severity": "medium",
+  "source": "prowler",
+  "source_id": "compute_instance_deletion_protection_enabled",
+  "title": "VM instance has deletion protection enabled"
+ },
+ {
+  "category": "resilience",
+  "cwe": "",
+  "fix_terraform": "```hcl\nresource \"google_compute_instance\" \"example_resource\" {\n  name         = \"example-instance\"\n  machine_type = \"e2-medium\"\n  zone         = \"us-central1-a\"\n\n  boot_disk {\n    # Disable auto-delete for the boot disk\n    auto_delete = false\n\n    initialize_params {\n      image = \"debian-cloud/debian-11\"\n    }\n  }\n\n  attached_disk {\n    source      = google_compute_disk.example_disk.id\n    # Disable auto-delete for attached disks\n    auto_delete = false\n  }\n\n  network_interface {\n    network = \"default\"\n  }\n}\n```",
+  "provider": "gcp",
+  "refs": [
+   "https://hub.prowler.com/check/compute_instance_disk_auto_delete_disabled"
+  ],
+  "remediation": "Disable `auto-delete` for all persistent disks attached to **production** and **business-critical** VM instances to prevent **accidental data loss**. Regularly review disk configurations to ensure data retention requirements are met.",
+  "resources": [
+   "google_compute_instance"
+  ],
+  "severity": "medium",
+  "source": "prowler",
+  "source_id": "compute_instance_disk_auto_delete_disabled",
+  "title": "VM instance attached disks have auto-delete disabled"
+ },
+ {
+  "category": "encryption",
+  "cwe": "",
+  "fix_terraform": "```hcl\nresource \"google_compute_instance\" \"<example_resource_name>\" {\n  name         = \"<example_resource_name>\"\n  machine_type = \"e2-medium\"\n  zone         = \"<example_zone>\"\n\n  boot_disk {\n    initialize_params { image = \"debian-cloud/debian-12\" }\n    # Critical: enables Customer-Supplied Encryption Key (CSEK) for the boot disk\n    disk_encryption_key { raw_key = \"<BASE64_32BYTE_KEY>\" }  # base64-encoded AES-256 key\n  }\n\n  network_interface { network = \"default\" }\n}\n```",
+  "provider": "gcp",
+  "refs": [
+   "https://hub.prowler.com/check/compute_instance_encryption_with_csek_enabled"
+  ],
+  "remediation": "Use **CSEK** for VM disks that require full control over data-at-rest keys. Apply **least privilege** to key custodians, store keys in hardened vaults/HSMs, enforce rotation and rapid revocation, and document recovery procedures. Combine with **defense in depth** (network and IAM controls) to limit blast radius.",
+  "resources": [
+   "google_compute_instance"
+  ],
+  "severity": "high",
+  "source": "prowler",
+  "source_id": "compute_instance_encryption_with_csek_enabled",
+  "title": "VM instance has all disks encrypted with Customer-Supplied Encryption Keys (CSEK)"
+ },
+ {
+  "category": "resilience",
+  "cwe": "",
+  "fix_terraform": "```hcl\nresource \"google_compute_instance_group_manager\" \"example\" {\n  name               = \"example-mig\"\n  base_instance_name = \"example\"\n  zone               = \"us-central1-a\"\n  target_size        = 2\n\n  version {\n    instance_template = google_compute_instance_template.example.id\n  }\n\n  # Enable autohealing with health check\n  auto_healing_policies {\n    health_check      = google_compute_health_check.example.id\n    initial_delay_sec = 300\n  }\n}\n\nresource \"google_compute_health_check\" \"example\" {\n  name               = \"example-health-check\"\n  check_interval_sec = 10\n  timeout_sec        = 5\n\n  http_health_check {\n    port = 80\n  }\n}\n```",
+  "provider": "gcp",
+  "refs": [
+   "https://hub.prowler.com/check/compute_instance_group_autohealing_enabled"
+  ],
+  "remediation": "Enable autohealing on all Managed Instance Groups by configuring a health check that validates application-level health. Set an appropriate initial delay to allow instances time to start before health checks begin.",
+  "resources": [
+   "google_compute_health_check",
+   "google_compute_instance_group_manager"
+  ],
+  "severity": "high",
+  "source": "prowler",
+  "source_id": "compute_instance_group_autohealing_enabled",
+  "title": "Managed Instance Group has autohealing enabled with a valid health check"
+ },
+ {
+  "category": "resilience",
+  "cwe": "",
+  "fix_terraform": "```hcl\nresource \"google_compute_backend_service\" \"example\" {\n  name        = \"example-backend-service\"\n  protocol    = \"HTTP\"\n  port_name   = \"http\"\n  timeout_sec = 30\n\n  # Attach MIG as backend\n  backend {\n    group = google_compute_instance_group_manager.example.instance_group\n  }\n\n  health_checks = [google_compute_health_check.example.id]\n}\n```",
+  "provider": "gcp",
+  "refs": [
+   "https://hub.prowler.com/check/compute_instance_group_load_balancer_attached"
+  ],
+  "remediation": "Attach Managed Instance Groups to load balancers using backend services to enable traffic distribution, health checking, and seamless autoscaling. This ensures high availability and optimal performance for production workloads.",
+  "resources": [
+   "google_compute_backend_service"
+  ],
+  "severity": "low",
+  "source": "prowler",
+  "source_id": "compute_instance_group_load_balancer_attached",
+  "title": "Managed Instance Group is attached to a load balancer"
+ },
+ {
+  "category": "resilience",
+  "cwe": "",
+  "fix_terraform": "```hcl\n# Create a regional MIG that spans multiple zones\nresource \"google_compute_region_instance_group_manager\" \"example\" {\n  name               = \"example-mig\"\n  region             = \"us-central1\"\n  base_instance_name = \"example\"\n  target_size        = 3\n\n  version {\n    instance_template = google_compute_instance_template.example.id\n  }\n\n  # Distribute instances across multiple zones\n  distribution_policy_zones = [\"us-central1-a\", \"us-central1-b\", \"us-central1-c\"]\n}\n```",
+  "provider": "gcp",
+  "refs": [
+   "https://hub.prowler.com/check/compute_instance_group_multiple_zones"
+  ],
+  "remediation": "Use regional managed instance groups instead of zonal MIGs to distribute instances across multiple zones. This provides automatic failover and load distribution, ensuring high availability for production workloads.",
+  "resources": [
+   "google_compute_region_instance_group_manager"
+  ],
+  "severity": "low",
+  "source": "prowler",
+  "source_id": "compute_instance_group_multiple_zones",
+  "title": "Managed Instance Groups span multiple zones for high availability"
+ },
+ {
+  "category": "trust-boundaries",
+  "cwe": "",
+  "fix_terraform": "```hcl\nresource \"google_compute_instance\" \"<example_resource_name>\" {\n  name         = \"<example_resource_name>\"\n  machine_type = \"e2-micro\"\n  zone         = \"<ZONE>\"\n\n  can_ip_forward = false  # Critical: disables IP forwarding to pass the check\n\n  boot_disk {\n    initialize_params {\n      image = \"debian-cloud/debian-12\"\n    }\n  }\n\n  network_interface {\n    network = \"default\"\n  }\n}\n```",
+  "provider": "gcp",
+  "refs": [
+   "https://hub.prowler.com/check/compute_instance_ip_forwarding_is_enabled"
+  ],
+  "remediation": "Disable **IP forwarding** on general-purpose VMs and allow it only for vetted **network appliances**, following **least privilege**.\n\nEnforce **network segmentation**, restrict routes, review exceptions regularly, and monitor egress to uphold **defense in depth**. *Exclude platform-managed nodes that require forwarding.*",
+  "resources": [
+   "google_compute_instance"
+  ],
+  "severity": "medium",
+  "source": "prowler",
+  "source_id": "compute_instance_ip_forwarding_is_enabled",
+  "title": "Compute Engine VM instance has IP forwarding disabled"
+ },
+ {
+  "category": "resilience",
+  "cwe": "",
+  "fix_terraform": "```hcl\n# Example: configure On Host Maintenance to MIGRATE for a Compute Engine VM instance\nresource \"google_compute_instance\" \"example\" {\n  name         = var.instance_name\n  machine_type = var.machine_type\n  zone         = var.zone\n\n  scheduling {\n    # Live migrate during host maintenance events\n    on_host_maintenance = \"MIGRATE\"\n  }\n}\n```",
+  "provider": "gcp",
+  "refs": [
+   "https://hub.prowler.com/check/compute_instance_on_host_maintenance_migrate"
+  ],
+  "remediation": "Configure VM instances to use **live migration** during host maintenance events to ensure continuous availability. This is the recommended setting for production workloads that require high availability.",
+  "resources": [
+   "google_compute_instance"
+  ],
+  "severity": "medium",
+  "source": "prowler",
+  "source_id": "compute_instance_on_host_maintenance_migrate",
+  "title": "Compute Engine VM instance has On Host Maintenance set to MIGRATE"
+ },
+ {
+  "category": "resilience",
+  "cwe": "",
+  "fix_terraform": "```hcl\nresource \"google_compute_instance\" \"example_resource\" {\n  name         = \"example-instance\"\n  machine_type = \"e2-medium\"\n  zone         = \"us-central1-a\"\n\n  scheduling {\n    # Use standard provisioning model for production workloads (not Spot)\n    provisioning_model = \"STANDARD\"\n    # Also ensure preemptible is false (legacy field)\n    preemptible = false\n  }\n}\n```",
+  "provider": "gcp",
+  "refs": [
+   "https://hub.prowler.com/checks/compute_instance_preemptible_vm_disabled"
+  ],
+  "remediation": "Use standard provisioning model for production and business-critical VM instances. Preemptible and Spot VMs should only be used for fault-tolerant, batch processing, or non-critical workloads that can handle interruptions.",
+  "resources": [
+   "google_compute_instance"
+  ],
+  "severity": "medium",
+  "source": "prowler",
+  "source_id": "compute_instance_preemptible_vm_disabled",
+  "title": "VM instance is not configured as preemptible or Spot VM"
+ },
+ {
+  "category": "internet-exposed",
+  "cwe": "",
+  "fix_terraform": "```hcl\nresource \"google_compute_instance\" \"<example_resource_name>\" {\n  name         = \"<example_resource_name>\"\n  machine_type = \"e2-micro\"\n  zone         = \"<example_resource_zone>\"\n\n  boot_disk {\n    initialize_params { image = \"debian-cloud/debian-11\" }\n  }\n\n  network_interface {\n    network = \"default\" # Critical: no access_config block -> no public IP\n  }\n}\n```",
+  "provider": "gcp",
+  "refs": [
+   "https://hub.prowler.com/check/compute_instance_public_ip"
+  ],
+  "remediation": "Adopt **private-only VMs** and remove external IPs.\n- Place workloads behind **load balancers** or **reverse proxies**\n- Use **Cloud NAT** for egress; admin access via **IAP**, **VPN**, or a hardened **bastion**\n- Apply **least privilege** firewall rules and network segmentation for **defense in depth**",
+  "resources": [
+   "google_compute_instance"
+  ],
+  "severity": "high",
+  "source": "prowler",
+  "source_id": "compute_instance_public_ip",
+  "title": "VM instance does not have a public IP address"
+ },
+ {
+  "category": "identity-access",
+  "cwe": "",
+  "fix_terraform": "```hcl\nresource \"google_compute_instance\" \"<example_resource_name>\" {\n  name         = \"<example_resource_name>\"\n  machine_type = \"e2-micro\"\n  zone         = \"us-central1-a\"\n\n  boot_disk {\n    initialize_params { image = \"debian-cloud/debian-12\" }\n  }\n\n  network_interface { network = \"default\" }\n\n  metadata = {\n    serial-port-enable = \"false\" # Critical: disables connecting to serial ports to pass the check\n  }\n}\n```",
+  "provider": "gcp",
+  "refs": [
+   "https://hub.prowler.com/check/compute_instance_serial_ports_in_use"
+  ],
+  "remediation": "Disable the **interactive serial console** on production VMs (`serial-port-enable=false`). Use it only for *break-glass* cases. Enforce **least privilege** for console roles, prefer controlled access paths (IAP/SSH or session tools), and monitor access. Apply **defense in depth** to reduce alternate entry points.",
+  "resources": [
+   "google_compute_instance"
+  ],
+  "severity": "medium",
+  "source": "prowler",
+  "source_id": "compute_instance_serial_ports_in_use",
+  "title": "VM instance has 'Enable Connecting to Serial Ports' disabled"
+ },
+ {
+  "category": "node-security",
+  "cwe": "",
+  "fix_terraform": "```hcl\nresource \"google_compute_instance\" \"<example_resource_name>\" {\n  name         = \"<example_resource_name>\"\n  machine_type = \"e2-micro\"\n\n  boot_disk {\n    initialize_params {\n      image = \"debian-cloud/debian-11\"\n    }\n  }\n\n  network_interface {\n    network = \"default\"\n  }\n\n  shielded_instance_config {\n    enable_vtpm                 = true  # Critical: enable vTPM\n    enable_integrity_monitoring = true  # Critical: enable Integrity Monitoring\n  }\n}\n```",
+  "provider": "gcp",
+  "refs": [
+   "https://hub.prowler.com/check/compute_instance_shielded_vm_enabled"
+  ],
+  "remediation": "Enable **Shielded VM** with `vTPM` and **Integrity Monitoring** set to `enabled` on all VMs. Prefer **Secure Boot** where compatible. Enforce via hardened images/templates, apply **least privilege** to shielded settings, and monitor integrity results-supporting **defense in depth** and trusted boot.",
+  "resources": [
+   "google_compute_instance"
+  ],
+  "severity": "medium",
+  "source": "prowler",
+  "source_id": "compute_instance_shielded_vm_enabled",
+  "title": "Compute instance has vTPM and Integrity Monitoring enabled"
+ },
+ {
+  "category": "trust-boundaries",
+  "cwe": "",
+  "fix_terraform": "```hcl\nresource \"google_compute_instance\" \"example_resource\" {\n  name         = \"example-instance\"\n  machine_type = \"e2-medium\"\n  zone         = \"us-central1-a\"\n\n  boot_disk {\n    initialize_params {\n      image = \"debian-cloud/debian-11\"\n    }\n  }\n\n  # Only one network interface\n  network_interface {\n    network = \"default\"\n  }\n}\n```",
+  "provider": "gcp",
+  "refs": [
+   "https://hub.prowler.com/check/compute_instance_single_network_interface"
+  ],
+  "remediation": "Configure VM instances with only the **minimum network connectivity** required for their intended purpose. Review instances with multiple network interfaces and consolidate to a single interface unless multi-NIC configuration is explicitly required for network appliance or routing purposes.",
+  "resources": [
+   "google_compute_instance"
+  ],
+  "severity": "medium",
+  "source": "prowler",
+  "source_id": "compute_instance_single_network_interface",
+  "title": "VM instance has a single network interface"
+ },
+ {
+  "category": "",
+  "cwe": "",
+  "fix_terraform": "```hcl\n# To remediate, either delete the suspended instance or resume it\n# Delete by removing the resource from your Terraform configuration\n# Or resume by changing the desired_status\nresource \"google_compute_instance\" \"example_resource\" {\n  name         = \"example-instance\"\n  machine_type = \"e2-medium\"\n  zone         = \"us-central1-a\"\n\n  # Set desired_status to RUNNING to resume the instance\n  desired_status = \"RUNNING\"\n\n  boot_disk {\n    initialize_params {\n      image = \"debian-cloud/debian-11\"\n    }\n  }\n\n  network_interface {\n    network = \"default\"\n  }\n}\n```",
+  "provider": "gcp",
+  "refs": [
+   "https://hub.prowler.com/check/compute_instance_suspended_without_persistent_disks"
+  ],
+  "remediation": "Regularly review suspended VM instances to reduce your attack surface. Either **resume** instances if still needed, or **delete** them along with their attached disks to eliminate potential data exposure. Implement automated policies to detect and alert on long-suspended instances as part of your security monitoring.",
+  "resources": [
+   "google_compute_instance"
+  ],
+  "severity": "medium",
+  "source": "prowler",
+  "source_id": "compute_instance_suspended_without_persistent_disks",
+  "title": "Suspended VM instance does not have persistent disks attached"
+ },
+ {
+  "category": "logging",
+  "cwe": "",
+  "fix_terraform": "```hcl\nresource \"google_compute_backend_service\" \"<example_resource_name>\" {\n  name          = \"<example_resource_name>\"\n  health_checks = [\"<example_health_check_self_link>\"]\n\n  log_config {\n    enable = true # Critical: enables logging on the backend service\n  }\n}\n```",
+  "provider": "gcp",
+  "refs": [
+   "https://hub.prowler.com/check/compute_loadbalancer_logging_enabled"
+  ],
+  "remediation": "Enable **request logging** on backend services with a risk-appropriate `sampleRate`; include key optional fields when needed. Export logs to monitoring for alerts and dashboards, enforce retention and integrity controls, and restrict access using **least privilege** and **defense in depth**.",
+  "resources": [
+   "google_compute_backend_service"
+  ],
+  "severity": "high",
+  "source": "prowler",
+  "source_id": "compute_loadbalancer_logging_enabled",
+  "title": "HTTP(S) load balancer has logging enabled"
+ },
+ {
+  "category": "trust-boundaries",
+  "cwe": "",
+  "fix_terraform": "```hcl\n# Deletes the default VPC network to pass the check\nresource \"google_project_default_network\" \"<example_resource_name>\" {}  # Ensures the 'default' network is removed\n```",
+  "provider": "gcp",
+  "refs": [
+   "https://hub.prowler.com/check/compute_network_default_in_use"
+  ],
+  "remediation": "Prefer **custom VPCs** over `default`. Remove unused default networks and apply **least privilege** with explicit firewall rules, private connectivity, and workload-based segmentation. Enforce creation controls (e.g., org policy to skip default network) and use **defense in depth** with logging and monitoring.",
+  "resources": [
+   "google_project_default_network"
+  ],
+  "severity": "medium",
+  "source": "prowler",
+  "source_id": "compute_network_default_in_use",
+  "title": "Project does not have a default VPC network"
+ },
+ {
+  "category": "logging,forensics-ready",
+  "cwe": "",
+  "fix_terraform": "```hcl\nresource \"google_dns_policy\" \"<example_resource_name>\" {\n  name           = \"<example_resource_name>\"\n  enable_logging = true  # CRITICAL: turns on DNS query logging for the policy\n\n  networks {\n    network_url = \"projects/<PROJECT_ID>/global/networks/<example_resource_name>\"  # Attach to the target VPC\n  }\n}\n```",
+  "provider": "gcp",
+  "refs": [
+   "https://hub.prowler.com/check/compute_network_dns_logging_enabled"
+  ],
+  "remediation": "Enable **Cloud DNS query logging** for all VPC networks via **DNS policies** and route logs to centralized analysis. Enforce **least privilege** on log access, set retention and sampling to manage cost, and add detections for malicious domains. Apply **defense in depth** with DNS response policies and egress controls.",
+  "resources": [
+   "google_dns_policy"
+  ],
+  "severity": "medium",
+  "source": "prowler",
+  "source_id": "compute_network_dns_logging_enabled",
+  "title": "VPC network has Cloud DNS logging enabled"
+ },
+ {
+  "category": "identity-access",
+  "cwe": "",
+  "fix_terraform": "```hcl\nresource \"google_compute_project_metadata\" \"example_resource\" {\n  metadata = {\n    enable-oslogin     = \"TRUE\"\n    enable-oslogin-2fa = \"TRUE\"  # Enables 2FA for OS Login\n  }\n}\n```",
+  "provider": "gcp",
+  "refs": [
+   "https://hub.prowler.com/check/compute_project_os_login_2fa_enabled"
+  ],
+  "remediation": "Enable OS Login with 2FA at the project level to enforce multi-factor authentication for all SSH connections. This adds a critical security layer by requiring users to complete a second verification step, protecting against credential theft and unauthorized access.",
+  "resources": [
+   "google_compute_project_metadata"
+  ],
+  "severity": "high",
+  "source": "prowler",
+  "source_id": "compute_project_os_login_2fa_enabled",
+  "title": "GCP project has OS Login with 2FA enabled"
+ },
+ {
+  "category": "identity-access",
+  "cwe": "",
+  "fix_terraform": "```hcl\nresource \"google_compute_project_metadata_item\" \"<example_resource_name>\" {\n  # Critical: this key/value enables OS Login at the project level\n  key   = \"enable-oslogin\"\n  value = \"TRUE\"\n}\n```",
+  "provider": "gcp",
+  "refs": [
+   "https://hub.prowler.com/check/compute_project_os_login_enabled"
+  ],
+  "remediation": "Enable **OS Login** at the project level to centralize SSH through **IAM**.\n- Apply **least privilege** to OS Login roles\n- Remove metadata SSH keys\n- Enforce MFA and short-lived credentials\n- Monitor login activity and add network restrictions for **defense in depth**",
+  "resources": [
+   "google_compute_project_metadata_item"
+  ],
+  "severity": "low",
+  "source": "prowler",
+  "source_id": "compute_project_os_login_enabled",
+  "title": "Project has OS Login enabled"
+ },
+ {
+  "category": "internet-exposed",
+  "cwe": "",
+  "fix_terraform": "```hcl\n# Reserve an internal address instead of a public one\nresource \"google_compute_address\" \"<example_resource_name>\" {\n  name         = \"<example_resource_name>\"\n  region       = \"<REGION>\"\n  subnetwork   = \"<example_subnetwork_name>\"\n  address_type = \"INTERNAL\" # FIX: use INTERNAL to avoid a public (EXTERNAL) IP listed by Shodan\n}\n```",
+  "provider": "gcp",
+  "refs": [
+   "https://hub.prowler.com/check/compute_public_address_shodan"
+  ],
+  "remediation": "Minimize Internet exposure:\n- Remove unused public IPs; prefer private addressing with controlled egress\n- Avoid `0.0.0.0/0`; restrict by allowlists and firewall policies\n- Place services behind proxies/VPN/bastions; close unused ports\n\nApply **least privilege** and **defense in depth**; continuously monitor external footprint.",
+  "resources": [
+   "google_compute_address"
+  ],
+  "severity": "medium",
+  "source": "prowler",
+  "source_id": "compute_public_address_shodan",
+  "title": "Public IP address is not listed in Shodan"
+ },
+ {
+  "category": "resilience",
+  "cwe": "",
+  "fix_terraform": "```hcl\nresource \"google_compute_resource_policy\" \"snapshot_schedule\" {\n  name   = \"snapshot-schedule-with-retention\"\n  region = var.region\n\n  snapshot_schedule_policy {\n    schedule {\n      daily_schedule {\n        days_in_cycle = 1\n        start_time    = \"04:00\"\n      }\n    }\n\n    # Automatically delete snapshots older than 90 days\n    retention_policy {\n      max_retention_days    = 90\n      on_source_disk_delete = \"KEEP_AUTO_SNAPSHOTS\"\n    }\n  }\n}\n\nresource \"google_compute_disk_resource_policy_attachment\" \"attachment\" {\n  name = google_compute_resource_policy.snapshot_schedule.name\n  disk = google_compute_disk.example.name\n  zone = var.zone\n}\n```",
+  "provider": "gcp",
+  "refs": [
+   "https://hub.prowler.com/check/compute_snapshot_not_outdated"
+  ],
+  "remediation": "Implement a snapshot lifecycle policy to automatically delete snapshots older than your organization's retention requirements. Regularly review and clean up outdated snapshots to reduce storage costs and minimize data exposure risks. Consider using scheduled snapshots with automatic deletion policies.",
+  "resources": [
+   "google_compute_disk_resource_policy_attachment",
+   "google_compute_resource_policy"
+  ],
+  "severity": "low",
+  "source": "prowler",
+  "source_id": "compute_snapshot_not_outdated",
+  "title": "Compute Engine disk snapshot is not outdated"
+ },
+ {
+  "category": "logging,forensics-ready",
+  "cwe": "",
+  "fix_terraform": "```hcl\nresource \"google_compute_subnetwork\" \"<example_resource_name>\" {\n  name          = \"<example_resource_name>\"\n  ip_cidr_range = \"10.0.0.0/24\"\n  region        = \"<REGION>\"\n  network       = \"<VPC_NETWORK_SELF_LINK>\"\n\n  enable_flow_logs = true # Critical: enables VPC Flow Logs so the subnet passes the check\n}\n```",
+  "provider": "gcp",
+  "refs": [
+   "https://hub.prowler.com/check/compute_subnet_flow_logs_enabled"
+  ],
+  "remediation": "Enable **VPC Flow Logs** on all production subnets. Tune aggregation, sampling, and metadata to balance visibility and cost.\n\nExport to centralized logging for analytics and alerting, apply **least privilege** to log access, and use organization guardrails to enforce consistent coverage as part of **defense in depth**.",
+  "resources": [
+   "google_compute_subnetwork"
+  ],
+  "severity": "medium",
+  "source": "prowler",
+  "source_id": "compute_subnet_flow_logs_enabled",
+  "title": "Subnet has VPC Flow Logs enabled"
+ },
+ {
+  "category": "encryption",
+  "cwe": "",
+  "fix_terraform": "```hcl\nresource \"google_dataproc_cluster\" \"<example_resource_name>\" {\n  name   = \"<example_resource_name>\"\n  region = \"<example_region>\"\n\n  cluster_config {\n    encryption_config {\n      gce_pd_kms_key_name = \"projects/<example_project_id>/locations/<example_region>/keyRings/<example_keyring_name>/cryptoKeys/<example_key_name>\" # FIX: Sets CMEK for persistent disks to pass the check\n    }\n  }\n}\n```",
+  "provider": "gcp",
+  "refs": [
+   "https://hub.prowler.com/check/dataproc_encrypted_with_cmks_disabled"
+  ],
+  "remediation": "Enable **CMEK** for Dataproc disk, job-argument, and staging-bucket encryption.\n- Grant KMS access with **least privilege** to required service accounts\n- Enforce **regular rotation** and support **revocation/disable** procedures\n- Keep keys co-located with data and monitor KMS usage\n- Consider **Cloud EKM** for external key control",
+  "resources": [
+   "google_dataproc_cluster"
+  ],
+  "severity": "medium",
+  "source": "prowler",
+  "source_id": "dataproc_encrypted_with_cmks_disabled",
+  "title": "Dataproc cluster is encrypted with a customer-managed encryption key (CMEK)"
+ },
+ {
+  "category": "encryption",
+  "cwe": "",
+  "fix_terraform": "```hcl\nresource \"google_dns_managed_zone\" \"<example_resource_name>\" {\n  name     = \"<example_resource_name>\"\n  dns_name = \"example.com.\"\n\n  dnssec_config {\n    state = \"on\" # Critical: enables DNSSEC for the managed zone\n  }\n}\n```",
+  "provider": "gcp",
+  "refs": [
+   "https://hub.prowler.com/check/dns_dnssec_disabled"
+  ],
+  "remediation": "Enable **DNSSEC** on public zones and complete the chain of trust by publishing a `DS` record at your registrar. Use DNSSEC-validating resolvers, apply **least privilege** for DNS administration, and monitor key lifecycle events. *Private zones are not DNSSEC-signed.*",
+  "resources": [
+   "google_dns_managed_zone"
+  ],
+  "severity": "medium",
+  "source": "prowler",
+  "source_id": "dns_dnssec_disabled",
+  "title": "Cloud DNS managed zone has DNSSEC enabled"
+ },
+ {
+  "category": "encryption",
+  "cwe": "",
+  "fix_terraform": "```hcl\nresource \"google_dns_managed_zone\" \"<example_resource_name>\" {\n  name     = \"<example_resource_name>\"\n  dns_name = \"example.com.\"\n\n  dnssec_config {\n    state = \"on\"\n\n    default_key_specs {\n      key_type   = \"keySigning\"\n      algorithm  = \"rsasha256\" # FIX: use a non-RSASHA1 KSK algorithm to pass the check\n      key_length = 2048\n    }\n\n    default_key_specs {\n      key_type   = \"zoneSigning\"\n      algorithm  = \"rsasha256\"\n      key_length = 1024\n    }\n  }\n}\n```",
+  "provider": "gcp",
+  "refs": [
+   "https://hub.prowler.com/check/dns_rsasha1_in_use_to_key_sign_in_dnssec"
+  ],
+  "remediation": "Adopt **strong, supported DNSSEC algorithms** for KSKs (e.g., `ECDSAP256SHA256` or `RSASHA256`) and retire `rsasha1`. Rotate keys and validate changes before deployment. Keep KSK and ZSK algorithms consistent, document key-rotation policy, and enforce **least privilege** for DNS/DNSSEC administration.",
+  "resources": [
+   "google_dns_managed_zone"
+  ],
+  "severity": "medium",
+  "source": "prowler",
+  "source_id": "dns_rsasha1_in_use_to_key_sign_in_dnssec",
+  "title": "Cloud DNS managed zone DNSSEC key-signing key does not use RSASHA1"
+ },
+ {
+  "category": "vulnerabilities",
+  "cwe": "",
+  "fix_terraform": "```hcl\nresource \"google_dns_managed_zone\" \"<example_resource_name>\" {\n  name     = \"<example_resource_name>\"\n  dns_name = \"example.com.\"\n\n  dnssec_config {\n    state = \"on\"\n\n    default_key_specs {\n      algorithm = \"ecdsap256sha256\"  # FIX: use a secure algorithm for zone signing\n      key_type  = \"zoneSigning\"       # Ensures the zone-signing key is not RSASHA1\n    }\n  }\n}\n```",
+  "provider": "gcp",
+  "refs": [
+   "https://hub.prowler.com/check/dns_rsasha1_in_use_to_zone_sign_in_dnssec"
+  ],
+  "remediation": "Use **strong DNSSEC algorithms** for zone signing (e.g., `rsasha256`, `ecdsa-p256-sha256`, `ed25519`) and avoid `rsasha1`. Practice **crypto agility**: standardize secure defaults, rotate keys, and periodically validate signatures with modern resolvers. Apply **defense in depth** by monitoring DNSSEC health and limiting who can change settings.",
+  "resources": [
+   "google_dns_managed_zone"
+  ],
+  "severity": "medium",
+  "source": "prowler",
+  "source_id": "dns_rsasha1_in_use_to_zone_sign_in_dnssec",
+  "title": "Cloud DNS managed zone does not use the RSASHA1 algorithm for the DNSSEC zone-signing key"
+ },
+ {
+  "category": "vulnerabilities,container-security",
+  "cwe": "",
+  "fix_terraform": "```hcl\nresource \"google_project_service\" \"<example_resource_name>\" {\n  project = \"<example_project_id>\"\n  service = \"containerscanning.googleapis.com\" # Critical: enables Container Scanning API to pass the check\n}\n```",
+  "provider": "gcp",
+  "refs": [
+   "https://hub.prowler.com/check/gcr_container_scanning_enabled"
+  ],
+  "remediation": "Enable `containerscanning.googleapis.com` and integrate results into CI/CD gates. Apply **defense in depth**:\n- Use **Binary Authorization** to block noncompliant images\n- Enforce **least privilege** over who can disable scanning\n- Rebuild and patch frequently; prefer trusted, signed base images",
+  "resources": [
+   "google_project_service"
+  ],
+  "severity": "medium",
+  "source": "prowler",
+  "source_id": "gcr_container_scanning_enabled",
+  "title": "Project has GCR Container Scanning API enabled"
+ },
+ {
+  "category": "identity-access",
+  "cwe": "",
+  "fix_terraform": "```hcl\nresource \"google_container_node_pool\" \"<example_resource_name>\" {\n  name     = \"<example_resource_name>\"\n  cluster  = \"<example_resource_name>\"\n  location = \"<example_resource_name>\"\n\n  node_config {\n    service_account = \"<example_resource_name>@<example_resource_id>.iam.gserviceaccount.com\" # critical: use a custom SA, not the Compute Engine default\n  }\n}\n```",
+  "provider": "gcp",
+  "refs": [
+   "https://hub.prowler.com/check/gke_cluster_no_default_service_account"
+  ],
+  "remediation": "Assign a **custom, least-privileged IAM service account** to each node pool instead of `default`.\n- Grant only permissions required for node logging/monitoring and operations\n- Enforce **separation of duties** and restrict impersonation\n- Periodically review roles and audit usage for **defense in depth**",
+  "resources": [
+   "google_container_node_pool"
+  ],
+  "severity": "medium",
+  "source": "prowler",
+  "source_id": "gke_cluster_no_default_service_account",
+  "title": "GKE cluster does not use the Compute Engine default service account"
+ },
+ {
+  "category": "identity-access",
+  "cwe": "",
+  "fix_terraform": "```hcl\nresource \"google_access_approval_settings\" \"<example_resource_name>\" {\n  project = \"<example_resource_id>\"\n\n  enrolled_services {\n    cloud_product    = \"all\"       # Critical: enroll all services to enable Access Approval for the project\n    enrollment_level = \"BLOCK_ALL\" # Critical: require approval for all applicable access requests\n  }\n}\n```",
+  "provider": "gcp",
+  "refs": [
+   "https://hub.prowler.com/check/iam_account_access_approval_enabled"
+  ],
+  "remediation": "Enable **Access Approval** for projects and *where feasible* at higher hierarchy for consistency. Assign **least-privilege approvers** with **separation of duties**, integrate timely notifications, and monitor **Access Transparency** records to maintain **defense in depth**.",
+  "resources": [
+   "google_access_approval_settings"
+  ],
+  "severity": "high",
+  "source": "prowler",
+  "source_id": "iam_account_access_approval_enabled",
+  "title": "Project has Access Approval enabled"
+ },
+ {
+  "category": "logging,forensics-ready",
+  "cwe": "",
+  "fix_terraform": "```hcl\n# Enable Cloud Audit Logs (Data Access) for all services\nresource \"google_project_iam_audit_config\" \"all\" {\n  project = \"<example_resource_id>\"\n  service = \"allServices\" # Critical: apply to all services\n\n  # Critical: enable Data Access audit log types to pass the check\n  audit_log_config { log_type = \"ADMIN_READ\" }  # metadata/config reads\n  audit_log_config { log_type = \"DATA_READ\" }   # data reads\n  audit_log_config { log_type = \"DATA_WRITE\" }  # data writes\n}\n```",
+  "provider": "gcp",
+  "refs": [
+   "https://hub.prowler.com/check/iam_audit_logs_enabled"
+  ],
+  "remediation": "Enable comprehensive **Cloud Audit Logs** for all services and principals, including `ADMIN_READ`, `DATA_READ`, `DATA_WRITE`. *Avoid exemptions.* Set org/folder defaults, centralize and retain logs, enforce least privilege on log access, protect logs from alteration, and alert on anomalous access.",
+  "resources": [
+   "google_project_iam_audit_config"
+  ],
+  "severity": "medium",
+  "source": "prowler",
+  "source_id": "iam_audit_logs_enabled",
+  "title": "GCP project has Cloud Audit Logs enabled"
+ },
+ {
+  "category": "forensics-ready",
+  "cwe": "",
+  "fix_terraform": "```hcl\nresource \"google_project_service\" \"<example_resource_name>\" {\n  project = \"<example_project_id>\"\n  service = \"cloudasset.googleapis.com\" # Enables Cloud Asset Inventory API to pass the check\n}\n```",
+  "provider": "gcp",
+  "refs": [
+   "https://hub.prowler.com/check/iam_cloud_asset_inventory_enabled"
+  ],
+  "remediation": "Enable **Cloud Asset Inventory** across all projects *and, if applicable, at the organization level* to maintain authoritative asset and IAM histories. Centralize analysis, retain records per policy, and use the data to enforce **least privilege** and **defense in depth**.",
+  "resources": [
+   "google_project_service"
+  ],
+  "severity": "high",
+  "source": "prowler",
+  "source_id": "iam_cloud_asset_inventory_enabled",
+  "title": "Project has Cloud Asset Inventory API enabled"
+ },
+ {
+  "category": "identity-access",
+  "cwe": "",
+  "fix_terraform": "```hcl\n# Grant required access at the service account level instead of the project level\nresource \"google_service_account_iam_member\" \"<example_resource_name>\" {\n  service_account_id = \"projects/<example_resource_id>/serviceAccounts/<example_resource_name>@<example_resource_id>.iam.gserviceaccount.com\"  # CRITICAL: scope grant to a specific service account, not the project\n  role               = \"roles/iam.serviceAccountUser\"  # CRITICAL: this role is granted only at the service account level\n  member             = \"user:<example_resource_name>@example.com\"\n}\n```",
+  "provider": "gcp",
+  "refs": [
+   "https://hub.prowler.com/check/iam_no_service_roles_at_project_level"
+  ],
+  "remediation": "Assign `roles/iam.serviceAccountUser` and `roles/iam.serviceAccountTokenCreator` only on the specific service account, not at project scope. Enforce **least privilege** and **separation of duties** with per-SA grants, conditional bindings, and time-bound access. Prefer **short-lived impersonation**; review grants regularly.",
+  "resources": [
+   "google_service_account_iam_member"
+  ],
+  "severity": "medium",
+  "source": "prowler",
+  "source_id": "iam_no_service_roles_at_project_level",
+  "title": "Project has no IAM users assigned the Service Account User or Service Account Token Creator roles at project level"
+ },
+ {
+  "category": "resilience",
+  "cwe": "",
+  "fix_terraform": "```hcl\nresource \"google_essential_contacts_contact\" \"<example_resource_name>\" {\n  parent = \"organizations/<example_resource_id>\"            # Critical: set at org level to satisfy the check\n  email  = \"<EMAIL>\"                                        # Critical: creates the essential contact\n  notification_category_subscriptions = [\"ALL\"]             # Critical: required; ensures the contact is created\n}\n```",
+  "provider": "gcp",
+  "refs": [
+   "https://hub.prowler.com/check/iam_organization_essential_contacts_configured"
+  ],
+  "remediation": "Configure **Essential Contacts** at the organization (and inherit to folders/projects) with group aliases for `SECURITY`, `BILLING`, `LEGAL`, `SUSPENSION`, `TECHNICAL`, and `PRODUCT_UPDATES`.\n\nApply **least privilege** and **separation of duties**. Review quarterly, verify delivery, and restrict contacts to approved domains.",
+  "resources": [
+   "google_essential_contacts_contact"
+  ],
+  "severity": "medium",
+  "source": "prowler",
+  "source_id": "iam_organization_essential_contacts_configured",
+  "title": "Organization has Essential Contacts configured"
+ },
+ {
+  "category": "identity-access,encryption",
+  "cwe": "",
+  "fix_terraform": "```hcl\nresource \"google_project_iam_binding\" \"<example_resource_name>\" {\n  project = \"<PROJECT_ID>\"\n  role    = \"roles/cloudkms.admin\" # Critical: ensure the offending principal is NOT bound as KMS Admin\n  members = [\n    \"user:<ALLOWED_MEMBER_EMAIL>\" # Critical: exclude any member who also has CryptoKey* roles to enforce separation of duties\n  ]\n}\n```",
+  "provider": "gcp",
+  "refs": [
+   "https://hub.prowler.com/check/iam_role_kms_enforce_separation_of_duties"
+  ],
+  "remediation": "Apply **least privilege** and **separation of duties**:\n- Never combine `roles/cloudkms.admin` with any `roles/cloudkms.cryptoKey*`\n- Isolate key management and usage in dedicated projects\n- Require approvals, log all key access, and monitor\n- Avoid broad `roles/owner` on key scopes",
+  "resources": [
+   "google_project_iam_binding"
+  ],
+  "severity": "medium",
+  "source": "prowler",
+  "source_id": "iam_role_kms_enforce_separation_of_duties",
+  "title": "Project members are not assigned both Cloud KMS Admin and CryptoKey Encrypter/Decrypter roles"
+ },
+ {
+  "category": "identity-access",
+  "cwe": "",
+  "fix_terraform": "```hcl\n# Remove all project-level principals from Service Account User\nresource \"google_project_iam_binding\" \"sa_user_none\" {\n  project = \"<example_resource_id>\"\n  role    = \"roles/iam.serviceAccountUser\"  # critical: target role to clear at project level\n  members = []                                # critical: empty list removes the binding (no members)\n}\n\n# Remove all project-level principals from Service Account Admin\nresource \"google_project_iam_binding\" \"sa_admin_none\" {\n  project = \"<example_resource_id>\"\n  role    = \"roles/iam.serviceAccountAdmin\"  # critical: target role to clear at project level\n  members = []                                 # critical: empty list removes the binding (no members)\n}\n```",
+  "provider": "gcp",
+  "refs": [
+   "https://hub.prowler.com/check/iam_role_sa_enforce_separation_of_duties"
+  ],
+  "remediation": "Enforce separation of duties: assign `roles/iam.serviceAccountAdmin` for lifecycle tasks and `roles/iam.serviceAccountUser` for attach/impersonate, never both to one principal.\n- Apply **least privilege** with narrow scope and conditions\n- Use temporary elevation/approvals\n- Regularly audit IAM bindings and logs",
+  "resources": [
+   "google_project_iam_binding"
+  ],
+  "severity": "medium",
+  "source": "prowler",
+  "source_id": "iam_role_sa_enforce_separation_of_duties",
+  "title": "Project enforces separation of duties for Service Account Admin and Service Account User roles"
+ },
+ {
+  "category": "internet-exposed,identity-access",
+  "cwe": "",
+  "fix_terraform": "```hcl\n# Replace the IAM policy on the KMS key to remove any public members\nresource \"google_kms_crypto_key_iam_policy\" \"<example_resource_name>\" {\n  crypto_key_id = \"<example_resource_id>\"\n  \n  policy_data = jsonencode({\n    bindings = [] # Critical: empty bindings remove all IAM principals, eliminating allUsers/allAuthenticatedUsers\n  })\n}\n```",
+  "provider": "gcp",
+  "refs": [
+   "https://hub.prowler.com/check/kms_key_not_publicly_accessible"
+  ],
+  "remediation": "Remove `allUsers` and `allAuthenticatedUsers` from key IAM. Grant access only to specific groups or service accounts with **least privilege** at the key scope. Enforce **separation of duties** between admins and users, and regularly review inherited bindings and audit logs.",
+  "resources": [
+   "google_kms_crypto_key_iam_policy"
+  ],
+  "severity": "high",
+  "source": "prowler",
+  "source_id": "kms_key_not_publicly_accessible",
+  "title": "Cloud KMS key has no public IAM access"
+ },
+ {
+  "category": "encryption",
+  "cwe": "",
+  "fix_terraform": "```hcl\nresource \"google_kms_crypto_key\" \"<example_resource_name>\" {\n  name     = \"<example_resource_name>\"\n  key_ring = \"<example_resource_id>\"\n  purpose  = \"ENCRYPT_DECRYPT\"\n\n  rotation_period = \"31536000s\" # Critical: sets automatic rotation to 365 days (<= 365 ensures PASS)\n}\n```",
+  "provider": "gcp",
+  "refs": [
+   "https://hub.prowler.com/check/kms_key_rotation_enabled"
+  ],
+  "remediation": "Enable **auto-rotation** for customer-managed keys with an interval  `365` days.\n\nAdopt a **key lifecycle** policy: enforce **least privilege** on key usage, apply **separation of duties** between key admins and users, monitor key access, and rehearse emergency rotation to minimize blast radius.",
+  "resources": [
+   "google_kms_crypto_key"
+  ],
+  "severity": "low",
+  "source": "prowler",
+  "source_id": "kms_key_rotation_enabled",
+  "title": "KMS key is rotated at least annually"
+ },
+ {
+  "category": "logging",
+  "cwe": "",
+  "fix_terraform": "```hcl\nresource \"google_logging_metric\" \"metric\" {\n  name   = \"<example_resource_name>\"\n  # Critical: this filter captures audit config changes via SetIamPolicy\n  filter = \"protoPayload.methodName=\\\"SetIamPolicy\\\" AND protoPayload.serviceData.policyDelta.auditConfigDeltas:*\"\n}\n\nresource \"google_monitoring_alert_policy\" \"alert\" {\n  display_name = \"<example_resource_name>\"\n  combiner     = \"OR\"\n\n  conditions {\n    display_name = \"<example_resource_name>\"\n    condition_threshold {\n      # Critical: associates the alert with the log-based metric created above\n      filter          = \"metric.type=\\\"logging.googleapis.com/user/<example_resource_name>\\\"\"\n      comparison      = \"COMPARISON_GT\"\n      threshold_value = 0\n      duration        = \"60s\"\n    }\n  }\n}\n```",
+  "provider": "gcp",
+  "refs": [
+   "https://hub.prowler.com/check/logging_log_metric_filter_and_alert_for_audit_configuration_changes_enabled"
+  ],
+  "remediation": "Create a log-based metric for **audit configuration changes** and pair it with a **log-based alert policy** that notifies responders.\n- Enforce **least privilege** on logging/IAM changes\n- Apply **change control** and **separation of duties**\n- Route alerts to durable channels and include response runbooks for **defense in depth**",
+  "resources": [
+   "google_logging_metric",
+   "google_monitoring_alert_policy"
+  ],
+  "severity": "medium",
+  "source": "prowler",
+  "source_id": "logging_log_metric_filter_and_alert_for_audit_configuration_changes_enabled",
+  "title": "Log metric filter for audit configuration changes has an associated alert policy"
+ },
+ {
+  "category": "logging,identity-access",
+  "cwe": "",
+  "fix_terraform": "```hcl\n# Create a logs-based metric for GCS IAM permission changes\nresource \"google_logging_metric\" \"<example_resource_name>\" {\n  name   = \"<example_resource_name>\"\n  filter = \"resource.type=\\\"gcs_bucket\\\" AND protoPayload.methodName=\\\"storage.setIamPermissions\\\"\" # CRITICAL: matches required filter for detection\n}\n\n# Alert policy referencing the above metric\nresource \"google_monitoring_alert_policy\" \"<example_resource_name>\" {\n  display_name = \"<example_resource_name>\"\n  combiner     = \"OR\"\n  conditions {\n    display_name = \"<example_resource_name>\"\n    condition_threshold {\n      filter          = \"metric.type=\\\"logging.googleapis.com/user/${google_logging_metric.<example_resource_name>.name}\\\"\" # CRITICAL: ties alert to the metric so check passes\n      comparison      = \"COMPARISON_GT\"\n      threshold_value = 0\n      duration        = \"0s\"\n    }\n  }\n}\n```",
+  "provider": "gcp",
+  "refs": [
+   "https://hub.prowler.com/check/logging_log_metric_filter_and_alert_for_bucket_permission_changes_enabled"
+  ],
+  "remediation": "Establish a **log-based metric** for bucket IAM permission changes with filter `resource.type=\"gcs_bucket\" AND protoPayload.methodName=\"storage.setIamPermissions\"` and link a **log-based alert policy** with clear notifications. Enforce **least privilege** and **separation of duties**, and routinely review alerts and audit logs to prevent and contain unauthorized access.",
+  "resources": [
+   "google_logging_metric",
+   "google_monitoring_alert_policy"
+  ],
+  "severity": "medium",
+  "source": "prowler",
+  "source_id": "logging_log_metric_filter_and_alert_for_bucket_permission_changes_enabled",
+  "title": "Log metric filter for Cloud Storage IAM permission changes has an associated alert policy"
+ },
+ {
+  "category": "logging",
+  "cwe": "",
+  "fix_terraform": "```hcl\nresource \"google_logging_metric\" \"compute_config_changes\" {\n  name   = \"compute_config_changes\"\n  filter = \"protoPayload.serviceName=\\\"compute.googleapis.com\\\"\"\n  metric_descriptor {\n    metric_kind = \"DELTA\"\n    value_type  = \"INT64\"\n  }\n}\n\nresource \"google_monitoring_alert_policy\" \"compute_config_alert\" {\n  display_name = \"Compute Engine Configuration Changes\"\n  conditions {\n    display_name = \"Compute config changes detected\"\n    condition_threshold {\n      filter          = \"metric.type=\\\"logging.googleapis.com/user/compute_config_changes\\\"\"\n      duration        = \"0s\"\n      comparison      = \"COMPARISON_GT\"\n      threshold_value = 0\n    }\n  }\n  notification_channels = [var.notification_channel_id]\n}\n```",
+  "provider": "gcp",
+  "refs": [
+   "https://hub.prowler.com/check/logging_log_metric_filter_and_alert_for_compute_configuration_changes_enabled"
+  ],
+  "remediation": "Configure log-based metric filters to detect Compute Engine configuration changes and create alert policies that trigger notifications when these metrics increment. Apply the **principle of least privilege** to limit who can modify compute resources, and establish **change management processes** to review and approve infrastructure modifications.",
+  "resources": [
+   "google_logging_metric",
+   "google_monitoring_alert_policy"
+  ],
+  "severity": "medium",
+  "source": "prowler",
+  "source_id": "logging_log_metric_filter_and_alert_for_compute_configuration_changes_enabled",
+  "title": "Compute Engine configuration changes are monitored with log metric filters and alerts"
+ },
+ {
+  "category": "logging",
+  "cwe": "",
+  "fix_terraform": "```hcl\nresource \"google_logging_metric\" \"<example_resource_name>\" {\n  name = \"<example_resource_name>\"\n  # Critical: log-based metric for IAM custom role create/update/delete\n  filter = \"resource.type=\\\"iam_role\\\" AND (protoPayload.methodName=\\\"google.iam.admin.v1.CreateRole\\\" OR protoPayload.methodName=\\\"google.iam.admin.v1.DeleteRole\\\" OR protoPayload.methodName=\\\"google.iam.admin.v1.UpdateRole\\\")\"\n}\n\nresource \"google_monitoring_alert_policy\" \"<example_resource_name>\" {\n  display_name = \"<example_resource_name>\"\n  conditions {\n    condition_threshold {\n      # Critical: alert policy targets the user log-based metric by name\n      filter          = \"metric.type=\\\"logging.googleapis.com/user/<example_resource_name>\\\"\"\n      comparison      = \"COMPARISON_GT\"\n      threshold_value = 0\n      duration        = \"0s\"\n    }\n  }\n}\n```",
+  "provider": "gcp",
+  "refs": [
+   "https://hub.prowler.com/check/logging_log_metric_filter_and_alert_for_custom_role_changes_enabled"
+  ],
+  "remediation": "Define log-based metrics capturing `resource.type=\"iam_role\"` events for `CreateRole`, `DeleteRole`, and `UpdateRole`, and attach **alert policies** to notify responders.\n\nEnforce **least privilege**, **separation of duties**, and **change control** for role management, and retain **audit logs** for investigation.",
+  "resources": [
+   "google_logging_metric",
+   "google_monitoring_alert_policy"
+  ],
+  "severity": "medium",
+  "source": "prowler",
+  "source_id": "logging_log_metric_filter_and_alert_for_custom_role_changes_enabled",
+  "title": "Log metric filter for IAM custom role changes has an associated alert policy"
+ },
+ {
+  "category": "logging,identity-access",
+  "cwe": "",
+  "fix_terraform": "```hcl\nresource \"google_logging_metric\" \"<example_resource_name>\" {\n  name = \"<example_resource_name>\"\n  # CRITICAL: Detects project ownership assignments/changes\n  filter = <<-EOT\n(protoPayload.serviceName=\"cloudresourcemanager.googleapis.com\") AND (ProjectOwnership OR projectOwnerInvitee) OR (protoPayload.serviceData.policyDelta.bindingDeltas.action=\"REMOVE\" AND protoPayload.serviceData.policyDelta.bindingDeltas.role=\"roles/owner\") OR (protoPayload.serviceData.policyDelta.bindingDeltas.action=\"ADD\" AND protoPayload.serviceData.policyDelta.bindingDeltas.role=\"roles/owner\")\nEOT\n}\n\nresource \"google_monitoring_alert_policy\" \"<example_resource_name>\" {\n  display_name = \"<example_resource_name>\"\n  combiner     = \"OR\"\n\n  conditions {\n    condition_threshold {\n      # CRITICAL: References the log-based metric so an alert is associated with it\n      filter          = \"metric.type=\\\"logging.googleapis.com/user/${google_logging_metric.<example_resource_name>.name}\\\"\"\n      comparison      = \"COMPARISON_GT\"\n      threshold_value = 0\n      duration        = \"0s\"\n    }\n  }\n}\n```",
+  "provider": "gcp",
+  "refs": [
+   "https://hub.prowler.com/check/logging_log_metric_filter_and_alert_for_project_ownership_changes_enabled"
+  ],
+  "remediation": "Create a log-based metric for ownership assignment/removal events and link it to an alerting policy that notifies a monitored channel. Minimize use of `roles/owner` per **least privilege**, require approvals and separation of duties, and apply **defense in depth** with centralized monitoring of IAM changes across projects.",
+  "resources": [
+   "google_logging_metric",
+   "google_monitoring_alert_policy"
+  ],
+  "severity": "medium",
+  "source": "prowler",
+  "source_id": "logging_log_metric_filter_and_alert_for_project_ownership_changes_enabled",
+  "title": "Log metric filter for project ownership assignments/changes has an associated alert policy"
+ },
+ {
+  "category": "logging",
+  "cwe": "",
+  "fix_terraform": "```hcl\nresource \"google_logging_metric\" \"sql_config_changes\" {\n  name   = \"<example_resource_name>\"\n  # Critical: captures Cloud SQL instance configuration updates\n  filter = \"protoPayload.methodName=\\\"cloudsql.instances.update\\\"\"\n}\n\nresource \"google_monitoring_alert_policy\" \"sql_config_change_alert\" {\n  display_name = \"<example_resource_name>\"\n  combiner     = \"OR\"\n\n  conditions {\n    condition_threshold {\n      # Critical: reference the logs-based metric so the alert is associated\n      filter          = \"metric.type=\\\"logging.googleapis.com/user/${google_logging_metric.sql_config_changes.name}\\\"\"\n      comparison      = \"COMPARISON_GT\"\n      threshold_value = 0\n      duration        = \"0s\"\n    }\n  }\n}\n```",
+  "provider": "gcp",
+  "refs": [
+   "https://hub.prowler.com/check/logging_log_metric_filter_and_alert_for_sql_instance_configuration_changes_enabled"
+  ],
+  "remediation": "Implement a **log-based metric** for Cloud SQL update events and attach a **Monitoring alert policy** that routes timely notifications. Apply **least privilege** for admin actions, enforce **change management** and **separation of duties**, and integrate alerts with on-call workflows to speed triage and prevent misconfigurations.",
+  "resources": [
+   "google_logging_metric",
+   "google_monitoring_alert_policy"
+  ],
+  "severity": "medium",
+  "source": "prowler",
+  "source_id": "logging_log_metric_filter_and_alert_for_sql_instance_configuration_changes_enabled",
+  "title": "Log metric filter for Cloud SQL instance configuration changes has an associated alert policy"
+ },
+ {
+  "category": "logging",
+  "cwe": "",
+  "fix_terraform": "```hcl\nresource \"google_logging_metric\" \"<example_resource_name>\" {\n  name   = \"<example_resource_name>\"\n  # CRITICAL: this filter captures VPC firewall rule changes\n  filter = \"resource.type=\\\"gce_firewall_rule\\\" AND (protoPayload.methodName:\\\"compute.firewalls.patch\\\" OR protoPayload.methodName:\\\"compute.firewalls.insert\\\" OR protoPayload.methodName:\\\"compute.firewalls.delete\\\")\"\n}\n\nresource \"google_monitoring_alert_policy\" \"<example_resource_name>\" {\n  display_name = \"<example_resource_name>\"\n  combiner     = \"OR\"\n\n  conditions {\n    display_name = \"<example_resource_name>\"\n    condition_threshold {\n      # CRITICAL: reference the user log metric so the alert policy is associated\n      # This makes the policy filter contain the metric name, satisfying the check\n      filter          = \"metric.type=\\\"logging.googleapis.com/user/${google_logging_metric.<example_resource_name>.name}\\\"\"\n      comparison      = \"COMPARISON_GT\"\n      threshold_value = 0\n      duration        = \"0s\"\n    }\n  }\n}\n```",
+  "provider": "gcp",
+  "refs": [
+   "https://hub.prowler.com/check/logging_log_metric_filter_and_alert_for_vpc_firewall_rule_changes_enabled"
+  ],
+  "remediation": "Establish a log-based metric for `gce_firewall_rule` insert/patch/delete events and tie it to an alerting policy that notifies responders.\n\nEnforce **least privilege** and change control on firewall updates, apply **separation of duties**, and monitor all projects for rapid, auditable detection of network control changes.",
+  "resources": [
+   "google_logging_metric",
+   "google_monitoring_alert_policy"
+  ],
+  "severity": "medium",
+  "source": "prowler",
+  "source_id": "logging_log_metric_filter_and_alert_for_vpc_firewall_rule_changes_enabled",
+  "title": "Log metric filter for VPC network firewall rule changes has an associated alert policy"
+ },
+ {
+  "category": "logging",
+  "cwe": "",
+  "fix_terraform": "```hcl\n# Create a logs-based metric for VPC network changes\nresource \"google_logging_metric\" \"<example_resource_name>\" {\n  name = \"<example_resource_name>\"\n  # CRITICAL: Filter capturing VPC network create/modify/delete/peering changes\n  filter = \"resource.type=\\\"gce_network\\\" AND (protoPayload.methodName:\\\"compute.networks.insert\\\" OR protoPayload.methodName:\\\"compute.networks.patch\\\" OR protoPayload.methodName:\\\"compute.networks.delete\\\" OR protoPayload.methodName:\\\"compute.networks.removePeering\\\" OR protoPayload.methodName:\\\"compute.networks.addPeering\\\")\"\n}\n\n# Alert policy associated with the logs-based metric\nresource \"google_monitoring_alert_policy\" \"<example_resource_name>\" {\n  display_name = \"<example_resource_name>\"\n\n  conditions {\n    condition_threshold {\n      # CRITICAL: Reference the logs-based metric so the policy is associated with it\n      filter          = \"metric.type=\\\"logging.googleapis.com/user/<example_resource_name>\\\"\"\n      comparison      = \"COMPARISON_GT\"\n      threshold_value = 0\n      duration        = \"0s\"\n    }\n  }\n}\n```",
+  "provider": "gcp",
+  "refs": [
+   "https://hub.prowler.com/check/logging_log_metric_filter_and_alert_for_vpc_network_changes_enabled"
+  ],
+  "remediation": "Implement a **log-based metric** for VPC change audit events and attach an **alerting policy** that notifies accountable teams.\n\nApply **least privilege** for network admins, enforce **change approval**, and adopt **defense in depth** to prevent and quickly detect unintended network changes.",
+  "resources": [
+   "google_logging_metric",
+   "google_monitoring_alert_policy"
+  ],
+  "severity": "medium",
+  "source": "prowler",
+  "source_id": "logging_log_metric_filter_and_alert_for_vpc_network_changes_enabled",
+  "title": "Log metric filter for VPC network changes has an associated alert policy"
+ },
+ {
+  "category": "logging",
+  "cwe": "",
+  "fix_terraform": "```hcl\nresource \"google_logging_metric\" \"<example_resource_name>\" {\n  name   = \"<example_resource_name>\"\n  filter = \"resource.type=\\\"gce_route\\\" AND (protoPayload.methodName:\\\"compute.routes.delete\\\" OR protoPayload.methodName:\\\"compute.routes.insert\\\")\" # Critical: matches VPC route insert/delete events\n}\n\nresource \"google_monitoring_alert_policy\" \"<example_resource_name>\" {\n  display_name = \"<example_resource_name>\"\n\n  conditions {\n    condition_threshold {\n      filter          = \"metric.type=\\\"logging.googleapis.com/user/<example_resource_name>\\\"\" # Critical: alert evaluates the log-based metric by name\n      comparison      = \"COMPARISON_GT\"\n      threshold_value = 0\n      duration        = \"0s\"\n    }\n  }\n}\n```",
+  "provider": "gcp",
+  "refs": [
+   "https://hub.prowler.com/check/logging_log_metric_filter_and_alert_for_vpc_network_route_changes_enabled"
+  ],
+  "remediation": "Create a **log-based metric** for `compute.routes.insert` and `compute.routes.delete`, and attach a **log-based alert** with reliable notifications.\n\nApply **least privilege** to route management, require **change approval**, and use **defense in depth** (egress filtering, private routing, durable audit logs).",
+  "resources": [
+   "google_logging_metric",
+   "google_monitoring_alert_policy"
+  ],
+  "severity": "medium",
+  "source": "prowler",
+  "source_id": "logging_log_metric_filter_and_alert_for_vpc_network_route_changes_enabled",
+  "title": "Log metric filter for VPC network route changes has an associated alert policy"
+ },
+ {
+  "category": "logging,forensics-ready",
+  "cwe": "",
+  "fix_terraform": "```hcl\n# Create a project-level logging sink exporting all logs\nresource \"google_logging_project_sink\" \"sink\" {\n  name        = \"<example_resource_name>\" # critical: creates the sink required by the check\n  destination = \"logging.googleapis.com/projects/<example_resource_id>\" # critical: required destination\n  # No filter set -> exports all log entries (fixes the finding)\n}\n```",
+  "provider": "gcp",
+  "refs": [
+   "https://hub.prowler.com/check/logging_sink_created"
+  ],
+  "remediation": "Create a **centralized export sink** that routes all logs to a secured, durable, preferably **immutable** destination with extended retention. Apply **least privilege** to sink identities, separate duties by isolating destinations, use **defense in depth** (encryption, access controls), and monitor sink health for continuity.",
+  "resources": [
+   "google_logging_project_sink"
+  ],
+  "severity": "medium",
+  "source": "prowler",
+  "source_id": "logging_sink_created",
+  "title": "Project has at least one logging sink exporting copies of all log entries"
+ }
+]

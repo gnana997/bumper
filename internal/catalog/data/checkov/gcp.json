@@ -1,0 +1,2322 @@
+[
+ {
+  "category": "NETWORKING",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_project_default_service_accounts"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV2_GCP_1",
+  "title": "Ensure GKE clusters are not running using the Compute Engine default service account"
+ },
+ {
+  "category": "NETWORKING",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_cloudfunctions_function"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV2_GCP_10",
+  "title": "Ensure GCP Cloud Function HTTP trigger is secured"
+ },
+ {
+  "category": "GENERAL_SECURITY",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_project_services"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV2_GCP_11",
+  "title": "Ensure GCP GCR Container Vulnerability Scanning is enabled"
+ },
+ {
+  "category": "NETWORKING",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_compute_firewall"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV2_GCP_12",
+  "title": "Ensure GCP compute firewall ingress does not allow unrestricted access to all ports"
+ },
+ {
+  "category": "LOGGING",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_sql_database_instance"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV2_GCP_13",
+  "title": "Ensure PostgreSQL database flag 'log_duration' is set to 'on'"
+ },
+ {
+  "category": "LOGGING",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_sql_database_instance"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV2_GCP_14",
+  "title": "Ensure PostgreSQL database flag 'log_executor_stats' is set to 'off'"
+ },
+ {
+  "category": "LOGGING",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_sql_database_instance"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV2_GCP_15",
+  "title": "Ensure PostgreSQL database flag 'log_parser_stats' is set to 'off'"
+ },
+ {
+  "category": "LOGGING",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_sql_database_instance"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV2_GCP_16",
+  "title": "Ensure PostgreSQL database flag 'log_planner_stats' is set to 'off'"
+ },
+ {
+  "category": "LOGGING",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_sql_database_instance"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV2_GCP_17",
+  "title": "Ensure PostgreSQL database flag 'log_statement_stats' is set to 'off'"
+ },
+ {
+  "category": "NETWORKING",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_compute_network"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV2_GCP_18",
+  "title": "Ensure GCP network defines a firewall and does not use the default firewall"
+ },
+ {
+  "category": "KUBERNETES",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_container_cluster"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV2_GCP_19",
+  "title": "Ensure GCP Kubernetes engine clusters have 'alpha cluster' feature disabled"
+ },
+ {
+  "category": "Networking",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_compute_network"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV2_GCP_2",
+  "title": "Ensure legacy networks do not exist for a project"
+ },
+ {
+  "category": "BACKUP_AND_RECOVERY",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_sql_database_instance"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV2_GCP_20",
+  "title": "Ensure MySQL DB instance has point-in-time recovery backup configured"
+ },
+ {
+  "category": "ENCRYPTION",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_notebooks_instance"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV2_GCP_21",
+  "title": "Ensure Vertex AI instance disks are encrypted with a Customer Managed Key (CMK)"
+ },
+ {
+  "category": "ENCRYPTION",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_document_ai_processor"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV2_GCP_22",
+  "title": "Ensure Document AI Processors are encrypted with a Customer Managed Key (CMK)"
+ },
+ {
+  "category": "ENCRYPTION",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_document_ai_warehouse_location"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV2_GCP_23",
+  "title": "Ensure Document AI Warehouse Location is configured to use a Customer Managed Key (CMK)"
+ },
+ {
+  "category": "ENCRYPTION",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_vertex_ai_endpoint"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV2_GCP_24",
+  "title": "Ensure Vertex AI endpoint uses a Customer Managed Key (CMK)"
+ },
+ {
+  "category": "ENCRYPTION",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_vertex_ai_featurestore"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV2_GCP_25",
+  "title": "Ensure Vertex AI featurestore uses a Customer Managed Key (CMK)"
+ },
+ {
+  "category": "ENCRYPTION",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_vertex_ai_tensorboard"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV2_GCP_26",
+  "title": "Ensure Vertex AI tensorboard uses a Customer Managed Key (CMK)"
+ },
+ {
+  "category": "ENCRYPTION",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_workbench_instance"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV2_GCP_27",
+  "title": "Ensure Vertex AI workbench instance disks are encrypted with a Customer Managed Key (CMK)"
+ },
+ {
+  "category": "GENERAL_SECURITY",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_workbench_instance"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV2_GCP_28",
+  "title": "Ensure Vertex AI workbench instances are private"
+ },
+ {
+  "category": "LOGGING",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_dialogflow_agent"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV2_GCP_29",
+  "title": "Ensure logging is enabled for Dialogflow agents"
+ },
+ {
+  "category": "ENCRYPTION",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_service_account_key"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV2_GCP_3",
+  "title": "Ensure that there are only GCP-managed service account keys for each service account"
+ },
+ {
+  "category": "LOGGING",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_dialogflow_cx_agent"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV2_GCP_30",
+  "title": "Ensure logging is enabled for Dialogflow CX agents"
+ },
+ {
+  "category": "LOGGING",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_dialogflow_cx_webhook"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV2_GCP_31",
+  "title": "Ensure logging is enabled for Dialogflow CX webhooks"
+ },
+ {
+  "category": "NETWORKING",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_tpu_v2_vm"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV2_GCP_32",
+  "title": "Ensure TPU v2 is private"
+ },
+ {
+  "category": "NETWORKING",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_vertex_ai_endpoint"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV2_GCP_33",
+  "title": "Ensure Vertex AI endpoint is private"
+ },
+ {
+  "category": "NETWORKING",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_vertex_ai_index_endpoint"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV2_GCP_34",
+  "title": "Ensure Vertex AI index endpoint is private"
+ },
+ {
+  "category": "ENCRYPTION",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_notebooks_runtime"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV2_GCP_35",
+  "title": "Ensure Vertex AI runtime is encrypted with a Customer Managed Key (CMK)"
+ },
+ {
+  "category": "NETWORKING",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_notebooks_runtime"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV2_GCP_36",
+  "title": "Ensure Vertex AI runtime is private"
+ },
+ {
+  "category": "NETWORKING",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_compute_forwarding_rule"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV2_GCP_37",
+  "title": "Ensure GCP compute regional forwarding rule does not use HTTP proxies with EXTERNAL load balancing scheme"
+ },
+ {
+  "category": "NETWORKING",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_compute_global_forwarding_rule"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV2_GCP_38",
+  "title": "Ensure GCP compute global forwarding rule does not use HTTP proxies with EXTERNAL load balancing scheme"
+ },
+ {
+  "category": "LOGGING",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_logging_folder_sink",
+   "google_logging_organization_sink",
+   "google_logging_project_sink",
+   "google_storage_bucket"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV2_GCP_4",
+  "title": "Ensure that retention policies on log buckets are configured using Bucket Lock"
+ },
+ {
+  "category": "Logging",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_project",
+   "google_project_iam_audit_config"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV2_GCP_5",
+  "title": "Ensure that Cloud Audit Logging is configured properly across all services and all users from a project"
+ },
+ {
+  "category": "ENCRYPTION",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_kms_crypto_key",
+   "google_kms_crypto_key_iam_binding",
+   "google_kms_crypto_key_iam_member"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV2_GCP_6",
+  "title": "Ensure that Cloud KMS cryptokeys are not anonymously or publicly accessible"
+ },
+ {
+  "category": "IAM",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_sql_database_instance",
+   "google_sql_user"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV2_GCP_7",
+  "title": "Ensure that a MySQL database instance does not allow anyone to connect with administrative privileges"
+ },
+ {
+  "category": "ENCRYPTION",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_kms_key_ring",
+   "google_kms_key_ring_iam_binding",
+   "google_kms_key_ring_iam_member"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV2_GCP_8",
+  "title": "Ensure that Cloud KMS Key Rings are not anonymously or publicly accessible"
+ },
+ {
+  "category": "GENERAL_SECURITY",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_container_registry",
+   "google_storage_bucket_iam_binding",
+   "google_storage_bucket_iam_member"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV2_GCP_9",
+  "title": "Ensure that Container Registry repositories are not anonymously or publicly accessible"
+ },
+ {
+  "category": "KUBERNETES",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_container_cluster"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_GCP_1",
+  "title": "Ensure Stackdriver Logging is set to Enabled on Kubernetes Engine Clusters"
+ },
+ {
+  "category": "KUBERNETES",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_container_node_pool"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_GCP_10",
+  "title": "Ensure 'Automatic node upgrade' is enabled for Kubernetes Clusters"
+ },
+ {
+  "category": "GENERAL_SECURITY",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_bigquery_table_iam_binding",
+   "google_bigquery_table_iam_member"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_GCP_100",
+  "title": "Ensure that BigQuery Tables are not anonymously or publicly accessible"
+ },
+ {
+  "category": "GENERAL_SECURITY",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_artifact_registry_repository_iam_binding",
+   "google_artifact_registry_repository_iam_member"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_GCP_101",
+  "title": "Ensure that Artifact Registry repositories are not anonymously or publicly accessible"
+ },
+ {
+  "category": "GENERAL_SECURITY",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_cloud_run_service_iam_binding",
+   "google_cloud_run_service_iam_member"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_GCP_102",
+  "title": "Ensure that GCP Cloud Run services are not anonymously or publicly accessible"
+ },
+ {
+  "category": "GENERAL_SECURITY",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_dataproc_cluster"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_GCP_103",
+  "title": "Ensure Dataproc Clusters do not have public IPs"
+ },
+ {
+  "category": "LOGGING",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_data_fusion_instance"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_GCP_104",
+  "title": "Ensure Datafusion has stack driver logging enabled"
+ },
+ {
+  "category": "LOGGING",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_data_fusion_instance"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_GCP_105",
+  "title": "Ensure Datafusion has stack driver monitoring enabled"
+ },
+ {
+  "category": "NETWORKING",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_compute_firewall"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_GCP_106",
+  "title": "Ensure Google compute firewall ingress does not allow unrestricted http port 80 access"
+ },
+ {
+  "category": "APPLICATION_SECURITY",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_cloudfunctions2_function_iam_binding",
+   "google_cloudfunctions2_function_iam_member",
+   "google_cloudfunctions_function_iam_binding",
+   "google_cloudfunctions_function_iam_member"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_GCP_107",
+  "title": "Cloud functions should not be public"
+ },
+ {
+  "category": "LOGGING",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_sql_database_instance"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_GCP_108",
+  "title": "Ensure hostnames are logged for GCP PostgreSQL databases"
+ },
+ {
+  "category": "LOGGING",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_sql_database_instance"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_GCP_109",
+  "title": "Ensure the GCP PostgreSQL database log levels are set to ERROR or lower"
+ },
+ {
+  "category": "NETWORKING",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_sql_database_instance"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_GCP_11",
+  "title": "Ensure that Cloud SQL database Instances are not open to the world"
+ },
+ {
+  "category": "LOGGING",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_sql_database_instance"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_GCP_110",
+  "title": "Ensure pgAudit is enabled for your GCP PostgreSQL database"
+ },
+ {
+  "category": "LOGGING",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_sql_database_instance"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_GCP_111",
+  "title": "Ensure GCP PostgreSQL logs SQL statements"
+ },
+ {
+  "category": "IAM",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_kms_crypto_key_iam_binding",
+   "google_kms_crypto_key_iam_member",
+   "google_kms_crypto_key_iam_policy"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_GCP_112",
+  "title": "Ensure KMS policy should not allow public access"
+ },
+ {
+  "category": "IAM",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_iam_policy"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_GCP_113",
+  "title": "Ensure IAM policy should not define public access"
+ },
+ {
+  "category": "GENERAL_SECURITY",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_storage_bucket"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_GCP_114",
+  "title": "Ensure public access prevention is enforced on Cloud Storage bucket"
+ },
+ {
+  "category": "IAM",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_organization_iam_binding",
+   "google_organization_iam_member"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_GCP_115",
+  "title": "Ensure basic roles are not used at organization level."
+ },
+ {
+  "category": "IAM",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_folder_iam_binding",
+   "google_folder_iam_member"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_GCP_116",
+  "title": "Ensure basic roles are not used at folder level."
+ },
+ {
+  "category": "IAM",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_project_iam_binding",
+   "google_project_iam_member"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_GCP_117",
+  "title": "Ensure basic roles are not used at project level."
+ },
+ {
+  "category": "IAM",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_iam_workload_identity_pool_provider"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_GCP_118",
+  "title": "Ensure IAM workload identity pool provider is restricted"
+ },
+ {
+  "category": "GENERAL_SECURITY",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_spanner_database"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_GCP_119",
+  "title": "Ensure Spanner Database has deletion protection enabled"
+ },
+ {
+  "category": "KUBERNETES",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_container_cluster"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_GCP_12",
+  "title": "Ensure Network Policy is enabled on Kubernetes Engine Clusters"
+ },
+ {
+  "category": "GENERAL_SECURITY",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_spanner_database"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_GCP_120",
+  "title": "Ensure Spanner Database has drop protection enabled"
+ },
+ {
+  "category": "GENERAL_SECURITY",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_bigquery_table"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_GCP_121",
+  "title": "Ensure BigQuery tables have deletion protection enabled"
+ },
+ {
+  "category": "ENCRYPTION",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_bigtable_instance"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_GCP_122",
+  "title": "Ensure Big Table Instances have deletion protection enabled"
+ },
+ {
+  "category": "KUBERNETES",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_container_cluster"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_GCP_123",
+  "title": "GKE Don't Use NodePools in the Cluster configuration"
+ },
+ {
+  "category": "NETWORKING",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_cloudfunctions2_function",
+   "google_cloudfunctions_function"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_GCP_124",
+  "title": "Ensure GCP Cloud Function is not configured with overly permissive Ingress setting"
+ },
+ {
+  "category": "IAM",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_iam_workload_identity_pool_provider"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_GCP_125",
+  "title": "Ensure GCP GitHub Actions OIDC trust policy is configured securely"
+ },
+ {
+  "category": "GENERAL_SECURITY",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_notebooks_instance"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_GCP_126",
+  "title": "Ensure Vertex AI Notebook instances are launched with Shielded VM enabled"
+ },
+ {
+  "category": "GENERAL_SECURITY",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_notebooks_instance"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_GCP_127",
+  "title": "Ensure Integrity Monitoring for Shielded Vertex AI Notebook Instances is Enabled"
+ },
+ {
+  "category": "KUBERNETES",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_container_cluster"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_GCP_13",
+  "title": "Ensure client certificate authentication to Kubernetes Engine Clusters is disabled"
+ },
+ {
+  "category": "BACKUP_AND_RECOVERY",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_sql_database_instance"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_GCP_14",
+  "title": "Ensure all Cloud SQL database instance have backup configuration enabled"
+ },
+ {
+  "category": "GENERAL_SECURITY",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_bigquery_dataset"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_GCP_15",
+  "title": "Ensure that BigQuery datasets are not anonymously or publicly accessible"
+ },
+ {
+  "category": "ENCRYPTION",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_dns_managed_zone"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_GCP_16",
+  "title": "Ensure that DNSSEC is enabled for Cloud DNS"
+ },
+ {
+  "category": "ENCRYPTION",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_dns_managed_zone"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_GCP_17",
+  "title": "Ensure that RSASHA1 is not used for the zone-signing and key-signing keys in Cloud DNS DNSSEC"
+ },
+ {
+  "category": "KUBERNETES",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_container_cluster"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_GCP_18",
+  "title": "Ensure GKE Control Plane is not public"
+ },
+ {
+  "category": "NETWORKING",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_compute_firewall"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_GCP_2",
+  "title": "Ensure Google compute firewall ingress does not allow unrestricted ssh access"
+ },
+ {
+  "category": "KUBERNETES",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_container_cluster"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_GCP_20",
+  "title": "Ensure master authorized networks is set to enabled in GKE clusters"
+ },
+ {
+  "category": "KUBERNETES",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_container_cluster"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_GCP_21",
+  "title": "Ensure Kubernetes Clusters are configured with Labels"
+ },
+ {
+  "category": "KUBERNETES",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_container_node_pool"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_GCP_22",
+  "title": "Ensure Container-Optimized OS (cos) is used for Kubernetes Engine Clusters Node image"
+ },
+ {
+  "category": "KUBERNETES",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_container_cluster"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_GCP_23",
+  "title": "Ensure Kubernetes Cluster is created with Alias IP ranges enabled"
+ },
+ {
+  "category": "KUBERNETES",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_container_cluster"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_GCP_24",
+  "title": "Ensure PodSecurityPolicy controller is enabled on the Kubernetes Engine Clusters"
+ },
+ {
+  "category": "KUBERNETES",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_container_cluster"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_GCP_25",
+  "title": "Ensure Kubernetes Cluster is created with Private cluster enabled"
+ },
+ {
+  "category": "LOGGING",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_compute_subnetwork"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_GCP_26",
+  "title": "Ensure that VPC Flow Logs is enabled for every subnet in a VPC Network"
+ },
+ {
+  "category": "NETWORKING",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_project"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_GCP_27",
+  "title": "Ensure that the default network does not exist in a project"
+ },
+ {
+  "category": "GENERAL_SECURITY",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_storage_bucket_iam_binding",
+   "google_storage_bucket_iam_member"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_GCP_28",
+  "title": "Ensure that Cloud Storage bucket is not anonymously or publicly accessible"
+ },
+ {
+  "category": "GENERAL_SECURITY",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_storage_bucket"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_GCP_29",
+  "title": "Ensure that Cloud Storage buckets have uniform bucket-level access enabled"
+ },
+ {
+  "category": "NETWORKING",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_compute_firewall"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_GCP_3",
+  "title": "Ensure Google compute firewall ingress does not allow unrestricted rdp access"
+ },
+ {
+  "category": "NETWORKING",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_compute_instance",
+   "google_compute_instance_from_template",
+   "google_compute_instance_template"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_GCP_30",
+  "title": "Ensure that instances are not configured to use the default service account"
+ },
+ {
+  "category": "NETWORKING",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_compute_instance",
+   "google_compute_instance_from_template",
+   "google_compute_instance_template"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_GCP_31",
+  "title": "Ensure that instances are not configured to use the default service account with full access to all Cloud APIs"
+ },
+ {
+  "category": "NETWORKING",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_compute_instance",
+   "google_compute_instance_from_template",
+   "google_compute_instance_template"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_GCP_32",
+  "title": "Ensure 'Block Project-wide SSH keys' is enabled for VM instances"
+ },
+ {
+  "category": "NETWORKING",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_compute_project_metadata"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_GCP_33",
+  "title": "Ensure oslogin is enabled for a Project"
+ },
+ {
+  "category": "NETWORKING",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_compute_instance",
+   "google_compute_instance_from_template",
+   "google_compute_instance_template"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_GCP_34",
+  "title": "Ensure that no instance in the project overrides the project setting for enabling OSLogin(OSLogin needs to be enabled in project metadata for all instances)"
+ },
+ {
+  "category": "NETWORKING",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_compute_instance",
+   "google_compute_instance_from_template",
+   "google_compute_instance_template"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_GCP_35",
+  "title": "Ensure 'Enable connecting to serial ports' is not enabled for VM Instance"
+ },
+ {
+  "category": "NETWORKING",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_compute_instance",
+   "google_compute_instance_from_template",
+   "google_compute_instance_template"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_GCP_36",
+  "title": "Ensure that IP forwarding is not enabled on Instances"
+ },
+ {
+  "category": "ENCRYPTION",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_compute_disk"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_GCP_37",
+  "title": "Ensure VM disks for critical VMs are encrypted with Customer Supplied Encryption Keys (CSEK)"
+ },
+ {
+  "category": "ENCRYPTION",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_compute_instance"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_GCP_38",
+  "title": "Ensure VM disks for critical VMs are encrypted with Customer Supplied Encryption Keys (CSEK)"
+ },
+ {
+  "category": "GENERAL_SECURITY",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_compute_instance",
+   "google_compute_instance_from_template",
+   "google_compute_instance_template"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_GCP_39",
+  "title": "Ensure Compute instances are launched with Shielded VM enabled"
+ },
+ {
+  "category": "NETWORKING",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_compute_ssl_policy"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_GCP_4",
+  "title": "Ensure no HTTPS or SSL proxy load balancers permit SSL policies with weak cipher suites"
+ },
+ {
+  "category": "NETWORKING",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_compute_instance",
+   "google_compute_instance_from_template",
+   "google_compute_instance_template"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_GCP_40",
+  "title": "Ensure that Compute instances do not have public IP addresses"
+ },
+ {
+  "category": "IAM",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_project_iam_binding",
+   "google_project_iam_member"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_GCP_41",
+  "title": "Ensure that IAM users are not assigned the Service Account User or Service Account Token Creator roles at project level"
+ },
+ {
+  "category": "IAM",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_project_iam_member"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_GCP_42",
+  "title": "Ensure that Service Account has no Admin privileges"
+ },
+ {
+  "category": "GENERAL_SECURITY",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_kms_crypto_key"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_GCP_43",
+  "title": "Ensure KMS encryption keys are rotated within a period of 90 days"
+ },
+ {
+  "category": "IAM",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_folder_iam_binding",
+   "google_folder_iam_member"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_GCP_44",
+  "title": "Ensure no roles that enable to impersonate and manage all service accounts are used at a folder level"
+ },
+ {
+  "category": "IAM",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_organization_iam_binding",
+   "google_organization_iam_member"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_GCP_45",
+  "title": "Ensure no roles that enable to impersonate and manage all service accounts are used at an organization level"
+ },
+ {
+  "category": "IAM",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_project_iam_binding",
+   "google_project_iam_member"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_GCP_46",
+  "title": "Ensure Default Service account is not used at a project level"
+ },
+ {
+  "category": "IAM",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_organization_iam_binding",
+   "google_organization_iam_member"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_GCP_47",
+  "title": "Ensure default service account is not used at an organization level"
+ },
+ {
+  "category": "IAM",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_folder_iam_binding",
+   "google_folder_iam_member"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_GCP_48",
+  "title": "Ensure Default Service account is not used at a folder level"
+ },
+ {
+  "category": "IAM",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_project_iam_binding",
+   "google_project_iam_member"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_GCP_49",
+  "title": "Ensure roles do not impersonate or manage Service Accounts used at project level"
+ },
+ {
+  "category": "GENERAL_SECURITY",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_sql_database_instance"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_GCP_50",
+  "title": "Ensure MySQL database 'local_infile' flag is set to 'off'"
+ },
+ {
+  "category": "LOGGING",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_sql_database_instance"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_GCP_51",
+  "title": "Ensure PostgreSQL database 'log_checkpoints' flag is set to 'on'"
+ },
+ {
+  "category": "LOGGING",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_sql_database_instance"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_GCP_52",
+  "title": "Ensure PostgreSQL database 'log_connections' flag is set to 'on'"
+ },
+ {
+  "category": "LOGGING",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_sql_database_instance"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_GCP_53",
+  "title": "Ensure PostgreSQL database 'log_disconnections' flag is set to 'on'"
+ },
+ {
+  "category": "LOGGING",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_sql_database_instance"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_GCP_54",
+  "title": "Ensure PostgreSQL database 'log_lock_waits' flag is set to 'on'"
+ },
+ {
+  "category": "LOGGING",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_sql_database_instance"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_GCP_55",
+  "title": "Ensure PostgreSQL database 'log_min_messages' flag is set to a valid value"
+ },
+ {
+  "category": "LOGGING",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_sql_database_instance"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_GCP_56",
+  "title": "Ensure PostgreSQL database 'log_temp_files flag is set to '0'"
+ },
+ {
+  "category": "LOGGING",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_sql_database_instance"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_GCP_57",
+  "title": "Ensure PostgreSQL database 'log_min_duration_statement' flag is set to '-1'"
+ },
+ {
+  "category": "GENERAL_SECURITY",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_sql_database_instance"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_GCP_58",
+  "title": "Ensure SQL database 'cross db ownership chaining' flag is set to 'off'"
+ },
+ {
+  "category": "GENERAL_SECURITY",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_sql_database_instance"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_GCP_59",
+  "title": "Ensure SQL database 'contained database authentication' flag is set to 'off'"
+ },
+ {
+  "category": "NETWORKING",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_sql_database_instance"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_GCP_6",
+  "title": "Ensure all Cloud SQL database instance requires all incoming connections to use SSL"
+ },
+ {
+  "category": "NETWORKING",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_sql_database_instance"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_GCP_60",
+  "title": "Ensure Cloud SQL database does not have public IP"
+ },
+ {
+  "category": "KUBERNETES",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_container_cluster"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_GCP_61",
+  "title": "Enable VPC Flow Logs and Intranode Visibility"
+ },
+ {
+  "category": "LOGGING",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_storage_bucket"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_GCP_62",
+  "title": "Bucket should log access"
+ },
+ {
+  "category": "LOGGING",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_storage_bucket"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_GCP_63",
+  "title": "Bucket should not log to itself"
+ },
+ {
+  "category": "KUBERNETES",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_container_cluster"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_GCP_64",
+  "title": "Ensure clusters are created with Private Nodes"
+ },
+ {
+  "category": "KUBERNETES",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_container_cluster"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_GCP_65",
+  "title": "Manage Kubernetes RBAC users with Google Groups for GKE"
+ },
+ {
+  "category": "KUBERNETES",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_container_cluster"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_GCP_66",
+  "title": "Ensure use of Binary Authorization"
+ },
+ {
+  "category": "KUBERNETES",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_container_cluster",
+   "google_container_node_pool"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_GCP_68",
+  "title": "Ensure Secure Boot for Shielded GKE Nodes is Enabled"
+ },
+ {
+  "category": "KUBERNETES",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_container_cluster",
+   "google_container_node_pool"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_GCP_69",
+  "title": "Ensure the GKE Metadata Server is Enabled"
+ },
+ {
+  "category": "KUBERNETES",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_container_cluster"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_GCP_7",
+  "title": "Ensure Legacy Authorization is set to Disabled on Kubernetes Engine Clusters"
+ },
+ {
+  "category": "KUBERNETES",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_container_cluster"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_GCP_70",
+  "title": "Ensure the GKE Release Channel is set"
+ },
+ {
+  "category": "KUBERNETES",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_container_cluster"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_GCP_71",
+  "title": "Ensure Shielded GKE Nodes are Enabled"
+ },
+ {
+  "category": "KUBERNETES",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_container_cluster",
+   "google_container_node_pool"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_GCP_72",
+  "title": "Ensure Integrity Monitoring for Shielded GKE Nodes is Enabled"
+ },
+ {
+  "category": "APPLICATION_SECURITY",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_compute_security_policy"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_GCP_73",
+  "title": "Ensure Cloud Armor prevents message lookup in Log4j2. See CVE-2021-44228 aka log4jshell"
+ },
+ {
+  "category": "GENERAL_SECURITY",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_compute_subnetwork"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_GCP_74",
+  "title": "Ensure that private_ip_google_access is enabled for Subnet"
+ },
+ {
+  "category": "NETWORKING",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_compute_firewall"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_GCP_75",
+  "title": "Ensure Google compute firewall ingress does not allow unrestricted FTP access"
+ },
+ {
+  "category": "NETWORKING",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_compute_subnetwork"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_GCP_76",
+  "title": "Ensure that Private google access is enabled for IPV6"
+ },
+ {
+  "category": "NETWORKING",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_compute_firewall"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_GCP_77",
+  "title": "Ensure Google compute firewall ingress does not allow on ftp port"
+ },
+ {
+  "category": "LOGGING",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_storage_bucket"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_GCP_78",
+  "title": "Ensure Cloud storage has versioning enabled"
+ },
+ {
+  "category": "GENERAL_SECURITY",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_sql_database_instance"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_GCP_79",
+  "title": "Ensure SQL database is using latest Major version"
+ },
+ {
+  "category": "KUBERNETES",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_container_cluster"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_GCP_8",
+  "title": "Ensure Stackdriver Monitoring is set to Enabled on Kubernetes Engine Clusters"
+ },
+ {
+  "category": "ENCRYPTION",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_bigquery_table"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_GCP_80",
+  "title": "Ensure Big Query Tables are encrypted with Customer Supplied Encryption Keys (CSEK)"
+ },
+ {
+  "category": "ENCRYPTION",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_bigquery_dataset"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_GCP_81",
+  "title": "Ensure Big Query Datasets are encrypted with Customer Supplied Encryption Keys (CSEK)"
+ },
+ {
+  "category": "ENCRYPTION",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_kms_crypto_key"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_GCP_82",
+  "title": "Ensure KMS keys are protected from deletion"
+ },
+ {
+  "category": "ENCRYPTION",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_pubsub_topic"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_GCP_83",
+  "title": "Ensure PubSub Topics are encrypted with Customer Supplied Encryption Keys (CSEK)"
+ },
+ {
+  "category": "ENCRYPTION",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_artifact_registry_repository"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_GCP_84",
+  "title": "Ensure Artifact Registry Repositories are encrypted with Customer Supplied Encryption Keys (CSEK)"
+ },
+ {
+  "category": "ENCRYPTION",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_bigtable_instance"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_GCP_85",
+  "title": "Ensure Big Table Instances are encrypted with Customer Supplied Encryption Keys (CSEK)"
+ },
+ {
+  "category": "GENERAL_SECURITY",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_cloudbuild_worker_pool"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_GCP_86",
+  "title": "Ensure Cloud build workers are private"
+ },
+ {
+  "category": "GENERAL_SECURITY",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_data_fusion_instance"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_GCP_87",
+  "title": "Ensure Data fusion instances are private"
+ },
+ {
+  "category": "NETWORKING",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_compute_firewall"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_GCP_88",
+  "title": "Ensure Google compute firewall ingress does not allow unrestricted mysql access"
+ },
+ {
+  "category": "GENERAL_SECURITY",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_notebooks_instance"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_GCP_89",
+  "title": "Ensure Vertex AI instances are private"
+ },
+ {
+  "category": "KUBERNETES",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_container_node_pool"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_GCP_9",
+  "title": "Ensure 'Automatic node repair' is enabled for Kubernetes Clusters"
+ },
+ {
+  "category": "ENCRYPTION",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_dataflow_job"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_GCP_90",
+  "title": "Ensure data flow jobs are encrypted with Customer Supplied Encryption Keys (CSEK)"
+ },
+ {
+  "category": "ENCRYPTION",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_dataproc_cluster"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_GCP_91",
+  "title": "Ensure Dataproc cluster is encrypted with Customer Supplied Encryption Keys (CSEK)"
+ },
+ {
+  "category": "ENCRYPTION",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_vertex_ai_dataset"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_GCP_92",
+  "title": "Ensure Vertex AI datasets uses a CMK (Customer Managed Key)"
+ },
+ {
+  "category": "ENCRYPTION",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_spanner_database"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_GCP_93",
+  "title": "Ensure Spanner Database is encrypted with Customer Supplied Encryption Keys (CSEK)"
+ },
+ {
+  "category": "GENERAL_SECURITY",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_dataflow_job"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_GCP_94",
+  "title": "Ensure Dataflow jobs are private"
+ },
+ {
+  "category": "GENERAL_SECURITY",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_redis_instance"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_GCP_95",
+  "title": "Ensure Memorystore for Redis has AUTH enabled"
+ },
+ {
+  "category": "ENCRYPTION",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_vertex_ai_metadata_store"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_GCP_96",
+  "title": "Ensure Vertex AI Metadata Store uses a CMK (Customer Managed Key)"
+ },
+ {
+  "category": "GENERAL_SECURITY",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_redis_instance"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_GCP_97",
+  "title": "Ensure Memorystore for Redis uses intransit encryption"
+ },
+ {
+  "category": "GENERAL_SECURITY",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_dataproc_cluster_iam_binding",
+   "google_dataproc_cluster_iam_member"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_GCP_98",
+  "title": "Ensure that Dataproc clusters are not anonymously or publicly accessible"
+ },
+ {
+  "category": "GENERAL_SECURITY",
+  "cwe": "",
+  "provider": "gcp",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "google_pubsub_topic_iam_binding",
+   "google_pubsub_topic_iam_member"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_GCP_99",
+  "title": "Ensure that Pub/Sub Topics are not anonymously or publicly accessible"
+ }
+]

@@ -1,0 +1,1288 @@
+[
+ {
+  "category": "Observability",
+  "cwe": "532",
+  "provider": "gcp",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/sql_database_instance.html#settings-1"
+  ],
+  "remediation": "No 'google_sql_database_instance' resource based on POSTGRES should set the 'log_min_duration_statement' flag to a value that is not '-1'",
+  "resources": [
+   "google_sql_database_instance"
+  ],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "00335e17-674c-442e-a64c-9436e60e6efb",
+  "title": "Beta - SQL DB Instance With Minimum Log Duration"
+ },
+ {
+  "category": "Encryption",
+  "cwe": "732",
+  "provider": "gcp",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/sql_database_instance#require_ssl"
+  ],
+  "remediation": "Cloud SQL Database Instance should have SSL enabled",
+  "resources": [
+   "google_sql_database_instance"
+  ],
+  "severity": "high",
+  "source": "kics",
+  "source_id": "02474449-71aa-40a1-87ae-e14497747b00",
+  "title": "SQL DB Instance With SSL Disabled"
+ },
+ {
+  "category": "Insecure Configurations",
+  "cwe": "1188",
+  "provider": "gcp",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/container_cluster"
+  ],
+  "remediation": "Kubernetes Engine Clusters must have Network Policy enabled, meaning that the attribute 'network_policy.enabled' must be true and the attribute 'addons_config.network_policy_config.disabled' must be false",
+  "resources": [
+   "google_container_cluster"
+  ],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "11e7550e-c4b6-472e-adff-c698f157cdd7",
+  "title": "Network Policy Disabled"
+ },
+ {
+  "category": "Best Practices",
+  "cwe": "1395",
+  "provider": "gcp",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/container_cluster#master_version"
+  ],
+  "remediation": "Running outdated versions of Google Kubernetes Engine (GKE) can expose it to known vulnerabilities and attacks. To reduce these risks, it is recommended to ensure that GKE is always running the latest version.",
+  "resources": [
+   "google_container_cluster"
+  ],
+  "severity": "low",
+  "source": "kics",
+  "source_id": "128df7ec-f185-48bc-8913-ce756a3ccb85",
+  "title": "Outdated GKE Version"
+ },
+ {
+  "category": "Observability",
+  "cwe": "779",
+  "provider": "gcp",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/sql_database_instance.html#settings-1"
+  ],
+  "remediation": "All 'google_sql_database_instance' resources based on POSTGRES should have the 'log_min_error_statement' flag set to 'ERROR' or a higher severity to prevent excessive logging",
+  "resources": [
+   "google_sql_database_instance"
+  ],
+  "severity": "low",
+  "source": "kics",
+  "source_id": "13de4e49-d407-4277-ba5a-d7f59283902f",
+  "title": "Beta - SQL DB Instance With Unrecommended Error Logging Threshold"
+ },
+ {
+  "category": "Encryption",
+  "cwe": "326",
+  "provider": "gcp",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_ssl_policy"
+  ],
+  "remediation": "This query confirms if Google Compute SSL Policy Weak Chyper Suits is Enabled, to do so we need to check if TLS is TLS_1_2, because other version have Weak Chypers",
+  "resources": [
+   "google_compute_ssl_policy"
+  ],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "14a457f0-473d-4d1d-9e37-6d99b355b336",
+  "title": "Google Compute SSL Policy Weak Cipher In Use"
+ },
+ {
+  "category": "Encryption",
+  "cwe": "284",
+  "provider": "gcp",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/google_kms_crypto_key_iam#google_kms_crypto_key_iam_policy"
+  ],
+  "remediation": "KMS Crypto Key should not be publicly accessible. In other words, the KMS Crypto Key policy should not set 'allUsers' or 'allAuthenticatedUsers' in the attribute 'member'/'members'",
+  "resources": [
+   "google_google_kms_crypto_key_iam"
+  ],
+  "severity": "high",
+  "source": "kics",
+  "source_id": "16cc87d1-dd47-4f46-b3ce-4dfcac8fd2f5",
+  "title": "KMS Crypto Key is Publicly Accessible"
+ },
+ {
+  "category": "Availability",
+  "cwe": "410",
+  "provider": "gcp",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/sql_database_instance.html#settings-1"
+  ],
+  "remediation": "A 'google_sql_database_instance' resource based on SQLSERVER should have the 'user connections' database flag unset or set to a non-limiting value (default 0). A small positive value may artificially limit concurrent connections and cause dropped requests or outages.",
+  "resources": [
+   "google_sql_database_instance"
+  ],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "18cb7d28-57df-4d6b-9fb4-02828cb15660",
+  "title": "Beta - SQL DB Instance With Limited User Connections"
+ },
+ {
+  "category": "Insecure Configurations",
+  "cwe": "732",
+  "provider": "gcp",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_instance#shielded_instance_config"
+  ],
+  "remediation": "Compute instances must be launched with Shielded VM enabled, which means the attribute 'shielded_instance_config' must be defined and its sub attributes 'enable_secure_boot', 'enable_vtpm' and 'enable_integrity_monitoring' must be set to true",
+  "resources": [
+   "google_compute_instance"
+  ],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "1b44e234-3d73-41a8-9954-0b154135280e",
+  "title": "Shielded VM Disabled"
+ },
+ {
+  "category": "Insecure Configurations",
+  "cwe": "94",
+  "provider": "gcp",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/sql_database_instance.html#settings-1"
+  ],
+  "remediation": "All 'google_sql_database_instance' resources based on SQLSERVER should enable the 'external scripts enabled' flag to 'off' to prevent malicious code injection attempts",
+  "resources": [
+   "google_sql_database_instance"
+  ],
+  "severity": "high",
+  "source": "kics",
+  "source_id": "1c329b9b-8221-4b55-8d5f-f0959faf9cee",
+  "title": "Beta - SQL DB Instance With External Scripts Enabled"
+ },
+ {
+  "category": "Insecure Defaults",
+  "cwe": "250",
+  "provider": "gcp",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/container_cluster#node_config"
+  ],
+  "remediation": "Kubernetes Engine Clusters should not be configured to use the default service account",
+  "resources": [
+   "google_container_cluster"
+  ],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "1c8eef02-17b1-4a3e-b01d-dcc3292d2c38",
+  "title": "GKE Using Default Service Account"
+ },
+ {
+  "category": "Networking and Firewall",
+  "cwe": "732",
+  "provider": "gcp",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_firewall#allow"
+  ],
+  "remediation": "Google Compute Network should not use a firewall rule that allows all ports",
+  "resources": [
+   "google_compute_firewall"
+  ],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "22ef1d26-80f8-4a6c-8c15-f35aab3cac78",
+  "title": "Google Compute Network Using Firewall Rule that Allows All Ports"
+ },
+ {
+  "category": "Observability",
+  "cwe": "778",
+  "provider": "gcp",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/sql_database_instance.html#settings-1"
+  ],
+  "remediation": "All 'google_sql_database_instance' resources based on POSTGRES should enable the 'cloudsql.enable_pgaudit' flag to allow for centralized logging",
+  "resources": [
+   "google_sql_database_instance"
+  ],
+  "severity": "low",
+  "source": "kics",
+  "source_id": "245eb024-d08a-449b-a1f2-02f7bba00fc2",
+  "title": "Beta - SQL DB Instance Without Centralized Logging"
+ },
+ {
+  "category": "Observability",
+  "cwe": "778",
+  "provider": "gcp",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/container_cluster#monitoring_service"
+  ],
+  "remediation": "Kubernetes Engine Clusters must have Stackdriver Monitoring enabled, which means the attribute 'monitoring_service' must be defined and different than 'none'",
+  "resources": [
+   "google_container_cluster"
+  ],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "30e8dfd2-3591-4d19-8d11-79e93106c93d",
+  "title": "Stackdriver Monitoring Disabled"
+ },
+ {
+  "category": "Access Control",
+  "cwe": "284",
+  "provider": "gcp",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_project_metadata#metadata"
+  ],
+  "remediation": "Verifies that the OSLogin is enabled",
+  "resources": [
+   "google_compute_project_metadata"
+  ],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "32ecd6eb-0711-421f-9627-1a28d9eff217",
+  "title": "OSLogin Disabled"
+ },
+ {
+  "category": "Observability",
+  "cwe": "778",
+  "provider": "gcp",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/logging_metric#filter-1"
+  ],
+  "remediation": "Resources google_monitoring_alert_policy and google_logging_metric filter fields should capture a logging metric whose filter contains protoPayload.methodName=`SetIamPolicy` AND protoPayload.serviceData.policyDelta.auditConfigDeltas:*. Both conditions must be joined with AND. Also, the google_monitoring_alert_policy notification_channels should be defined on google_monitoring_alert_policy.",
+  "resources": [
+   "google_logging_metric"
+  ],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "39d83c5a-2df4-4a2c-8ffb-b96b1bc3a813",
+  "title": "Beta - Logs And Alerts Missing Audit Configuration Changes"
+ },
+ {
+  "category": "Insecure Defaults",
+  "cwe": "250",
+  "provider": "gcp",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_instance"
+  ],
+  "remediation": "Instances should not be configured to use the Default Service Account, that has full access to all Cloud APIs, which means the attribute 'service_account' and its sub attribute 'email' must be defined. Additionally, 'email' must not be empty and must also not be a default Google Compute Engine service account.",
+  "resources": [
+   "google_compute_instance"
+  ],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "3cb4af0b-056d-4fb1-8b95-fdc4593625ff",
+  "title": "Using Default Service Account"
+ },
+ {
+  "category": "Secret Management",
+  "cwe": "284",
+  "provider": "gcp",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_instance"
+  ],
+  "remediation": "VM Instance should block project-wide SSH keys",
+  "resources": [
+   "google_compute_instance"
+  ],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "3e4d5ce6-3280-4027-8010-c26eeea1ec01",
+  "title": "Project-wide SSH Keys Are Enabled In VM Instances"
+ },
+ {
+  "category": "Observability",
+  "cwe": "788",
+  "provider": "gcp",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_subnetwork"
+  ],
+  "remediation": "This query checks if logs are enabled for a Google Compute Subnetwork resource.",
+  "resources": [
+   "google_compute_subnetwork"
+  ],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "40430747-442d-450a-a34f-dc57149f4609",
+  "title": "Google Compute Subnetwork Logging Disabled"
+ },
+ {
+  "category": "Networking and Firewall",
+  "cwe": "1188",
+  "provider": "gcp",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_firewall#name"
+  ],
+  "remediation": "Google Compute Network should not use default firewall rule",
+  "resources": [
+   "google_compute_firewall"
+  ],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "40abce54-95b1-478c-8e5f-ea0bf0bb0e33",
+  "title": "Google Compute Network Using Default Firewall Rule"
+ },
+ {
+  "category": "Observability",
+  "cwe": "353",
+  "provider": "gcp",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/container_node_pool"
+  ],
+  "remediation": "Enabling Integrity Monitoring for Shielded GKE Nodes is necessary to be notified of inconsistencies during the node boot sequence.",
+  "resources": [
+   "google_container_node_pool"
+  ],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "4b5ee6a4-5682-4725-8a7a-d9e9a51986c8",
+  "title": "Beta - Shielded GKE Node Do Not Have Integrity Monitoring Enabled"
+ },
+ {
+  "category": "Observability",
+  "cwe": "778",
+  "provider": "gcp",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/container_cluster#logging_service"
+  ],
+  "remediation": "Kubernetes Engine Clusters must have Stackdriver Logging enabled, which means the attribute 'logging_service' must be defined and different from 'none'",
+  "resources": [
+   "google_container_cluster"
+  ],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "4c7ebcb2-eae2-461e-bc83-456ee2d4f694",
+  "title": "Stackdriver Logging Disabled"
+ },
+ {
+  "category": "Observability",
+  "cwe": "778",
+  "provider": "gcp",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/google_project_service#service-1"
+  ],
+  "remediation": "The 'google_project_service.service' field must include 'cloudasset.googleapis.com' to allow Cloud Asset Inventory",
+  "resources": [
+   "google_google_project_service"
+  ],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "4f60da73-190e-4048-8e1d-cc5a3974cd15",
+  "title": "Beta - Cloud Asset Inventory Disabled"
+ },
+ {
+  "category": "Insecure Defaults",
+  "cwe": "732",
+  "provider": "gcp",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/sql_database_instance.html#settings-1"
+  ],
+  "remediation": "All 'google_sql_database_instance' resources based on 'MYSQL' should disable the 'local_infile' flag to prevent unwanted exposure",
+  "resources": [
+   "google_sql_database_instance"
+  ],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "51a2c34d-dfd0-436f-aa34-e8f796e052fd",
+  "title": "Beta - SQL DB Instance With Local Data Loading Enabled"
+ },
+ {
+  "category": "Insecure Configurations",
+  "cwe": "732",
+  "provider": "gcp",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/container_cluster#enable_shielded_nodes"
+  ],
+  "remediation": "GKE cluster nodes must be launched with Shielded VM enabled, which means the attribute 'enable_shielded_nodes' must be set to 'true'.",
+  "resources": [
+   "google_container_cluster"
+  ],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "579a0727-9c29-4d58-8195-fc5802a8bdb4",
+  "title": "Shielded GKE Nodes Disabled"
+ },
+ {
+  "category": "Insecure Configurations",
+  "cwe": "799",
+  "provider": "gcp",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/google_project"
+  ],
+  "remediation": "Verifies if the Google Project Auto Create Network is Disabled",
+  "resources": [
+   "google_google_project"
+  ],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "59571246-3f62-4965-a96f-c7d97e269351",
+  "title": "Google Project Auto Create Network Disabled"
+ },
+ {
+  "category": "Insecure Configurations",
+  "cwe": "732",
+  "provider": "gcp",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/sql_database_instance.html#settings-1"
+  ],
+  "remediation": "No 'google_sql_database_instance' resource based on SQLSERVER should enable the deprecated 'cross db ownership chaining'",
+  "resources": [
+   "google_sql_database_instance"
+  ],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "5a8c5d26-c592-4c98-afac-9762c54cc868",
+  "title": "Beta - SQL DB Instance With Ownership Chaining Enabled"
+ },
+ {
+  "category": "Insecure Configurations",
+  "cwe": "284",
+  "provider": "gcp",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/container_cluster"
+  ],
+  "remediation": "Kubernetes Engine Clusters must have Legacy Authorization set to disabled, which means the attribute 'enable_legacy_abac' must not be true",
+  "resources": [
+   "google_container_cluster"
+  ],
+  "severity": "high",
+  "source": "kics",
+  "source_id": "5baa92d2-d8ee-4c75-88a4-52d9d8bb8067",
+  "title": "GKE Legacy Authorization Enabled"
+ },
+ {
+  "category": "Insecure Configurations",
+  "cwe": "350",
+  "provider": "gcp",
+  "refs": [
+   "https://www.terraform.io/docs/providers/google/d/dns_managed_zone.html"
+  ],
+  "remediation": "DNSSEC must be enabled for Cloud DNS",
+  "resources": [],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "5ef61c88-bbb4-4725-b1df-55d23c9676bb",
+  "title": "Cloud DNS Without DNSSEC"
+ },
+ {
+  "category": "Access Control",
+  "cwe": "285",
+  "provider": "gcp",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/google_project_iam#google_project_iam_binding"
+  ],
+  "remediation": "Verifies if Google Project IAM Binding Service Account doesn't have an Account User or Token Creator Role associated",
+  "resources": [
+   "google_google_project_iam"
+  ],
+  "severity": "high",
+  "source": "kics",
+  "source_id": "617ef6ff-711e-4bd7-94ae-e965911b1b40",
+  "title": "Google Project IAM Binding Service Account has Token Creator or Account User Role"
+ },
+ {
+  "category": "Insecure Configurations",
+  "cwe": "710",
+  "provider": "gcp",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/container_cluster"
+  ],
+  "remediation": "Kubernetes Clusters must be configured with labels, which means the attribute 'resource_labels' must be defined",
+  "resources": [
+   "google_container_cluster"
+  ],
+  "severity": "low",
+  "source": "kics",
+  "source_id": "65c1bc7a-4835-4ac4-a2b6-13d310b0648d",
+  "title": "Cluster Labels Disabled"
+ },
+ {
+  "category": "Networking and Firewall",
+  "cwe": "284",
+  "provider": "gcp",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_firewall"
+  ],
+  "remediation": "Check if the Google compute firewall allows unrestricted RDP access. Allowed ports should not contain RDP port 3389",
+  "resources": [
+   "google_compute_firewall"
+  ],
+  "severity": "high",
+  "source": "kics",
+  "source_id": "678fd659-96f2-454a-a2a0-c2571f83a4a3",
+  "title": "RDP Access Is Not Restricted"
+ },
+ {
+  "category": "Observability",
+  "cwe": "778",
+  "provider": "gcp",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/logging_metric#filter-1"
+  ],
+  "remediation": "Resources google_monitoring_alert_policy and google_logging_metric filter fields should capture a logging metric whose filter contains resource.type=`iam_role` AND explicitly uses OR between all method values: protoPayload.methodName=`google.iam.admin.v1.CreateRole` OR `google.iam.admin.v1.DeleteRole` OR `google.iam.admin.v1.UpdateRole` OR `google.iam.admin.v1.UndeleteRole`. OR operators must be present and notification_channels defined on google_monitoring_alert_policy.",
+  "resources": [
+   "google_logging_metric"
+  ],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "69d4f245-d534-479e-8bcc-f6a836276dc8",
+  "title": "Beta - Logs And Alerts Missing Custom Role Changes"
+ },
+ {
+  "category": "Insecure Configurations",
+  "cwe": "732",
+  "provider": "gcp",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/container_cluster"
+  ],
+  "remediation": "Kubernetes Clusters must be created with Private Clusters enabled, meaning the 'private_cluster_config' must be defined and the attributes 'enable_private_nodes' and 'enable_private_endpoint' must be true",
+  "resources": [
+   "google_container_cluster"
+  ],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "6ccb85d7-0420-4907-9380-50313f80946b",
+  "title": "Private Cluster Disabled"
+ },
+ {
+  "category": "Insecure Configurations",
+  "cwe": "276",
+  "provider": "gcp",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/google/6.36.1/docs/resources/compute_network"
+  ],
+  "remediation": "Legacy networks can have an impact for high network traffic projects and are subject to a single point of contention or failure.",
+  "resources": [
+   "google_compute_network"
+  ],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "700f1049-7fa0-4cb0-971b-3efebfb6a91f",
+  "title": "Beta - Legacy Networks Do Not Exist For Older Google Projects"
+ },
+ {
+  "category": "Access Control",
+  "cwe": "284",
+  "provider": "gcp",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/google/latest/docs/data-sources/iam_policy#role"
+  ],
+  "remediation": "As a best practice, it is better to assign an IAM Role to a group than to a user",
+  "resources": [],
+  "severity": "low",
+  "source": "kics",
+  "source_id": "704fcc44-a58f-4af5-82e2-93f2a58ef918",
+  "title": "User with IAM Role"
+ },
+ {
+  "category": "Insecure Configurations",
+  "cwe": "299",
+  "provider": "gcp",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/container_cluster"
+  ],
+  "remediation": "Kubernetes Clusters must use the default OAuth authentication, which means 'master_auth' must either be undefined or have 'client_certificate_config' with the attribute 'issue_client_certificate' equal to false",
+  "resources": [
+   "google_container_cluster"
+  ],
+  "severity": "low",
+  "source": "kics",
+  "source_id": "73fb21a1-b19a-45b1-b648-b47b1678681e",
+  "title": "Legacy Client Certificate Auth Enabled"
+ },
+ {
+  "category": "Access Control",
+  "cwe": "862",
+  "provider": "gcp",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/essential_contacts_contact"
+  ],
+  "remediation": "It is advisable to set up Essential Contacts to specify email addresses that Google Cloud can use to send important technical or security notifications.",
+  "resources": [
+   "google_essential_contacts_contact"
+  ],
+  "severity": "low",
+  "source": "kics",
+  "source_id": "7bd9c6a8-3b1f-495c-9752-a4a9c4e1b29f",
+  "title": "Beta - Ensure Essential Contacts Is Configured For Organization"
+ },
+ {
+  "category": "Access Control",
+  "cwe": "285",
+  "provider": "gcp",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/google_project_iam#google_project_iam_member"
+  ],
+  "remediation": "Verifies that Google Project IAM Member Service Account doesn't have an Admin Role associated",
+  "resources": [
+   "google_google_project_iam"
+  ],
+  "severity": "high",
+  "source": "kics",
+  "source_id": "84d36481-fd63-48cb-838e-635c44806ec2",
+  "title": "Google Project IAM Member Service Account Has Admin Role"
+ },
+ {
+  "category": "Observability",
+  "cwe": "778",
+  "provider": "gcp",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/sql_database_instance.html#settings-1"
+  ],
+  "remediation": "All 'google_sql_database_instance' resources based on POSTGRES should enable the 'log_disconnections' flag to log disconnections",
+  "resources": [
+   "google_sql_database_instance"
+  ],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "8895abb4-6491-4ae6-9c33-c2f360752b7a",
+  "title": "Beta - SQL DB Instance Without Disconnections Logging"
+ },
+ {
+  "category": "Observability",
+  "cwe": "778",
+  "provider": "gcp",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/google_project_iam#google_project_iam_audit_config"
+  ],
+  "remediation": "Audit Logging Configuration is defective",
+  "resources": [
+   "google_google_project_iam"
+  ],
+  "severity": "low",
+  "source": "kics",
+  "source_id": "89fe890f-b480-460c-8b6b-7d8b1468adb4",
+  "title": "IAM Audit Not Properly Configured"
+ },
+ {
+  "category": "Insecure Configurations",
+  "cwe": "799",
+  "provider": "gcp",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/container_node_pool#node_config"
+  ],
+  "remediation": "The node image should be Container-Optimized OS(COS)",
+  "resources": [
+   "google_container_node_pool"
+  ],
+  "severity": "low",
+  "source": "kics",
+  "source_id": "8a893e46-e267-485a-8690-51f39951de58",
+  "title": "COS Node Image Not Used"
+ },
+ {
+  "category": "Insecure Configurations",
+  "cwe": "1269",
+  "provider": "gcp",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/container_cluster"
+  ],
+  "remediation": "Alpha clusters are not covered by an SLA and are not production-ready",
+  "resources": [
+   "google_container_cluster"
+  ],
+  "severity": "low",
+  "source": "kics",
+  "source_id": "8ca7e731-56f6-4fb4-9b98-fcb0a93518c8",
+  "title": "Beta - Google Kubernetes Engine Cluster Has Alpha Features Enabled"
+ },
+ {
+  "category": "Insecure Configurations",
+  "cwe": "284",
+  "provider": "gcp",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/container_cluster"
+  ],
+  "remediation": "Kubernetes Clusters must have Pod Security Policy controller enabled, which means there must be a 'pod_security_policy_config' with the 'enabled' attribute equal to true",
+  "resources": [
+   "google_container_cluster"
+  ],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "9192e0f9-eca5-4056-9282-ae2a736a4088",
+  "title": "Pod Security Policy Disabled"
+ },
+ {
+  "category": "Access Control",
+  "cwe": "266",
+  "provider": "gcp",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/google_project_iam#policy_data"
+  ],
+  "remediation": "Google Project IAM Policy should not assign a KMS admin role and CryptoKey role to the same member",
+  "resources": [
+   "google_google_project_iam"
+  ],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "92e4464a-4139-4d57-8742-b5acc0347680",
+  "title": "KMS Admin and CryptoKey Roles In Use"
+ },
+ {
+  "category": "Insecure Configurations",
+  "cwe": "284",
+  "provider": "gcp",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/google_project_iam#google_project_iam_binding"
+  ],
+  "remediation": "Gmail accounts are being used instead of corporate credentials",
+  "resources": [
+   "google_google_project_iam"
+  ],
+  "severity": "low",
+  "source": "kics",
+  "source_id": "9356962e-4a4f-4d06-ac59-dc8008775eaa",
+  "title": "Not Proper Email Account In Use"
+ },
+ {
+  "category": "Networking and Firewall",
+  "cwe": "732",
+  "provider": "gcp",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_instance"
+  ],
+  "remediation": "Google Compute Engine VM instances should not enable serial ports. When enabled, anyone can access your VM, if they know the username, project ID, SSH key, instance name and zone",
+  "resources": [
+   "google_compute_instance"
+  ],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "97fa667a-d05b-4f16-9071-58b939f34751",
+  "title": "Serial Ports Are Enabled For VM Instances"
+ },
+ {
+  "category": "Networking and Firewall",
+  "cwe": "406",
+  "provider": "gcp",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/container_cluster#network_policy-1"
+  ],
+  "remediation": "All 'google_container_cluster' resources should enable network policy support. Network policies can provide better security by limiting connections between pods thus reducing compromise radius",
+  "resources": [
+   "google_container_cluster"
+  ],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "99976ba0-aa37-4745-93a6-5f1d55997f67",
+  "title": "Beta - Cluster Without Network Policy Support Enabled"
+ },
+ {
+  "category": "Access Control",
+  "cwe": "732",
+  "provider": "gcp",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/storage_bucket_iam#google_storage_bucket_iam_binding"
+  ],
+  "remediation": "Cloud Storage Buckets must not be anonymously or publicly accessible, which means the attribute 'members' must not possess 'allUsers' or 'allAuthenticatedUsers'",
+  "resources": [
+   "google_storage_bucket_iam"
+  ],
+  "severity": "critical",
+  "source": "kics",
+  "source_id": "a6cd52a1-3056-4910-96a5-894de9f3f3b3",
+  "title": "Cloud Storage Anonymous or Publicly Accessible"
+ },
+ {
+  "category": "Observability",
+  "cwe": "778",
+  "provider": "gcp",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/logging_metric#filter-1"
+  ],
+  "remediation": "Resources google_monitoring_alert_policy and google_logging_metric filter fields should capture a logging metric whose filter defines protoPayload.serviceName=`cloudresourcemanager.googleapis.com` AND (ProjectOwnership OR projectOwnerInvitee) OR (bindingDeltas.action=`REMOVE` AND bindingDeltas.role=`roles/owner`) OR (bindingDeltas.action=`ADD` AND bindingDeltas.role=`roles/owner`). All AND/OR operators must be explicit and notification_channels defined on google_monitoring_alert_policy.",
+  "resources": [
+   "google_logging_metric"
+  ],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "a881b71c-73ac-4358-879c-e3271db5a3c5",
+  "title": "Beta - Logs And Alerts Missing Project Ownership Assignment And Changes"
+ },
+ {
+  "category": "Insecure Configurations",
+  "cwe": "693",
+  "provider": "gcp",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/container_node_pool"
+  ],
+  "remediation": "Google Container Node Pool Auto Repair should be enabled. This service periodically checks for failing nodes and repairs them to ensure a smooth running state.",
+  "resources": [
+   "google_container_node_pool"
+  ],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "acfdbec6-4a17-471f-b412-169d77553332",
+  "title": "Google Container Node Pool Auto Repair Disabled"
+ },
+ {
+  "category": "Resource Management",
+  "cwe": "1188",
+  "provider": "gcp",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/container_node_pool#auto_upgrade"
+  ],
+  "remediation": "Kubernetes nodes must have auto upgrades set to true, which means Node 'auto_upgrade' should be enabled for Kubernetes Clusters",
+  "resources": [
+   "google_container_node_pool"
+  ],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "b139213e-7d24-49c2-8025-c18faa21ecaa",
+  "title": "Node Auto Upgrade Disabled"
+ },
+ {
+  "category": "Insecure Configurations",
+  "cwe": "732",
+  "provider": "gcp",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/sql_database_instance"
+  ],
+  "remediation": "Cloud SQL instances should not be publicly accessible.",
+  "resources": [
+   "google_sql_database_instance"
+  ],
+  "severity": "critical",
+  "source": "kics",
+  "source_id": "b187edca-b81e-4fdc-aff4-aab57db45edb",
+  "title": "SQL DB Instance Publicly Accessible"
+ },
+ {
+  "category": "Encryption",
+  "cwe": "311",
+  "provider": "gcp",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_disk"
+  ],
+  "remediation": "VM disks for critical VMs must be encrypted with Customer Supplied Encryption Keys (CSEK) or with Customer-managed encryption keys (CMEK), which means the attribute 'disk_encryption_key' must be defined and its sub attributes 'raw_key' or 'kms_key_self_link' must also be defined",
+  "resources": [
+   "google_compute_disk"
+  ],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "b1d51728-7270-4991-ac2f-fc26e2695b38",
+  "title": "Disk Encryption Disabled"
+ },
+ {
+  "category": "Insecure Defaults",
+  "cwe": "732",
+  "provider": "gcp",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/sql_database_instance.html#settings-1"
+  ],
+  "remediation": "All 'google_sql_database_instance' resources based on MYSQL should enable the 'skip_show_database' flag to prevent unwanted exposure",
+  "resources": [
+   "google_sql_database_instance"
+  ],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "b5b70198-2a34-4792-b0d9-ce99abe485bb",
+  "title": "Beta - SQL DB Instance With Exposed Show Privileges"
+ },
+ {
+  "category": "Insecure Configurations",
+  "cwe": "285",
+  "provider": "gcp",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/storage_bucket"
+  ],
+  "remediation": "Google Storage Bucket Level Access should be enabled",
+  "resources": [
+   "google_storage_bucket"
+  ],
+  "severity": "high",
+  "source": "kics",
+  "source_id": "bb0db090-5509-4853-a827-75ced0b3caa0",
+  "title": "Google Storage Bucket Level Access Disabled"
+ },
+ {
+  "category": "Access Control",
+  "cwe": "732",
+  "provider": "gcp",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_instance#scopes"
+  ],
+  "remediation": "A VM instance is configured to use the default service account with full access to all Cloud APIs",
+  "resources": [
+   "google_compute_instance"
+  ],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "bc280331-27b9-4acb-a010-018e8098aa5d",
+  "title": "VM With Full Cloud Access"
+ },
+ {
+  "category": "Access Control",
+  "cwe": "285",
+  "provider": "gcp",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/storage_bucket_iam#member/members"
+  ],
+  "remediation": "Cloud Storage Bucket is anonymously or publicly accessible",
+  "resources": [
+   "google_storage_bucket_iam"
+  ],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "c010082c-76e0-4b91-91d9-6e8439e455dd",
+  "title": "Cloud Storage Bucket Is Publicly Accessible"
+ },
+ {
+  "category": "Best Practices",
+  "cwe": "1188",
+  "provider": "gcp",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/container_cluster"
+  ],
+  "remediation": "Release Channel should be subscribed to Regular or Stable to automate version upgrades to the GKE cluster and to reduce version management complexity to the number of features and level of stability required.",
+  "resources": [
+   "google_container_cluster"
+  ],
+  "severity": "low",
+  "source": "kics",
+  "source_id": "c1701dcf-24df-4675-b863-340233c4e34f",
+  "title": "Beta - Ensure GKE Version Management Is Automated Using Release Channels"
+ },
+ {
+  "category": "Insecure Configurations",
+  "cwe": "286",
+  "provider": "gcp",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/sql_database_instance.html#settings-1"
+  ],
+  "remediation": "In a 'google_sql_database_instance' resource based on SQLSERVER, the 'contained database authentication' flag should be set to 'off'",
+  "resources": [
+   "google_sql_database_instance"
+  ],
+  "severity": "high",
+  "source": "kics",
+  "source_id": "c3655703-569b-42ec-8027-ef8835d989c0",
+  "title": "Beta - SQL DB Instance With Contained Database Authentication"
+ },
+ {
+  "category": "Networking and Firewall",
+  "cwe": "732",
+  "provider": "gcp",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_firewall"
+  ],
+  "remediation": "Google Firewall should not allow SSH access (port 22) from the Internet (public CIDR block) to ensure the principle of least privileges",
+  "resources": [
+   "google_compute_firewall"
+  ],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "c4dcdcdf-10dd-4bf4-b4a0-8f6239e6aaa0",
+  "title": "SSH Access Is Not Restricted"
+ },
+ {
+  "category": "Insecure Configurations",
+  "cwe": "799",
+  "provider": "gcp",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/container_cluster"
+  ],
+  "remediation": "Kubernetes Clusters must be created with Alias IP ranges enabled, which means the attribut 'ip_allocation_policy' must be defined and, if defined, the attribute 'networking_mode' must be VPC_NATIVE",
+  "resources": [
+   "google_container_cluster"
+  ],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "c606ba1d-d736-43eb-ac24-e16108f3a9e0",
+  "title": "IP Aliasing Disabled"
+ },
+ {
+  "category": "Access Control",
+  "cwe": "285",
+  "provider": "gcp",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/google_project_iam#google_project_iam_member"
+  ],
+  "remediation": "Verifies if Google Poject IAM Member Service Account doesn't have a Account User or Token Creator associated",
+  "resources": [
+   "google_google_project_iam"
+  ],
+  "severity": "high",
+  "source": "kics",
+  "source_id": "c68b4e6d-4e01-4ca1-b256-1e18e875785c",
+  "title": "Google Project IAM Member Service Account has Token Creator or Account User Role"
+ },
+ {
+  "category": "Insecure Configurations",
+  "cwe": "250",
+  "provider": "gcp",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/sql_database_instance.html#settings-1"
+  ],
+  "remediation": "No 'google_sql_database_instance' resource based on SQLSERVER should define the 'user options' flag",
+  "resources": [
+   "google_sql_database_instance"
+  ],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "c8e4444e-d9a9-4426-be8e-9f1b8c43133c",
+  "title": "Beta - SQL DB Instance With Global User Options"
+ },
+ {
+  "category": "Observability",
+  "cwe": "778",
+  "provider": "gcp",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/dns_policy#enable_logging-1"
+  ],
+  "remediation": "The 'google_dns_policy' should always have the 'enable_logging' field set to true",
+  "resources": [
+   "google_dns_policy"
+  ],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "cc9e464e-5abc-4c8f-8077-a9aa7ebe6a05",
+  "title": "Beta - Google DNS Policy Logging Disabled"
+ },
+ {
+  "category": "Encryption",
+  "cwe": "326",
+  "provider": "gcp",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/dns_managed_zone#algorithm"
+  ],
+  "remediation": "DNSSEC should not use the RSASHA1 algorithm, which means if, within the 'dnssec_config' block, the 'default_key_specs' block exists with the 'algorithm' field is 'rsasha1' which is bad.",
+  "resources": [
+   "google_dns_managed_zone"
+  ],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "ccc3100c-0fdd-4a5e-9908-c10107291860",
+  "title": "DNSSEC Using RSASHA1"
+ },
+ {
+  "category": "Insecure Configurations",
+  "cwe": "1188",
+  "provider": "gcp",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/google/2.20.3/docs/resources/container_cluster#kubernetes_dashboard-4"
+  ],
+  "remediation": "Kubernetes Web UI (Dashboard) should be disabled when running on Kubernetes Engine",
+  "resources": [
+   "google_container_cluster"
+  ],
+  "severity": "low",
+  "source": "kics",
+  "source_id": "ced11de2-e701-4e63-83ab-4fdb1ab8c5dd",
+  "title": "Beta - Kubernetes Web UI Is Not Disabled"
+ },
+ {
+  "category": "Resource Management",
+  "cwe": "284",
+  "provider": "gcp",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/google/latest/docs/data-sources/iam_policy#role"
+  ],
+  "remediation": "Service account should not have improper privileges like admin, editor, owner, or write roles",
+  "resources": [],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "cefdad16-0dd5-4ac5-8ed2-a37502c78672",
+  "title": "Service Account with Improper Privileges"
+ },
+ {
+  "category": "Backup",
+  "cwe": "799",
+  "provider": "gcp",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/sql_database_instance"
+  ],
+  "remediation": "Checks if backup configuration is enabled for all Cloud SQL Database instances",
+  "resources": [
+   "google_sql_database_instance"
+  ],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "cf3c7631-cd1e-42f3-8801-a561214a6e79",
+  "title": "SQL DB Instance Backup Disabled"
+ },
+ {
+  "category": "Insecure Configurations",
+  "cwe": "284",
+  "provider": "gcp",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_instance"
+  ],
+  "remediation": "Check if any VM instance disables OSLogin",
+  "resources": [
+   "google_compute_instance"
+  ],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "d0b4d550-c001-46c3-bbdb-d5d75d33f05f",
+  "title": "OSLogin Is Disabled For VM Instance"
+ },
+ {
+  "category": "Insecure Defaults",
+  "cwe": "266",
+  "provider": "gcp",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/sql_database_instance.html#settings-1"
+  ],
+  "remediation": "All 'google_sql_database_instance' resources based on SQLSERVER should set the 'remote access' flag to 'off'",
+  "resources": [
+   "google_sql_database_instance"
+  ],
+  "severity": "high",
+  "source": "kics",
+  "source_id": "d4436ca8-1caf-427c-8911-8b4d31ff6b40",
+  "title": "Beta - SQL DB Instance With Remote Access Enabled"
+ },
+ {
+  "category": "Observability",
+  "cwe": "778",
+  "provider": "gcp",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/storage_bucket#log_bucket"
+  ],
+  "remediation": "Cloud storage bucket should have logging enabled",
+  "resources": [
+   "google_storage_bucket"
+  ],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "d6cabc3a-d57e-48c2-b341-bf3dd4f4a120",
+  "title": "Cloud Storage Bucket Logging Not Enabled"
+ },
+ {
+  "category": "Secret Management",
+  "cwe": "326",
+  "provider": "gcp",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/kms_crypto_key"
+  ],
+  "remediation": "KMS encryption keys should be rotated every 90 days or less. A short lifetime of encryption keys reduces the potential blast radius in case of compromise.",
+  "resources": [
+   "google_kms_crypto_key"
+  ],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "d8c57c4e-bf6f-4e32-a2bf-8643532de77b",
+  "title": "High Google KMS Crypto Key Rotation Period"
+ },
+ {
+  "category": "Access Control",
+  "cwe": "732",
+  "provider": "gcp",
+  "refs": [
+   "https://www.terraform.io/docs/providers/google/r/bigquery_dataset.html"
+  ],
+  "remediation": "BigQuery dataset is anonymously or publicly accessible",
+  "resources": [],
+  "severity": "high",
+  "source": "kics",
+  "source_id": "e576ce44-dd03-4022-a8c0-3906acca2ab4",
+  "title": "BigQuery Dataset Is Public"
+ },
+ {
+  "category": "Networking and Firewall",
+  "cwe": "285",
+  "provider": "gcp",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_firewall#allow"
+  ],
+  "remediation": "Google Compute Network should not use a firewall rule that allows port range",
+  "resources": [
+   "google_compute_firewall"
+  ],
+  "severity": "low",
+  "source": "kics",
+  "source_id": "e6f61c37-106b-449f-a5bb-81bfcaceb8b4",
+  "title": "Google Compute Network Using Firewall Rule that Allows Port Range"
+ },
+ {
+  "category": "Observability",
+  "cwe": "710",
+  "provider": "gcp",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/storage_bucket#enabled"
+  ],
+  "remediation": "Cloud Storage Bucket should have versioning enabled",
+  "resources": [
+   "google_storage_bucket"
+  ],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "e7e961ac-d17e-4413-84bc-8a1fbe242944",
+  "title": "Cloud Storage Bucket Versioning Disabled"
+ },
+ {
+  "category": "Observability",
+  "cwe": "779",
+  "provider": "gcp",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/sql_database_instance.html#settings-1"
+  ],
+  "remediation": "All 'google_sql_database_instance' resources based on POSTGRES should have the 'log_min_messages' flag set to 'WARNING' or a higher severity to prevent excessive logging",
+  "resources": [
+   "google_sql_database_instance"
+  ],
+  "severity": "low",
+  "source": "kics",
+  "source_id": "ecbbe763-95dc-47e6-8660-84ff751e5acf",
+  "title": "Beta - SQL DB Instance With Unrecommended Logging Threshold"
+ },
+ {
+  "category": "Networking and Firewall",
+  "cwe": "732",
+  "provider": "gcp",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_subnetwork#private_ip_google_access"
+  ],
+  "remediation": "Google Compute Subnetwork should have Private Google Access enabled, which means 'private_ip_google_access' should be set to true",
+  "resources": [
+   "google_compute_subnetwork"
+  ],
+  "severity": "low",
+  "source": "kics",
+  "source_id": "ee7b93c1-b3f8-4a3b-9588-146d481814f5",
+  "title": "Google Compute Subnetwork with Private Google Access Disabled"
+ },
+ {
+  "category": "Networking and Firewall",
+  "cwe": "1188",
+  "provider": "gcp",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/google/latest/docs/data-sources/compute_instance"
+  ],
+  "remediation": "Instances must not have IP forwarding enabled, which means the attribute 'can_ip_forward' must not be true",
+  "resources": [],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "f34c0c25-47b4-41eb-9c79-249b4dd47b89",
+  "title": "IP Forwarding Enabled"
+ },
+ {
+  "category": "Insecure Defaults",
+  "cwe": "209",
+  "provider": "gcp",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/sql_database_instance.html#settings-1"
+  ],
+  "remediation": "All 'google_sql_database_instance' resources based on SQLSERVER should enable the '3625'(trace log) flag to prevent the disclosure of sensitive information",
+  "resources": [
+   "google_sql_database_instance"
+  ],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "f5aff735-fd1c-4751-a5e9-98bfe4893fa2",
+  "title": "Beta - SQL DB Instance With Exposed Trace Logs"
+ },
+ {
+  "category": "Observability",
+  "cwe": "778",
+  "provider": "gcp",
+  "refs": [
+   "https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/sql_database_instance.html#settings-1"
+  ],
+  "remediation": "All 'google_sql_database_instance' resources based on POSTGRES should enable the 'log_connections' flag to log connection attempts",
+  "resources": [
+   "google_sql_database_instance"
+  ],
+  "severity": "medium",
+  "source": "kics",
+  "source_id": "fc7187e5-b9a2-46c0-950d-3bfcaaacc5ca",
+  "title": "Beta - SQL DB Instance Without Connections Logging"
+ }
+]

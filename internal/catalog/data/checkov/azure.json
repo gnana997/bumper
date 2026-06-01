@@ -1,0 +1,4307 @@
+[
+ {
+  "category": "ENCRYPTION",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_storage_account"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV2_AZURE_1",
+  "title": "Ensure storage for critical data are encrypted with Customer Managed Key"
+ },
+ {
+  "category": "GENERAL_SECURITY",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_virtual_machine",
+   "azurerm_virtual_machine_extension"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV2_AZURE_10",
+  "title": "Ensure that Microsoft Antimalware is configured to automatically updates for Virtual Machines"
+ },
+ {
+  "category": "ENCRYPTION",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_kusto_cluster"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV2_AZURE_11",
+  "title": "Ensure that Azure Data Explorer encryption at rest uses a customer-managed key"
+ },
+ {
+  "category": "BACKUP_AND_RECOVERY",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_virtual_machine"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV2_AZURE_12",
+  "title": "Ensure that virtual machines are backed up using Azure Backup"
+ },
+ {
+  "category": "GENERAL_SECURITY",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_mssql_server_security_alert_policy",
+   "azurerm_sql_server"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV2_AZURE_13",
+  "title": "Ensure that sql servers enables data security policy"
+ },
+ {
+  "category": "ENCRYPTION",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_managed_disk",
+   "azurerm_virtual_machine"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV2_AZURE_14",
+  "title": "Ensure that Unattached disks are encrypted"
+ },
+ {
+  "category": "ENCRYPTION",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_data_factory"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV2_AZURE_15",
+  "title": "Ensure that Azure data factories are encrypted with a customer-managed key"
+ },
+ {
+  "category": "ENCRYPTION",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_mysql_server",
+   "azurerm_mysql_server_key"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV2_AZURE_16",
+  "title": "Ensure that MySQL server enables customer-managed key for encryption"
+ },
+ {
+  "category": "ENCRYPTION",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_postgresql_server",
+   "azurerm_postgresql_server_key"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV2_AZURE_17",
+  "title": "Ensure that PostgreSQL server enables customer-managed key for encryption"
+ },
+ {
+  "category": "NETWORKING",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_synapse_workspace"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV2_AZURE_19",
+  "title": "Ensure that Azure Synapse workspaces have no IP firewall rules attached"
+ },
+ {
+  "category": "GENERAL_SECURITY",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_mssql_server",
+   "azurerm_mssql_server_security_alert_policy",
+   "azurerm_sql_server"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV2_AZURE_2",
+  "title": "Ensure that Vulnerability Assessment (VA) is enabled on a SQL server by setting a Storage Account"
+ },
+ {
+  "category": "LOGGING",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_log_analytics_storage_insights",
+   "azurerm_storage_account",
+   "azurerm_storage_table"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV2_AZURE_20",
+  "title": "Ensure Storage logging is enabled for Table service for read requests"
+ },
+ {
+  "category": "LOGGING",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_log_analytics_storage_insights",
+   "azurerm_storage_account",
+   "azurerm_storage_container"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV2_AZURE_21",
+  "title": "Ensure Storage logging is enabled for Blob service for read requests"
+ },
+ {
+  "category": "ENCRYPTION",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_cognitive_account",
+   "azurerm_cognitive_account_customer_managed_key"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV2_AZURE_22",
+  "title": "Ensure that Cognitive Services enables customer-managed key for encryption"
+ },
+ {
+  "category": "NETWORKING",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_spring_cloud_service"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV2_AZURE_23",
+  "title": "Ensure Azure spring cloud is configured with Virtual network (Vnet)"
+ },
+ {
+  "category": "GENERAL_SECURITY",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_automation_account"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV2_AZURE_24",
+  "title": "Ensure Azure automation account does NOT have overly permissive network access"
+ },
+ {
+  "category": "GENERAL_SECURITY",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_mssql_database"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV2_AZURE_25",
+  "title": "Ensure Azure SQL database Transparent Data Encryption (TDE) is enabled"
+ },
+ {
+  "category": "GENERAL_SECURITY",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_postgresql_flexible_server_firewall_rule"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV2_AZURE_26",
+  "title": "Ensure Azure PostgreSQL Flexible server is not configured with overly permissive network access"
+ },
+ {
+  "category": "GENERAL_SECURITY",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_mssql_server"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV2_AZURE_27",
+  "title": "Ensure Azure AD authentication is enabled for Azure SQL (MSSQL)"
+ },
+ {
+  "category": "GENERAL_SECURITY",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_container_group"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV2_AZURE_28",
+  "title": "Ensure Container Instance is configured with managed identity"
+ },
+ {
+  "category": "GENERAL_SECURITY",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_kubernetes_cluster"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV2_AZURE_29",
+  "title": "Ensure AKS cluster has Azure CNI networking enabled"
+ },
+ {
+  "category": "GENERAL_SECURITY",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_mssql_server",
+   "azurerm_mssql_server_security_alert_policy",
+   "azurerm_mssql_server_vulnerability_assessment",
+   "azurerm_sql_server"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV2_AZURE_3",
+  "title": "Ensure that VA setting Periodic Recurring Scans is enabled on a SQL server"
+ },
+ {
+  "category": "GENERAL_SECURITY",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_container_registry_webhook"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV2_AZURE_30",
+  "title": "Ensure Azure Container Registry (ACR) has HTTPS enabled for webhook"
+ },
+ {
+  "category": "GENERAL_SECURITY",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_subnet"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV2_AZURE_31",
+  "title": "Ensure VNET subnet is configured with a Network Security Group (NSG)"
+ },
+ {
+  "category": "GENERAL_SECURITY",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_key_vault"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV2_AZURE_32",
+  "title": "Ensure private endpoint is configured to key vault"
+ },
+ {
+  "category": "GENERAL_SECURITY",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_storage_account"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV2_AZURE_33",
+  "title": "Ensure storage account is configured with private endpoint"
+ },
+ {
+  "category": "NETWORKING",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_mssql_firewall_rule",
+   "azurerm_sql_firewall_rule"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV2_AZURE_34",
+  "title": "Ensure Azure SQL server firewall is not overly permissive"
+ },
+ {
+  "category": "IAM",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_recovery_services_vault"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV2_AZURE_35",
+  "title": "Ensure Azure recovery services vault is configured with managed identity"
+ },
+ {
+  "category": "IAM",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_automation_account"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV2_AZURE_36",
+  "title": "Ensure Azure automation account is configured with managed identity"
+ },
+ {
+  "category": "ENCRYPTION",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_mariadb_server"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV2_AZURE_37",
+  "title": "Ensure Azure MariaDB server is using latest TLS (1.2)"
+ },
+ {
+  "category": "GENERAL_SECURITY",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_storage_account"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV2_AZURE_38",
+  "title": "Ensure soft-delete is enabled on Azure storage account"
+ },
+ {
+  "category": "NETWORKING",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_linux_virtual_machine",
+   "azurerm_network_interface",
+   "azurerm_virtual_machine",
+   "azurerm_windows_virtual_machine"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV2_AZURE_39",
+  "title": "Ensure Azure VM is not configured with public IP and serial console access"
+ },
+ {
+  "category": "GENERAL_SECURITY",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_mssql_server",
+   "azurerm_mssql_server_security_alert_policy",
+   "azurerm_mssql_server_vulnerability_assessment",
+   "azurerm_sql_server"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV2_AZURE_4",
+  "title": "Ensure Azure SQL server ADS VA Send scan reports to is configured"
+ },
+ {
+  "category": "IAM",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_storage_account"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV2_AZURE_40",
+  "title": "Ensure storage account is not configured with Shared Key authorization"
+ },
+ {
+  "category": "IAM",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_storage_account"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV2_AZURE_41",
+  "title": "Ensure storage account is configured with SAS expiration policy"
+ },
+ {
+  "category": "GENERAL_SECURITY",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_postgresql_server"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV2_AZURE_42",
+  "title": "Ensure Azure PostgreSQL server is configured with private endpoint"
+ },
+ {
+  "category": "GENERAL_SECURITY",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_mariadb_server"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV2_AZURE_43",
+  "title": "Ensure Azure MariaDB server is configured with private endpoint"
+ },
+ {
+  "category": "GENERAL_SECURITY",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_mysql_server"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV2_AZURE_44",
+  "title": "Ensure Azure MySQL server is configured with private endpoint"
+ },
+ {
+  "category": "GENERAL_SECURITY",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_mssql_server"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV2_AZURE_45",
+  "title": "Ensure Microsoft SQL server is configured with private endpoint"
+ },
+ {
+  "category": "GENERAL_SECURITY",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_synapse_workspace_security_alert_policy",
+   "azurerm_synapse_workspace_vulnerability_assessment"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV2_AZURE_46",
+  "title": "Ensure that Azure Synapse Workspace vulnerability assessment is enabled"
+ },
+ {
+  "category": "IAM",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_storage_account"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV2_AZURE_47",
+  "title": "Ensure storage account is configured without blob anonymous access"
+ },
+ {
+  "category": "ENCRYPTION",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_databricks_workspace"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV2_AZURE_48",
+  "title": "Ensure that Databricks Workspaces enables customer-managed key for root DBFS encryption"
+ },
+ {
+  "category": "NETWORKING",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_machine_learning_workspace"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV2_AZURE_49",
+  "title": "Ensure that Azure Machine learning workspace is not configured with overly permissive network access"
+ },
+ {
+  "category": "GENERAL_SECURITY",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_mssql_server",
+   "azurerm_mssql_server_security_alert_policy",
+   "azurerm_mssql_server_vulnerability_assessment",
+   "azurerm_sql_server"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV2_AZURE_5",
+  "title": "Ensure that VA setting 'Also send email notifications to admins and subscription owners' is set for a SQL server"
+ },
+ {
+  "category": "NETWORKING",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_machine_learning_workspace",
+   "azurerm_storage_account"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV2_AZURE_50",
+  "title": "Ensure Azure Storage Account storing Machine Learning workspace high business impact data is not publicly accessible"
+ },
+ {
+  "category": "GENERAL_SECURITY",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_synapse_sql_pool",
+   "azurerm_synapse_sql_pool_security_alert_policy"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV2_AZURE_51",
+  "title": "Ensure Synapse SQL Pool has a security alert policy"
+ },
+ {
+  "category": "GENERAL_SECURITY",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_synapse_sql_pool",
+   "azurerm_synapse_sql_pool_security_alert_policy",
+   "azurerm_synapse_sql_pool_vulnerability_assessment"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV2_AZURE_52",
+  "title": "Ensure Synapse SQL Pool has vulnerability assessment attached"
+ },
+ {
+  "category": "LOGGING",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_synapse_workspace"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV2_AZURE_53",
+  "title": "Ensure Azure Synapse Workspace has extended audit logs"
+ },
+ {
+  "category": "LOGGING",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_synapse_sql_pool",
+   "azurerm_synapse_sql_pool_extended_auditing_policy"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV2_AZURE_54",
+  "title": "Ensure log monitoring is enabled for Synapse SQL Pool"
+ },
+ {
+  "category": "NETWORKING",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_spring_cloud_app",
+   "azurerm_spring_cloud_service"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV2_AZURE_55",
+  "title": "Ensure Azure Spring Cloud app end-to-end TLS is enabled"
+ },
+ {
+  "category": "NETWORKING",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_mysql_flexible_server"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV2_AZURE_56",
+  "title": "Ensure Azure MySQL Flexible Server is configured with private endpoint"
+ },
+ {
+  "category": "GENERAL_SECURITY",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_postgresql_flexible_server"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV2_AZURE_57",
+  "title": "Ensure PostgreSQL Flexible Server is configured with private endpoint"
+ },
+ {
+  "category": "GENERAL_SECURITY",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_sql_firewall_rule",
+   "azurerm_sql_server"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV2_AZURE_6",
+  "title": "Ensure 'Allow access to Azure services' for PostgreSQL Database Server is disabled"
+ },
+ {
+  "category": "GENERAL_SECURITY",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_sql_server"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV2_AZURE_7",
+  "title": "Ensure that Azure Active Directory Admin is configured"
+ },
+ {
+  "category": "LOGGING",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_monitor_activity_log_alert",
+   "azurerm_storage_account",
+   "azurerm_storage_container"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV2_AZURE_8",
+  "title": "Ensure the storage container storing the activity logs is not publicly accessible"
+ },
+ {
+  "category": "GENERAL_SECURITY",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_virtual_machine"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV2_AZURE_9",
+  "title": "Ensure Virtual Machines are utilizing Managed Disks"
+ },
+ {
+  "category": "GENERAL_SECURITY",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_linux_virtual_machine",
+   "azurerm_virtual_machine"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_1",
+  "title": "Ensure Azure Instance does not use basic authentication(Use SSH Key Instead)"
+ },
+ {
+  "category": "NETWORKING",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_cosmosdb_account"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_100",
+  "title": "Ensure that Cosmos DB accounts have customer-managed keys to encrypt data at rest"
+ },
+ {
+  "category": "NETWORKING",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_cosmosdb_account"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_101",
+  "title": "Ensure that Azure Cosmos DB disables public network access"
+ },
+ {
+  "category": "BACKUP_AND_RECOVERY",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_postgresql_server"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_102",
+  "title": "Ensure that PostgreSQL server enables geo-redundant backups"
+ },
+ {
+  "category": "GENERAL_SECURITY",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_data_factory"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_103",
+  "title": "Ensure that Azure Data Factory uses Git repository for source control"
+ },
+ {
+  "category": "NETWORKING",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_data_factory"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_104",
+  "title": "Ensure that Azure Data factory public network access is disabled"
+ },
+ {
+  "category": "ENCRYPTION",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_data_lake_store"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_105",
+  "title": "Ensure that Data Lake Store accounts enables encryption"
+ },
+ {
+  "category": "NETWORKING",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_eventgrid_domain"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_106",
+  "title": "Ensure that Azure Event Grid Domain public network access is disabled"
+ },
+ {
+  "category": "NETWORKING",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_api_management"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_107",
+  "title": "Ensure that API management services use virtual networks"
+ },
+ {
+  "category": "NETWORKING",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_iothub"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_108",
+  "title": "Ensure that Azure IoT Hub disables public network access"
+ },
+ {
+  "category": "NETWORKING",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_key_vault"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_109",
+  "title": "Ensure that key vault allows firewall rules settings"
+ },
+ {
+  "category": "NETWORKING",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_mariadb_firewall_rule",
+   "azurerm_mssql_firewall_rule",
+   "azurerm_mysql_firewall_rule",
+   "azurerm_mysql_flexible_server_firewall_rule",
+   "azurerm_postgresql_firewall_rule",
+   "azurerm_sql_firewall_rule"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_11",
+  "title": "Ensure no SQL Databases allow ingress from 0.0.0.0/0 (ANY IP)"
+ },
+ {
+  "category": "NETWORKING",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_key_vault"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_110",
+  "title": "Ensure that key vault enables purge protection"
+ },
+ {
+  "category": "LOGGING",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_key_vault"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_111",
+  "title": "Ensure that key vault enables soft delete"
+ },
+ {
+  "category": "BACKUP_AND_RECOVERY",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_key_vault_key"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_112",
+  "title": "Ensure that key vault key is backed by HSM"
+ },
+ {
+  "category": "NETWORKING",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_mssql_server"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_113",
+  "title": "Ensure that SQL server disables public network access"
+ },
+ {
+  "category": "GENERAL_SECURITY",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_key_vault_secret"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_114",
+  "title": "Ensure that key vault secrets have \"content_type\" set"
+ },
+ {
+  "category": "NETWORKING",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_kubernetes_cluster"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_115",
+  "title": "Ensure that AKS enables private clusters"
+ },
+ {
+  "category": "NETWORKING",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_kubernetes_cluster"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_116",
+  "title": "Ensure that AKS uses Azure Policies Add-on"
+ },
+ {
+  "category": "NETWORKING",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_kubernetes_cluster"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_117",
+  "title": "Ensure that AKS uses disk encryption set"
+ },
+ {
+  "category": "NETWORKING",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_network_interface"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_118",
+  "title": "Ensure that Network Interfaces disable IP forwarding"
+ },
+ {
+  "category": "NETWORKING",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_network_interface"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_119",
+  "title": "Ensure that Network Interfaces don't use public IPs"
+ },
+ {
+  "category": "LOGGING",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_network_watcher_flow_log"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_12",
+  "title": "Ensure that Network Security Group Flow Log retention period is 'greater than 90 days'"
+ },
+ {
+  "category": "APPLICATION_SECURITY",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_application_gateway",
+   "azurerm_web_application_firewall_policy"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_120",
+  "title": "Ensure that Application Gateway enables WAF"
+ },
+ {
+  "category": "NETWORKING",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_frontdoor"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_121",
+  "title": "Ensure that Azure Front Door enables WAF"
+ },
+ {
+  "category": "NETWORKING",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_web_application_firewall_policy"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_122",
+  "title": "Ensure that Application Gateway uses WAF in \"Detection\" or \"Prevention\" modes"
+ },
+ {
+  "category": "NETWORKING",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_frontdoor_firewall_policy"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_123",
+  "title": "Ensure that Azure Front Door uses WAF in \"Detection\" or \"Prevention\" modes"
+ },
+ {
+  "category": "NETWORKING",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_search_service"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_124",
+  "title": "Ensure that Azure Cognitive Search disables public network access"
+ },
+ {
+  "category": "ENCRYPTION",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_service_fabric_cluster"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_125",
+  "title": "Ensures that Service Fabric use three levels of protection available"
+ },
+ {
+  "category": "GENERAL_SECURITY",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_service_fabric_cluster"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_126",
+  "title": "Ensures that Active Directory is used for authentication for Service Fabric"
+ },
+ {
+  "category": "GENERAL_SECURITY",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_mysql_server"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_127",
+  "title": "Ensure that My SQL server enables Threat detection policy"
+ },
+ {
+  "category": "GENERAL_SECURITY",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_postgresql_server"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_128",
+  "title": "Ensure that PostgreSQL server enables Threat detection policy"
+ },
+ {
+  "category": "BACKUP_AND_RECOVERY",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_mariadb_server"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_129",
+  "title": "Ensure that MariaDB server enables geo-redundant backups"
+ },
+ {
+  "category": "GENERAL_SECURITY",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_app_service",
+   "azurerm_linux_web_app",
+   "azurerm_windows_web_app"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_13",
+  "title": "Ensure App Service Authentication is set on Azure App Service"
+ },
+ {
+  "category": "ENCRYPTION",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_postgresql_server"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_130",
+  "title": "Ensure that PostgreSQL server enables infrastructure encryption"
+ },
+ {
+  "category": "GENERAL_SECURITY",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_security_center_contact"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_131",
+  "title": "Ensure that 'Security contact emails' is set"
+ },
+ {
+  "category": "GENERAL_SECURITY",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_cosmosdb_account"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_132",
+  "title": "Ensure cosmosdb does not allow privileged escalation by restricting management plane changes"
+ },
+ {
+  "category": "APPLICATION_SECURITY",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_frontdoor_firewall_policy"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_133",
+  "title": "Ensure Front Door WAF prevents message lookup in Log4j2. See CVE-2021-44228 aka log4jshell"
+ },
+ {
+  "category": "NETWORKING",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_cognitive_account"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_134",
+  "title": "Ensure that Cognitive Services accounts disable public network access"
+ },
+ {
+  "category": "APPLICATION_SECURITY",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_web_application_firewall_policy"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_135",
+  "title": "Ensure Application Gateway WAF prevents message lookup in Log4j2. See CVE-2021-44228 aka log4jshell"
+ },
+ {
+  "category": "BACKUP_AND_RECOVERY",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_postgresql_flexible_server"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_136",
+  "title": "Ensure that PostgreSQL Flexible server enables geo-redundant backups"
+ },
+ {
+  "category": "IAM",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_container_registry"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_137",
+  "title": "Ensure ACR admin account is disabled"
+ },
+ {
+  "category": "IAM",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_container_registry"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_138",
+  "title": "Ensures that ACR disables anonymous pulling of images"
+ },
+ {
+  "category": "NETWORKING",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_container_registry"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_139",
+  "title": "Ensure ACR set to disable public networking"
+ },
+ {
+  "category": "NETWORKING",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_app_service",
+   "azurerm_linux_web_app",
+   "azurerm_windows_web_app"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_14",
+  "title": "Ensure web app redirects all HTTP traffic to HTTPS in Azure App Service"
+ },
+ {
+  "category": "IAM",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_cosmosdb_account"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_140",
+  "title": "Ensure that Local Authentication is disabled on CosmosDB"
+ },
+ {
+  "category": "IAM",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_kubernetes_cluster"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_141",
+  "title": "Ensure AKS local admin account is disabled"
+ },
+ {
+  "category": "IAM",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_machine_learning_compute_cluster"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_142",
+  "title": "Ensure Machine Learning Compute Cluster Local Authentication is disabled"
+ },
+ {
+  "category": "NETWORKING",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_kubernetes_cluster"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_143",
+  "title": "Ensure AKS cluster nodes do not have public IP addresses"
+ },
+ {
+  "category": "NETWORKING",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_machine_learning_workspace"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_144",
+  "title": "Ensure that Public Access is disabled for Machine Learning Workspace"
+ },
+ {
+  "category": "NETWORKING",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_function_app",
+   "azurerm_function_app_slot",
+   "azurerm_linux_function_app",
+   "azurerm_linux_function_app_slot",
+   "azurerm_windows_function_app",
+   "azurerm_windows_function_app_slot"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_145",
+  "title": "Ensure Function app is using the latest version of TLS encryption"
+ },
+ {
+  "category": "LOGGING",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_postgresql_configuration"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_146",
+  "title": "Ensure server parameter 'log_retention' is set to 'ON' for PostgreSQL Database Server"
+ },
+ {
+  "category": "NETWORKING",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_postgresql_server"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_147",
+  "title": "Ensure PostgreSQL is using the latest version of TLS encryption"
+ },
+ {
+  "category": "NETWORKING",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_redis_cache"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_148",
+  "title": "Ensure Redis Cache is using the latest version of TLS encryption"
+ },
+ {
+  "category": "ENCRYPTION",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_linux_virtual_machine",
+   "azurerm_linux_virtual_machine_scale_set"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_149",
+  "title": "Ensure that Virtual machine does not enable password authentication"
+ },
+ {
+  "category": "NETWORKING",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_app_service",
+   "azurerm_linux_web_app",
+   "azurerm_windows_web_app"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_15",
+  "title": "Ensure web app is using the latest version of TLS encryption"
+ },
+ {
+  "category": "GENERAL_SECURITY",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_machine_learning_compute_cluster"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_150",
+  "title": "Ensure Machine Learning Compute Cluster Minimum Nodes Set To 0"
+ },
+ {
+  "category": "ENCRYPTION",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_windows_virtual_machine"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_151",
+  "title": "Ensure Windows VM enables encryption"
+ },
+ {
+  "category": "ENCRYPTION",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_api_management"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_152",
+  "title": "Ensure Client Certificates are enforced for API management"
+ },
+ {
+  "category": "NETWORKING",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_app_service_slot",
+   "azurerm_linux_web_app_slot",
+   "azurerm_windows_web_app_slot"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_153",
+  "title": "Ensure web app redirects all HTTP traffic to HTTPS in Azure App Service Slot"
+ },
+ {
+  "category": "NETWORKING",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_app_service_slot"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_154",
+  "title": "Ensure the App service slot is using the latest version of TLS encryption"
+ },
+ {
+  "category": "NETWORKING",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_app_service_slot"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_155",
+  "title": "Ensure debugging is disabled for the App service slot"
+ },
+ {
+  "category": "LOGGING",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_mssql_database_extended_auditing_policy"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_156",
+  "title": "Ensure default Auditing policy for a SQL Server is configured to capture and retain the activity logs"
+ },
+ {
+  "category": "GENERAL_SECURITY",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_synapse_workspace"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_157",
+  "title": "Ensure that Synapse workspace has data_exfiltration_protection_enabled"
+ },
+ {
+  "category": "NETWORKING",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_databricks_workspace"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_158",
+  "title": "Ensure Databricks Workspace data plane to control plane communication happens over private link"
+ },
+ {
+  "category": "LOGGING",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_function_app",
+   "azurerm_function_app_slot"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_159",
+  "title": "Ensure function app builtin logging is enabled"
+ },
+ {
+  "category": "IAM",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_app_service",
+   "azurerm_linux_web_app",
+   "azurerm_windows_web_app"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_16",
+  "title": "Ensure that Register with Azure Active Directory is enabled on App Service"
+ },
+ {
+  "category": "NETWORKING",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_spring_cloud_api_portal"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_161",
+  "title": "Ensures Spring Cloud API Portal is enabled on for HTTPS"
+ },
+ {
+  "category": "NETWORKING",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_spring_cloud_api_portal"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_162",
+  "title": "Ensures Spring Cloud API Portal Public Access Is Disabled"
+ },
+ {
+  "category": "GENERAL_SECURITY",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_container_registry"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_163",
+  "title": "Enable vulnerability scanning for container images."
+ },
+ {
+  "category": "GENERAL_SECURITY",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_container_registry"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_164",
+  "title": "Ensures that ACR uses signed/trusted images"
+ },
+ {
+  "category": "NETWORKING",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_container_registry"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_165",
+  "title": "Ensure geo-replicated container registries to match multi-region container deployments."
+ },
+ {
+  "category": "SUPPLY_CHAIN",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_container_registry"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_166",
+  "title": "Ensure container image quarantine, scan, and mark images verified"
+ },
+ {
+  "category": "GENERAL_SECURITY",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_container_registry"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_167",
+  "title": "Ensure a retention policy is set to cleanup untagged manifests."
+ },
+ {
+  "category": "KUBERNETES",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_kubernetes_cluster",
+   "azurerm_kubernetes_cluster_node_pool"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_168",
+  "title": "Ensure Azure Kubernetes Cluster (AKS) nodes should use a minimum number of 50 pods."
+ },
+ {
+  "category": "KUBERNETES",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_kubernetes_cluster"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_169",
+  "title": "Ensure Azure Kubernetes Cluster (AKS) nodes use scale sets"
+ },
+ {
+  "category": "NETWORKING",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_app_service",
+   "azurerm_linux_web_app",
+   "azurerm_windows_web_app"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_17",
+  "title": "Ensure the web app has 'Client Certificates (Incoming client certificates)' set"
+ },
+ {
+  "category": "GENERAL_SECURITY",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_kubernetes_cluster"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_170",
+  "title": "Ensure that AKS use the Paid Sku for its SLA"
+ },
+ {
+  "category": "NETWORKING",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_kubernetes_cluster"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_171",
+  "title": "Ensure AKS cluster upgrade channel is chosen"
+ },
+ {
+  "category": "GENERAL_SECURITY",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_kubernetes_cluster"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_172",
+  "title": "Ensure autorotation of Secrets Store CSI Driver secrets for AKS clusters"
+ },
+ {
+  "category": "ENCRYPTION",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_api_management"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_173",
+  "title": "Ensure API management uses at least TLS 1.2"
+ },
+ {
+  "category": "NETWORKING",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_api_management"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_174",
+  "title": "Ensure API management public access is disabled"
+ },
+ {
+  "category": "GENERAL_SECURITY",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_web_pubsub"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_175",
+  "title": "Ensure Web PubSub uses a SKU with an SLA"
+ },
+ {
+  "category": "IAM",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_web_pubsub"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_176",
+  "title": "Ensure Web PubSub uses managed identities to access Azure resources"
+ },
+ {
+  "category": "GENERAL_SECURITY",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_windows_virtual_machine",
+   "azurerm_windows_virtual_machine_scale_set"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_177",
+  "title": "Ensure Windows VM enables automatic updates"
+ },
+ {
+  "category": "GENERAL_SECURITY",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_linux_virtual_machine",
+   "azurerm_linux_virtual_machine_scale_set"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_178",
+  "title": "Ensure linux VM enables SSH with keys for secure communication"
+ },
+ {
+  "category": "GENERAL_SECURITY",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_linux_virtual_machine",
+   "azurerm_linux_virtual_machine_scale_set",
+   "azurerm_windows_virtual_machine",
+   "azurerm_windows_virtual_machine_scale_set"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_179",
+  "title": "Ensure VM agent is installed"
+ },
+ {
+  "category": "NETWORKING",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_app_service",
+   "azurerm_linux_web_app",
+   "azurerm_windows_web_app"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_18",
+  "title": "Ensure that 'HTTP Version' is the latest if used to run the web app"
+ },
+ {
+  "category": "GENERAL_SECURITY",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_kusto_cluster"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_180",
+  "title": "Ensure that data explorer uses Sku with an SLA"
+ },
+ {
+  "category": "IAM",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_kusto_cluster"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_181",
+  "title": "Ensure that data explorer/Kusto uses managed identities to access Azure resources securely."
+ },
+ {
+  "category": "NETWORKING",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_virtual_network",
+   "azurerm_virtual_network_dns_servers"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_182",
+  "title": "Ensure that VNET has at least 2 connected DNS Endpoints"
+ },
+ {
+  "category": "NETWORKING",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_virtual_network"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_183",
+  "title": "Ensure that VNET uses local DNS addresses"
+ },
+ {
+  "category": "IAM",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_app_configuration"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_184",
+  "title": "Ensure 'local_auth_enabled' is set to 'False'"
+ },
+ {
+  "category": "NETWORKING",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_app_configuration"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_185",
+  "title": "Ensure 'Public Access' is not Enabled for App configuration"
+ },
+ {
+  "category": "ENCRYPTION",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_app_configuration"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_186",
+  "title": "Ensure App configuration encryption block is set."
+ },
+ {
+  "category": "BACKUP_AND_RECOVERY",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_app_configuration"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_187",
+  "title": "Ensure App configuration purge protection is enabled"
+ },
+ {
+  "category": "GENERAL_SECURITY",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_app_configuration"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_188",
+  "title": "Ensure App configuration Sku is standard"
+ },
+ {
+  "category": "NETWORKING",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_key_vault"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_189",
+  "title": "Ensure that Azure Key Vault disables public network access"
+ },
+ {
+  "category": "GENERAL_SECURITY",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_security_center_subscription_pricing"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_19",
+  "title": "Ensure that standard pricing tier is selected"
+ },
+ {
+  "category": "NETWORKING",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_storage_account"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_190",
+  "title": "Ensure that Storage blobs restrict public access"
+ },
+ {
+  "category": "IAM",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_eventgrid_topic"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_191",
+  "title": "Ensure that Managed identity provider is enabled for Azure Event Grid Topic"
+ },
+ {
+  "category": "IAM",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_eventgrid_topic"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_192",
+  "title": "Ensure that Azure Event Grid Topic local Authentication is disabled"
+ },
+ {
+  "category": "NETWORKING",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_eventgrid_topic"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_193",
+  "title": "Ensure public network access is disabled for Azure Event Grid Topic"
+ },
+ {
+  "category": "IAM",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_eventgrid_domain"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_194",
+  "title": "Ensure that Managed identity provider is enabled for Azure Event Grid Domain"
+ },
+ {
+  "category": "IAM",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_eventgrid_domain"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_195",
+  "title": "Ensure that Azure Event Grid Domain local Authentication is disabled"
+ },
+ {
+  "category": "GENERAL_SECURITY",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_signalr_service"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_196",
+  "title": "Ensure that SignalR uses a Paid Sku for its SLA"
+ },
+ {
+  "category": "NETWORKING",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_cdn_endpoint"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_197",
+  "title": "Ensure the Azure CDN disables the HTTP endpoint"
+ },
+ {
+  "category": "NETWORKING",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_cdn_endpoint"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_198",
+  "title": "Ensure the Azure CDN enables the HTTPS endpoint"
+ },
+ {
+  "category": "ENCRYPTION",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_servicebus_namespace"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_199",
+  "title": "Ensure that Azure Service Bus uses double encryption"
+ },
+ {
+  "category": "ENCRYPTION",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_managed_disk"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_2",
+  "title": "Ensure Azure managed disk has encryption enabled"
+ },
+ {
+  "category": "GENERAL_SECURITY",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_security_center_contact"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_20",
+  "title": "Ensure that security contact 'Phone number' is set"
+ },
+ {
+  "category": "NETWORKING",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_cdn_endpoint_custom_domain"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_200",
+  "title": "Ensure the Azure CDN endpoint is using the latest version of TLS encryption"
+ },
+ {
+  "category": "ENCRYPTION",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_servicebus_namespace"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_201",
+  "title": "Ensure that Azure Service Bus uses a customer-managed key to encrypt data"
+ },
+ {
+  "category": "IAM",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_servicebus_namespace"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_202",
+  "title": "Ensure that Managed identity provider is enabled for Azure Service Bus"
+ },
+ {
+  "category": "IAM",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_servicebus_namespace"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_203",
+  "title": "Ensure Azure Service Bus Local Authentication is disabled"
+ },
+ {
+  "category": "NETWORKING",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_servicebus_namespace"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_204",
+  "title": "Ensure 'public network access enabled' is set to 'False' for Azure Service Bus"
+ },
+ {
+  "category": "NETWORKING",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_servicebus_namespace"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_205",
+  "title": "Ensure Azure Service Bus is using the latest version of TLS encryption"
+ },
+ {
+  "category": "BACKUP_AND_RECOVERY",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_storage_account"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_206",
+  "title": "Ensure that Storage Accounts use replication"
+ },
+ {
+  "category": "IAM",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_search_service"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_207",
+  "title": "Ensure Azure Cognitive Search service uses managed identities to access Azure resources"
+ },
+ {
+  "category": "GENERAL_SECURITY",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_search_service"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_208",
+  "title": "Ensure that Azure Cognitive Search maintains SLA for index updates"
+ },
+ {
+  "category": "GENERAL_SECURITY",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_search_service"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_209",
+  "title": "Ensure that Azure Cognitive Search maintains SLA for search index queries"
+ },
+ {
+  "category": "GENERAL_SECURITY",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_security_center_contact"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_21",
+  "title": "Ensure that 'Send email notification for high severity alerts' is set to 'On'"
+ },
+ {
+  "category": "NETWORKING",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_search_service"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_210",
+  "title": "Ensure Azure Cognitive Search service allowed IPS does not give public Access"
+ },
+ {
+  "category": "GENERAL_SECURITY",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_service_plan"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_211",
+  "title": "Ensure App Service plan suitable for production use"
+ },
+ {
+  "category": "GENERAL_SECURITY",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_service_plan"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_212",
+  "title": "Ensure App Service has a minimum number of instances for failover"
+ },
+ {
+  "category": "NETWORKING",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_app_service",
+   "azurerm_linux_web_app",
+   "azurerm_windows_web_app"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_213",
+  "title": "Ensure that App Service configures health check"
+ },
+ {
+  "category": "GENERAL_SECURITY",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_linux_web_app",
+   "azurerm_windows_web_app"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_214",
+  "title": "Ensure App Service is set to be always on"
+ },
+ {
+  "category": "ENCRYPTION",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_api_management_backend"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_215",
+  "title": "Ensure API management backend uses https"
+ },
+ {
+  "category": "NETWORKING",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_firewall"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_216",
+  "title": "Ensure DenyIntelMode is set to Deny for Azure Firewalls"
+ },
+ {
+  "category": "ENCRYPTION",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_application_gateway"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_217",
+  "title": "Ensure Azure Application gateways listener that allow connection requests over HTTP"
+ },
+ {
+  "category": "ENCRYPTION",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_application_gateway"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_218",
+  "title": "Ensure Application Gateway defines secure protocols for in transit communication"
+ },
+ {
+  "category": "NETWORKING",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_firewall"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_219",
+  "title": "Ensure Firewall defines a firewall policy"
+ },
+ {
+  "category": "GENERAL_SECURITY",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_security_center_contact"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_22",
+  "title": "Ensure that 'Send email notification for high severity alerts' is set to 'On'"
+ },
+ {
+  "category": "NETWORKING",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_firewall_policy"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_220",
+  "title": "Ensure Firewall policy has IDPS mode as deny"
+ },
+ {
+  "category": "NETWORKING",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_linux_function_app",
+   "azurerm_linux_function_app_slot",
+   "azurerm_windows_function_app",
+   "azurerm_windows_function_app_slot"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_221",
+  "title": "Ensure that Azure Function App public network access is disabled"
+ },
+ {
+  "category": "NETWORKING",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_linux_web_app",
+   "azurerm_windows_web_app"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_222",
+  "title": "Ensure that Azure Web App public network access is disabled"
+ },
+ {
+  "category": "ENCRYPTION",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_eventhub_namespace"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_223",
+  "title": "Ensure Event Hub Namespace uses at least TLS 1.2"
+ },
+ {
+  "category": "LOGGING",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_mssql_database"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_224",
+  "title": "Ensure that the Ledger feature is enabled on database that"
+ },
+ {
+  "category": "BACKUP_AND_RECOVERY",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_service_plan"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_225",
+  "title": "Ensure the App Service Plan is zone redundant"
+ },
+ {
+  "category": "KUBERNETES",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_kubernetes_cluster"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_226",
+  "title": "Ensure ephemeral disks are used for OS disks"
+ },
+ {
+  "category": "KUBERNETES",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_kubernetes_cluster",
+   "azurerm_kubernetes_cluster_node_pool"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_227",
+  "title": "Ensure that the AKS cluster encrypt temp disks, caches, and data flows"
+ },
+ {
+  "category": "BACKUP_AND_RECOVERY",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_eventhub_namespace"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_228",
+  "title": "Ensure the Azure Event Hub Namespace is zone redundant"
+ },
+ {
+  "category": "BACKUP_AND_RECOVERY",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_mssql_database"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_229",
+  "title": "Ensure the Azure SQL Database Namespace is zone redundant"
+ },
+ {
+  "category": "LOGGING",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_mssql_server",
+   "azurerm_mssql_server_extended_auditing_policy",
+   "azurerm_sql_server"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_23",
+  "title": "Ensure that 'Auditing' is set to 'On' for SQL servers"
+ },
+ {
+  "category": "BACKUP_AND_RECOVERY",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_redis_cache"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_230",
+  "title": "Standard Replication should be enabled"
+ },
+ {
+  "category": "BACKUP_AND_RECOVERY",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_app_service_environment_v3"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_231",
+  "title": "Ensure App Service Environment is zone redundant"
+ },
+ {
+  "category": "KUBERNETES",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_kubernetes_cluster"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_232",
+  "title": "Ensure that only critical system pods run on system nodes"
+ },
+ {
+  "category": "BACKUP_AND_RECOVERY",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_container_registry"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_233",
+  "title": "Ensure Azure Container Registry (ACR) is zone redundant"
+ },
+ {
+  "category": "GENERAL_SECURITY",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_security_center_subscription_pricing"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_234",
+  "title": "Ensure that Azure Defender for cloud is set to On for Resource Manager"
+ },
+ {
+  "category": "GENERAL_SECURITY",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_container_group"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_235",
+  "title": "Ensure that Azure container environment variables are configured with secure values only"
+ },
+ {
+  "category": "NETWORKING",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_cognitive_account"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_236",
+  "title": "Ensure that Cognitive Services accounts disable local authentication"
+ },
+ {
+  "category": "GENERAL_SECURITY",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_container_registry"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_237",
+  "title": "Ensure dedicated data endpoints are enabled."
+ },
+ {
+  "category": "NETWORKING",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_cognitive_account"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_238",
+  "title": "Ensure that all Azure Cognitive Services accounts are configured with a managed identity"
+ },
+ {
+  "category": "SECRETS",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_synapse_workspace"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_239",
+  "title": "Ensure Azure Synapse Workspace administrator login password is not exposed"
+ },
+ {
+  "category": "LOGGING",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_mssql_server",
+   "azurerm_mssql_server_extended_auditing_policy",
+   "azurerm_sql_server"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_24",
+  "title": "Ensure that 'Auditing' Retention is 'greater than 90 days' for SQL servers"
+ },
+ {
+  "category": "ENCRYPTION",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_synapse_workspace"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_240",
+  "title": "Ensure Azure Synapse Workspace is encrypted with a CMK"
+ },
+ {
+  "category": "ENCRYPTION",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_synapse_sql_pool"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_241",
+  "title": "Ensure Synapse SQL pools are encrypted"
+ },
+ {
+  "category": "GENERAL_SECURITY",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_synapse_spark_pool"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_242",
+  "title": "Ensure isolated compute is enabled for Synapse Spark pools"
+ },
+ {
+  "category": "GENERAL_SECURITY",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_storage_account"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_244",
+  "title": "Avoid the use of local users for Azure Storage unless necessary"
+ },
+ {
+  "category": "NETWORKING",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_container_group"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_245",
+  "title": "Ensure that Azure Container group is deployed into virtual network"
+ },
+ {
+  "category": "NETWORKING",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_kubernetes_cluster"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_246",
+  "title": "Ensure Azure AKS cluster HTTP application routing is disabled"
+ },
+ {
+  "category": "NETWORKING",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_cognitive_account"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_247",
+  "title": "Ensure that Azure Cognitive Services account hosted with OpenAI is configured with data loss prevention"
+ },
+ {
+  "category": "NETWORKING",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_batch_account"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_248",
+  "title": "Ensure that if Azure Batch account public network access in case 'enabled' then its account access must be 'deny'"
+ },
+ {
+  "category": "IAM",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_249",
+  "title": "Ensure Azure GitHub Actions OIDC trust policy is configured securely"
+ },
+ {
+  "category": "GENERAL_SECURITY",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_mssql_server_security_alert_policy"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_25",
+  "title": "Ensure that 'Threat Detection types' is set to 'All'"
+ },
+ {
+  "category": "NETWORKING",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_storage_sync"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_250",
+  "title": "Ensure Storage Sync Service is not configured with overly permissive network access"
+ },
+ {
+  "category": "NETWORKING",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_managed_disk"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_251",
+  "title": "Ensure Azure Virtual Machine disks are configured without public network access"
+ },
+ {
+  "category": "GENERAL_SECURITY",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_mssql_server_security_alert_policy"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_26",
+  "title": "Ensure that 'Send Alerts To' is enabled for MSSQL servers"
+ },
+ {
+  "category": "GENERAL_SECURITY",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_mssql_server_security_alert_policy"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_27",
+  "title": "Ensure that 'Email service and co-administrators' is 'Enabled' for MSSQL servers"
+ },
+ {
+  "category": "NETWORKING",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_mysql_server"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_28",
+  "title": "Ensure 'Enforce SSL connection' is set to 'ENABLED' for MySQL Database Server"
+ },
+ {
+  "category": "NETWORKING",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_postgresql_server"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_29",
+  "title": "Ensure 'Enforce SSL connection' is set to 'ENABLED' for PostgreSQL Database Server"
+ },
+ {
+  "category": "ENCRYPTION",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_storage_account"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_3",
+  "title": "Ensure that 'enable_https_traffic_only' is enabled"
+ },
+ {
+  "category": "LOGGING",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_postgresql_configuration"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_30",
+  "title": "Ensure server parameter 'log_checkpoints' is set to 'ON' for PostgreSQL Database Server"
+ },
+ {
+  "category": "LOGGING",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_postgresql_configuration"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_31",
+  "title": "Ensure server parameter 'log_connections' is set to 'ON' for PostgreSQL Database Server"
+ },
+ {
+  "category": "NETWORKING",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_postgresql_configuration"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_32",
+  "title": "Ensure server parameter 'connection_throttling' is set to 'ON' for PostgreSQL Database Server"
+ },
+ {
+  "category": "LOGGING",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_storage_account"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_33",
+  "title": "Ensure Storage logging is enabled for Queue service for read, write and delete requests"
+ },
+ {
+  "category": "NETWORKING",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_storage_container"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_34",
+  "title": "Ensure that 'Public access level' is set to Private for blob containers"
+ },
+ {
+  "category": "NETWORKING",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_storage_account",
+   "azurerm_storage_account_network_rules"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_35",
+  "title": "Ensure default network access rule for Storage Accounts is set to deny"
+ },
+ {
+  "category": "NETWORKING",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_storage_account",
+   "azurerm_storage_account_network_rules"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_36",
+  "title": "Ensure 'Trusted Microsoft Services' is enabled for Storage Account access"
+ },
+ {
+  "category": "LOGGING",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_monitor_log_profile"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_37",
+  "title": "Ensure that Activity Log Retention is set 365 days or greater"
+ },
+ {
+  "category": "LOGGING",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_monitor_log_profile"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_38",
+  "title": "Ensure audit profile captures all the activities"
+ },
+ {
+  "category": "IAM",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_role_definition"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_39",
+  "title": "Ensure that no custom subscription owner roles are created"
+ },
+ {
+  "category": "KUBERNETES",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_kubernetes_cluster"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_4",
+  "title": "Ensure AKS logging to Azure Monitoring is Configured"
+ },
+ {
+  "category": "GENERAL_SECURITY",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_key_vault_key"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_40",
+  "title": "Ensure that the expiration date is set on all keys"
+ },
+ {
+  "category": "GENERAL_SECURITY",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_key_vault_secret"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_41",
+  "title": "Ensure that the expiration date is set on all secrets"
+ },
+ {
+  "category": "BACKUP_AND_RECOVERY",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_key_vault"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_42",
+  "title": "Ensure the key vault is recoverable"
+ },
+ {
+  "category": "CONVENTION",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_storage_account"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_43",
+  "title": "Ensure Storage Accounts adhere to the naming rules"
+ },
+ {
+  "category": "NETWORKING",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_storage_account"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_44",
+  "title": "Ensure Storage Account is using the latest version of TLS encryption"
+ },
+ {
+  "category": "SECRETS",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_virtual_machine"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_45",
+  "title": "Ensure that no sensitive credentials are exposed in VM custom_data"
+ },
+ {
+  "category": "NETWORKING",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_mariadb_server"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_47",
+  "title": "Ensure 'Enforce SSL connection' is set to 'ENABLED' for MariaDB servers"
+ },
+ {
+  "category": "NETWORKING",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_mariadb_server"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_48",
+  "title": "Ensure 'public network access enabled' is set to 'False' for MariaDB servers"
+ },
+ {
+  "category": "GENERAL_SECURITY",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_linux_virtual_machine_scale_set"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_49",
+  "title": "Ensure Azure linux scale set does not use basic authentication(Use SSH Key Instead)"
+ },
+ {
+  "category": "KUBERNETES",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_kubernetes_cluster"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_5",
+  "title": "Ensure RBAC is enabled on AKS clusters"
+ },
+ {
+  "category": "GENERAL_SECURITY",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_linux_virtual_machine",
+   "azurerm_windows_virtual_machine"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_50",
+  "title": "Ensure Virtual Machine Extensions are not Installed"
+ },
+ {
+  "category": "NETWORKING",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_mssql_server"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_52",
+  "title": "Ensure MSSQL is using the latest version of TLS encryption"
+ },
+ {
+  "category": "NETWORKING",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_mysql_server"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_53",
+  "title": "Ensure 'public network access enabled' is set to 'False' for mySQL servers"
+ },
+ {
+  "category": "NETWORKING",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_mysql_server"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_54",
+  "title": "Ensure MySQL is using the latest version of TLS encryption"
+ },
+ {
+  "category": "GENERAL_SECURITY",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_security_center_subscription_pricing"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_55",
+  "title": "Ensure that Azure Defender is set to On for Servers"
+ },
+ {
+  "category": "GENERAL_SECURITY",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_function_app"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_56",
+  "title": "Ensure that function apps enables Authentication"
+ },
+ {
+  "category": "GENERAL_SECURITY",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_app_service",
+   "azurerm_linux_web_app",
+   "azurerm_windows_web_app"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_57",
+  "title": "Ensure that CORS disallows every resource to access app services"
+ },
+ {
+  "category": "NETWORKING",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_synapse_workspace"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_58",
+  "title": "Ensure that Azure Synapse workspaces enables managed virtual networks"
+ },
+ {
+  "category": "NETWORKING",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_storage_account"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_59",
+  "title": "Ensure that Storage accounts disallow public access"
+ },
+ {
+  "category": "KUBERNETES",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_kubernetes_cluster"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_6",
+  "title": "Ensure AKS has an API Server Authorized IP Ranges enabled"
+ },
+ {
+  "category": "GENERAL_SECURITY",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_security_center_subscription_pricing"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_61",
+  "title": "Ensure that Azure Defender is set to On for App Service"
+ },
+ {
+  "category": "GENERAL_SECURITY",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_function_app"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_62",
+  "title": "Ensure function apps are not accessible from all regions"
+ },
+ {
+  "category": "LOGGING",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_app_service",
+   "azurerm_linux_web_app",
+   "azurerm_windows_web_app"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_63",
+  "title": "Ensure that App service enables HTTP logging"
+ },
+ {
+  "category": "NETWORKING",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_storage_sync"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_64",
+  "title": "Ensure that Azure File Sync disables public network access"
+ },
+ {
+  "category": "LOGGING",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_app_service",
+   "azurerm_linux_web_app",
+   "azurerm_windows_web_app"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_65",
+  "title": "Ensure that App service enables detailed error messages"
+ },
+ {
+  "category": "LOGGING",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_app_service",
+   "azurerm_linux_web_app",
+   "azurerm_windows_web_app"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_66",
+  "title": "Ensure that App service enables failed request tracing"
+ },
+ {
+  "category": "GENERAL_SECURITY",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_function_app",
+   "azurerm_function_app_slot"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_67",
+  "title": "Ensure that 'HTTP Version' is the latest, if used to run the Function app"
+ },
+ {
+  "category": "NETWORKING",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_postgresql_server"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_68",
+  "title": "Ensure that PostgreSQL server disables public network access"
+ },
+ {
+  "category": "GENERAL_SECURITY",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_security_center_subscription_pricing"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_69",
+  "title": "Ensure that Azure Defender is set to On for Azure SQL database servers"
+ },
+ {
+  "category": "KUBERNETES",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_kubernetes_cluster"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_7",
+  "title": "Ensure AKS cluster has Network Policy configured"
+ },
+ {
+  "category": "NETWORKING",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_function_app",
+   "azurerm_function_app_slot",
+   "azurerm_linux_function_app",
+   "azurerm_linux_function_app_slot",
+   "azurerm_windows_function_app",
+   "azurerm_windows_function_app_slot"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_70",
+  "title": "Ensure that Function apps is only accessible over HTTPS"
+ },
+ {
+  "category": "GENERAL_SECURITY",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_app_service",
+   "azurerm_linux_web_app",
+   "azurerm_windows_web_app"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_71",
+  "title": "Ensure that Managed identity provider is enabled for app services"
+ },
+ {
+  "category": "GENERAL_SECURITY",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_app_service",
+   "azurerm_linux_function_app",
+   "azurerm_linux_function_app_slot",
+   "azurerm_linux_web_app",
+   "azurerm_linux_web_app_slot",
+   "azurerm_windows_function_app",
+   "azurerm_windows_function_app_slot",
+   "azurerm_windows_web_app",
+   "azurerm_windows_web_app_slot"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_72",
+  "title": "Ensure that remote debugging is not enabled for app services"
+ },
+ {
+  "category": "ENCRYPTION",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_automation_variable_bool",
+   "azurerm_automation_variable_datetime",
+   "azurerm_automation_variable_int",
+   "azurerm_automation_variable_string"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_73",
+  "title": "Ensure that Automation account variables are encrypted"
+ },
+ {
+  "category": "ENCRYPTION",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_kusto_cluster"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_74",
+  "title": "Ensure that Azure Data Explorer (Kusto) uses disk encryption"
+ },
+ {
+  "category": "ENCRYPTION",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_kusto_cluster"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_75",
+  "title": "Ensure that Azure Data Explorer uses double encryption"
+ },
+ {
+  "category": "ENCRYPTION",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_batch_account"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_76",
+  "title": "Ensure that Azure Batch account uses key vault to encrypt data"
+ },
+ {
+  "category": "NETWORKING",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_network_security_group",
+   "azurerm_network_security_rule"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_77",
+  "title": "Ensure that UDP Services are restricted from the Internet"
+ },
+ {
+  "category": "APPLICATION_SECURITY",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_app_service",
+   "azurerm_linux_web_app",
+   "azurerm_windows_web_app"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_78",
+  "title": "Ensure FTP deployments are disabled"
+ },
+ {
+  "category": "GENERAL_SECURITY",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_security_center_subscription_pricing"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_79",
+  "title": "Ensure that Azure Defender is set to On for SQL servers on machines"
+ },
+ {
+  "category": "KUBERNETES",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_kubernetes_cluster"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_8",
+  "title": "Ensure Kubernetes Dashboard is disabled"
+ },
+ {
+  "category": "GENERAL_SECURITY",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_app_service",
+   "azurerm_windows_web_app"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_80",
+  "title": "Ensure that 'Net Framework' version is the latest, if used as a part of the web app"
+ },
+ {
+  "category": "GENERAL_SECURITY",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_app_service"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_81",
+  "title": "Ensure that 'PHP version' is the latest, if used to run the web app"
+ },
+ {
+  "category": "GENERAL_SECURITY",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_app_service"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_82",
+  "title": "Ensure that 'Python version' is the latest, if used to run the web app"
+ },
+ {
+  "category": "GENERAL_SECURITY",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_app_service"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_83",
+  "title": "Ensure that 'Java version' is the latest, if used to run the web app"
+ },
+ {
+  "category": "GENERAL_SECURITY",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_security_center_subscription_pricing"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_84",
+  "title": "Ensure that Azure Defender is set to On for Storage"
+ },
+ {
+  "category": "GENERAL_SECURITY",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_security_center_subscription_pricing"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_85",
+  "title": "Ensure that Azure Defender is set to On for Kubernetes"
+ },
+ {
+  "category": "GENERAL_SECURITY",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_security_center_subscription_pricing"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_86",
+  "title": "Ensure that Azure Defender is set to On for Container Registries"
+ },
+ {
+  "category": "GENERAL_SECURITY",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_security_center_subscription_pricing"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_87",
+  "title": "Ensure that Azure Defender is set to On for Key Vault"
+ },
+ {
+  "category": "GENERAL_SECURITY",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_app_service",
+   "azurerm_linux_web_app",
+   "azurerm_windows_web_app"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_88",
+  "title": "Ensure that app services use Azure Files"
+ },
+ {
+  "category": "NETWORKING",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_redis_cache"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_89",
+  "title": "Ensure that Azure Cache for Redis disables public network access"
+ },
+ {
+  "category": "NETWORKING",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_redis_cache"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_91",
+  "title": "Ensure that only SSL are enabled for Cache for Redis"
+ },
+ {
+  "category": "GENERAL_SECURITY",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_linux_virtual_machine",
+   "azurerm_windows_virtual_machine"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_92",
+  "title": "Ensure that Virtual Machines use managed disks"
+ },
+ {
+  "category": "ENCRYPTION",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_managed_disk"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_93",
+  "title": "Ensure that managed disks use a specific set of disk encryption sets for the customer-managed key encryption"
+ },
+ {
+  "category": "BACKUP_AND_RECOVERY",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_mysql_flexible_server",
+   "azurerm_mysql_server"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_94",
+  "title": "Ensure that My SQL server enables geo-redundant backups"
+ },
+ {
+  "category": "GENERAL_SECURITY",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_virtual_machine_scale_set"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_95",
+  "title": "Ensure that automatic OS image patching is enabled for Virtual Machine Scale Sets"
+ },
+ {
+  "category": "ENCRYPTION",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_mysql_server"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_96",
+  "title": "Ensure that MySQL server enables infrastructure encryption"
+ },
+ {
+  "category": "ENCRYPTION",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_linux_virtual_machine_scale_set",
+   "azurerm_windows_virtual_machine_scale_set"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_97",
+  "title": "Ensure that Virtual machine scale sets have encryption at host enabled"
+ },
+ {
+  "category": "NETWORKING",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_container_group"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_98",
+  "title": "Ensure that Azure Container group is deployed into virtual network"
+ },
+ {
+  "category": "NETWORKING",
+  "cwe": "",
+  "provider": "azure",
+  "refs": [],
+  "remediation": "",
+  "resources": [
+   "azurerm_cosmosdb_account"
+  ],
+  "severity": "",
+  "source": "checkov",
+  "source_id": "CKV_AZURE_99",
+  "title": "Ensure Cosmos DB accounts have restricted access"
+ }
+]
