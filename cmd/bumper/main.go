@@ -31,6 +31,7 @@ import (
 	"github.com/gnana997/bumper/internal/safety"
 	"github.com/gnana997/bumper/internal/search"
 	"github.com/gnana997/bumper/internal/setup"
+	"github.com/gnana997/bumper/internal/style"
 	"github.com/gnana997/bumper/internal/tui"
 )
 
@@ -264,31 +265,57 @@ func cmdSearch(args []string) int {
 	for i, h := range enforced {
 		sel[i] = h.Doc.Rule
 	}
-	fmt.Printf("Enforced rules (%d) — these fire on your plan:\n\n", len(sel))
-	if err := report.RuleList(os.Stdout, sel, "text"); err != nil {
-		return fail("%v", err)
-	}
+	p := style.New(os.Stdout)
+	g := p.Glyphs
+
 	if !*enforcedOnly {
-		printAdvisory(advisory)
+		fmt.Printf("%s    %s\n\n",
+			p.Strong(fmt.Sprintf("%d matches", len(sel)+len(advisory))),
+			p.Faint(fmt.Sprintf("%d enforced · %d advisory", len(sel), len(advisory))))
+	}
+
+	// Enforced — minimal severity / id / title rows under a green section dot.
+	fmt.Printf("%s %s  %s\n\n", p.OK(g.Dot), p.Strong("enforced"),
+		p.Faint(fmt.Sprintf("%d   fires on your plan", len(sel))))
+	if len(sel) == 0 {
+		fmt.Printf("  %s\n", p.Faint("no enforced rules match this query"))
+	}
+	wID := 0
+	for _, r := range sel {
+		wID = max(wID, len(r.ID))
+	}
+	for _, r := range sel {
+		fmt.Printf("  %s%s%s\n",
+			p.Severity(r.Severity, style.PadRight(r.Severity, 9)),
+			p.Strong(fmt.Sprintf("%-*s", wID+2, r.ID)),
+			p.Dim(style.Trunc(r.Title, 52)))
+	}
+
+	if !*enforcedOnly {
+		printAdvisory(p, advisory)
 	}
 	return 0
 }
 
-// printAdvisory renders the advisory hits as a compact, clearly-labeled section
-// so they never read as enforced.
-func printAdvisory(adv []search.Hit) {
-	fmt.Printf("\nAdvisory (%d) — best-practice knowledge, NOT enforced (Trivy/Checkov/KICS/Prowler):\n\n", len(adv))
+// printAdvisory renders the advisory hits as a compact section under a hollow ring,
+// so they read as knowledge — never as enforced. Severity / source / title, colored.
+func printAdvisory(p *style.Palette, adv []search.Hit) {
+	fmt.Printf("\n%s %s  %s\n\n", p.Dim(p.Glyphs.Ring), p.Strong("advisory"),
+		p.Faint(fmt.Sprintf("%d   knowledge, not enforced — Trivy · Checkov · KICS · Prowler", len(adv))))
+	wSrc := 0
+	for _, h := range adv {
+		wSrc = max(wSrc, len(h.Doc.Entry.Source))
+	}
 	for _, h := range adv {
 		e := h.Doc.Entry
 		sev := e.Severity
 		if sev == "" {
 			sev = "-"
 		}
-		res := ""
-		if len(e.Resources) > 0 {
-			res = e.Resources[0]
-		}
-		fmt.Printf("  %-9s %-8s %-38s %s\n", sev, e.Source, res, e.Title)
+		fmt.Printf("  %s%s%s\n",
+			p.Severity(e.Severity, style.PadRight(sev, 9)),
+			p.Dim(fmt.Sprintf("%-*s", wSrc+2, e.Source)),
+			p.Dim(style.Trunc(e.Title, 60)))
 	}
 }
 
@@ -401,6 +428,7 @@ func cmdInit(args []string) int {
 		return fail("%v", err)
 	}
 	steps := setup.Plan(setup.Options{MCP: mcp, Hook: hook, Env: env})
+	p := style.New(os.Stdout)
 
 	if *printOnly {
 		fmt.Printf("bumper init — would wire bumper (%s) into Claude Code:\n\n", env.Bin)
@@ -424,7 +452,7 @@ func cmdInit(args []string) int {
 		for _, line := range res.Lines {
 			fmt.Println("  " + line)
 		}
-		fmt.Println("\n✓ bumper is wired in. Commit .mcp.json and .claude/settings.json to share the gate with your team.")
+		fmt.Printf("\n%s bumper is wired in. Commit .mcp.json and .claude/settings.json to share the gate with your team.\n", p.OK(p.Glyphs.Check))
 		return 0
 	}
 
@@ -502,22 +530,25 @@ func cmdVerify(args []string) int {
 		return fail("%v", err)
 	}
 
+	p := style.New(os.Stdout)
+	g := p.Glyphs
 	if !res.Passed {
 		report.Text(os.Stdout, res.Blocking)
-		fmt.Fprintf(os.Stderr, "\nbumper: %s NOT verified — %d finding(s) at or above %q. "+
+		pe := style.New(os.Stderr)
+		fmt.Fprintf(os.Stderr, "\n%s bumper: %s NOT verified — %d finding(s) at or above %q. "+
 			"Fix them, or record an explicit override with `bumper verify --accept %s`.\n",
-			planPath, len(res.Blocking), *minSeverity, planPath)
+			pe.Severity("critical", pe.Glyphs.Cross), planPath, len(res.Blocking), *minSeverity, planPath)
 		return 1
 	}
 
 	if res.Verdict.Accepted {
-		fmt.Printf("⚠ bumper: %s verified WITH OVERRIDE (%d blocking finding(s) accepted). apply unblocked.\n",
-			planPath, res.Verdict.Blocking)
+		fmt.Printf("%s bumper: %s verified WITH OVERRIDE (%d blocking finding(s) accepted). apply unblocked.\n",
+			p.Severity("high", g.Warn), planPath, res.Verdict.Blocking)
 	} else {
-		fmt.Printf("✓ bumper: %s verified (%d finding(s), none blocking). apply unblocked.\n",
-			planPath, res.Verdict.FindingsTotal)
+		fmt.Printf("%s bumper: %s verified (%d finding(s), none blocking). apply unblocked.\n",
+			p.OK(g.Check), planPath, res.Verdict.FindingsTotal)
 	}
-	fmt.Printf("  plan sha256: %s\n", res.Verdict.PlanSHA)
+	fmt.Printf("  %s%s\n", p.Faint("plan sha256: "), p.Dim(res.Verdict.PlanSHA))
 	return 0
 }
 

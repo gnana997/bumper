@@ -10,18 +10,20 @@ import (
 	"github.com/charmbracelet/lipgloss"
 )
 
-// Hazard-console palette: charcoal ground, amber chrome, severity as the one
-// semantic signal. lipgloss/termenv downsamples truecolor and honors NO_COLOR.
+// Hazard-console palette: warm charcoal ground, burnt-amber chrome, severity as
+// the one semantic signal. Matched to the web app's --term-* tokens so the CLI and
+// the site read as one product. lipgloss/termenv downsamples truecolor and honors
+// NO_COLOR.
 var (
-	colCrit   = lipgloss.Color("#FF3B3B")
-	colHigh   = lipgloss.Color("#FF9F1C")
-	colMed    = lipgloss.Color("#F4D35E")
-	colLow    = lipgloss.Color("#7A8290")
-	colSafe   = lipgloss.Color("#3DD68C")
-	colChrome = lipgloss.Color("#5B6573")
-	colLive   = lipgloss.Color("#FFB703")
-	colInk    = lipgloss.Color("#E8E6E3")
-	colDim    = lipgloss.Color("#6B7280")
+	colCrit   = lipgloss.Color("#FF5A4D") // term-crit
+	colHigh   = lipgloss.Color("#E3A53C") // term-high
+	colMed    = lipgloss.Color("#C9B27D") // warm amber-tan
+	colLow    = lipgloss.Color("#8B8270") // term-dim
+	colSafe   = lipgloss.Color("#74B491") // term-ok
+	colChrome = lipgloss.Color("#6B6450") // warm structural lines/labels
+	colLive   = lipgloss.Color("#E08A5C") // term-accent (burnt amber)
+	colInk    = lipgloss.Color("#DCD5C4") // term-ink
+	colDim    = lipgloss.Color("#8B8270") // term-dim
 )
 
 // glyphs has a Unicode set and an ASCII fallback (for non-UTF-8 terminals), so

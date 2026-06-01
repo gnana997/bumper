@@ -6,31 +6,70 @@ import (
 	"fmt"
 	"io"
 	"strings"
-	"text/tabwriter"
 
 	"github.com/gnana997/bumper/internal/engine"
 	"github.com/gnana997/bumper/internal/rules"
+	"github.com/gnana997/bumper/internal/style"
 )
 
-// Text writes a human-readable report.
+// Text writes a human-readable report — colored on a terminal, plain when piped.
+// Layout mirrors the web app's --explain terminal: a colored severity token, the
+// resource, the message, then labeled rule/fix/ref rows, with a severity tally.
 func Text(w io.Writer, findings []engine.Finding) {
+	p := style.New(w)
 	if len(findings) == 0 {
-		fmt.Fprintln(w, "✓ bumper: no dangerous changes found in this plan.")
+		fmt.Fprintf(w, "%s %s\n", p.OK(p.Glyphs.Check), "bumper: no dangerous changes found in this plan.")
 		return
 	}
-	fmt.Fprintf(w, "bumper found %d issue(s) in this plan:\n\n", len(findings))
+	fmt.Fprintf(w, "bumper found %s in this plan:\n\n", p.Strong(fmt.Sprintf("%d issue(s)", len(findings))))
 	for _, f := range findings {
-		fmt.Fprintf(w, "  [%s] %s\n", strings.ToUpper(f.Severity), f.Title)
-		fmt.Fprintf(w, "    resource: %s\n", f.Address)
-		fmt.Fprintf(w, "    rule:     %s\n", f.RuleID)
+		sev := strings.ToUpper(f.Severity)
+		fmt.Fprintf(w, "%s  %s   %s\n", p.Severity(f.Severity, style.PadRight(sev, 8)), p.Strong(f.Address), p.Dim(f.Title))
+		fmt.Fprintf(w, "  %s%s\n", p.Faint(fmt.Sprintf("%-6s", "rule")), f.RuleID)
 		if f.Fix != "" {
-			fmt.Fprintf(w, "    fix:      %s\n", f.Fix)
+			fmt.Fprintf(w, "  %s%s\n", p.Faint(fmt.Sprintf("%-6s", "fix")), p.OK(f.Fix))
 		}
 		for _, ref := range f.Refs {
-			fmt.Fprintf(w, "    ref:      %s\n", ref)
+			fmt.Fprintf(w, "  %s%s\n", p.Faint(fmt.Sprintf("%-6s", "ref")), p.Dim(ref))
 		}
 		fmt.Fprintln(w)
 	}
+	fmt.Fprintln(w, severityTally(p, findings))
+}
+
+// severityTally renders "3 findings   2 critical · 1 high" with each count colored
+// by its severity — the calm summary line under a findings block.
+func severityTally(p *style.Palette, findings []engine.Finding) string {
+	var n [5]int // critical, high, medium, low, other
+	for _, f := range findings {
+		switch f.Severity {
+		case "critical":
+			n[0]++
+		case "high":
+			n[1]++
+		case "medium":
+			n[2]++
+		case "low":
+			n[3]++
+		default:
+			n[4]++
+		}
+	}
+	parts := []string{}
+	add := func(sev string, c int) {
+		if c > 0 {
+			parts = append(parts, p.Severity(sev, fmt.Sprintf("%d %s", c, sev)))
+		}
+	}
+	add("critical", n[0])
+	add("high", n[1])
+	add("medium", n[2])
+	add("low", n[3])
+	head := p.Faint(fmt.Sprintf("%d finding(s)", len(findings)))
+	if len(parts) == 0 {
+		return head
+	}
+	return head + "   " + strings.Join(parts, p.Faint(" · "))
 }
 
 // JSON writes findings as an indented JSON array.
@@ -252,7 +291,10 @@ type ruleRow struct {
 	Refs     []string `json:"refs,omitempty"`
 }
 
-// RuleList renders a rule set as an aligned text table or JSON.
+// RuleList renders a rule set as an aligned text table or JSON. The text table is
+// colored on a terminal: severity by its color, the id in bold, source/resource
+// dimmed. Columns are padded as plain text first, then colored, so the ANSI codes
+// (zero display width) never throw off the alignment.
 func RuleList(w io.Writer, rs []*rules.Rule, format string) error {
 	if format == "json" {
 		rows := make([]ruleRow, 0, len(rs))
@@ -264,33 +306,47 @@ func RuleList(w io.Writer, rs []*rules.Rule, format string) error {
 		return enc.Encode(rows)
 	}
 
-	tw := tabwriter.NewWriter(w, 0, 0, 2, ' ', 0)
-	fmt.Fprintln(tw, "SEVERITY\tSOURCE\tID\tRESOURCE\tTITLE")
-	for _, r := range rs {
-		resource := r.Resource
-		if resource == "" {
-			resource = "(multiple)"
+	p := style.New(w)
+	type trow struct{ sev, src, id, res, title string }
+	rows := make([]trow, len(rs))
+	wSev, wSrc, wID, wRes := len("SEVERITY"), len("SOURCE"), len("ID"), len("RESOURCE")
+	for i, r := range rs {
+		res := r.Resource
+		if res == "" {
+			res = "(multiple)"
 		}
-		fmt.Fprintf(tw, "%s\t%s\t%s\t%s\t%s\n", r.Severity, r.Source, r.ID, resource, truncate(r.Title, 64))
+		rows[i] = trow{r.Severity, r.Source, r.ID, res, truncate(r.Title, 60)}
+		wSev, wSrc = max(wSev, len(r.Severity)), max(wSrc, len(r.Source))
+		wID, wRes = max(wID, len(r.ID)), max(wRes, len(res))
 	}
-	if err := tw.Flush(); err != nil {
-		return err
+	fmt.Fprintln(w, p.Faint(fmt.Sprintf("%-*s  %-*s  %-*s  %-*s  %s",
+		wSev, "SEVERITY", wSrc, "SOURCE", wID, "ID", wRes, "RESOURCE", "TITLE")))
+	for _, r := range rows {
+		fmt.Fprintf(w, "%s  %s  %s  %s  %s\n",
+			p.Severity(r.sev, fmt.Sprintf("%-*s", wSev, r.sev)),
+			p.Dim(fmt.Sprintf("%-*s", wSrc, r.src)),
+			p.Strong(fmt.Sprintf("%-*s", wID, r.id)),
+			p.Dim(fmt.Sprintf("%-*s", wRes, r.res)),
+			r.title)
 	}
-	fmt.Fprintf(w, "\n%d rule(s)\n", len(rs))
+	fmt.Fprintf(w, "\n%s\n", p.Faint(fmt.Sprintf("%d rule(s)", len(rs))))
 	return nil
 }
 
 // RuleDetail prints one rule, including its CEL check (the spec's
 // "reproducible, explainable" pillar — you can see exactly what fires).
 func RuleDetail(w io.Writer, r *rules.Rule) {
-	fmt.Fprintf(w, "%s  [%s]\n", r.ID, r.Severity)
+	p := style.New(w)
+	fmt.Fprintf(w, "%s  %s\n", p.Strong(r.ID), p.Severity(r.Severity, "["+r.Severity+"]"))
 	fmt.Fprintf(w, "%s\n\n", r.Title)
+
+	label := func(s string) string { return p.Faint(fmt.Sprintf("  %-9s", s)) }
 
 	prov := r.Source
 	if r.AVD != "" {
 		prov += " · " + r.AVD
 	}
-	fmt.Fprintf(w, "  source:   %s\n", prov)
+	fmt.Fprintf(w, "%s%s\n", label("source:"), p.Dim(prov))
 
 	resource := r.Resource
 	if resource == "" {
@@ -300,16 +356,16 @@ func RuleDetail(w io.Writer, r *rules.Rule) {
 	if len(r.On) > 0 {
 		actions = strings.Join(r.On, ", ")
 	}
-	fmt.Fprintf(w, "  applies:  %s  on [%s]\n", resource, actions)
+	fmt.Fprintf(w, "%s%s  %s\n", label("applies:"), p.Strong(resource), p.Faint("on ["+actions+"]"))
 	if r.Fix != "" {
-		fmt.Fprintf(w, "  fix:      %s\n", r.Fix)
+		fmt.Fprintf(w, "%s%s\n", label("fix:"), p.OK(r.Fix))
 	}
 	for _, ref := range r.Refs {
-		fmt.Fprintf(w, "  ref:      %s\n", ref)
+		fmt.Fprintf(w, "%s%s\n", label("ref:"), p.Dim(ref))
 	}
-	fmt.Fprintln(w, "  check (CEL):")
+	fmt.Fprintln(w, p.Faint("  check (CEL):"))
 	for _, line := range strings.Split(strings.TrimRight(r.When, "\n"), "\n") {
-		fmt.Fprintf(w, "    %s\n", line)
+		fmt.Fprintf(w, "    %s\n", p.Dim(line))
 	}
 }
 
