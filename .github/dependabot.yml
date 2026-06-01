@@ -1,0 +1,20 @@
+version: 2
+updates:
+  # Go module dependencies — one grouped PR per week instead of one per dep.
+  - package-ecosystem: gomod
+    directory: "/"
+    schedule:
+      interval: weekly
+    groups:
+      go-dependencies:
+        patterns: ["*"]
+    open-pull-requests-limit: 5
+
+  # Keep the GitHub Actions used in workflows pinned and current.
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: weekly
+    groups:
+      github-actions:
+        patterns: ["*"]
