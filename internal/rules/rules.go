@@ -171,6 +171,8 @@ func providerFromType(resource string) string {
 		return "aws"
 	case strings.HasPrefix(resource, "google_"):
 		return "gcp"
+	case strings.HasPrefix(resource, "azurerm_"):
+		return "azure"
 	case strings.HasPrefix(resource, "digitalocean_"):
 		return "do"
 	default:

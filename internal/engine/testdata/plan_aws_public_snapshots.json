@@ -1,0 +1,144 @@
+{
+  "format_version": "1.2",
+  "terraform_version": "1.9.0",
+  "resource_changes": [
+    {
+      "address": "aws_ami_launch_permission.public_ami",
+      "mode": "managed",
+      "type": "aws_ami_launch_permission",
+      "name": "public_ami",
+      "provider_name": "registry.terraform.io/hashicorp/aws",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": {
+          "image_id": "ami-0123456789abcdef0",
+          "group": "all"
+        }
+      }
+    },
+    {
+      "address": "aws_ami_launch_permission.shared_account",
+      "mode": "managed",
+      "type": "aws_ami_launch_permission",
+      "name": "shared_account",
+      "provider_name": "registry.terraform.io/hashicorp/aws",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": {
+          "image_id": "ami-0123456789abcdef0",
+          "group": null,
+          "account_id": "111122223333"
+        }
+      }
+    },
+    {
+      "address": "aws_db_snapshot.public",
+      "mode": "managed",
+      "type": "aws_db_snapshot",
+      "name": "public",
+      "provider_name": "registry.terraform.io/hashicorp/aws",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": {
+          "db_instance_identifier": "prod-db",
+          "db_snapshot_identifier": "prod-db-snap",
+          "shared_accounts": ["all"]
+        }
+      }
+    },
+    {
+      "address": "aws_db_cluster_snapshot.public",
+      "mode": "managed",
+      "type": "aws_db_cluster_snapshot",
+      "name": "public",
+      "provider_name": "registry.terraform.io/hashicorp/aws",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": {
+          "db_cluster_identifier": "prod-cluster",
+          "db_cluster_snapshot_identifier": "prod-cluster-snap",
+          "shared_accounts": ["111122223333", "all"]
+        }
+      }
+    },
+    {
+      "address": "aws_db_snapshot.shared_account",
+      "mode": "managed",
+      "type": "aws_db_snapshot",
+      "name": "shared_account",
+      "provider_name": "registry.terraform.io/hashicorp/aws",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": {
+          "db_instance_identifier": "prod-db",
+          "db_snapshot_identifier": "prod-db-snap2",
+          "shared_accounts": ["111122223333", "444455556666"]
+        }
+      }
+    },
+    {
+      "address": "aws_db_snapshot.private",
+      "mode": "managed",
+      "type": "aws_db_snapshot",
+      "name": "private",
+      "provider_name": "registry.terraform.io/hashicorp/aws",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": {
+          "db_instance_identifier": "prod-db",
+          "db_snapshot_identifier": "prod-db-snap3",
+          "shared_accounts": []
+        }
+      }
+    },
+    {
+      "address": "aws_ebs_snapshot_block_public_access.unblocked",
+      "mode": "managed",
+      "type": "aws_ebs_snapshot_block_public_access",
+      "name": "unblocked",
+      "provider_name": "registry.terraform.io/hashicorp/aws",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": {
+          "state": "unblocked"
+        }
+      }
+    },
+    {
+      "address": "aws_ebs_snapshot_block_public_access.blocked",
+      "mode": "managed",
+      "type": "aws_ebs_snapshot_block_public_access",
+      "name": "blocked",
+      "provider_name": "registry.terraform.io/hashicorp/aws",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": {
+          "state": "block-all-sharing"
+        }
+      }
+    },
+    {
+      "address": "aws_snapshot_create_volume_permission.shared_account",
+      "mode": "managed",
+      "type": "aws_snapshot_create_volume_permission",
+      "name": "shared_account",
+      "provider_name": "registry.terraform.io/hashicorp/aws",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": {
+          "snapshot_id": "snap-0123456789abcdef0",
+          "account_id": "111122223333"
+        }
+      }
+    }
+  ]
+}

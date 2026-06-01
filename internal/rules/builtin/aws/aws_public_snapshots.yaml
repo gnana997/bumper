@@ -1,0 +1,63 @@
+# Public snapshots / AMIs — publicly-shared images and snapshots silently leak
+# data to every AWS account on earth. These are custom (source: custom): the
+# upstream Trivy/tfsec Terraform IaC policy set has NO AVD-AWS-NNNN check for
+# AMI/snapshot public sharing (the avd.aquasec.com "public-ami" and
+# "ebs-volume-snapshot-public" entries are CloudSploit *cloud/runtime* checks,
+# not Terraform IaC, and carry no AVD-AWS-\d{4} id). Each rule keys on the
+# EXPLICIT public marker, never on absence, so false positives are near-zero.
+
+# An AMI shared with everyone. aws_ami_launch_permission with group == "all"
+# grants launch permission to all AWS accounts => public AMI. The only public
+# marker is group == "all"; a specific account_id / organization_arn share must
+# stay silent. has()-guarded so a share that only sets account_id never fires.
+- id: AWS_AMI_PUBLIC
+  source: custom
+  severity: critical
+  resource: aws_ami_launch_permission
+  on: [create, update]
+  when: |
+    has(after.group) && after.group == "all"
+  title: "AMI is shared publicly (launch permission group = 'all')"
+  fix: "Remove group = \"all\" from aws_ami_launch_permission; share to specific account_id / organization_arn instead, and make the AMI private."
+  refs:
+    - "https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ami_launch_permission"
+    - "https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/sharingamis-intro.html"
+
+# A public RDS / Aurora snapshot. aws_db_snapshot and aws_db_cluster_snapshot
+# expose shared_accounts (a list); the literal "all" makes the snapshot public.
+# Type-less over the two snapshot types; as_list() normalizes string-or-list.
+# A shared_accounts of specific account ids stays silent.
+- id: AWS_RDS_SNAPSHOT_PUBLIC
+  source: custom
+  severity: critical
+  on: [create, update]
+  when: |
+    type in ["aws_db_snapshot", "aws_db_cluster_snapshot"] &&
+    has(after.shared_accounts) &&
+    as_list(after.shared_accounts).exists(a, a == "all")
+  title: "RDS snapshot is shared publicly (shared_accounts contains 'all')"
+  fix: "Remove \"all\" from shared_accounts; share the DB/cluster snapshot only with specific AWS account IDs."
+  refs:
+    - "https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/db_snapshot"
+    - "https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/db_cluster_snapshot"
+
+# Account/region-level guard that permits public EBS snapshots. There is NO
+# clean plan-time field to make an individual EBS snapshot public in the AWS
+# Terraform provider: aws_snapshot_create_volume_permission supports only
+# account_id (no group = "all"; provider issue #13198 still open), and
+# aws_ebs_snapshot has no permission field. The expressible insecure value is
+# aws_ebs_snapshot_block_public_access.state == "unblocked", which removes the
+# account guard and ALLOWS snapshots to be shared publicly. We fire on that
+# explicit value; block-all-sharing / block-new-sharing stay silent.
+- id: AWS_EBS_SNAPSHOT_PUBLIC
+  source: custom
+  severity: critical
+  resource: aws_ebs_snapshot_block_public_access
+  on: [create, update]
+  when: |
+    has(after.state) && after.state == "unblocked"
+  title: "EBS snapshot public-access block is disabled (state = 'unblocked'), permitting public snapshots"
+  fix: "Set state = \"block-all-sharing\" (or \"block-new-sharing\") on aws_ebs_snapshot_block_public_access so EBS snapshots cannot be shared publicly."
+  refs:
+    - "https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ebs_snapshot_block_public_access"
+    - "https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/block-public-access-snapshots.html"

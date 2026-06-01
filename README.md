@@ -9,16 +9,20 @@ ways: a **CLI/CI gate**, an **MCP server** your coding agent calls, and a **guar
 hook** that stops an agent from applying a plan it never verified. A locally
 installed AI CLI optionally explains each finding in plain English.
 
-> **v1.0.0.** Ships **95 curated rules** (17 critical / 49 high / 27 medium / 2 low) across
-> **AWS** (57), **GCP** (35), and **Azure** (3): network exposure (security groups,
-> NACLs, GCP firewalls — both legacy `google_compute_firewall` and the modern
-> network/regional/hierarchical firewall **policy** rules — Azure NSGs; IPv4/IPv6,
-> port-range aware), VPC hygiene (auto-mode networks, public-zone DNSSEC, subnet
-> flow logs), least-privilege IAM (primitive owner/editor grants, user-managed
-> service-account keys, SA impersonation roles, default-SA grants), GKE & Compute
-> hardening (legacy metadata endpoints, metadata concealment, node/default service
-> accounts, Shielded VM secure boot, OS Login, serial port, project-wide SSH keys),
-> public
+> **v1.0.0.** Ships **112 curated rules** (20 critical / 57 high / 32 medium / 3 low) across
+> **AWS** (60), **GCP** (35), and **Azure** (17) — a consistent cross-cloud
+> baseline (public storage/databases, open admin ports, public k8s control plane,
+> wildcard/over-privileged IAM, TLS, encryption, public snapshots/AMIs,
+> destruction) plus deep per-cloud coverage. Highlights: network exposure (security
+> groups, NACLs, GCP firewalls — both legacy `google_compute_firewall` and the
+> modern network/regional/hierarchical firewall **policy** rules — Azure NSGs;
+> IPv4/IPv6, port-range aware), VPC hygiene (auto-mode networks, public-zone DNSSEC,
+> subnet flow logs), least-privilege IAM (primitive owner/editor grants, user-managed
+> service-account keys, SA impersonation roles, Azure privileged role assignments),
+> GKE & Compute hardening (legacy metadata endpoints, metadata concealment,
+> node/default service accounts, Shielded VM secure boot, OS Login, serial port,
+> project-wide SSH keys), Azure service exposure (storage/SQL/Redis/ACR public
+> network, AKS public API, Key Vault purge protection, App Service TLS), public
 > endpoints (RDS/EKS/MQ, AKS, Cloud SQL public IP & authorized networks, BigQuery
 > & Cloud Storage public access, GKE public control plane), IAM & resource
 > policies (wildcard admin, open trust/ECR/SQS principals, `allUsers` bindings,

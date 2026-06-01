@@ -1,0 +1,311 @@
+{
+  "format_version": "1.2",
+  "terraform_version": "1.9.0",
+  "resource_changes": [
+    {
+      "address": "azurerm_storage_account.insecure_transfer_v4",
+      "mode": "managed",
+      "type": "azurerm_storage_account",
+      "name": "insecure_transfer_v4",
+      "provider_name": "registry.terraform.io/hashicorp/azurerm",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": {
+          "name": "insecuretransferv4",
+          "https_traffic_only_enabled": false,
+          "min_tls_version": "TLS1_2"
+        }
+      }
+    },
+    {
+      "address": "azurerm_storage_account.insecure_transfer_v3",
+      "mode": "managed",
+      "type": "azurerm_storage_account",
+      "name": "insecure_transfer_v3",
+      "provider_name": "registry.terraform.io/hashicorp/azurerm",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": {
+          "name": "insecuretransferv3",
+          "enable_https_traffic_only": false,
+          "min_tls_version": "TLS1_2"
+        }
+      }
+    },
+    {
+      "address": "azurerm_storage_account.weak_tls",
+      "mode": "managed",
+      "type": "azurerm_storage_account",
+      "name": "weak_tls",
+      "provider_name": "registry.terraform.io/hashicorp/azurerm",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": {
+          "name": "weaktls",
+          "https_traffic_only_enabled": true,
+          "min_tls_version": "TLS1_1"
+        }
+      }
+    },
+    {
+      "address": "azurerm_storage_account.secure",
+      "mode": "managed",
+      "type": "azurerm_storage_account",
+      "name": "secure",
+      "provider_name": "registry.terraform.io/hashicorp/azurerm",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": {
+          "name": "securestorage",
+          "https_traffic_only_enabled": true,
+          "enable_https_traffic_only": true,
+          "min_tls_version": "TLS1_2"
+        }
+      }
+    },
+    {
+      "address": "azurerm_mssql_server.weak_tls",
+      "mode": "managed",
+      "type": "azurerm_mssql_server",
+      "name": "weak_tls",
+      "provider_name": "registry.terraform.io/hashicorp/azurerm",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": {
+          "name": "mssql-weak",
+          "minimum_tls_version": "1.0"
+        }
+      }
+    },
+    {
+      "address": "azurerm_mssql_server.disabled_tls",
+      "mode": "managed",
+      "type": "azurerm_mssql_server",
+      "name": "disabled_tls",
+      "provider_name": "registry.terraform.io/hashicorp/azurerm",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": {
+          "name": "mssql-disabled",
+          "minimum_tls_version": "Disabled"
+        }
+      }
+    },
+    {
+      "address": "azurerm_mssql_server.secure",
+      "mode": "managed",
+      "type": "azurerm_mssql_server",
+      "name": "secure",
+      "provider_name": "registry.terraform.io/hashicorp/azurerm",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": {
+          "name": "mssql-secure",
+          "minimum_tls_version": "1.2"
+        }
+      }
+    },
+    {
+      "address": "azurerm_postgresql_server.ssl_off",
+      "mode": "managed",
+      "type": "azurerm_postgresql_server",
+      "name": "ssl_off",
+      "provider_name": "registry.terraform.io/hashicorp/azurerm",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": {
+          "name": "pg-ssl-off",
+          "ssl_enforcement_enabled": false
+        }
+      }
+    },
+    {
+      "address": "azurerm_mysql_server.ssl_off",
+      "mode": "managed",
+      "type": "azurerm_mysql_server",
+      "name": "ssl_off",
+      "provider_name": "registry.terraform.io/hashicorp/azurerm",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": {
+          "name": "mysql-ssl-off",
+          "ssl_enforcement_enabled": false
+        }
+      }
+    },
+    {
+      "address": "azurerm_postgresql_server.ssl_on",
+      "mode": "managed",
+      "type": "azurerm_postgresql_server",
+      "name": "ssl_on",
+      "provider_name": "registry.terraform.io/hashicorp/azurerm",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": {
+          "name": "pg-ssl-on",
+          "ssl_enforcement_enabled": true
+        }
+      }
+    },
+    {
+      "address": "azurerm_linux_web_app.no_https_only",
+      "mode": "managed",
+      "type": "azurerm_linux_web_app",
+      "name": "no_https_only",
+      "provider_name": "registry.terraform.io/hashicorp/azurerm",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": {
+          "name": "linux-web-nohttps",
+          "https_only": false
+        }
+      }
+    },
+    {
+      "address": "azurerm_function_app.absent_https_only",
+      "mode": "managed",
+      "type": "azurerm_function_app",
+      "name": "absent_https_only",
+      "provider_name": "registry.terraform.io/hashicorp/azurerm",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": {
+          "name": "func-absent-https"
+        }
+      }
+    },
+    {
+      "address": "azurerm_windows_web_app.https_only",
+      "mode": "managed",
+      "type": "azurerm_windows_web_app",
+      "name": "https_only",
+      "provider_name": "registry.terraform.io/hashicorp/azurerm",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": {
+          "name": "win-web-https",
+          "https_only": true
+        }
+      }
+    },
+    {
+      "address": "azurerm_role_assignment.owner_subscription",
+      "mode": "managed",
+      "type": "azurerm_role_assignment",
+      "name": "owner_subscription",
+      "provider_name": "registry.terraform.io/hashicorp/azurerm",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": {
+          "role_definition_name": "Owner",
+          "scope": "/subscriptions/00000000-0000-0000-0000-000000000000"
+        }
+      }
+    },
+    {
+      "address": "azurerm_role_assignment.contributor_mgmt_group",
+      "mode": "managed",
+      "type": "azurerm_role_assignment",
+      "name": "contributor_mgmt_group",
+      "provider_name": "registry.terraform.io/hashicorp/azurerm",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": {
+          "role_definition_name": "Contributor",
+          "scope": "/providers/Microsoft.Management/managementGroups/corp-root"
+        }
+      }
+    },
+    {
+      "address": "azurerm_role_assignment.owner_resource_group",
+      "mode": "managed",
+      "type": "azurerm_role_assignment",
+      "name": "owner_resource_group",
+      "provider_name": "registry.terraform.io/hashicorp/azurerm",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": {
+          "role_definition_name": "Owner",
+          "scope": "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/app-rg"
+        }
+      }
+    },
+    {
+      "address": "azurerm_role_assignment.reader_subscription",
+      "mode": "managed",
+      "type": "azurerm_role_assignment",
+      "name": "reader_subscription",
+      "provider_name": "registry.terraform.io/hashicorp/azurerm",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": {
+          "role_definition_name": "Reader",
+          "scope": "/subscriptions/00000000-0000-0000-0000-000000000000"
+        }
+      }
+    },
+    {
+      "address": "azurerm_key_vault.no_purge",
+      "mode": "managed",
+      "type": "azurerm_key_vault",
+      "name": "no_purge",
+      "provider_name": "registry.terraform.io/hashicorp/azurerm",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": {
+          "name": "kv-no-purge",
+          "purge_protection_enabled": false
+        }
+      }
+    },
+    {
+      "address": "azurerm_key_vault.purge_on",
+      "mode": "managed",
+      "type": "azurerm_key_vault",
+      "name": "purge_on",
+      "provider_name": "registry.terraform.io/hashicorp/azurerm",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": {
+          "name": "kv-purge-on",
+          "purge_protection_enabled": true
+        }
+      }
+    },
+    {
+      "address": "azurerm_public_ip.vm_ip",
+      "mode": "managed",
+      "type": "azurerm_public_ip",
+      "name": "vm_ip",
+      "provider_name": "registry.terraform.io/hashicorp/azurerm",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": {
+          "name": "vm-public-ip",
+          "allocation_method": "Static",
+          "sku": "Standard"
+        }
+      }
+    }
+  ]
+}

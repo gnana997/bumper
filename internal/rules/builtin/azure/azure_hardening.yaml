@@ -1,0 +1,137 @@
+# Azure TLS / IAM / Key Vault / compute hardening wave.
+#
+# Rationale notes baked inline per rule. Several rules deliberately fire on an
+# EXPLICIT insecure value (storage transfer/TLS, mssql TLS, single-server SSL)
+# to stay low-false-positive; the absence-based ones (app-service https_only,
+# key vault purge protection) are chosen because the provider default is itself
+# insecure, so "unset" == "insecure" and is worth surfacing (medium, non-block
+# at default unless escalated). v3->v4 storage rename is OR-guarded.
+
+# Storage account must enforce HTTPS-only transfer. Default is true, so an
+# EXPLICIT false is a clear misconfig. OR-guard both v3 (enable_https_traffic_only)
+# and v4 (https_traffic_only_enabled) field names.
+- id: AZURE_STORAGE_INSECURE_TRANSFER
+  source: trivy
+  avd: AVD-AZU-0008
+  severity: medium
+  resource: azurerm_storage_account
+  on: [create, update]
+  when: |
+    (has(after.https_traffic_only_enabled) && after.https_traffic_only_enabled == false) ||
+    (has(after.enable_https_traffic_only) && after.enable_https_traffic_only == false)
+  title: "Storage account allows insecure (HTTP) transfer"
+  fix: "Set https_traffic_only_enabled = true (azurerm v4) or enable_https_traffic_only = true (v3) on the storage account."
+  refs: ["https://avd.aquasec.com/misconfig/azure/storage/avd-azu-0008/"]
+
+# Storage account minimum TLS version too weak. Fire only on an explicit
+# insecure value (TLS1_0/TLS1_1); absence is left to provider default.
+- id: AZURE_STORAGE_WEAK_TLS
+  source: trivy
+  avd: AVD-AZU-0011
+  severity: medium
+  resource: azurerm_storage_account
+  on: [create, update]
+  when: |
+    has(after.min_tls_version) && after.min_tls_version in ["TLS1_0", "TLS1_1"]
+  title: "Storage account permits a weak minimum TLS version (TLS 1.0/1.1)"
+  fix: "Set min_tls_version = \"TLS1_2\" on the storage account."
+  refs: ["https://avd.aquasec.com/misconfig/azure/storage/avd-azu-0011/"]
+
+# Azure SQL (mssql) server minimum TLS version. "Disabled" (no minimum) and
+# 1.0/1.1 are all insecure. Fire only on an explicit weak value.
+- id: AZURE_SQL_SERVER_WEAK_TLS
+  source: trivy
+  avd: AVD-AZU-0026
+  severity: high
+  resource: azurerm_mssql_server
+  on: [create, update]
+  when: |
+    has(after.minimum_tls_version) && after.minimum_tls_version in ["1.0", "1.1", "Disabled"]
+  title: "Azure SQL server permits a weak or disabled minimum TLS version"
+  fix: "Set minimum_tls_version = \"1.2\" on the azurerm_mssql_server."
+  refs: ["https://avd.aquasec.com/misconfig/azure/database/avd-azu-0026/"]
+
+# Single-server PostgreSQL/MySQL must enforce SSL. Type-less because the two
+# resource types share ssl_enforcement_enabled. Flexible servers configure SSL
+# via a separate *_configuration resource and are intentionally out of scope.
+# Fire only on an explicit false (default-on, so explicit disable is the signal).
+- id: AZURE_DB_SSL_DISABLED
+  source: trivy
+  avd: AVD-AZU-0020
+  provider: azure
+  severity: high
+  on: [create, update]
+  when: |
+    type in ["azurerm_postgresql_server", "azurerm_mysql_server"] &&
+    has(after.ssl_enforcement_enabled) && after.ssl_enforcement_enabled == false
+  title: "Single-server PostgreSQL/MySQL has SSL enforcement disabled"
+  fix: "Set ssl_enforcement_enabled = true on the single-server database resource."
+  refs: ["https://avd.aquasec.com/misconfig/azure/database/avd-azu-0020/"]
+
+# App Service / Function App must redirect to HTTPS. https_only DEFAULTS TO
+# FALSE (insecure default), so absence == HTTP allowed == finding. Type-less
+# across the web/function app families. No clean single upstream AVD covering
+# this exact set, so source: custom.
+- id: AZURE_APP_SERVICE_NOT_HTTPS_ONLY
+  source: custom
+  provider: azure
+  severity: medium
+  on: [create, update]
+  when: |
+    type in [
+      "azurerm_linux_web_app", "azurerm_windows_web_app", "azurerm_app_service",
+      "azurerm_function_app", "azurerm_linux_function_app", "azurerm_windows_function_app"
+    ] &&
+    (!has(after.https_only) || after.https_only != true)
+  title: "App Service / Function App does not enforce HTTPS-only (https_only is not true)"
+  fix: "Set https_only = true on the web app / function app; it defaults to false."
+  refs: ["https://learn.microsoft.com/azure/app-service/configure-ssl-bindings#enforce-https"]
+
+# Privileged role assignment at subscription or management-group scope. Key on
+# role_definition_name + scope (NOT role_definition_id / principal_id, both
+# computed). Resource-group-scoped grants are intentionally NOT flagged.
+- id: AZURE_ROLE_ASSIGNMENT_PRIVILEGED
+  source: custom
+  severity: high
+  resource: azurerm_role_assignment
+  on: [create, update]
+  when: |
+    has(after.role_definition_name) &&
+    after.role_definition_name in ["Owner", "Contributor", "User Access Administrator"] &&
+    has(after.scope) &&
+    (
+      after.scope.matches("^/subscriptions/[^/]+$") ||
+      after.scope.contains("/providers/Microsoft.Management/managementGroups/")
+    )
+  title: "Highly privileged role assigned at subscription or management-group scope"
+  fix: "Scope the assignment to the smallest resource group / resource needed, or use a less privileged built-in role."
+  refs: ["https://learn.microsoft.com/azure/role-based-access-control/best-practices"]
+
+# Key Vault purge protection. Defaults to false; an unset/false value means a
+# deleted vault (and its secrets) can be permanently purged. Absence-based,
+# medium (defense-in-depth). Upstream AVD-AZU-0016 (no-purge).
+- id: AZURE_KEY_VAULT_NO_PURGE_PROTECTION
+  source: trivy
+  avd: AVD-AZU-0016
+  severity: medium
+  resource: azurerm_key_vault
+  on: [create, update]
+  when: |
+    !has(after.purge_protection_enabled) || after.purge_protection_enabled != true
+  title: "Key Vault does not have purge protection enabled"
+  fix: "Set purge_protection_enabled = true (and enable soft delete) on the azurerm_key_vault."
+  refs: ["https://avd.aquasec.com/misconfig/azure/keyvault/avd-azu-0016/"]
+
+# Public IP allocation — advisory. ip_address is computed, so key on existence
+# of the resource on create only. Low/advisory: a public IP is not inherently a
+# misconfig but is worth surfacing in a safety gate.
+- id: AZURE_VM_PUBLIC_IP
+  source: custom
+  severity: low
+  resource: azurerm_public_ip
+  on: [create]
+  when: |
+    type == "azurerm_public_ip"
+  title: "A public IP address is being created (review internet exposure)"
+  fix: "Confirm the public IP is required; prefer private endpoints / NAT or a load balancer where possible."
+  refs: ["https://learn.microsoft.com/azure/virtual-network/ip-services/public-ip-addresses"]

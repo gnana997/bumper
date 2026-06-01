@@ -1,0 +1,275 @@
+{
+  "format_version": "1.2",
+  "terraform_version": "1.9.0",
+  "resource_changes": [
+    {
+      "address": "azurerm_storage_container.public_blob",
+      "mode": "managed",
+      "type": "azurerm_storage_container",
+      "name": "public_blob",
+      "provider_name": "registry.terraform.io/hashicorp/azurerm",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": { "name": "assets", "container_access_type": "blob" }
+      }
+    },
+    {
+      "address": "azurerm_storage_container.public_container",
+      "mode": "managed",
+      "type": "azurerm_storage_container",
+      "name": "public_container",
+      "provider_name": "registry.terraform.io/hashicorp/azurerm",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": { "name": "browse", "container_access_type": "container" }
+      }
+    },
+    {
+      "address": "azurerm_storage_container.private",
+      "mode": "managed",
+      "type": "azurerm_storage_container",
+      "name": "private",
+      "provider_name": "registry.terraform.io/hashicorp/azurerm",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": { "name": "secrets", "container_access_type": "private" }
+      }
+    },
+    {
+      "address": "azurerm_storage_account.permits_public_v4",
+      "mode": "managed",
+      "type": "azurerm_storage_account",
+      "name": "permits_public_v4",
+      "provider_name": "registry.terraform.io/hashicorp/azurerm",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": {
+          "name": "acctv4",
+          "allow_nested_items_to_be_public": true,
+          "https_traffic_only_enabled": true
+        }
+      }
+    },
+    {
+      "address": "azurerm_storage_account.permits_public_v2",
+      "mode": "managed",
+      "type": "azurerm_storage_account",
+      "name": "permits_public_v2",
+      "provider_name": "registry.terraform.io/hashicorp/azurerm",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": {
+          "name": "acctv2",
+          "allow_blob_public_access": true,
+          "enable_https_traffic_only": true
+        }
+      }
+    },
+    {
+      "address": "azurerm_storage_account.locked_down",
+      "mode": "managed",
+      "type": "azurerm_storage_account",
+      "name": "locked_down",
+      "provider_name": "registry.terraform.io/hashicorp/azurerm",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": {
+          "name": "acctsafe",
+          "allow_nested_items_to_be_public": false,
+          "https_traffic_only_enabled": true
+        }
+      }
+    },
+    {
+      "address": "azurerm_mssql_server.public",
+      "mode": "managed",
+      "type": "azurerm_mssql_server",
+      "name": "public",
+      "provider_name": "registry.terraform.io/hashicorp/azurerm",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": { "name": "sql-public", "public_network_access_enabled": true }
+      }
+    },
+    {
+      "address": "azurerm_postgresql_server.public",
+      "mode": "managed",
+      "type": "azurerm_postgresql_server",
+      "name": "public",
+      "provider_name": "registry.terraform.io/hashicorp/azurerm",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": { "name": "pg-public", "public_network_access_enabled": true }
+      }
+    },
+    {
+      "address": "azurerm_mssql_server.private",
+      "mode": "managed",
+      "type": "azurerm_mssql_server",
+      "name": "private",
+      "provider_name": "registry.terraform.io/hashicorp/azurerm",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": { "name": "sql-private", "public_network_access_enabled": false }
+      }
+    },
+    {
+      "address": "azurerm_postgresql_flexible_server.flex",
+      "mode": "managed",
+      "type": "azurerm_postgresql_flexible_server",
+      "name": "flex",
+      "provider_name": "registry.terraform.io/hashicorp/azurerm",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": { "name": "pg-flex", "public_network_access_enabled": true }
+      }
+    },
+    {
+      "address": "azurerm_redis_cache.public",
+      "mode": "managed",
+      "type": "azurerm_redis_cache",
+      "name": "public",
+      "provider_name": "registry.terraform.io/hashicorp/azurerm",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": { "name": "redis-public", "public_network_access_enabled": true }
+      }
+    },
+    {
+      "address": "azurerm_redis_cache.private",
+      "mode": "managed",
+      "type": "azurerm_redis_cache",
+      "name": "private",
+      "provider_name": "registry.terraform.io/hashicorp/azurerm",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": { "name": "redis-private", "public_network_access_enabled": false }
+      }
+    },
+    {
+      "address": "azurerm_kubernetes_cluster.public_api",
+      "mode": "managed",
+      "type": "azurerm_kubernetes_cluster",
+      "name": "public_api",
+      "provider_name": "registry.terraform.io/hashicorp/azurerm",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": {
+          "name": "aks-public",
+          "private_cluster_enabled": false,
+          "api_server_access_profile": []
+        }
+      }
+    },
+    {
+      "address": "azurerm_kubernetes_cluster.private",
+      "mode": "managed",
+      "type": "azurerm_kubernetes_cluster",
+      "name": "private",
+      "provider_name": "registry.terraform.io/hashicorp/azurerm",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": {
+          "name": "aks-private",
+          "private_cluster_enabled": true
+        }
+      }
+    },
+    {
+      "address": "azurerm_kubernetes_cluster.authorized_ranges_nested",
+      "mode": "managed",
+      "type": "azurerm_kubernetes_cluster",
+      "name": "authorized_ranges_nested",
+      "provider_name": "registry.terraform.io/hashicorp/azurerm",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": {
+          "name": "aks-nested-ips",
+          "private_cluster_enabled": false,
+          "api_server_access_profile": [
+            { "authorized_ip_ranges": ["203.0.113.0/24"] }
+          ]
+        }
+      }
+    },
+    {
+      "address": "azurerm_kubernetes_cluster.authorized_ranges_toplevel",
+      "mode": "managed",
+      "type": "azurerm_kubernetes_cluster",
+      "name": "authorized_ranges_toplevel",
+      "provider_name": "registry.terraform.io/hashicorp/azurerm",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": {
+          "name": "aks-toplevel-ips",
+          "private_cluster_enabled": false,
+          "api_server_authorized_ip_ranges": ["203.0.113.0/24"]
+        }
+      }
+    },
+    {
+      "address": "azurerm_container_registry.public_network",
+      "mode": "managed",
+      "type": "azurerm_container_registry",
+      "name": "public_network",
+      "provider_name": "registry.terraform.io/hashicorp/azurerm",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": {
+          "name": "acrpublic",
+          "public_network_access_enabled": true,
+          "anonymous_pull_enabled": false
+        }
+      }
+    },
+    {
+      "address": "azurerm_container_registry.anon_pull",
+      "mode": "managed",
+      "type": "azurerm_container_registry",
+      "name": "anon_pull",
+      "provider_name": "registry.terraform.io/hashicorp/azurerm",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": {
+          "name": "acranon",
+          "public_network_access_enabled": false,
+          "anonymous_pull_enabled": true
+        }
+      }
+    },
+    {
+      "address": "azurerm_container_registry.locked_down",
+      "mode": "managed",
+      "type": "azurerm_container_registry",
+      "name": "locked_down",
+      "provider_name": "registry.terraform.io/hashicorp/azurerm",
+      "change": {
+        "actions": ["create"],
+        "before": null,
+        "after": {
+          "name": "acrsafe",
+          "public_network_access_enabled": false,
+          "anonymous_pull_enabled": false
+        }
+      }
+    }
+  ]
+}

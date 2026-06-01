@@ -1,0 +1,124 @@
+# Azure public-exposure family. These complement the existing
+# AZURE_NSG_PUBLIC_INGRESS_SENSITIVE (NSG inbound) and AZURE_DB_FIREWALL_PUBLIC
+# (firewall-rule 0.0.0.0-255.255.255.255) rules: here we cover service-level
+# "public network access" toggles and storage public-blob exposure, which are a
+# different attack surface than firewall rules / NSGs.
+
+# 1) Storage container set to blob/container public access. container_access_type
+# defaults to "private" (secure) — an unset field renders as null/"private", so we
+# require has() and an explicit insecure value to avoid firing on the default.
+- id: AZURE_STORAGE_CONTAINER_PUBLIC
+  source: trivy
+  avd: AVD-AZU-0007
+  severity: high
+  resource: azurerm_storage_container
+  on: [create, update]
+  when: |
+    has(after.container_access_type) &&
+    after.container_access_type in ["blob", "container"]
+  title: "Storage container allows anonymous public access (container_access_type blob/container)"
+  fix: "Set container_access_type = \"private\" so blobs are not anonymously readable."
+  refs:
+    - "https://learn.microsoft.com/azure/storage/blobs/anonymous-read-access-configure"
+    - "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/storage_container"
+
+# 2) Storage account that PERMITS public blob access. This only enables the
+# capability (each container still has to opt in via container_access_type), so it
+# is advisory/medium rather than block-worthy. v3/v4 rename: allow_blob_public_access
+# (<= v2) vs allow_nested_items_to_be_public (v3+) — guard BOTH. Both default to
+# true at the provider, but we fire only on an EXPLICIT true to keep noise down;
+# guarding with has() means an absent/null field stays silent.
+- id: AZURE_STORAGE_ACCOUNT_ALLOWS_PUBLIC_BLOB
+  source: custom
+  severity: medium
+  resource: azurerm_storage_account
+  on: [create, update]
+  when: |
+    (has(after.allow_nested_items_to_be_public) && after.allow_nested_items_to_be_public == true) ||
+    (has(after.allow_blob_public_access) && after.allow_blob_public_access == true)
+  title: "Storage account permits public blob access (allow_nested_items_to_be_public / allow_blob_public_access true)"
+  fix: "Set allow_nested_items_to_be_public = false (allow_blob_public_access on older provider versions) to forbid any container from going public."
+  refs:
+    - "https://learn.microsoft.com/azure/storage/blobs/anonymous-read-access-prevent"
+    - "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/storage_account"
+
+# 3) Single-server PaaS databases with public_network_access_enabled. Type-less so
+# it covers mssql/sql/postgresql/mysql single servers in one rule. EXCLUDES
+# *_flexible_server: there public_network_access_enabled is COMPUTED from
+# delegated_subnet_id, so a rule keyed on it would never fire reliably. Distinct
+# from AZURE_DB_FIREWALL_PUBLIC (firewall-rule level). Fire on explicit true.
+- id: AZURE_SQL_PUBLIC_NETWORK
+  source: custom
+  provider: azure
+  severity: high
+  on: [create, update]
+  when: |
+    type in ["azurerm_mssql_server", "azurerm_sql_server",
+             "azurerm_postgresql_server", "azurerm_mysql_server"] &&
+    has(after.public_network_access_enabled) &&
+    after.public_network_access_enabled == true
+  title: "Database server allows public network access (public_network_access_enabled = true)"
+  fix: "Set public_network_access_enabled = false and reach the server over a private endpoint / VNet."
+  refs:
+    - "https://learn.microsoft.com/azure/azure-sql/database/connectivity-settings"
+    - "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/mssql_server"
+
+# 4) Redis cache reachable over the public internet. public_network_access_enabled
+# defaults to true at the provider; we fire on an explicit true so a plan that has
+# rendered it as null (provider default unset) does not surface noisily, while an
+# author who left it true is flagged.
+- id: AZURE_REDIS_PUBLIC_NETWORK
+  source: custom
+  severity: high
+  resource: azurerm_redis_cache
+  on: [create, update]
+  when: |
+    has(after.public_network_access_enabled) &&
+    after.public_network_access_enabled == true
+  title: "Redis cache allows public network access (public_network_access_enabled = true)"
+  fix: "Set public_network_access_enabled = false and connect via a private endpoint."
+  refs:
+    - "https://learn.microsoft.com/azure/azure-cache-for-redis/cache-private-link"
+    - "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/redis_cache"
+
+# 5) AKS cluster with a public API server. Public when the cluster is NOT private
+# AND no authorized IP ranges are set in EITHER the v3+ nested
+# api_server_access_profile[].authorized_ip_ranges block OR the old top-level
+# api_server_authorized_ip_ranges list (v3/v4 shape change — check both). Fires
+# only when private is off/absent AND both range sources are empty/absent.
+- id: AZURE_AKS_PUBLIC_API_SERVER
+  source: trivy
+  avd: AVD-AZU-0041
+  severity: high
+  resource: azurerm_kubernetes_cluster
+  on: [create, update]
+  when: |
+    (!has(after.private_cluster_enabled) || after.private_cluster_enabled != true) &&
+    !(has(after.api_server_access_profile) &&
+      after.api_server_access_profile.exists(p,
+        has(p.authorized_ip_ranges) && as_list(p.authorized_ip_ranges).exists(r, true))) &&
+    !(has(after.api_server_authorized_ip_ranges) &&
+      as_list(after.api_server_authorized_ip_ranges).exists(r, true))
+  title: "AKS API server is public: not a private cluster and no authorized IP ranges"
+  fix: "Set private_cluster_enabled = true, or restrict the API server via api_server_access_profile.authorized_ip_ranges."
+  refs:
+    - "https://learn.microsoft.com/azure/aks/api-server-authorized-ip-ranges"
+    - "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/kubernetes_cluster"
+
+# 6) Container registry exposed publicly, either via public network access or
+# anonymous pull. public_network_access_enabled defaults true and
+# anonymous_pull_enabled defaults false; either being true is an exposure. Fire on
+# explicit true on either flag.
+- id: AZURE_ACR_PUBLIC
+  source: custom
+  severity: high
+  resource: azurerm_container_registry
+  on: [create, update]
+  when: |
+    (has(after.public_network_access_enabled) && after.public_network_access_enabled == true) ||
+    (has(after.anonymous_pull_enabled) && after.anonymous_pull_enabled == true)
+  title: "Container registry is publicly exposed (public_network_access_enabled or anonymous_pull_enabled true)"
+  fix: "Set public_network_access_enabled = false and anonymous_pull_enabled = false; use a private endpoint and authenticated pulls."
+  refs:
+    - "https://learn.microsoft.com/azure/container-registry/container-registry-access-selected-networks"
+    - "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/container_registry"
