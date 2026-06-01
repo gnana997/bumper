@@ -13,18 +13,18 @@ jobs:
   goreleaser:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0 # full history so the changelog can be built
 
-      - uses: actions/setup-go@v5
+      - uses: actions/setup-go@v6
         with:
           go-version-file: go.mod
 
       - uses: sigstore/cosign-installer@v3 # keyless signing
       - uses: anchore/sbom-action/download-syft@v0 # SBOM generation
 
-      - uses: goreleaser/goreleaser-action@v6
+      - uses: goreleaser/goreleaser-action@v7
         with:
           version: "~> v2"
           args: release --clean
@@ -35,7 +35,7 @@ jobs:
 
       # SLSA build provenance — a signed attestation binding each artifact to
       # this exact workflow run, verifiable with `gh attestation verify`.
-      - uses: actions/attest-build-provenance@v2
+      - uses: actions/attest-build-provenance@v4
         with:
           subject-path: |
             dist/*.tar.gz
