@@ -27,6 +27,7 @@ import (
 	"github.com/gnana997/bumper/internal/report"
 	"github.com/gnana997/bumper/internal/rules"
 	"github.com/gnana997/bumper/internal/safety"
+	"github.com/gnana997/bumper/internal/search"
 	"github.com/gnana997/bumper/internal/setup"
 	"github.com/gnana997/bumper/internal/tui"
 )
@@ -37,11 +38,12 @@ Usage:
   bumper [flags] plan.json        scan a plan (use "-" for stdin)
   bumper tui plan.json            scan + open the interactive hazard console
   bumper list [flags] [--tui]     list the rule set (or browse it interactively)
+  bumper search [flags] <query>   find rules by keyword/resource — what to bake in before writing TF
   bumper explain <RULE_ID>        show one rule in detail
   bumper init [flags]             wire bumper into Claude Code (MCP server + apply-guard hook)
   bumper verify <plan.tfplan>     scan a saved plan and record a verdict that unblocks its apply
   bumper guard                    PreToolUse hook: block unverified terraform apply/destroy (reads stdin)
-  bumper mcp                      run as an MCP server (scan/list/explain tools over stdio)
+  bumper mcp                      run as an MCP server (scan/search/list/explain tools over stdio)
   bumper version
 
 Enforce (agent context): terraform plan -out tfplan && bumper verify tfplan && terraform apply tfplan
@@ -67,6 +69,8 @@ func run() int {
 		switch args[0] {
 		case "list":
 			return cmdList(args[1:])
+		case "search":
+			return cmdSearch(args[1:])
 		case "explain":
 			return cmdExplain(args[1:])
 		case "tui":
@@ -194,6 +198,49 @@ func cmdList(args []string) int {
 			return fail("%v", err)
 		}
 		return 0
+	}
+	if err := report.RuleList(os.Stdout, sel, *format); err != nil {
+		return fail("%v", err)
+	}
+	return 0
+}
+
+// cmdSearch ranks rules by relevance to a query / resource type — the
+// "what should I bake in before writing Terraform for X" lookup. Same corpus as
+// list, but ranked rather than enumerated.
+func cmdSearch(args []string) int {
+	fs := flag.NewFlagSet("search", flag.ContinueOnError)
+	fs.SetOutput(os.Stderr)
+	provider := fs.String("provider", "", "filter by cloud: aws|gcp|azure")
+	severity := fs.String("severity", "", "filter by severity: critical|high|medium|low")
+	resource := fs.String("resource", "", "resource type to get rules for, e.g. aws_s3_bucket")
+	limit := fs.Int("limit", search.DefaultLimit, "max results")
+	format := fs.String("format", "text", "text|json")
+	fs.Usage = func() {
+		fmt.Fprintln(os.Stderr, "usage: bumper search [--resource T] [--provider C] [--severity S] [--limit N] [query...]")
+	}
+	if err := fs.Parse(args); err != nil {
+		return 2
+	}
+	query := strings.Join(fs.Args(), " ")
+	if query == "" && *provider == "" && *severity == "" && *resource == "" {
+		fs.Usage()
+		return 2
+	}
+	set, err := rules.Load("")
+	if err != nil {
+		return fail("%v", err)
+	}
+	hits := search.Rules(set, search.Query{
+		Text:     query,
+		Provider: *provider,
+		Severity: *severity,
+		Resource: *resource,
+		Limit:    *limit,
+	})
+	sel := make([]*rules.Rule, len(hits))
+	for i, h := range hits {
+		sel[i] = h.Rule
 	}
 	if err := report.RuleList(os.Stdout, sel, *format); err != nil {
 		return fail("%v", err)

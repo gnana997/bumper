@@ -19,6 +19,7 @@ import (
 	"github.com/gnana997/bumper/internal/report"
 	"github.com/gnana997/bumper/internal/rules"
 	"github.com/gnana997/bumper/internal/safety"
+	"github.com/gnana997/bumper/internal/search"
 )
 
 // handlers carries the loaded rule set shared by every tool call.
@@ -40,6 +41,7 @@ func NewServer(rulesDir string) (*mcp.Server, error) {
 	}, nil)
 
 	mcp.AddTool(s, &mcp.Tool{Name: "scan_plan", Description: scanDesc}, h.scanPlan)
+	mcp.AddTool(s, &mcp.Tool{Name: "search_rules", Description: searchDesc}, h.searchRules)
 	mcp.AddTool(s, &mcp.Tool{Name: "list_rules", Description: listDesc}, h.listRules)
 	mcp.AddTool(s, &mcp.Tool{Name: "explain_rule", Description: explainDesc}, h.explainRule)
 	return s, nil
@@ -104,6 +106,76 @@ func (h *handlers) scanPlan(ctx context.Context, _ *mcp.CallToolRequest, in Scan
 	}
 	findings = filterMinSeverity(findings, in.MinSeverity)
 	return nil, ScanPlanOutput{Findings: findings, Summary: summarize(findings, source)}, nil
+}
+
+// ---- search_rules ----------------------------------------------------------
+
+const searchDesc = `Search bumper's Terraform security rules by keyword, ` +
+	`resource type, cloud, or severity. CALL THIS BEFORE WRITING OR EDITING ` +
+	`Terraform for a resource: it returns the security requirements bumper ` +
+	`enforces (severity, what's wrong, and the fix) so you can bake them in up ` +
+	`front and pass the gate, instead of being blocked after. Examples: query ` +
+	`"public storage" or "open ssh"; or resource ` +
+	`"google_sql_database_instance" / "aws_s3_bucket" / "azurerm_storage_account" ` +
+	`to get every rule for that type. Results are ranked by relevance. After you ` +
+	`generate the plan, verify with scan_plan.`
+
+// SearchRulesInput is a search query. Give a free-text query, a resource type,
+// or both, optionally narrowed by provider/severity.
+type SearchRulesInput struct {
+	Query    string `json:"query,omitempty" jsonschema:"Free-text query, e.g. \"public storage\", \"open ssh\", \"unencrypted database\". Matches rule id/title/fix/resource."`
+	Resource string `json:"resource,omitempty" jsonschema:"Terraform resource type to get rules for, e.g. aws_s3_bucket, google_sql_database_instance, azurerm_storage_account."`
+	Provider string `json:"provider,omitempty" jsonschema:"Filter by cloud: aws|gcp|azure."`
+	Severity string `json:"severity,omitempty" jsonschema:"Filter by severity: critical|high|medium|low."`
+	Limit    int    `json:"limit,omitempty" jsonschema:"Max results to return (default 20)."`
+}
+
+// SearchResult is one ranked rule with the fields an agent needs to act.
+type SearchResult struct {
+	ID       string   `json:"id"`
+	Severity string   `json:"severity"`
+	Resource string   `json:"resource,omitempty"`
+	Provider string   `json:"provider,omitempty"`
+	Title    string   `json:"title"`
+	Fix      string   `json:"fix,omitempty"`
+	Refs     []string `json:"refs,omitempty"`
+	Source   string   `json:"source"`
+	AVD      string   `json:"avd,omitempty"`
+	Enforced bool     `json:"enforced" jsonschema:"True when bumper executes this rule against a plan (always true today). Advisory-only catalog entries would be false."`
+}
+
+// SearchRulesOutput is the ranked result set.
+type SearchRulesOutput struct {
+	Results []SearchResult `json:"results"`
+	Count   int            `json:"count"`
+}
+
+func (h *handlers) searchRules(ctx context.Context, _ *mcp.CallToolRequest, in SearchRulesInput) (*mcp.CallToolResult, SearchRulesOutput, error) {
+	hits := search.Rules(h.set, search.Query{
+		Text:     in.Query,
+		Resource: in.Resource,
+		Provider: in.Provider,
+		Severity: in.Severity,
+		Limit:    in.Limit,
+	})
+	out := SearchRulesOutput{Results: []SearchResult{}}
+	for _, hit := range hits {
+		r := hit.Rule
+		out.Results = append(out.Results, SearchResult{
+			ID:       r.ID,
+			Severity: r.Severity,
+			Resource: r.Resource,
+			Provider: r.Provider,
+			Title:    r.Title,
+			Fix:      r.Fix,
+			Refs:     r.Refs,
+			Source:   r.Source,
+			AVD:      r.AVD,
+			Enforced: hit.Enforced,
+		})
+	}
+	out.Count = len(out.Results)
+	return nil, out, nil
 }
 
 // ---- list_rules ------------------------------------------------------------

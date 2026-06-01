@@ -156,8 +156,11 @@ The MCP server exposes three tools to the agent:
 | Tool | Does |
 | --- | --- |
 | `scan_plan` | scan a plan (inline JSON or a `.tfplan` path) → structured findings + a `blocking` verdict |
+| `search_rules` | **before** writing Terraform for a resource, get the rules to bake in (by keyword / resource / cloud) — ranked, with the fix |
 | `list_rules` | browse the rule set (filter by severity / source / service) |
 | `explain_rule` | one rule in full: the CEL check, fix, and provenance |
+
+This closes the loop for an agent: **`search_rules` (advise) → generate → `scan_plan` (verify) → guard (gate).**
 
 ## Interactive console (TUI)
 
@@ -187,6 +190,12 @@ bumper list --source custom          # only bumper's own (non-Trivy) rules
 bumper list --severity critical      # filter by severity
 bumper list --service rds            # filter by service/resource substring
 bumper list --format json            # machine-readable catalog
+
+# search ranks by relevance — "what should I bake in before writing TF for X?"
+bumper search "public storage"                      # by keyword
+bumper search --resource aws_s3_bucket              # every rule for a resource type
+bumper search --provider azure --severity critical  # narrow by cloud + severity
+bumper search "open ssh" --format json              # same data the search_rules MCP tool returns
 bumper explain AWS_RDS_PUBLICLY_ACCESSIBLE   # one rule: provenance, fix, and the CEL check
 ```
 
