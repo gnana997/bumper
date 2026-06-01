@@ -59,7 +59,7 @@ runs:
 
     - name: Upload SARIF to code scanning
       if: ${{ inputs.upload-sarif == 'true' }}
-      uses: github/codeql-action/upload-sarif@v3
+      uses: github/codeql-action/upload-sarif@v4
       with:
         sarif_file: ${{ steps.sarif.outputs.file }}
         category: bumper
@@ -76,7 +76,7 @@ runs:
 
     - name: Upsert sticky PR comment
       if: ${{ inputs.comment == 'true' && github.event_name == 'pull_request' }}
-      uses: actions/github-script@v7
+      uses: actions/github-script@v9
       env:
         BUMPER_MD: ${{ steps.md.outputs.file }}
       with:
