@@ -61,6 +61,9 @@ homebrew_casks:
   - name: bumper
     binaries:
       - bumper
+    # Don't push prerelease (-rc/-alpha/-beta) casks to the stable tap, so
+    # `brew install` only ever resolves to a GA release.
+    skip_upload: "auto"
     repository:
       owner: gnana997
       name: homebrew-tap
