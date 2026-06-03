@@ -1,4 +1,4 @@
-name: "bumper"
+name: "Bumper - Terraform Plan Safety Gate"
 description: "Catch dangerous Terraform changes before apply — uploads SARIF to code scanning and posts a sticky PR comment."
 branding:
   icon: "shield"
