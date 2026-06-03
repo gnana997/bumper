@@ -86,6 +86,10 @@ release:
     name: bumper
   draft: false
   prerelease: auto
+  # Re-runs / retried jobs overwrite same-named assets instead of failing with a
+  # GitHub 422 "already_exists" (the release object and any prior assets persist
+  # across a re-run; `--clean` only wipes the local dist/).
+  replace_existing_artifacts: true
   footer: |
     ## Verify this release
     ```sh
