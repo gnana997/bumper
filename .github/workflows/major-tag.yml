@@ -1,0 +1,31 @@
+name: major-tag
+
+# Keep the floating major tag (e.g. v1) pointing at the latest stable release, so
+# `uses: gnana997/bumper@v1` always resolves to the newest compatible action.
+# Prerelease tags (v1.2.0-rc.1) are skipped — the major tag only tracks GA.
+on:
+  push:
+    tags: ["v*.*.*"]
+
+permissions:
+  contents: write
+
+jobs:
+  retag:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Move the major tag to this release
+        run: |
+          set -euo pipefail
+          tag="${GITHUB_REF#refs/tags/}"
+          case "$tag" in
+            *-*) echo "prerelease $tag — leaving the major tag untouched"; exit 0 ;;
+          esac
+          major="${tag%%.*}"        # v1.2.3 -> v1
+          echo "pointing $major at $tag"
+          git tag -f "$major" "$tag"
+          git push -f origin "refs/tags/${major}"

@@ -2,7 +2,10 @@ name: release
 
 on:
   push:
-    tags: ["v*"]
+    # Full semver tags only (v1.2.3, v1.2.3-rc.1). The floating major tag `v1`
+    # — maintained by major-tag.yml so `uses: gnana997/bumper@v1` resolves — has
+    # no dots, so it never triggers a (spurious) release.
+    tags: ["v*.*.*"]
 
 permissions:
   contents: write # create the GitHub Release
