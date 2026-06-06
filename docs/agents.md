@@ -128,10 +128,13 @@ and runs fully offline — see
 `auggie` you already have installed and authenticated — no API key, no vendor
 account. The deterministic verdict never depends on any of them.
 
-## Hosted Advisor (coming soon)
+## Hosted Advisor
 
-The scanner is offline and deterministic — that never changes. A hosted **Advisor**
-MCP is planned as the optional other half: a knowledge-only server your agent can
-query for semantic best-practice guidance across the full federated catalog
-(lookup-not-upload — it never sees your plan or state). Track it at
-[bumper.sh](https://bumper.sh).
+The scanner is offline and deterministic — that never changes. The hosted **Advisor**
+is the optional other half: a knowledge-only server your agent can query for semantic
+best-practice guidance across the full federated catalog, plus CVE lookups and a
+known-malicious-package check (lookup-not-upload — it never sees your plan or state).
+It's live at `advisor.bumper.sh`.
+
+- **[Advisor MCP](mcp.md)** — connect the remote MCP to your agent (one line, no install).
+- **[Advisor API](api.md)** — the same data over plain REST.
