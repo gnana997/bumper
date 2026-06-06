@@ -148,7 +148,7 @@ The secure-coding check before you pin a dependency: which known CVEs affect thi
 | `package` | yes | package name |
 | `version` | yes | exact version |
 
-```sh
+```sh try
 curl "https://advisor.bumper.sh/cve/lookup?ecosystem=npm&package=lodash&version=4.17.4"
 ```
 
@@ -193,11 +193,10 @@ package is bad at *every* version, so `version` is accepted but ignored. Returns
 **malicious** subset, each with its advisories (including the source write-up verbatim, so
 you can show *why* it's blocked).
 
-```sh
+```sh try
 curl -X POST https://advisor.bumper.sh/malware-check \
   -H 'Content-Type: application/json' \
-  -d '{"deps":[{"ecosystem":"npm","package":"npm-security-testing"},
-               {"ecosystem":"npm","package":"express"}]}'
+  -d '{"deps":[{"ecosystem":"npm","package":"npm-security-testing"},{"ecosystem":"npm","package":"express"}]}'
 ```
 
 ```jsonc
@@ -234,7 +233,7 @@ transitive malicious dep the named-only `/malware-check` never saw).
 | `deps` | yes | — | `[{ecosystem, package, version}]` |
 | `include_malware` | no | `true` | also flag `MAL-` packages in `findings[].malware` |
 
-```sh
+```sh try
 curl -X POST https://advisor.bumper.sh/scan \
   -H 'Content-Type: application/json' \
   -d '{"deps":[{"ecosystem":"npm","package":"lodash","version":"4.17.4"}]}'
