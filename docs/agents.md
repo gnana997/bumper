@@ -12,7 +12,8 @@ they close the loop:
 - [One-command setup: bumper init](#one-command-setup-bumper-init)
 - [MCP tools](#mcp-tools)
 - [Supported agents](#supported-agents)
-- [Hosted Advisor (coming soon)](#hosted-advisor-coming-soon)
+- [Dependency guardrail](#dependency-guardrail)
+- [Hosted Advisor](#hosted-advisor)
 
 ## Enforce the apply with verify and guard
 
@@ -127,6 +128,28 @@ and runs fully offline — see
 `scan`/TUI) shells out to whichever of `claude` / `gemini` / `codex` / `opencode` /
 `auggie` you already have installed and authenticated — no API key, no vendor
 account. The deterministic verdict never depends on any of them.
+
+## Dependency guardrail
+
+The same enforcement idea, applied to **package installs** — a different action class, so
+it's a separate pair of hooks (wired by `bumper init` alongside the terraform guard). It
+uses the hosted [Advisor](api.md); only package coordinates leave the machine, never code.
+
+A dependency carries two different risks, handled at two different moments:
+
+- **Malicious package** (typosquat / backdoor; runs at install time) → **pre-install, hard
+  block.** The `bumper deps guard` PreToolUse hook checks the named packages and **denies**
+  the install if any is known-malicious — with a reason that names the package + advisory so
+  the agent fixes the install (a typo, or an alternative) instead of just stopping.
+- **Vulnerable dependency** (a legit package with a known CVE) → **post-install, non-blocking.**
+  The `bumper deps watch` PostToolUse hook runs the scan after an install; when the tree is
+  clean it's silent, and on findings it nudges the agent to **spawn a subagent** that runs
+  `bumper deps`, pulls full detail via the Advisor MCP (`get_vuln`), and applies fixes —
+  keeping the triage out of the main thread.
+
+Run [`bumper deps`](cli.md#deps--the-dependency-guardrail) yourself any time to scan a
+project. Detection is deterministic across all severities; the AI insight is the explain
+layer, fetched on demand.
 
 ## Hosted Advisor
 

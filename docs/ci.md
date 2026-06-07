@@ -116,6 +116,38 @@ steps:
       fail-severity: high
 ```
 
+## Dependency scanning in CI
+
+Most value from bumper's dependency guardrail is at **agent/install time** (the
+[hooks](agents.md#dependency-guardrail) block malicious installs and surface vulnerable
+ones before anything reaches CI). The CI Action is the **backstop** for installs the hooks
+didn't mediate — human commits, other tools — and a **hard fail-gate on malicious packages**
+(not just an alert).
+
+```yaml
+permissions:
+  contents: read
+  security-events: write   # SARIF upload
+  pull-requests: write     # sticky comment
+steps:
+  - uses: actions/checkout@v4
+  - uses: gnana997/bumper/deps@v1
+    with:
+      lockfile: package-lock.json   # optional; auto-detects if omitted
+      fail-severity: high           # malicious always fails
+```
+
+It uploads SARIF to the Security tab, posts a sticky PR comment, and fails the job on
+findings at or above `fail-severity`. Lockfiles are scanned **lookup-not-upload** — only
+package coordinates leave the runner. Inputs: `lockfile`, `fail-severity` (default `high`),
+`min-severity`, `upload-sarif`, `comment`, `advisor-url` (self-host), `bumper-version`,
+`working-directory`.
+
+> Note: for GitHub repos this overlaps Dependabot/dependency-review for *vulnerable* deps —
+> bumper's edge is the **pre-execution malware block in the agent loop** and a **hard malware
+> fail-gate** here. Reach for the Action when you want a non-GitHub CI, a hard gate, or one
+> unified bumper gate across infra + deps.
+
 ## Without the Action (any CI)
 
 bumper is a single static binary — drop it into GitLab CI, CircleCI, Jenkins, or a
@@ -123,9 +155,12 @@ plain shell. Install it and gate on the exit code:
 
 ```sh
 curl -fsSL https://get.bumper.sh | sh
-bumper --format sarif plan.json > bumper.sarif || true   # don't fail on the SARIF step
-bumper --min-severity high plan.json                     # exit 1 on high+ → fails the job
+bumper --format sarif plan.json > bumper.sarif || true   # plan: don't fail on the SARIF step
+bumper --min-severity high plan.json                     # plan: exit 1 on high+ → fails the job
+
+bumper deps --format sarif --no-fail > bumper-deps.sarif # deps: SARIF for any code-scanning upload
+bumper deps --min-severity high                          # deps: exit 1 on high+ (auto-detects lockfiles)
 ```
 
-Exit codes are CI-native: `0` clean, `1` findings present, `2` usage error. Upload
-`bumper.sarif` with whatever SARIF mechanism your platform provides.
+Exit codes are CI-native: `0` clean, `1` findings present, `2` usage error. Upload the
+SARIF with whatever mechanism your platform provides.

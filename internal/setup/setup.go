@@ -126,10 +126,16 @@ func Detect() (Env, error) {
 
 // Options is a chosen init configuration.
 type Options struct {
-	MCP  Scope
-	Hook Scope
-	Env  Env
+	MCP        Scope
+	Hook       Scope
+	Deps       Scope  // dependency guardrail hooks (deps guard + deps watch)
+	Advisor    bool   // wire the hosted Advisor MCP (consent: only package info leaves the box)
+	AdvisorURL string // override for self-hosting; "" → the public default
+	Env        Env
 }
+
+// DefaultAdvisorURL is the hosted, public Advisor used when no override is given.
+const DefaultAdvisorURL = "https://advisor.bumper.sh"
 
 // Step is one file mutation, deferred so a plan can be previewed before applying.
 type Step struct {
@@ -173,10 +179,35 @@ func Plan(o Options) []Step {
 		p := filepath.Join(o.Env.Home, ".claude", "settings.json")
 		steps = append(steps, Step{"install guard hook · user", p, func() (Action, error) { return MergeHook(p, bin) }})
 	}
+	switch o.Deps {
+	case ScopeProject:
+		p := filepath.Join(o.Env.Cwd, ".claude", "settings.json")
+		steps = append(steps, Step{"install dependency hooks · project", p, func() (Action, error) { return MergeDepsHooks(p, bin) }})
+	case ScopeUser:
+		p := filepath.Join(o.Env.Home, ".claude", "settings.json")
+		steps = append(steps, Step{"install dependency hooks · user", p, func() (Action, error) { return MergeDepsHooks(p, bin) }})
+	}
+	if o.Advisor {
+		url := o.AdvisorURL
+		if url == "" {
+			url = DefaultAdvisorURL
+		}
+		switch o.MCP {
+		case ScopeProject:
+			p := filepath.Join(o.Env.Cwd, ".mcp.json")
+			steps = append(steps, Step{"register Advisor MCP · hosted", p, func() (Action, error) { return MergeAdvisorMCP(p, url) }})
+		case ScopeUser:
+			p := filepath.Join(o.Env.Home, ".claude.json")
+			steps = append(steps, Step{"register Advisor MCP · hosted", p, func() (Action, error) { return MergeAdvisorMCP(p, url) }})
+		}
+	}
 	gi := filepath.Join(o.Env.Cwd, ".gitignore")
 	steps = append(steps, Step{"ignore .bumper/ verdict store", gi, func() (Action, error) { return EnsureGitignore(gi) }})
 	cm := filepath.Join(o.Env.Cwd, "CLAUDE.md")
 	steps = append(steps, Step{"note verify workflow in CLAUDE.md", cm, func() (Action, error) { return EnsureClaudeMd(cm) }})
+	if o.Deps == ScopeProject || o.Deps == ScopeUser {
+		steps = append(steps, Step{"note deps workflow in CLAUDE.md", cm, func() (Action, error) { return EnsureDepsClaudeMd(cm) }})
+	}
 	return steps
 }
 
@@ -251,12 +282,134 @@ func hookInstalled(pre []any) bool {
 			if !ok {
 				continue
 			}
-			if cmd, _ := hm["command"].(string); strings.Contains(cmd, "bumper") && strings.Contains(cmd, "guard") {
+			// Match the terraform guard precisely — NOT "bumper deps guard", so a
+			// deps-only init never tricks this into skipping the apply guard.
+			if cmd, _ := hm["command"].(string); strings.Contains(cmd, "bumper") &&
+				strings.Contains(cmd, "guard") && !strings.Contains(cmd, "deps") {
 				return true
 			}
 		}
 	}
 	return false
+}
+
+// MergeDepsHooks installs the dependency guardrail hooks: `deps guard` (PreToolUse,
+// blocks malicious installs) and `deps watch` (PostToolUse, scans after install).
+// Idempotent and additive — it coexists with the terraform guard hook.
+func MergeDepsHooks(path, binPath string) (Action, error) {
+	m, existed, err := loadJSONMap(path)
+	if err != nil {
+		return Unchanged, err
+	}
+	hooks := childMap(m, "hooks")
+	changed := false
+	if pre := childSlice(hooks, "PreToolUse"); !hookCmdInstalled(pre, "deps guard") {
+		hooks["PreToolUse"] = append(pre, bashHookEntry(binPath+" deps guard"))
+		changed = true
+	}
+	if post := childSlice(hooks, "PostToolUse"); !hookCmdInstalled(post, "deps watch") {
+		hooks["PostToolUse"] = append(post, bashHookEntry(binPath+" deps watch"))
+		changed = true
+	}
+	if !changed {
+		return Unchanged, nil
+	}
+	m["hooks"] = hooks
+	if err := writeJSONMap(path, m, existed); err != nil {
+		return Unchanged, err
+	}
+	return actionFor(existed), nil
+}
+
+func bashHookEntry(command string) map[string]any {
+	return map[string]any{
+		"matcher": "Bash",
+		"hooks":   []any{map[string]any{"type": "command", "command": command}},
+	}
+}
+
+// hookCmdInstalled reports whether any hook entry's command contains needle.
+func hookCmdInstalled(entries []any, needle string) bool {
+	for _, e := range entries {
+		em, ok := e.(map[string]any)
+		if !ok {
+			continue
+		}
+		inner, _ := em["hooks"].([]any)
+		for _, h := range inner {
+			hm, ok := h.(map[string]any)
+			if !ok {
+				continue
+			}
+			if cmd, _ := hm["command"].(string); strings.Contains(cmd, needle) {
+				return true
+			}
+		}
+	}
+	return false
+}
+
+// MergeAdvisorMCP registers the hosted Advisor as a streamable-http MCP server.
+// Only package coordinates ever reach it — never source. Idempotent.
+func MergeAdvisorMCP(path, url string) (Action, error) {
+	m, existed, err := loadJSONMap(path)
+	if err != nil {
+		return Unchanged, err
+	}
+	servers := childMap(m, "mcpServers")
+	desired := map[string]any{"type": "http", "url": strings.TrimRight(url, "/") + "/mcp"}
+	if cur, ok := servers["bumper-advisor"]; ok && jsonEqual(cur, desired) {
+		return Unchanged, nil
+	}
+	servers["bumper-advisor"] = desired
+	m["mcpServers"] = servers
+	if err := writeJSONMap(path, m, existed); err != nil {
+		return Unchanged, err
+	}
+	return actionFor(existed), nil
+}
+
+const depsClaudeMdMarker = "<!-- bumper-deps-workflow -->"
+
+const depsClaudeMdStanza = depsClaudeMdMarker + `
+## Dependency safety (bumper)
+
+bumper guards package installs:
+
+- A known-MALICIOUS install is **blocked before it runs** (pre-install hook); the block
+  reason names the package and advisory — fix a typo or pick a maintained alternative.
+- **After any install**, bumper scans the resolved tree. When it flags vulnerable or
+  malicious packages, **spawn a subagent (Task)** to run ` + "`bumper deps`" + `, analyze the
+  findings (use the ` + "`bumper-advisor`" + ` MCP ` + "`get_vuln`" + ` for detail), and apply or propose
+  fixes — keeping triage out of the main thread.
+
+Run ` + "`bumper deps`" + ` yourself any time to scan the current project. Only package
+coordinates (ecosystem/name/version) ever leave the machine — never your code.
+<!-- /bumper-deps-workflow -->
+`
+
+// EnsureDepsClaudeMd appends the dependency-guardrail stanza if its marker is absent.
+func EnsureDepsClaudeMd(path string) (Action, error) {
+	b, err := os.ReadFile(path)
+	existed := err == nil
+	if err != nil && !os.IsNotExist(err) {
+		return Unchanged, err
+	}
+	if strings.Contains(string(b), depsClaudeMdMarker) {
+		return Unchanged, nil
+	}
+	out := string(b)
+	if existed && len(b) > 0 && !strings.HasSuffix(out, "\n") {
+		out += "\n"
+	}
+	if existed && len(b) > 0 {
+		out += "\n"
+	}
+	out += depsClaudeMdStanza
+	if err := os.WriteFile(path, []byte(out), 0o644); err != nil {
+		return Unchanged, err
+	}
+	return actionFor(existed), nil
 }
 
 // gitignoreEntry is the verdict store; it is machine- and time-specific.

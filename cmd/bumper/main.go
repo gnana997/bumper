@@ -22,6 +22,7 @@ import (
 	"time"
 
 	"github.com/gnana997/bumper/internal/catalog"
+	"github.com/gnana997/bumper/internal/deps"
 	"github.com/gnana997/bumper/internal/engine"
 	"github.com/gnana997/bumper/internal/enrich"
 	"github.com/gnana997/bumper/internal/mcpserver"
@@ -44,6 +45,9 @@ Usage:
   bumper search [flags] <query>   find rules by keyword/resource — what to bake in before writing TF
   bumper explain <RULE_ID>        show one rule in detail
   bumper init [flags]             wire bumper into Claude Code (MCP server + apply-guard hook)
+  bumper deps [path]              scan a lockfile for known-vulnerable + malicious dependencies
+  bumper deps guard               PreToolUse hook: block installs of known-malicious packages (stdin)
+  bumper deps watch               PostToolUse hook: scan deps after an install, nudge on findings (stdin)
   bumper verify <plan.tfplan>     scan a saved plan and record a verdict that unblocks its apply
   bumper guard                    PreToolUse hook: block unverified terraform apply/destroy (reads stdin)
   bumper mcp                      run as an MCP server (scan/search/list/explain tools over stdio)
@@ -86,6 +90,8 @@ func run() int {
 			return cmdGuard(args[1:])
 		case "init":
 			return cmdInit(args[1:])
+		case "deps":
+			return cmdDeps(args[1:])
 		case "version", "--version", "-v":
 			fmt.Println("bumper " + report.Version)
 			return 0
@@ -407,7 +413,9 @@ func cmdInit(args []string) int {
 	fs := flag.NewFlagSet("init", flag.ContinueOnError)
 	fs.SetOutput(os.Stderr)
 	mcpFlag := fs.String("mcp", "project", "MCP server scope: project|user|none")
-	hookFlag := fs.String("hook", "project", "guard hook scope: project|user|none")
+	hookFlag := fs.String("hook", "project", "guard + dependency hook scope: project|user|none")
+	advisorFlag := fs.Bool("advisor", true, "wire the hosted Advisor MCP (only package info leaves the machine)")
+	advisorURLFlag := fs.String("advisor-url", "", "Advisor base URL for self-hosting (default https://advisor.bumper.sh)")
 	printOnly := fs.Bool("print", false, "show what would change and exit without writing")
 	assumeYes := fs.Bool("yes", false, "apply non-interactively (no wizard)")
 	noTUI := fs.Bool("no-tui", false, "skip the wizard even on a TTY")
@@ -427,13 +435,20 @@ func cmdInit(args []string) int {
 	if err != nil {
 		return fail("%v", err)
 	}
-	steps := setup.Plan(setup.Options{MCP: mcp, Hook: hook, Env: env})
+	advisorURL := deps.ResolveAdvisorURL(*advisorURLFlag)
+	// Dependency hooks ride the same scope as the guard hook (one "hooks" choice).
+	steps := setup.Plan(setup.Options{
+		MCP: mcp, Hook: hook, Deps: hook, Advisor: *advisorFlag, AdvisorURL: advisorURL, Env: env,
+	})
 	p := style.New(os.Stdout)
 
 	if *printOnly {
 		fmt.Printf("bumper init — would wire bumper (%s) into Claude Code:\n\n", env.Bin)
 		for _, s := range steps {
 			fmt.Printf("  • %-34s %s\n", s.Title, s.RelPath(env))
+		}
+		if *advisorFlag {
+			printAdvisorDisclosure(advisorURL)
 		}
 		fmt.Println("\n(--print) no files were changed.")
 		return 0
@@ -461,6 +476,10 @@ func cmdInit(args []string) int {
 		fmt.Fprintln(os.Stderr, "refusing to modify files without confirmation; re-run with --yes (or --print to preview).")
 		return 2
 	}
+	if *advisorFlag {
+		printAdvisorDisclosure(advisorURL)
+		fmt.Println()
+	}
 	fmt.Printf("bumper init — wiring bumper (%s) into Claude Code:\n\n", env.Bin)
 	for _, s := range steps {
 		act, err := s.Run()
@@ -471,6 +490,13 @@ func cmdInit(args []string) int {
 	}
 	fmt.Println("\n✓ bumper is wired in. Commit .mcp.json and .claude/settings.json to share the gate with your team.")
 	return 0
+}
+
+// printAdvisorDisclosure is the consent notice for wiring the hosted Advisor MCP.
+func printAdvisorDisclosure(url string) {
+	fmt.Printf("  Advisor MCP → configures the HOSTED server at %s\n", url)
+	fmt.Println("    Only package info (ecosystem/name/version) leaves your machine — never your code.")
+	fmt.Println("    Skip with --advisor=false, or self-host with --advisor-url.")
 }
 
 // isInteractive reports whether stdin is a terminal (so the wizard can read keys).
@@ -565,6 +591,157 @@ func cmdGuard(args []string) int {
 	if err := safety.Guard(os.Stdin, os.Stdout, time.Now(), *maxAge); err != nil {
 		// Fail-open: never wedge the user's shell on a guard error.
 		fmt.Fprintf(os.Stderr, "bumper guard: %v\n", err)
+	}
+	return 0
+}
+
+// cmdDeps routes the dependency-guardrail subcommands: the scanner (default),
+// the pre-install guard hook, and the post-install watch hook.
+func cmdDeps(args []string) int {
+	if len(args) > 0 {
+		switch args[0] {
+		case "guard":
+			return cmdDepsGuard(args[1:])
+		case "watch":
+			return cmdDepsWatch(args[1:])
+		}
+	}
+	return cmdDepsScan(args)
+}
+
+// cmdDepsScan parses a lockfile (or auto-detects them in cwd) and scans the
+// resolved dependencies against the Advisor for known vulns + malicious packages.
+func cmdDepsScan(args []string) int {
+	fs := flag.NewFlagSet("deps", flag.ContinueOnError)
+	fs.SetOutput(os.Stderr)
+	format := fs.String("format", "text", "output: text|json|sarif|markdown")
+	asJSON := fs.Bool("json", false, "shorthand for --format json")
+	minSeverity := fs.String("min-severity", "low", "report findings at or above: low|medium|high|critical")
+	advisorURL := fs.String("advisor-url", "", "Advisor base URL (default https://advisor.bumper.sh, or $BUMPER_ADVISOR_URL)")
+	noFail := fs.Bool("no-fail", false, "always exit 0, even when findings are present")
+	fs.Usage = func() {
+		fmt.Fprintln(os.Stderr, "usage: bumper deps [path] [--format text|json|sarif|markdown] [--min-severity low] [--advisor-url URL] [--no-fail]")
+	}
+	// Tolerate flags placed after the path (the Go flag pkg otherwise stops at the
+	// first positional) — agents don't always order them flags-first.
+	if err := fs.Parse(hoistFlags(args, map[string]bool{"-advisor-url": true, "--advisor-url": true})); err != nil {
+		return 2
+	}
+
+	var (
+		depList []deps.Dep
+		label   string
+	)
+	if fs.NArg() >= 1 {
+		path := fs.Arg(0)
+		data, err := readInput(path)
+		if err != nil {
+			return fail("%v", err)
+		}
+		res, err := deps.ParseLockfile(filepath.Base(path), string(data))
+		if err != nil {
+			return fail("%v", err)
+		}
+		depList, label = res.Deps, res.Label
+	} else {
+		cwd, _ := os.Getwd()
+		depList = deps.CollectLockfileDeps(cwd)
+		if len(depList) == 0 {
+			return fail("no lockfile found here (looked for package-lock.json, requirements.txt, " +
+				"poetry.lock, uv.lock, Pipfile.lock, go.sum, Cargo.lock, Gemfile.lock). Pass a path explicitly.")
+		}
+		label = "auto-detected lockfiles"
+	}
+
+	client := deps.NewClient(deps.ResolveAdvisorURL(*advisorURL))
+	res, err := client.Scan(depList, true)
+	if err != nil {
+		if errors.Is(err, deps.ErrRateLimited) {
+			return fail("rate limited by the Advisor — wait a moment and retry, or self-host with --advisor-url.")
+		}
+		return fail("scan failed: %v", err)
+	}
+
+	res = report.FilterDepsSeverity(res, *minSeverity)
+
+	outFmt := *format
+	if *asJSON {
+		outFmt = "json"
+	}
+	switch outFmt {
+	case "json":
+		_ = report.DepsJSON(os.Stdout, res)
+	case "sarif":
+		artifact := "lockfile"
+		if fs.NArg() >= 1 {
+			artifact = fs.Arg(0)
+		}
+		_ = report.DepsSARIF(os.Stdout, res, artifact)
+	case "markdown", "md":
+		report.DepsMarkdown(os.Stdout, res)
+	default:
+		report.DepsText(os.Stdout, res, label)
+	}
+	if res.Status == "unavailable" {
+		fmt.Fprintln(os.Stderr, "bumper: advisor mirror is unavailable right now — results may be incomplete.")
+	}
+	if (res.VulnerableCount > 0 || res.MalwareCount > 0) && !*noFail {
+		return 1
+	}
+	return 0
+}
+
+// hoistFlags moves flag tokens (and the values of space-separated value-flags)
+// ahead of positional args so `flag.Parse` sees them even when a user/agent puts
+// the path first.
+func hoistFlags(args []string, valueFlags map[string]bool) []string {
+	var flags, pos []string
+	for i := 0; i < len(args); i++ {
+		a := args[i]
+		if strings.HasPrefix(a, "-") {
+			flags = append(flags, a)
+			if valueFlags[a] && i+1 < len(args) { // space-separated value, e.g. --advisor-url URL
+				i++
+				flags = append(flags, args[i])
+			}
+			continue
+		}
+		pos = append(pos, a)
+	}
+	return append(flags, pos...)
+}
+
+// cmdDepsGuard is the PreToolUse pre-install hook: it blocks installs of known-
+// malicious packages with an informative reason. Always exits 0 (the block is in
+// the JSON output); fail-open on any error.
+func cmdDepsGuard(args []string) int {
+	fs := flag.NewFlagSet("deps guard", flag.ContinueOnError)
+	fs.SetOutput(os.Stderr)
+	advisorURL := fs.String("advisor-url", "", "Advisor base URL (or $BUMPER_ADVISOR_URL)")
+	if err := fs.Parse(args); err != nil {
+		return 2
+	}
+	client := deps.NewClient(deps.ResolveAdvisorURL(*advisorURL))
+	if err := deps.Guard(os.Stdin, os.Stdout, client); err != nil {
+		fmt.Fprintf(os.Stderr, "bumper deps guard: %v\n", err)
+	}
+	return 0
+}
+
+// cmdDepsWatch is the PostToolUse post-install hook: after an install it scans the
+// resolved tree and, on findings, injects context nudging the agent to spawn a
+// triage subagent. Non-blocking; always exits 0; fail-open.
+func cmdDepsWatch(args []string) int {
+	fs := flag.NewFlagSet("deps watch", flag.ContinueOnError)
+	fs.SetOutput(os.Stderr)
+	advisorURL := fs.String("advisor-url", "", "Advisor base URL (or $BUMPER_ADVISOR_URL)")
+	if err := fs.Parse(args); err != nil {
+		return 2
+	}
+	cwd, _ := os.Getwd()
+	client := deps.NewClient(deps.ResolveAdvisorURL(*advisorURL))
+	if err := deps.Watch(os.Stdin, os.Stdout, client, cwd); err != nil {
+		fmt.Fprintf(os.Stderr, "bumper deps watch: %v\n", err)
 	}
 	return 0
 }

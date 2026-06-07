@@ -1,0 +1,116 @@
+name: "Bumper - Dependency Scan"
+description: "Scan lockfiles for known-vulnerable + known-malicious dependencies — SARIF to code scanning, a sticky PR comment, and a hard fail-gate (incl. malware)."
+branding:
+  icon: "shield"
+  color: "orange"
+
+inputs:
+  lockfile:
+    description: "Path to a lockfile (e.g. package-lock.json, uv.lock, go.sum). Leave empty to auto-detect in working-directory."
+    required: false
+    default: ""
+  fail-severity:
+    description: "Fail the job when any finding is at or above this severity (low|medium|high|critical), or 'none' to never fail. Malicious packages always count as critical."
+    required: false
+    default: "high"
+  min-severity:
+    description: "Lowest severity to include in the SARIF upload and PR comment."
+    required: false
+    default: "low"
+  upload-sarif:
+    description: "Upload SARIF to GitHub code scanning (needs security-events: write)."
+    required: false
+    default: "true"
+  comment:
+    description: "Post/update a sticky PR comment (needs pull-requests: write)."
+    required: false
+    default: "true"
+  advisor-url:
+    description: "Advisor base URL for self-hosting (default https://advisor.bumper.sh)."
+    required: false
+    default: ""
+  bumper-version:
+    description: "Release tag of bumper to install (e.g. v1.0.0), or 'latest'."
+    required: false
+    default: "latest"
+  working-directory:
+    description: "Directory the lockfile path is relative to / auto-detection runs in."
+    required: false
+    default: "."
+
+runs:
+  using: "composite"
+  steps:
+    # Same signed/checksummed release binary as the Terraform action; install.sh
+    # lives at the repo root (one dir up from this composite action).
+    - name: Install bumper
+      shell: bash
+      env:
+        BUMPER_VERSION: ${{ inputs.bumper-version }}
+        BUMPER_INSTALL_DIR: ${{ runner.temp }}/bumper-bin
+      run: |
+        bash "${{ github.action_path }}/../install.sh"
+        echo "${{ runner.temp }}/bumper-bin" >> "$GITHUB_PATH"
+
+    - name: Run bumper deps (SARIF)
+      id: sarif
+      shell: bash
+      working-directory: ${{ inputs.working-directory }}
+      env:
+        BUMPER_ADVISOR_URL: ${{ inputs.advisor-url }}
+      run: |
+        bumper deps --format sarif --no-fail --min-severity "${{ inputs.min-severity }}" \
+          ${{ inputs.lockfile }} > "${RUNNER_TEMP}/bumper-deps.sarif"
+        echo "file=${RUNNER_TEMP}/bumper-deps.sarif" >> "$GITHUB_OUTPUT"
+
+    - name: Upload SARIF to code scanning
+      if: ${{ inputs.upload-sarif == 'true' }}
+      uses: github/codeql-action/upload-sarif@v4
+      with:
+        sarif_file: ${{ steps.sarif.outputs.file }}
+        category: bumper-deps
+
+    - name: Render PR comment
+      id: md
+      if: ${{ inputs.comment == 'true' && github.event_name == 'pull_request' }}
+      shell: bash
+      working-directory: ${{ inputs.working-directory }}
+      env:
+        BUMPER_ADVISOR_URL: ${{ inputs.advisor-url }}
+      run: |
+        bumper deps --format markdown --no-fail --min-severity "${{ inputs.min-severity }}" \
+          ${{ inputs.lockfile }} > "${RUNNER_TEMP}/bumper-deps.md"
+        echo "file=${RUNNER_TEMP}/bumper-deps.md" >> "$GITHUB_OUTPUT"
+
+    - name: Upsert sticky PR comment
+      if: ${{ inputs.comment == 'true' && github.event_name == 'pull_request' }}
+      uses: actions/github-script@v9
+      env:
+        BUMPER_MD: ${{ steps.md.outputs.file }}
+      with:
+        script: |
+          const fs = require('fs');
+          const body = fs.readFileSync(process.env.BUMPER_MD, 'utf8');
+          const marker = '<!-- bumper-deps -->';
+          const { owner, repo } = context.repo;
+          const issue_number = context.issue.number;
+          // Update our previous deps comment in place (matched by its hidden marker)
+          // so re-runs replace one comment instead of spamming the PR. Distinct from
+          // the Terraform action's marker, so both can coexist.
+          const comments = await github.paginate(github.rest.issues.listComments, {
+            owner, repo, issue_number, per_page: 100,
+          });
+          const existing = comments.find(c => c.body && c.body.includes(marker));
+          if (existing) {
+            await github.rest.issues.updateComment({ owner, repo, comment_id: existing.id, body });
+          } else {
+            await github.rest.issues.createComment({ owner, repo, issue_number, body });
+          }
+
+    - name: Severity gate
+      if: ${{ inputs.fail-severity != 'none' }}
+      shell: bash
+      working-directory: ${{ inputs.working-directory }}
+      env:
+        BUMPER_ADVISOR_URL: ${{ inputs.advisor-url }}
+      run: bumper deps --min-severity "${{ inputs.fail-severity }}" ${{ inputs.lockfile }}

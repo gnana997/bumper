@@ -36,12 +36,13 @@ type (
 )
 
 type initModel struct {
-	env  setup.Env
-	mcp  setup.Scope
-	hook setup.Scope
+	env     setup.Env
+	mcp     setup.Scope
+	hook    setup.Scope
+	advisor bool // wire the hosted Advisor MCP (consent checkbox)
 
 	phase    initPhase
-	focusRow int // configure: 0 = MCP, 1 = hook
+	focusRow int // configure: 0 = MCP, 1 = hook, 2 = Advisor checkbox
 
 	steps    []setup.Step
 	results  []stepResult
@@ -55,7 +56,7 @@ type initModel struct {
 }
 
 func newInitModel(env setup.Env, mcp, hook setup.Scope) initModel {
-	return initModel{env: env, mcp: mcp, hook: hook, gl: pickGlyphs()}
+	return initModel{env: env, mcp: mcp, hook: hook, advisor: true, gl: pickGlyphs()}
 }
 
 func (m initModel) Init() tea.Cmd { return initTickCmd() }
@@ -104,18 +105,29 @@ func (m initModel) onKey(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 				m.focusRow--
 			}
 		case "down", "j", "tab":
-			if m.focusRow < 1 {
+			if m.focusRow < 2 {
 				m.focusRow++
 			}
 		case "right", "l", " ", "enter":
 			if k == "enter" {
-				m.steps = setup.Plan(setup.Options{MCP: m.mcp, Hook: m.hook, Env: m.env})
+				// Dependency hooks ride the guard-hook scope; the Advisor MCP is the checkbox.
+				m.steps = setup.Plan(setup.Options{
+					MCP: m.mcp, Hook: m.hook, Deps: m.hook, Advisor: m.advisor, Env: m.env,
+				})
 				m.phase = ipReview
 				return m, nil
 			}
-			m.cycle(+1)
+			if m.focusRow == 2 {
+				m.advisor = !m.advisor
+			} else {
+				m.cycle(+1)
+			}
 		case "left", "h":
-			m.cycle(-1)
+			if m.focusRow == 2 {
+				m.advisor = !m.advisor
+			} else {
+				m.cycle(-1)
+			}
 		}
 	case ipReview:
 		switch k {

@@ -122,6 +122,53 @@ conveyed via the hook's JSON output, not the exit code.
 
 ---
 
+## `deps` — the dependency guardrail
+
+Scan a lockfile for **known-vulnerable** and **known-malicious** dependencies, checked
+against the hosted [Advisor](api.md). Lockfiles are parsed locally — only package
+coordinates (`ecosystem/name/version`) leave the machine, never your source.
+
+```sh
+bumper deps                          # auto-detect lockfile(s) in the current directory
+bumper deps package-lock.json        # scan a specific lockfile
+bumper deps --json requirements.txt  # machine-readable findings (for an agent)
+```
+
+Supports `package-lock.json`, `requirements.txt`, `poetry.lock`, `uv.lock`,
+`Pipfile.lock`, `go.sum` / `go.mod`, `Cargo.lock`, and `Gemfile.lock`. Exits `1` when
+findings are present (so CI gates), `0` when clean.
+
+| Command | Flag | Default | Description |
+| --- | --- | --- | --- |
+| `deps` | `--format` | `text` | output: `text` \| `json` \| `sarif` \| `markdown` (`--json` is shorthand for `--format json`) |
+| `deps` | `--min-severity` | `low` | report findings at or above `low\|medium\|high\|critical` (malware always counts) |
+| `deps` | `--advisor-url` | `https://advisor.bumper.sh` | Advisor base URL (self-host); also `$BUMPER_ADVISOR_URL` |
+| `deps` | `--no-fail` | off | always exit `0`, even with findings |
+
+The `sarif` / `markdown` formats feed CI — SARIF to the GitHub Security tab, markdown to a
+sticky PR comment. See the [dependency-scan Action](ci.md#dependency-scanning-in-ci).
+
+### The hooks
+
+Two PreToolUse/PostToolUse hooks (wired by [`bumper init`](#init--mcp)) make the
+guardrail automatic for a coding agent — each reads a tool-call payload on stdin and
+always exits `0`:
+
+```sh
+bumper deps guard    # PreToolUse: BLOCK an install of a known-malicious package
+bumper deps watch    # PostToolUse: after an install, scan + nudge on findings
+```
+
+- **`deps guard`** inspects `install <pkg>` commands; if a named package is known-malicious
+  it returns a `deny` decision whose reason names the package, the advisory, and what to do —
+  so the agent corrects the install rather than just hitting a wall. Bare/manifest installs
+  pass through to the post-install scan.
+- **`deps watch`** runs the scan itself after any install; it stays **silent when the tree is
+  clean** and, on findings, injects context nudging the agent to spawn a subagent to run
+  `bumper deps` and remediate. Non-blocking. Full model in [agents.md](agents.md).
+
+---
+
 ## `list`
 
 Every rule is inspectable — part of the trust story.

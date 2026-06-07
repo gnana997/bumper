@@ -80,9 +80,11 @@ func (m initModel) bodyConfigure() string {
 	b.WriteString(kvline("project", stInk.Render(collapseHome(m.env.Cwd, m.env.Home))+"  "+git))
 	b.WriteString("\n")
 
-	b.WriteString(m.section("WIRE IN") + stDim.Render("   ↑↓ pick row · ←→ change scope") + "\n\n")
+	b.WriteString(m.section("WIRE IN") + stDim.Render("   ↑↓ pick row · ←→ change · space toggle") + "\n\n")
 	b.WriteString(m.scopeRow(0, "MCP server", m.mcp, mcpTarget(m.mcp)) + "\n")
-	b.WriteString(m.scopeRow(1, "guard hook", m.hook, hookTarget(m.hook)) + "\n\n")
+	b.WriteString(m.scopeRow(1, "guard hook", m.hook, hookTarget(m.hook)) + "\n")
+	b.WriteString(m.advisorRow(2) + "\n")
+	b.WriteString("  " + stDim.Render("the hook scope installs the apply-guard + dependency install-block / post-install scan hooks") + "\n\n")
 
 	b.WriteString(m.section("ALWAYS"))
 	b.WriteString("  " + stSafe.Render(m.gl.check) + " " + stDim.Render("ignore .bumper/ in .gitignore") + "\n")
@@ -113,6 +115,28 @@ func (m initModel) scopeRow(row int, label string, sel setup.Scope, target strin
 	}
 	arrow := stDim.Render("  " + m.gl.arrow + " " + target)
 	return spine + " " + lbl + " " + strings.Join(chips, " ") + arrow
+}
+
+// advisorRow renders the hosted-Advisor consent checkbox with its disclosure.
+func (m initModel) advisorRow(row int) string {
+	focused := m.focusRow == row
+	spine := stDim.Render(m.gl.spine)
+	lbl := stInk.Render(pad("Advisor MCP", 12))
+	if focused {
+		spine = lipgloss.NewStyle().Foreground(colLive).Render(m.gl.spineActive)
+		lbl = lipgloss.NewStyle().Foreground(colLive).Bold(true).Render(pad("Advisor MCP", 12))
+	}
+	box := "[ ]"
+	if m.advisor {
+		box = "[x]"
+	}
+	if focused {
+		box = lipgloss.NewStyle().Foreground(colLive).Bold(true).Render(box)
+	} else {
+		box = stInk.Render(box)
+	}
+	hint := stDim.Render("  " + m.gl.arrow + " hosted · only package info leaves the box")
+	return spine + " " + lbl + " " + box + hint
 }
 
 // --- review ---
