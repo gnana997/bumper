@@ -694,7 +694,14 @@ func logHookEvent(path, name string, in, out []byte, hookErr error) {
 	if err != nil {
 		return
 	}
-	defer f.Close()
+	// Check the flush/close error (CWE-252) rather than discard it. For this
+	// best-effort debug logger a close error is non-actionable and must never wedge
+	// a hook, so it is inspected but intentionally not propagated.
+	defer func() {
+		if cerr := f.Close(); cerr != nil {
+			_ = cerr
+		}
+	}()
 	entry := map[string]any{
 		"ts":   time.Now().Format(time.RFC3339),
 		"hook": name,
