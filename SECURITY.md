@@ -9,8 +9,8 @@ bar. Thank you for helping keep it trustworthy.
 
 Report privately through GitHub's
 [**Private vulnerability reporting**](https://github.com/gnana997/bumper/security/advisories/new)
-(Security → Advisories → *Report a vulnerability*). If you can't use that, email
-**gnana997@gmail.com** with the details.
+(Security → Advisories → *Report a vulnerability*) — it lets you share details and
+coordinate a fix with us privately.
 
 Please include:
 
