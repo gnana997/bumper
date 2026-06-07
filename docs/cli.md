@@ -118,8 +118,10 @@ bumper guard                         # PreToolUse hook; reads a tool-call payloa
 | `guard` | `--max-age` | `12h` | how long a verdict stays valid (`0` = no expiry) |
 
 `verify` runs `terraform show -json` on the `.tfplan` itself and, on a pass, writes
-`.bumper/verified/<sha256>` (gitignored). `guard` always exits `0` — a block is
-conveyed via the hook's JSON output, not the exit code.
+`.bumper/verified/<sha256>` (gitignored). `guard` emits a JSON allow/deny decision on
+stdout; on a **deny** it also prints the reason to stderr and exits `2` (a universal block
+signal for agents that don't parse the JSON), otherwise it exits `0`. See
+[agents.md](agents.md#how-the-hooks-signal-a-block).
 
 ---
 
@@ -151,9 +153,10 @@ sticky PR comment. See the [dependency-scan Action](ci.md#dependency-scanning-in
 
 ### The hooks
 
-Two PreToolUse/PostToolUse hooks (wired by [`bumper init`](#init--mcp)) make the
-guardrail automatic for a coding agent — each reads a tool-call payload on stdin and
-always exits `0`:
+Two PreToolUse/PostToolUse hooks (wired by [`bumper init`](#init)) make the
+guardrail automatic for a coding agent — each reads a tool-call payload on stdin, emits a
+JSON decision, and on a **block** exits `2` with the reason on stderr (the universal
+backstop; `deps watch` is advisory and never blocks):
 
 ```sh
 bumper deps guard    # PreToolUse: BLOCK an install of a known-malicious package

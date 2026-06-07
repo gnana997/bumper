@@ -199,7 +199,7 @@ dependency scan is the same repo at the `deps` subpath.)
 | [docs/cli.md](docs/cli.md) | command reference — scan, deps, list, search, explain, verify, guard, tui, init |
 | [docs/rules.md](docs/rules.md) | rule format (YAML + CEL), coverage, the advisory catalog, writing your own |
 | [docs/ci.md](docs/ci.md) | the GitHub Actions — inputs, permissions, SARIF, sticky comment |
-| [docs/agents.md](docs/agents.md) | the agent enforcement model — MCP, `bumper init`, verify + guard |
+| [docs/agents.md](docs/agents.md) | the agent guardrail — the two tool-layer gates (Terraform apply + dependency install), `bumper init`, supported agents |
 | [docs/mcp.md](docs/mcp.md) | the hosted Advisor MCP — tools, what leaves the machine |
 | [docs/architecture.md](docs/architecture.md) | internals, tech stack, supply-chain provenance, roadmap |
 | [examples/](examples/) | runnable, hermetic examples for both gates |
