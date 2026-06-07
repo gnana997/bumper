@@ -163,6 +163,29 @@ Separately, the `--explain` enrichment (for `scan`/TUI) shells out to whichever 
 authenticated — no API key, no vendor account. The deterministic verdict never depends on
 any of them.
 
+### Debugging a hook
+
+The hooks **fail open** — on an unrecognized payload they stay silent rather than error,
+so a mismatch (wrong tool name, command in an unexpected field) looks like "nothing
+happened." To see exactly what an agent sends and what bumper decided, add `--log <file>`
+(or set `$BUMPER_HOOK_LOG`) to any hook command:
+
+```sh
+bumper deps guard --client=augment --log /tmp/bumper-hooks.log
+# or, without touching config:
+export BUMPER_HOOK_LOG=/tmp/bumper-hooks.log
+```
+
+Each invocation appends one JSON line — timestamp, hook name, the raw stdin payload, and
+the emitted decision (`""` = silent allow):
+
+```json
+{"hook":"guard","in":{"tool_name":"launch-process","tool_input":{"command":"terraform destroy"}},"out":{"hookSpecificOutput":{"permissionDecision":"deny", "...":"..."}},"ts":"2026-06-07T13:05:33+05:30"}
+```
+
+This is the fastest way to confirm a new agent's shell-tool name and command field before
+trusting the gate (logging is best-effort and never affects the hook's behavior).
+
 ## Dependency guardrail
 
 The same enforcement idea, applied to **package installs** — a different action class, so

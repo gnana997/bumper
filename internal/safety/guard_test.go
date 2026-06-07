@@ -121,6 +121,41 @@ func TestDecideMissingPlanDeny(t *testing.T) {
 	}
 }
 
+func TestWorkDir(t *testing.T) {
+	if (HookInput{CWD: "/c", WorkspaceRoots: []string{"/w"}}).WorkDir() != "/c" {
+		t.Error("cwd should win")
+	}
+	if (HookInput{WorkspaceRoots: []string{"/w", "/x"}}).WorkDir() != "/w" {
+		t.Error("workspace_roots[0] expected when no cwd")
+	}
+	if (HookInput{}).WorkDir() != "" {
+		t.Error("empty when neither present")
+	}
+}
+
+// TestDecideAugmentWorkspaceRoots proves the guard resolves the plan path relative
+// to workspace_roots when there's no cwd (the Augment payload shape).
+func TestDecideAugmentWorkspaceRoots(t *testing.T) {
+	dir := t.TempDir()
+	if err := os.WriteFile(filepath.Join(dir, "tfplan"), []byte(cleanPlanJSON), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	in := HookInput{ToolName: "launch-process", WorkspaceRoots: []string{dir}}
+	in.ToolInput.Command = "terraform apply tfplan"
+	// No cwd, but workspace_roots points at the dir holding tfplan → the plan is
+	// found (so it denies as "unverified", NOT as "not found").
+	d := Decide(in, "launch-process", time.Now(), DefaultMaxAge)
+	if !d.Deny {
+		t.Fatal("expected deny (unverified plan)")
+	}
+	if strings.Contains(d.Reason, "not found") {
+		t.Errorf("plan should be resolved via workspace_roots, got not-found: %q", d.Reason)
+	}
+	if !strings.Contains(d.Reason, "bumper verify") {
+		t.Errorf("expected unverified-plan reason, got %q", d.Reason)
+	}
+}
+
 // TestVerifyThenGuardAllow is the core round-trip: verify a clean plan, then the
 // guard must allow `terraform apply <plan>` for that exact file.
 func TestVerifyThenGuardAllow(t *testing.T) {
@@ -179,7 +214,7 @@ func TestGuardEndToEnd(t *testing.T) {
 	// A non-Bash payload produces no output (silent allow).
 	payload, _ := json.Marshal(hookInput("Read", "", "/repo"))
 	var out bytes.Buffer
-	if err := Guard(bytes.NewReader(payload), &out, "Bash", time.Now(), DefaultMaxAge); err != nil {
+	if _, err := Guard(bytes.NewReader(payload), &out, "Bash", time.Now(), DefaultMaxAge); err != nil {
 		t.Fatalf("Guard: %v", err)
 	}
 	if out.Len() != 0 {
@@ -189,7 +224,7 @@ func TestGuardEndToEnd(t *testing.T) {
 	// A bare apply produces a deny decision in the hook JSON contract.
 	payload, _ = json.Marshal(hookInput("Bash", "terraform apply", "/repo"))
 	out.Reset()
-	if err := Guard(bytes.NewReader(payload), &out, "Bash", time.Now(), DefaultMaxAge); err != nil {
+	if _, err := Guard(bytes.NewReader(payload), &out, "Bash", time.Now(), DefaultMaxAge); err != nil {
 		t.Fatalf("Guard: %v", err)
 	}
 	var decoded hookOutput
@@ -205,7 +240,7 @@ func TestGuardEndToEnd(t *testing.T) {
 
 	// Malformed payload is fail-open (no error, no output).
 	out.Reset()
-	if err := Guard(strings.NewReader("not json"), &out, "Bash", time.Now(), DefaultMaxAge); err != nil {
+	if _, err := Guard(strings.NewReader("not json"), &out, "Bash", time.Now(), DefaultMaxAge); err != nil {
 		t.Errorf("malformed payload should fail-open, got err: %v", err)
 	}
 	if out.Len() != 0 {

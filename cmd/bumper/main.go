@@ -7,6 +7,7 @@
 package main
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
 	"errors"
@@ -576,14 +577,14 @@ func cmdGuard(args []string) int {
 	fs.SetOutput(os.Stderr)
 	maxAge := fs.Duration("max-age", safety.DefaultMaxAge, "how long a verdict stays valid (0 = no expiry)")
 	client := fs.String("client", "claude", "host agent whose shell tool to match: claude|augment")
+	logPath := fs.String("log", "", "append raw hook payload + decision to this file (debug; or $BUMPER_HOOK_LOG)")
 	if err := fs.Parse(args); err != nil {
 		return 2
 	}
-	if err := safety.Guard(os.Stdin, os.Stdout, shellToolForClient(*client), time.Now(), *maxAge); err != nil {
-		// Fail-open: never wedge the user's shell on a guard error.
-		fmt.Fprintf(os.Stderr, "bumper guard: %v\n", err)
-	}
-	return 0
+	return runHook("guard", *logPath, func(r io.Reader, w io.Writer) (hookOutcome, error) {
+		d, err := safety.Guard(r, w, shellToolForClient(*client), time.Now(), *maxAge)
+		return hookOutcome{deny: d.Deny, reason: d.Reason}, err
+	})
 }
 
 // shellToolForClient resolves the --client flag to the host agent's shell-tool
@@ -594,6 +595,88 @@ func shellToolForClient(client string) string {
 		return a.ShellTool()
 	}
 	return setup.AgentClaude.ShellTool()
+}
+
+// hookOutcome is what a hook body reports back: whether it denied a PreToolUse
+// call and the reason. A PostToolUse hook (deps watch) never denies.
+type hookOutcome struct {
+	deny   bool
+	reason string
+}
+
+// runHook executes a hook body (guard / deps guard / deps watch) with optional
+// debug logging, and returns the process exit code.
+//
+// It buffers stdin so the raw payload AND the emitted decision can both be appended
+// to logPath, then writes the decision to real stdout. When a PreToolUse hook denies
+// it ALSO writes the reason to stderr and returns exit code 2 — the universal block
+// signal every agent honors (and the only one Gemini accepts, since it ignores the
+// JSON deny). Agents that read the stdout JSON get the clean structured deny; the
+// exit-2 path is the backstop if the JSON is ever ignored. Logging and errors are
+// fail-open and never turn an allow into a block.
+//
+// logPath comes from --log; if empty, $BUMPER_HOOK_LOG is used, so logging can be
+// toggled globally without rewiring config (handy when wiring a new agent).
+func runHook(name, logPath string, body func(r io.Reader, w io.Writer) (hookOutcome, error)) int {
+	if logPath == "" {
+		logPath = os.Getenv("BUMPER_HOOK_LOG")
+	}
+	in, _ := io.ReadAll(os.Stdin)
+	var out bytes.Buffer
+	outcome, err := body(bytes.NewReader(in), &out)
+	_, _ = os.Stdout.Write(out.Bytes())
+	if err != nil {
+		// Fail-open: surface the error but never block the agent's shell.
+		fmt.Fprintf(os.Stderr, "bumper %s: %v\n", name, err)
+	}
+	if logPath != "" {
+		logHookEvent(logPath, name, in, out.Bytes(), err)
+	}
+	if outcome.deny {
+		if outcome.reason != "" {
+			fmt.Fprintln(os.Stderr, outcome.reason)
+		}
+		return 2 // universal block signal — covers agents that ignore the JSON deny
+	}
+	return 0
+}
+
+// logHookEvent appends one JSON line: timestamp, hook name, the raw stdin payload
+// the agent sent, and the decision bumper emitted ("" = silent allow). Any failure
+// to write is swallowed — debug logging must never wedge a hook.
+func logHookEvent(path, name string, in, out []byte, hookErr error) {
+	f, err := os.OpenFile(path, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0o644)
+	if err != nil {
+		return
+	}
+	defer f.Close()
+	entry := map[string]any{
+		"ts":   time.Now().Format(time.RFC3339),
+		"hook": name,
+		"in":   asJSONOrString(in),
+		"out":  asJSONOrString(out),
+	}
+	if hookErr != nil {
+		entry["err"] = hookErr.Error()
+	}
+	b, err := json.Marshal(entry)
+	if err != nil {
+		return
+	}
+	_, _ = f.Write(append(b, '\n'))
+}
+
+// asJSONOrString embeds b as nested JSON when it's valid (readable logs), else as
+// a plain string (so a malformed payload can't corrupt the log line).
+func asJSONOrString(b []byte) any {
+	b = bytes.TrimSpace(b)
+	if len(b) == 0 {
+		return ""
+	}
+	if json.Valid(b) {
+		return json.RawMessage(b)
+	}
+	return string(b)
 }
 
 // cmdDeps routes the dependency-guardrail subcommands: the scanner (default),
@@ -724,14 +807,15 @@ func cmdDepsGuard(args []string) int {
 	fs.SetOutput(os.Stderr)
 	advisorURL := fs.String("advisor-url", "", "Advisor base URL (or $BUMPER_ADVISOR_URL)")
 	clientFlag := fs.String("client", "claude", "host agent whose shell tool to match: claude|augment")
+	logPath := fs.String("log", "", "append raw hook payload + decision to this file (debug; or $BUMPER_HOOK_LOG)")
 	if err := fs.Parse(args); err != nil {
 		return 2
 	}
 	client := deps.NewClient(deps.ResolveAdvisorURL(*advisorURL))
-	if err := deps.Guard(os.Stdin, os.Stdout, client, shellToolForClient(*clientFlag)); err != nil {
-		fmt.Fprintf(os.Stderr, "bumper deps guard: %v\n", err)
-	}
-	return 0
+	return runHook("deps guard", *logPath, func(r io.Reader, w io.Writer) (hookOutcome, error) {
+		reason, err := deps.Guard(r, w, client, shellToolForClient(*clientFlag))
+		return hookOutcome{deny: reason != "", reason: reason}, err
+	})
 }
 
 // cmdDepsWatch is the PostToolUse post-install hook: after an install it scans the
@@ -742,15 +826,17 @@ func cmdDepsWatch(args []string) int {
 	fs.SetOutput(os.Stderr)
 	advisorURL := fs.String("advisor-url", "", "Advisor base URL (or $BUMPER_ADVISOR_URL)")
 	clientFlag := fs.String("client", "claude", "host agent whose shell tool to match: claude|augment")
+	logPath := fs.String("log", "", "append raw hook payload + decision to this file (debug; or $BUMPER_HOOK_LOG)")
 	if err := fs.Parse(args); err != nil {
 		return 2
 	}
 	cwd, _ := os.Getwd()
 	client := deps.NewClient(deps.ResolveAdvisorURL(*advisorURL))
-	if err := deps.Watch(os.Stdin, os.Stdout, client, cwd, shellToolForClient(*clientFlag)); err != nil {
-		fmt.Fprintf(os.Stderr, "bumper deps watch: %v\n", err)
-	}
-	return 0
+	// PostToolUse: the install already ran, so this hook never blocks (no exit 2);
+	// it only injects context. Always exits 0.
+	return runHook("deps watch", *logPath, func(r io.Reader, w io.Writer) (hookOutcome, error) {
+		return hookOutcome{}, deps.Watch(r, w, client, cwd, shellToolForClient(*clientFlag))
+	})
 }
 
 // enrichFindings adds an AI plain-English explanation to a scan's findings.

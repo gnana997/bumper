@@ -88,7 +88,7 @@ func TestGuardDeniesMalicious(t *testing.T) {
 
 	in := `{"tool_name":"Bash","tool_input":{"command":"npm install evilpkg"}}`
 	var out bytes.Buffer
-	if err := Guard(strings.NewReader(in), &out, NewClient(srv.URL), "Bash"); err != nil {
+	if _, err := Guard(strings.NewReader(in), &out, NewClient(srv.URL), "Bash"); err != nil {
 		t.Fatalf("Guard: %v", err)
 	}
 	var dec struct {
@@ -115,7 +115,7 @@ func TestGuardSilentOnClean(t *testing.T) {
 	}))
 	defer srv.Close()
 	var out bytes.Buffer
-	if err := Guard(strings.NewReader(`{"tool_name":"Bash","tool_input":{"command":"npm install express"}}`), &out, NewClient(srv.URL), "Bash"); err != nil {
+	if _, err := Guard(strings.NewReader(`{"tool_name":"Bash","tool_input":{"command":"npm install express"}}`), &out, NewClient(srv.URL), "Bash"); err != nil {
 		t.Fatalf("Guard: %v", err)
 	}
 	if out.Len() != 0 {
@@ -123,10 +123,27 @@ func TestGuardSilentOnClean(t *testing.T) {
 	}
 }
 
+func TestWorkDirResolution(t *testing.T) {
+	// Claude: cwd present → cwd wins.
+	in := hookInput{CWD: "/claude/wd", WorkspaceRoots: []string{"/ws/root"}}
+	if got := in.workDir(); got != "/claude/wd" {
+		t.Errorf("cwd should win, got %q", got)
+	}
+	// Augment: no cwd, has workspace_roots → first root.
+	in = hookInput{WorkspaceRoots: []string{"/ws/root", "/other"}}
+	if got := in.workDir(); got != "/ws/root" {
+		t.Errorf("workspace_roots[0] expected, got %q", got)
+	}
+	// Neither → empty (caller falls back to process cwd).
+	if got := (hookInput{}).workDir(); got != "" {
+		t.Errorf("empty expected, got %q", got)
+	}
+}
+
 func TestGuardFailOpenOnBadInput(t *testing.T) {
 	var out bytes.Buffer
 	// nil client would panic if it ever got called — proves we bail before the call.
-	if err := Guard(strings.NewReader("not json"), &out, nil, "Bash"); err != nil {
+	if _, err := Guard(strings.NewReader("not json"), &out, nil, "Bash"); err != nil {
 		t.Fatalf("Guard: %v", err)
 	}
 	if out.Len() != 0 {
@@ -152,7 +169,7 @@ func TestGuardShellToolMatch(t *testing.T) {
 	// Augment shell tool: matches when shellTool="launch-process" → denies.
 	in := `{"tool_name":"launch-process","tool_input":{"command":"npm install evilpkg"}}`
 	var out bytes.Buffer
-	if err := Guard(strings.NewReader(in), &out, NewClient(srv.URL), "launch-process"); err != nil {
+	if _, err := Guard(strings.NewReader(in), &out, NewClient(srv.URL), "launch-process"); err != nil {
 		t.Fatalf("Guard: %v", err)
 	}
 	if !strings.Contains(out.String(), "deny") {
@@ -162,7 +179,7 @@ func TestGuardShellToolMatch(t *testing.T) {
 	// Mismatch: same payload but expecting "Bash" → silent no-op (nil client proves
 	// we bail before any network call).
 	var out2 bytes.Buffer
-	if err := Guard(strings.NewReader(in), &out2, nil, "Bash"); err != nil {
+	if _, err := Guard(strings.NewReader(in), &out2, nil, "Bash"); err != nil {
 		t.Fatalf("Guard: %v", err)
 	}
 	if out2.Len() != 0 {

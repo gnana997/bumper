@@ -1,7 +1,11 @@
 package main
 
 import (
+	"encoding/json"
+	"os"
+	"path/filepath"
 	"reflect"
+	"strings"
 	"testing"
 )
 
@@ -60,4 +64,43 @@ func TestHoistFlags(t *testing.T) {
 			}
 		})
 	}
+}
+
+func TestLogHookEvent(t *testing.T) {
+	path := filepath.Join(t.TempDir(), "hooks.log")
+	// A valid JSON payload + a JSON decision → both embed as nested JSON.
+	logHookEvent(path, "deps guard",
+		[]byte(`{"tool_name":"launch-process","tool_input":{"command":"npm i evil"}}`),
+		[]byte(`{"hookSpecificOutput":{"permissionDecision":"deny"}}`), nil)
+	// A silent allow (empty output) on a second call → appends, "out" is "".
+	logHookEvent(path, "deps watch", []byte(`{"tool_name":"x"}`), nil, nil)
+
+	b, err := os.ReadFile(path)
+	if err != nil {
+		t.Fatal(err)
+	}
+	lines := strings.Split(strings.TrimSpace(string(b)), "\n")
+	if len(lines) != 2 {
+		t.Fatalf("want 2 log lines, got %d", len(lines))
+	}
+	var first struct {
+		Hook string          `json:"hook"`
+		In   json.RawMessage `json:"in"`
+		Out  json.RawMessage `json:"out"`
+		TS   string          `json:"ts"`
+	}
+	if err := json.Unmarshal([]byte(lines[0]), &first); err != nil {
+		t.Fatalf("log line is not valid JSON: %v\n%s", err, lines[0])
+	}
+	if first.Hook != "deps guard" || first.TS == "" {
+		t.Errorf("bad entry: %+v", first)
+	}
+	if !strings.Contains(string(first.In), "launch-process") || !strings.Contains(string(first.Out), "deny") {
+		t.Errorf("payload/decision not captured: in=%s out=%s", first.In, first.Out)
+	}
+}
+
+func TestLogHookEventFailSafe(t *testing.T) {
+	// An unwritable path must not panic — logging is best-effort.
+	logHookEvent(filepath.Join(t.TempDir(), "no-such-dir", "x.log"), "guard", []byte("not json"), nil, nil)
 }

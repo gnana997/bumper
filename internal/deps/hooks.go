@@ -9,13 +9,29 @@ import (
 	"strings"
 )
 
-// hookInput is the subset of Claude Code's PreToolUse/PostToolUse stdin we read.
+// hookInput is the subset of a PreToolUse/PostToolUse stdin payload we read.
+// Claude Code provides `cwd`; Augment instead provides `workspace_roots` (an
+// array, no cwd), so we read both and resolve the working dir from whichever is
+// present (see workDir).
 type hookInput struct {
-	ToolName  string `json:"tool_name"`
-	CWD       string `json:"cwd"`
-	ToolInput struct {
+	ToolName       string   `json:"tool_name"`
+	CWD            string   `json:"cwd"`
+	WorkspaceRoots []string `json:"workspace_roots"`
+	ToolInput      struct {
 		Command string `json:"command"`
 	} `json:"tool_input"`
+}
+
+// workDir resolves the directory to scan: the agent's cwd if given (Claude), else
+// the first workspace root (Augment), else "".
+func (in hookInput) workDir() string {
+	if in.CWD != "" {
+		return in.CWD
+	}
+	if len(in.WorkspaceRoots) > 0 {
+		return in.WorkspaceRoots[0]
+	}
+	return ""
 }
 
 func readHookInput(r io.Reader) (hookInput, error) {
@@ -35,10 +51,14 @@ func readHookInput(r io.Reader) (hookInput, error) {
 // Fail-open throughout — a bumper or network error must never wedge the shell.
 // shellTool is the host agent's shell-execution tool name (e.g. "Bash" for Claude
 // Code, "launch-process" for Augment); the hook is a no-op for any other tool.
-func Guard(r io.Reader, w io.Writer, client *Client, shellTool string) error {
+//
+// It writes the JSON deny decision to w and returns the deny reason ("" = allow),
+// so the caller can ALSO surface the block via stderr + exit 2 — the universal
+// backstop honored by every agent (and required by Gemini, which ignores the JSON).
+func Guard(r io.Reader, w io.Writer, client *Client, shellTool string) (reason string, err error) {
 	in, err := readHookInput(r)
 	if err != nil || in.ToolName != shellTool {
-		return nil
+		return "", nil
 	}
 	var named []Dep
 	for _, c := range parseInstallCommands(in.ToolInput.Command) {
@@ -47,17 +67,18 @@ func Guard(r io.Reader, w io.Writer, client *Client, shellTool string) error {
 		}
 	}
 	if len(named) == 0 {
-		return nil // bare/manifest install or non-install command — defer to post-install
+		return "", nil // bare/manifest install or non-install command — defer to post-install
 	}
 	res, err := client.MalwareCheck(named)
 	if err != nil || res == nil || res.MaliciousCount == 0 || len(res.Results) == 0 {
-		return nil // advisor down or nothing flagged — fail-open
+		return "", nil // advisor down or nothing flagged — fail-open
 	}
-	return writeJSON(w, map[string]any{
+	reason = buildDenyReason(res)
+	return reason, writeJSON(w, map[string]any{
 		"hookSpecificOutput": map[string]any{
 			"hookEventName":            "PreToolUse",
 			"permissionDecision":       "deny",
-			"permissionDecisionReason": buildDenyReason(res),
+			"permissionDecisionReason": reason,
 		},
 	})
 }
@@ -74,7 +95,7 @@ func Watch(r io.Reader, w io.Writer, client *Client, fallbackDir, shellTool stri
 	if !isInstallish(in.ToolInput.Command) {
 		return nil
 	}
-	dir := in.CWD
+	dir := in.workDir()
 	if dir == "" {
 		dir = fallbackDir
 	}

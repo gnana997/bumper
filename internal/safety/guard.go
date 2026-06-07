@@ -15,14 +15,29 @@ import (
 // re-verify (the plan may predate drift). 0 disables expiry.
 const DefaultMaxAge = 24 * time.Hour
 
-// HookInput is the subset of Claude Code's PreToolUse stdin payload we read.
+// HookInput is the subset of a PreToolUse stdin payload we read. Claude Code
+// provides `cwd`; Augment instead provides `workspace_roots` (an array, no cwd),
+// so we read both and resolve via WorkDir.
 type HookInput struct {
-	HookEventName string `json:"hook_event_name"`
-	ToolName      string `json:"tool_name"`
-	CWD           string `json:"cwd"`
-	ToolInput     struct {
+	HookEventName  string   `json:"hook_event_name"`
+	ToolName       string   `json:"tool_name"`
+	CWD            string   `json:"cwd"`
+	WorkspaceRoots []string `json:"workspace_roots"`
+	ToolInput      struct {
 		Command string `json:"command"`
 	} `json:"tool_input"`
+}
+
+// WorkDir resolves the directory plan paths are relative to: the agent's cwd if
+// given (Claude), else the first workspace root (Augment), else "".
+func (in HookInput) WorkDir() string {
+	if in.CWD != "" {
+		return in.CWD
+	}
+	if len(in.WorkspaceRoots) > 0 {
+		return in.WorkspaceRoots[0]
+	}
+	return ""
 }
 
 // Decision is guard's verdict on a tool call. A zero Decision means "no opinion"
@@ -46,15 +61,19 @@ type hookSpecificOutput struct {
 // Guard reads a PreToolUse payload, decides, and writes a deny decision (if any)
 // as the hook's JSON output. It is fail-open on malformed input: a bumper bug
 // must never wedge the user's shell. The decision to block is conveyed purely
-// through the JSON output, so the process still exits 0.
 // shellTool is the host agent's shell-execution tool name (e.g. "Bash" for Claude
 // Code, "launch-process" for Augment); any other tool yields a silent allow.
-func Guard(r io.Reader, w io.Writer, shellTool string, now time.Time, maxAge time.Duration) error {
+//
+// It writes the JSON deny decision to w and RETURNS the Decision, so the caller can
+// also surface a block via stderr + exit 2 — the universal backstop every agent
+// honors (and the only mechanism Gemini accepts, since it ignores the JSON).
+func Guard(r io.Reader, w io.Writer, shellTool string, now time.Time, maxAge time.Duration) (Decision, error) {
 	in, err := readHookInput(r)
 	if err != nil {
-		return nil // fail-open: can't understand the payload, don't block
+		return Decision{}, nil // fail-open: can't understand the payload, don't block
 	}
-	return writeDecision(w, Decide(in, shellTool, now, maxAge))
+	d := Decide(in, shellTool, now, maxAge)
+	return d, writeDecision(w, d)
 }
 
 func readHookInput(r io.Reader) (HookInput, error) {
@@ -88,8 +107,9 @@ func Decide(in HookInput, shellTool string, now time.Time, maxAge time.Duration)
 	if in.ToolName != shellTool {
 		return Decision{}
 	}
+	cwd := in.WorkDir()
 	for _, c := range parseTerraformCommands(in.ToolInput.Command) {
-		if d := decideOne(in.CWD, c, now, maxAge); d.Deny {
+		if d := decideOne(cwd, c, now, maxAge); d.Deny {
 			return d // first dangerous command in a chain wins
 		}
 	}
