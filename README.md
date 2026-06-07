@@ -145,6 +145,7 @@ offline. Full coverage map, rule format, and how to write your own:
 | [docs/ci.md](docs/ci.md) | the GitHub Action — inputs, permissions, SARIF, sticky comment |
 | [docs/agents.md](docs/agents.md) | the agent enforcement model — MCP, `bumper init`, verify + guard |
 | [docs/architecture.md](docs/architecture.md) | internals, tech stack, supply-chain provenance, roadmap |
+| [e2e/](e2e/) | run the guardrail against a real Claude Code agent yourself (manual, local) |
 
 ## Contributing & security
 
