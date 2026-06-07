@@ -56,7 +56,7 @@ func TestDepsSARIF(t *testing.T) {
 		Runs    []struct {
 			Tool struct {
 				Driver struct {
-					Name  string `json:"name"`
+					Name  string                `json:"name"`
 					Rules []struct{ ID string } `json:"rules"`
 				} `json:"driver"`
 			} `json:"tool"`

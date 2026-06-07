@@ -1,16 +1,15 @@
 # The agent enforcement model
 
-Scanning tells you what's dangerous; **verify + guard make it unavoidable** — and
-the MCP server lets an agent consult bumper *while* it writes Terraform. Together
-they close the loop:
+Scanning tells you what's dangerous; **the hooks make it unavoidable** — and the hosted
+Advisor MCP lets an agent consult bumper *while* it works. Together they close the loop:
 
-**`search_rules` (advise) → generate → `scan_plan` (verify) → `guard` (gate).**
+**advise (Advisor MCP) → generate → scan (CLI) → gate (hooks).**
 
 - [Enforce the apply with verify and guard](#enforce-the-apply-with-verify-and-guard)
 - [The verdict store](#the-verdict-store)
 - [The guard hook](#the-guard-hook)
 - [One-command setup: bumper init](#one-command-setup-bumper-init)
-- [MCP tools](#mcp-tools)
+- [Scanning, not MCP tools](#scanning-not-mcp-tools)
 - [Supported agents](#supported-agents)
 - [Dependency guardrail](#dependency-guardrail)
 - [Hosted Advisor](#hosted-advisor)
@@ -73,57 +72,62 @@ guard never blanket-approves, so it's safe to install at user scope globally.
 $ bumper init --print
 bumper init — would wire bumper into Claude Code:
 
-  • register MCP server · project      .mcp.json
-  • install guard hook · project       .claude/settings.json
-  • ignore .bumper/ verdict store      .gitignore
-  • note verify workflow in CLAUDE.md  CLAUDE.md
+  • install terraform guard · project   .claude/settings.json
+  • install dependency hooks · project   .claude/settings.json
+  • register advisor MCP · project       .mcp.json
+  • ignore .bumper/ verdict store        .gitignore
+  • note terraform workflow in CLAUDE.md CLAUDE.md
+  • note deps workflow in CLAUDE.md      CLAUDE.md
 ```
 
 `bumper init` is a hazard-console wizard; everything it writes is **merge-safe and
-idempotent**. `--mcp` / `--hook` choose `project|user|none`; `--print` previews;
-`--yes` runs non-interactively. It writes:
+idempotent**. `--hook` scopes the hooks (`project|user|none`); `--terraform` / `--deps`
+pick which hooks; `--advisor` scopes the MCP (`project|user|none`); `--print` previews;
+`--yes` runs non-interactively. Hooks self-filter, so the defaults wire everything — a
+repo that adds Terraform later is already covered. It writes:
 
-**`.mcp.json`** — registers the stdio MCP server:
-
-```json
-{
-  "mcpServers": {
-    "bumper": { "command": "bumper", "args": ["mcp"] }
-  }
-}
-```
-
-**`.claude/settings.json`** — installs the guard as a PreToolUse hook on `Bash`:
+**`.claude/settings.json`** — the guardrail hooks on `Bash` (terraform apply-guard,
+dependency install-block, post-install scan):
 
 ```json
 {
   "hooks": {
     "PreToolUse": [
-      { "matcher": "Bash", "hooks": [{ "type": "command", "command": "bumper guard" }] }
+      { "matcher": "Bash", "hooks": [{ "type": "command", "command": "bumper guard" }] },
+      { "matcher": "Bash", "hooks": [{ "type": "command", "command": "bumper deps guard" }] }
+    ],
+    "PostToolUse": [
+      { "matcher": "Bash", "hooks": [{ "type": "command", "command": "bumper deps watch" }] }
     ]
   }
 }
 ```
 
-## MCP tools
+**`.mcp.json`** — registers the hosted [Advisor MCP](mcp.md) (the single MCP — knowledge +
+CVE/malware lookups; only package coordinates leave the machine):
 
-`bumper mcp` runs the server directly (stdio) — what `init` wires up. It exposes
-four tools to the agent:
+```json
+{
+  "mcpServers": {
+    "bumper-advisor": { "type": "http", "url": "https://advisor.bumper.sh/mcp" }
+  }
+}
+```
 
-| Tool | Does |
-| --- | --- |
-| `scan_plan` | scan a plan (inline JSON or a `.tfplan` path) → structured findings + a `blocking` verdict |
-| `search_rules` | **before** writing Terraform for a resource, get what to bake in — bumper's **enforced** rules (must-fix) plus the **advisory** best-practice catalog, ranked |
-| `list_rules` | browse the rule set (filter by severity / source / service) |
-| `explain_rule` | one rule in full: the CEL check, fix, and provenance |
+## Scanning, not MCP tools
 
-`search_rules` spans both corpora (enforced + the ~2,600-entry advisory catalog)
-and runs fully offline — see
-[rules.md → Enforced vs advisory](rules.md#enforced-vs-advisory-two-corpora).
+bumper has **one MCP** — the hosted [Advisor](mcp.md), for proactive knowledge/CVE/malware
+lookups. *Scanning* is the CLI, enforced by the hooks:
+- **Terraform:** `bumper verify <plan>` / `bumper <plan.json>` (the apply-guard requires it).
+- **Dependencies:** `bumper deps` (the post-install hook runs it; see the
+  [dependency guardrail](#dependency-guardrail)).
+
+For offline rule lookups without the Advisor, the CLI has `bumper search` / `bumper list` /
+`bumper explain` over the bundled catalog ([rules.md](rules.md#enforced-vs-advisory-two-corpora)).
 
 ## Supported agents
 
-`bumper init` wires the MCP server + guard hook into **Claude Code**, **Codex**,
+`bumper init` wires the hooks + advisor MCP into **Claude Code**, **Codex**,
 **opencode**, **auggie**, and **gemini**. The `--explain` enrichment (for
 `scan`/TUI) shells out to whichever of `claude` / `gemini` / `codex` / `opencode` /
 `auggie` you already have installed and authenticated — no API key, no vendor

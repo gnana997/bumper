@@ -25,15 +25,15 @@ func TestGCPNetworkRules(t *testing.T) {
 
 	// Negative cases — these must produce no findings at all.
 	for _, addr := range []string{
-		"google_compute_network_firewall_policy_rule.https_ok",      // public but port 443 (not sensitive)
-		"google_compute_network_firewall_policy_rule.internal_ssh",  // ssh but private source
-		"google_compute_network_firewall_policy_rule.deny_ssh",      // public ssh but action deny
-		"google_compute_network_firewall_policy_rule.disabled_ssh",  // public ssh but disabled
-		"google_compute_network.custom",                             // custom-mode VPC
-		"google_dns_managed_zone.public_signed",                     // DNSSEC on
-		"google_dns_managed_zone.private_zone",                      // private zone (DNSSEC N/A)
-		"google_compute_subnetwork.logged",                          // flow logs on
-		"google_compute_subnetwork.proxy",                           // proxy-only subnet (flow logs N/A)
+		"google_compute_network_firewall_policy_rule.https_ok",     // public but port 443 (not sensitive)
+		"google_compute_network_firewall_policy_rule.internal_ssh", // ssh but private source
+		"google_compute_network_firewall_policy_rule.deny_ssh",     // public ssh but action deny
+		"google_compute_network_firewall_policy_rule.disabled_ssh", // public ssh but disabled
+		"google_compute_network.custom",                            // custom-mode VPC
+		"google_dns_managed_zone.public_signed",                    // DNSSEC on
+		"google_dns_managed_zone.private_zone",                     // private zone (DNSSEC N/A)
+		"google_compute_subnetwork.logged",                         // flow logs on
+		"google_compute_subnetwork.proxy",                          // proxy-only subnet (flow logs N/A)
 	} {
 		if mentions(f, addr) {
 			t.Errorf("resource %s should produce no findings; got %+v", addr, f)

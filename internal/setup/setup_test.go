@@ -21,36 +21,14 @@ func readJSON(t *testing.T, path string) map[string]any {
 	return m
 }
 
-func TestMergeMCPCreateAndIdempotent(t *testing.T) {
-	path := filepath.Join(t.TempDir(), ".mcp.json")
-
-	if a, err := MergeMCP(path, "bumper"); err != nil || a != Created {
-		t.Fatalf("first merge: action=%v err=%v, want created", a, err)
-	}
-	m := readJSON(t, path)
-	servers, _ := m["mcpServers"].(map[string]any)
-	entry, _ := servers["bumper"].(map[string]any)
-	if entry["command"] != "bumper" {
-		t.Errorf("command = %v, want bumper", entry["command"])
-	}
-	args, _ := entry["args"].([]any)
-	if len(args) != 1 || args[0] != "mcp" {
-		t.Errorf("args = %v, want [mcp]", args)
-	}
-
-	if a, err := MergeMCP(path, "bumper"); err != nil || a != Unchanged {
-		t.Errorf("re-merge: action=%v err=%v, want unchanged", a, err)
-	}
-}
-
-func TestMergeMCPPreservesOtherServers(t *testing.T) {
+func TestMergeAdvisorPreservesOtherServers(t *testing.T) {
 	path := filepath.Join(t.TempDir(), ".mcp.json")
 	seed := `{"mcpServers":{"other":{"command":"other-srv"}},"someTopLevel":42}`
 	if err := os.WriteFile(path, []byte(seed), 0o644); err != nil {
 		t.Fatal(err)
 	}
 
-	if a, err := MergeMCP(path, "bumper"); err != nil || a != Updated {
+	if a, err := MergeAdvisorMCP(path, "https://advisor.bumper.sh"); err != nil || a != Updated {
 		t.Fatalf("merge: action=%v err=%v, want updated", a, err)
 	}
 	m := readJSON(t, path)
@@ -61,8 +39,8 @@ func TestMergeMCPPreservesOtherServers(t *testing.T) {
 	if _, ok := servers["other"]; !ok {
 		t.Error("existing 'other' server was clobbered")
 	}
-	if _, ok := servers["bumper"]; !ok {
-		t.Error("bumper server not added")
+	if _, ok := servers["bumper-advisor"]; !ok {
+		t.Error("advisor server not added")
 	}
 }
 
@@ -132,7 +110,7 @@ func TestRefuseInvalidJSON(t *testing.T) {
 	if err := os.WriteFile(path, []byte("{ this is not json"), 0o644); err != nil {
 		t.Fatal(err)
 	}
-	if _, err := MergeMCP(path, "bumper"); err == nil {
+	if _, err := MergeAdvisorMCP(path, "https://advisor.bumper.sh"); err == nil {
 		t.Error("expected refusal to overwrite invalid JSON")
 	}
 	// The bad file must be left untouched.
@@ -142,14 +120,24 @@ func TestRefuseInvalidJSON(t *testing.T) {
 	}
 }
 
-func TestUpdateWritesBackup(t *testing.T) {
-	path := filepath.Join(t.TempDir(), ".mcp.json")
+func TestUpdateIsAtomicNoStrayFiles(t *testing.T) {
+	dir := t.TempDir()
+	path := filepath.Join(dir, ".mcp.json")
 	os.WriteFile(path, []byte(`{"mcpServers":{}}`), 0o644)
-	if _, err := MergeMCP(path, "bumper"); err != nil {
+	if _, err := MergeAdvisorMCP(path, "https://advisor.bumper.sh"); err != nil {
 		t.Fatal(err)
 	}
-	if _, err := os.Stat(path + ".bumper-bak"); err != nil {
-		t.Error("expected a .bumper-bak backup of the pre-existing file")
+	// The atomic temp+rename must leave no .bumper-bak or .bumper-tmp behind.
+	entries, _ := os.ReadDir(dir)
+	for _, e := range entries {
+		if strings.HasSuffix(e.Name(), ".bumper-bak") || strings.HasSuffix(e.Name(), ".bumper-tmp") {
+			t.Errorf("stray file left behind: %s", e.Name())
+		}
+	}
+	// And the update actually landed.
+	m := readJSON(t, path)
+	if _, ok := m["mcpServers"].(map[string]any)["bumper-advisor"]; !ok {
+		t.Error("advisor server not written")
 	}
 }
 
@@ -173,23 +161,32 @@ func TestEnsureGitignore(t *testing.T) {
 func TestPlanScopePaths(t *testing.T) {
 	env := Env{Bin: "bumper", Cwd: "/proj", Home: "/home/u"}
 
-	steps := Plan(Options{MCP: ScopeProject, Hook: ScopeUser, Env: env})
+	steps := Plan(Options{
+		HookScope: ScopeUser, Terraform: true, Deps: true,
+		Advisor: true, AdvisorScope: ScopeProject, Env: env,
+	})
 	got := map[string]string{}
 	for _, s := range steps {
 		got[s.Title] = s.Path
 	}
-	if p := got["register MCP server · project"]; p != "/proj/.mcp.json" {
-		t.Errorf("project MCP path = %q", p)
+	if p := got["register advisor MCP · project"]; p != "/proj/.mcp.json" {
+		t.Errorf("project advisor MCP path = %q", p)
 	}
-	if p := got["install guard hook · user"]; p != "/home/u/.claude/settings.json" {
-		t.Errorf("user hook path = %q", p)
+	if p := got["install terraform guard · user"]; p != "/home/u/.claude/settings.json" {
+		t.Errorf("user terraform hook path = %q", p)
 	}
-	// gitignore + CLAUDE.md are always present.
+	if p := got["install dependency hooks · user"]; p != "/home/u/.claude/settings.json" {
+		t.Errorf("user deps hook path = %q", p)
+	}
+	// gitignore + both CLAUDE.md notes present (Terraform + Deps wired).
 	if _, ok := got["ignore .bumper/ verdict store"]; !ok {
 		t.Error("plan missing gitignore step")
 	}
-	if _, ok := got["note verify workflow in CLAUDE.md"]; !ok {
-		t.Error("plan missing CLAUDE.md step")
+	if _, ok := got["note terraform workflow in CLAUDE.md"]; !ok {
+		t.Error("plan missing terraform CLAUDE.md step")
+	}
+	if _, ok := got["note deps workflow in CLAUDE.md"]; !ok {
+		t.Error("plan missing deps CLAUDE.md step")
 	}
 
 	// RelPath collapses project + home paths.

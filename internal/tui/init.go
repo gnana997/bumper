@@ -36,13 +36,15 @@ type (
 )
 
 type initModel struct {
-	env     setup.Env
-	mcp     setup.Scope
-	hook    setup.Scope
-	advisor bool // wire the hosted Advisor MCP (consent checkbox)
+	env          setup.Env
+	terraform    bool        // install the terraform apply-guard hook
+	deps         bool        // install the dependency hooks
+	hookScope    setup.Scope // project|user — where hooks go
+	advisor      bool        // register the hosted advisor MCP
+	advisorScope setup.Scope // project|user — where the advisor MCP goes
 
 	phase    initPhase
-	focusRow int // configure: 0 = MCP, 1 = hook, 2 = Advisor checkbox
+	focusRow int // 0=terraform 1=deps 2=hookScope 3=advisor 4=advisorScope
 
 	steps    []setup.Step
 	results  []stepResult
@@ -55,9 +57,15 @@ type initModel struct {
 	gl       glyphs
 }
 
-func newInitModel(env setup.Env, mcp, hook setup.Scope) initModel {
-	return initModel{env: env, mcp: mcp, hook: hook, advisor: true, gl: pickGlyphs()}
+func newInitModel(env setup.Env) initModel {
+	// Default B: wire everything (hooks self-filter, so it's safe and future-proof).
+	return initModel{
+		env: env, terraform: true, deps: true, advisor: true,
+		hookScope: setup.ScopeProject, advisorScope: setup.ScopeProject, gl: pickGlyphs(),
+	}
 }
+
+const initLastRow = 4 // 0=terraform 1=deps 2=hookScope 3=advisor 4=advisorScope
 
 func (m initModel) Init() tea.Cmd { return initTickCmd() }
 
@@ -105,29 +113,18 @@ func (m initModel) onKey(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 				m.focusRow--
 			}
 		case "down", "j", "tab":
-			if m.focusRow < 2 {
+			if m.focusRow < initLastRow {
 				m.focusRow++
 			}
-		case "right", "l", " ", "enter":
-			if k == "enter" {
-				// Dependency hooks ride the guard-hook scope; the Advisor MCP is the checkbox.
-				m.steps = setup.Plan(setup.Options{
-					MCP: m.mcp, Hook: m.hook, Deps: m.hook, Advisor: m.advisor, Env: m.env,
-				})
-				m.phase = ipReview
-				return m, nil
-			}
-			if m.focusRow == 2 {
-				m.advisor = !m.advisor
-			} else {
-				m.cycle(+1)
-			}
-		case "left", "h":
-			if m.focusRow == 2 {
-				m.advisor = !m.advisor
-			} else {
-				m.cycle(-1)
-			}
+		case "enter":
+			m.steps = setup.Plan(setup.Options{
+				HookScope: m.hookScope, Terraform: m.terraform, Deps: m.deps,
+				Advisor: m.advisor, AdvisorScope: m.advisorScope, Env: m.env,
+			})
+			m.phase = ipReview
+			return m, nil
+		case "right", "l", " ", "left", "h":
+			m.change()
 		}
 	case ipReview:
 		switch k {
@@ -152,18 +149,35 @@ func (m initModel) onKey(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 	return m, nil
 }
 
-func (m *initModel) cycle(dir int) {
-	next := func(s setup.Scope) setup.Scope {
-		if dir < 0 {
-			return s.Next().Next() // Prev == two Nexts over a 3-cycle
+// change applies ←→/space on the focused row: toggles for the on/off rows,
+// project↔user for the scope rows. It keeps the deps→advisor invariant: the
+// dependency guardrail can't function without an advisor endpoint.
+func (m *initModel) change() {
+	switch m.focusRow {
+	case 0:
+		m.terraform = !m.terraform
+	case 1:
+		m.deps = !m.deps
+		if m.deps {
+			m.advisor = true // deps needs the advisor for CVE/malware data
 		}
-		return s.Next()
+	case 2:
+		m.hookScope = flipScope(m.hookScope)
+	case 3:
+		m.advisor = !m.advisor
+		if !m.advisor {
+			m.deps = false // can't scan deps without an advisor
+		}
+	case 4:
+		m.advisorScope = flipScope(m.advisorScope)
 	}
-	if m.focusRow == 0 {
-		m.mcp = next(m.mcp)
-	} else {
-		m.hook = next(m.hook)
+}
+
+func flipScope(s setup.Scope) setup.Scope {
+	if s == setup.ScopeUser {
+		return setup.ScopeProject
 	}
+	return setup.ScopeUser
 }
 
 func (m initModel) applyStepCmd(idx int) tea.Cmd {

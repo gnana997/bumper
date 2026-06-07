@@ -94,14 +94,18 @@ func TestEnsureDepsClaudeMd(t *testing.T) {
 
 func TestPlanWithDepsAndAdvisor(t *testing.T) {
 	env := Env{Bin: "bumper", Cwd: t.TempDir(), Home: t.TempDir()}
-	steps := Plan(Options{MCP: ScopeProject, Hook: ScopeProject, Deps: ScopeProject, Advisor: true, Env: env})
+	steps := Plan(Options{
+		HookScope: ScopeProject, Terraform: true, Deps: true,
+		Advisor: true, AdvisorScope: ScopeProject, Env: env,
+	})
 	titles := map[string]bool{}
 	for _, s := range steps {
 		titles[s.Title] = true
 	}
 	for _, want := range []string{
+		"install terraform guard · project",
 		"install dependency hooks · project",
-		"register Advisor MCP · hosted",
+		"register advisor MCP · project",
 		"note deps workflow in CLAUDE.md",
 	} {
 		if !titles[want] {

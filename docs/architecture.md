@@ -18,10 +18,11 @@ internal/report/       text / json / sarif / markdown output
 internal/style/        terminal color palette (truecolor + 16-color fallback, TTY/NO_COLOR aware)
 internal/enrich/       AI-CLI adapters (claude/gemini/...) — optional enrichment
 internal/safety/       verify + guard — the sha256-bound apply gate
-internal/mcpserver/    MCP server: scan_plan / search_rules / list_rules / explain_rule
+internal/deps/         dependency guardrail: lockfile parsers + Advisor REST client + hooks
 internal/catalog/      embedded advisory catalog (federated Trivy/Checkov/KICS/Prowler)
 internal/search/       cross-corpus BM25 search over enforced + advisory
-internal/setup/        `bumper init` — merge-safe MCP + hook wiring
+internal/report/       text / json / sarif / markdown reporters (plan + deps)
+internal/setup/        `bumper init` — merge-safe hooks + advisor-MCP wiring
 internal/tui/          the hazard-console TUI and the init wizard
 ```
 
@@ -40,10 +41,10 @@ terraform show -json   →  internal/plan      normalize each resource change to
                                               evaluate when(...) → Finding; rank by severity
    ┌────────────────────────────┴───────────────────────────────┐
    ▼                            ▼                                 ▼
-internal/report           internal/safety                  internal/mcpserver
-text/json/sarif/md        verify → verdict (sha256)        scan_plan / search_rules /
-(+ internal/style         guard → allow/deny JSON          list_rules / explain_rule
- colorization)                                             (over stdio)
+internal/report           internal/safety                  internal/deps
+text/json/sarif/md        verify → verdict (sha256)        parse lockfile → Advisor /scan
+(+ internal/style         guard → allow/deny JSON          deps guard/watch hooks
+ colorization)                                             (knowledge via the hosted Advisor MCP)
 ```
 
 `internal/search` + `internal/catalog` sit alongside the engine: they power

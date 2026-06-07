@@ -8,12 +8,10 @@ API](api.md), exposed as agent tools.
 It is **lookup-not-upload**: the agent sends a query, a package coordinate, or a small list
 of named packages — never your code, plan, or state.
 
-> **Two different MCP servers.** This page is the **hosted, remote** Advisor
-> (`advisor.bumper.sh/mcp`) — knowledge only, nothing to install. bumper *also* ships an
-> **offline, local** MCP (`bumper mcp`, stdio) that scans your actual Terraform plans
-> (`scan_plan`, `verify`, the `guard` hook). That one is covered in
-> [agents.md](agents.md). Use both: the local server enforces *your* plan; the hosted
-> Advisor answers *general* best-practice and dependency questions.
+> **The Advisor is the one MCP.** It's hosted (`advisor.bumper.sh/mcp`), knowledge-only,
+> nothing to install. *Scanning* your own plans/dependencies is the CLI (`bumper verify`,
+> `bumper deps`), enforced by the [hooks](agents.md) — not an MCP tool. So the agent uses
+> this MCP to *look things up* and the CLI to *act on your code*.
 
 - [Connect](#connect)
 - [Tools](#tools)

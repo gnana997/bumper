@@ -1,7 +1,7 @@
 // Package setup implements `bumper init`: wiring bumper into a coding agent
-// (Claude Code) so its safety checks are always available and its apply-guard is
-// always on. It registers the MCP server, installs the PreToolUse guard hook,
-// ignores the verdict store, and drops a workflow note into CLAUDE.md.
+// (Claude Code). It installs the guardrail hooks (terraform apply-guard +
+// dependency install-block/post-install scan), registers the hosted Advisor MCP,
+// ignores the verdict store, and drops the workflow notes into CLAUDE.md.
 //
 // Every mutation is merge-not-clobber and idempotent: existing config is
 // preserved, and re-running init changes nothing once wired. User-scope files
@@ -124,14 +124,18 @@ func Detect() (Env, error) {
 	}, nil
 }
 
-// Options is a chosen init configuration.
+// Options is a chosen init configuration. Hooks self-filter at runtime, so wiring
+// a guardrail that isn't used yet is harmless (it simply never fires) — that's why
+// the defaults wire everything and a monorepo that adds Terraform later is already
+// covered. The hosted advisor is the single MCP (the local stdio server is gone).
 type Options struct {
-	MCP        Scope
-	Hook       Scope
-	Deps       Scope  // dependency guardrail hooks (deps guard + deps watch)
-	Advisor    bool   // wire the hosted Advisor MCP (consent: only package info leaves the box)
-	AdvisorURL string // override for self-hosting; "" → the public default
-	Env        Env
+	HookScope    Scope  // project|user|none — where the hook(s) are written
+	Terraform    bool   // install the terraform apply-guard hook
+	Deps         bool   // install the dependency hooks (deps guard + deps watch)
+	Advisor      bool   // register the hosted advisor MCP
+	AdvisorScope Scope  // project|user — where the advisor MCP entry is written
+	AdvisorURL   string // override for self-hosting; "" → the public default
+	Env          Env
 }
 
 // DefaultAdvisorURL is the hosted, public Advisor used when no override is given.
@@ -163,83 +167,60 @@ func (s Step) RelPath(env Env) string {
 func Plan(o Options) []Step {
 	bin := o.Env.Bin
 	var steps []Step
-	switch o.MCP {
-	case ScopeProject:
-		p := filepath.Join(o.Env.Cwd, ".mcp.json")
-		steps = append(steps, Step{"register MCP server · project", p, func() (Action, error) { return MergeMCP(p, bin) }})
-	case ScopeUser:
-		p := filepath.Join(o.Env.Home, ".claude.json")
-		steps = append(steps, Step{"register MCP server · user", p, func() (Action, error) { return MergeMCP(p, bin) }})
+
+	// Hooks (terraform apply-guard + dependency guard/scan) share one settings.json.
+	if hp := hookSettingsPath(o); hp != "" {
+		sc := string(o.HookScope)
+		if o.Terraform {
+			steps = append(steps, Step{"install terraform guard · " + sc, hp, func() (Action, error) { return MergeHook(hp, bin) }})
+		}
+		if o.Deps {
+			steps = append(steps, Step{"install dependency hooks · " + sc, hp, func() (Action, error) { return MergeDepsHooks(hp, bin) }})
+		}
 	}
-	switch o.Hook {
-	case ScopeProject:
-		p := filepath.Join(o.Env.Cwd, ".claude", "settings.json")
-		steps = append(steps, Step{"install guard hook · project", p, func() (Action, error) { return MergeHook(p, bin) }})
-	case ScopeUser:
-		p := filepath.Join(o.Env.Home, ".claude", "settings.json")
-		steps = append(steps, Step{"install guard hook · user", p, func() (Action, error) { return MergeHook(p, bin) }})
-	}
-	switch o.Deps {
-	case ScopeProject:
-		p := filepath.Join(o.Env.Cwd, ".claude", "settings.json")
-		steps = append(steps, Step{"install dependency hooks · project", p, func() (Action, error) { return MergeDepsHooks(p, bin) }})
-	case ScopeUser:
-		p := filepath.Join(o.Env.Home, ".claude", "settings.json")
-		steps = append(steps, Step{"install dependency hooks · user", p, func() (Action, error) { return MergeDepsHooks(p, bin) }})
-	}
+
+	// The hosted advisor — the single MCP (knowledge + CVE/malware lookups).
 	if o.Advisor {
-		url := o.AdvisorURL
-		if url == "" {
-			url = DefaultAdvisorURL
-		}
-		switch o.MCP {
-		case ScopeProject:
-			p := filepath.Join(o.Env.Cwd, ".mcp.json")
-			steps = append(steps, Step{"register Advisor MCP · hosted", p, func() (Action, error) { return MergeAdvisorMCP(p, url) }})
-		case ScopeUser:
-			p := filepath.Join(o.Env.Home, ".claude.json")
-			steps = append(steps, Step{"register Advisor MCP · hosted", p, func() (Action, error) { return MergeAdvisorMCP(p, url) }})
+		if mp := advisorMCPPath(o); mp != "" {
+			url := o.AdvisorURL
+			if url == "" {
+				url = DefaultAdvisorURL
+			}
+			steps = append(steps, Step{"register advisor MCP · " + string(o.AdvisorScope), mp, func() (Action, error) { return MergeAdvisorMCP(mp, url) }})
 		}
 	}
+
+	// Always: ignore the verdict store; document only the workflows we wired.
 	gi := filepath.Join(o.Env.Cwd, ".gitignore")
 	steps = append(steps, Step{"ignore .bumper/ verdict store", gi, func() (Action, error) { return EnsureGitignore(gi) }})
 	cm := filepath.Join(o.Env.Cwd, "CLAUDE.md")
-	steps = append(steps, Step{"note verify workflow in CLAUDE.md", cm, func() (Action, error) { return EnsureClaudeMd(cm) }})
-	if o.Deps == ScopeProject || o.Deps == ScopeUser {
+	if o.Terraform {
+		steps = append(steps, Step{"note terraform workflow in CLAUDE.md", cm, func() (Action, error) { return EnsureClaudeMd(cm) }})
+	}
+	if o.Deps {
 		steps = append(steps, Step{"note deps workflow in CLAUDE.md", cm, func() (Action, error) { return EnsureDepsClaudeMd(cm) }})
 	}
 	return steps
 }
 
-// MergeMCP registers the bumper MCP server in an .mcp.json / ~/.claude.json file.
-func MergeMCP(path, binPath string) (Action, error) {
-	m, existed, err := loadJSONMap(path)
-	if err != nil {
-		return Unchanged, err
+func hookSettingsPath(o Options) string {
+	switch o.HookScope {
+	case ScopeProject:
+		return filepath.Join(o.Env.Cwd, ".claude", "settings.json")
+	case ScopeUser:
+		return filepath.Join(o.Env.Home, ".claude", "settings.json")
 	}
-	servers := childMap(m, "mcpServers")
-	desired := map[string]any{
-		"command": unquoteFirst(binPath),
-		"args":    []any{"mcp"},
-	}
-	if cur, ok := servers["bumper"]; ok && jsonEqual(cur, desired) {
-		return Unchanged, nil
-	}
-	servers["bumper"] = desired
-	m["mcpServers"] = servers
-	if err := writeJSONMap(path, m, existed); err != nil {
-		return Unchanged, err
-	}
-	return actionFor(existed), nil
+	return ""
 }
 
-// unquoteFirst strips surrounding quotes added for shell use; the MCP "command"
-// field is exec'd directly (not shell-parsed), so it must be the raw path.
-func unquoteFirst(s string) string {
-	if len(s) >= 2 && s[0] == '"' && s[len(s)-1] == '"' {
-		return s[1 : len(s)-1]
+func advisorMCPPath(o Options) string {
+	switch o.AdvisorScope {
+	case ScopeProject:
+		return filepath.Join(o.Env.Cwd, ".mcp.json")
+	case ScopeUser:
+		return filepath.Join(o.Env.Home, ".claude.json")
 	}
-	return s
+	return ""
 }
 
 // MergeHook installs the guard as a PreToolUse Bash hook in a settings.json file.
@@ -456,7 +437,8 @@ hook — they have no reviewable saved plan. To destroy, use:
 
     terraform plan -destroy -out tfplan && bumper verify tfplan && terraform apply tfplan
 
-You can also call the bumper MCP ` + "`scan_plan`" + ` tool on a plan before applying.
+Need best-practice guidance before writing Terraform? Ask the ` + "`bumper-advisor`" + ` MCP
+(` + "`search_rules`" + `), or run ` + "`bumper search`" + ` offline.
 <!-- /bumper-workflow -->
 `
 
@@ -504,8 +486,10 @@ func loadJSONMap(path string) (m map[string]any, existed bool, err error) {
 }
 
 // writeJSONMap writes m as indented JSON, creating parent dirs. Existing files
-// are updated atomically (temp + rename) with a one-time .bumper-bak backup so a
-// crash mid-write can never corrupt user config.
+// are updated atomically — written to a temp file in the same directory, then
+// renamed over the target (os.Rename is atomic on POSIX), so a crash mid-write
+// can never leave a half-written or corrupted config. No backup file is left
+// behind: the rename never exposes a partial state, so there's nothing to recover.
 func writeJSONMap(path string, m map[string]any, existed bool) error {
 	if err := os.MkdirAll(filepath.Dir(path), 0o755); err != nil {
 		return err
@@ -517,9 +501,6 @@ func writeJSONMap(path string, m map[string]any, existed bool) error {
 	b = append(b, '\n')
 	if !existed {
 		return os.WriteFile(path, b, 0o644)
-	}
-	if orig, err := os.ReadFile(path); err == nil {
-		_ = os.WriteFile(path+".bumper-bak", orig, 0o644)
 	}
 	tmp := path + ".bumper-tmp"
 	if err := os.WriteFile(tmp, b, 0o644); err != nil {

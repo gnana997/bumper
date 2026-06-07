@@ -19,8 +19,10 @@ account.
 It runs three ways:
 
 - a **CLI / CI gate** — text · JSON · SARIF (Security tab) · a sticky PR comment;
-- an **MCP server** your coding agent calls — `scan_plan` / `search_rules` / `list_rules` / `explain_rule`;
-- a **guard hook** that stops an agent from applying a plan it never verified.
+- **agent guard hooks** — block an unverified Terraform apply *and* a known-malicious
+  package install before it runs, and scan dependencies after install;
+- the hosted **[Advisor MCP](docs/mcp.md)** your agent queries for best-practice, CVE,
+  and malware data (lookup-only — your code never leaves the machine).
 
 An AI CLI you already have (`claude`, `gemini`, `codex`, `opencode`, `auggie`)
 optionally explains each finding in plain English — zero setup, zero cost. The
@@ -63,7 +65,7 @@ curl -fsSL https://get.bumper.sh | sh
 go install github.com/gnana997/bumper/cmd/bumper@latest
 ```
 
-Then wire it into your coding agent (MCP server + apply-guard hook):
+Then wire it into your coding agent (guardrail hooks + the hosted Advisor MCP):
 
 ```sh
 bumper init
@@ -96,7 +98,8 @@ error. Output formats: `--format text` (default) · `json` · `sarif` · `markdo
 | --- | --- | --- |
 | **Scan & explain** | flag exposure/destruction in a plan, optional AI enrichment | [docs/cli.md](docs/cli.md) |
 | **Enforce the apply** | `verify` binds a passing scan to a plan by sha256; `guard` blocks an unverified `apply` | [docs/agents.md](docs/agents.md) |
-| **Agent guardrail (MCP)** | native MCP server + `bumper init` wires it into Claude Code, Codex, opencode, … | [docs/agents.md](docs/agents.md) |
+| **Agent guardrail** | `bumper init` wires the guard hooks + the hosted Advisor MCP into Claude Code, Codex, opencode, … | [docs/agents.md](docs/agents.md) |
+| **Dependency guardrail** | block malicious installs, scan deps for CVEs — in the agent loop and in CI | [docs/agents.md](docs/agents.md#dependency-guardrail) |
 | **CI / GitHub Action** | SARIF to the Security tab, a sticky PR comment, fail on `high+` | [docs/ci.md](docs/ci.md) |
 | **Search the catalog** | `bumper search` ranks enforced rules + an advisory best-practice catalog | [docs/cli.md](docs/cli.md#search) |
 | **Interactive console** | `bumper tui` — the "hazard console" for the scary local apply | [docs/cli.md](docs/cli.md#tui) |
@@ -126,8 +129,9 @@ offline. Full coverage map, rule format, and how to write your own:
 - **It enforces, it doesn't just warn.** `verify` binds a passing scan to the
   exact plan by sha256; the `guard` hook then *blocks* an unverified
   `apply`/`destroy`. A linter you can ignore becomes a gate you can't.
-- **Built for the agent era.** A native MCP server plus a tool-layer guard mean
-  your AI agent can no longer silently apply infrastructure it didn't verify.
+- **Built for the agent era.** Tool-layer guard hooks (Terraform apply + package
+  installs) plus the hosted Advisor MCP mean your AI agent can no longer silently
+  apply infra it didn't verify or install a known-malicious package.
 - **Deterministic core stands alone.** The AI layer is garnish; if it's absent or
   fails, the deterministic findings are still complete and blocking.
 
@@ -135,7 +139,7 @@ offline. Full coverage map, rule format, and how to write your own:
 
 | | |
 | --- | --- |
-| [docs/cli.md](docs/cli.md) | command reference — scan, list, search, explain, verify, guard, tui, init, mcp |
+| [docs/cli.md](docs/cli.md) | command reference — scan, deps, list, search, explain, verify, guard, tui, init |
 | [docs/rules.md](docs/rules.md) | rule format (YAML + CEL), coverage, the advisory catalog, writing your own |
 | [docs/ci.md](docs/ci.md) | the GitHub Action — inputs, permissions, SARIF, sticky comment |
 | [docs/agents.md](docs/agents.md) | the agent enforcement model — MCP, `bumper init`, verify + guard |

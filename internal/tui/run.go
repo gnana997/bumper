@@ -44,11 +44,11 @@ func RunRules(rs []*rules.Rule) error {
 // RunInit launches the interactive init wizard, seeded with the given default
 // scopes. It applies the chosen configuration itself; the returned InitResult
 // lets the caller leave a persistent record after the alt-screen is torn down.
-func RunInit(env setup.Env, mcp, hook setup.Scope) (InitResult, error) {
+func RunInit(env setup.Env) (InitResult, error) {
 	if !isTTY() {
 		return InitResult{}, fmt.Errorf("the init wizard needs an interactive terminal; re-run with --yes for non-interactive setup")
 	}
-	final, err := tea.NewProgram(newInitModel(env, mcp, hook), tea.WithAltScreen()).Run()
+	final, err := tea.NewProgram(newInitModel(env), tea.WithAltScreen()).Run()
 	if err != nil {
 		return InitResult{}, err
 	}

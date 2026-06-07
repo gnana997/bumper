@@ -80,28 +80,56 @@ func (m initModel) bodyConfigure() string {
 	b.WriteString(kvline("project", stInk.Render(collapseHome(m.env.Cwd, m.env.Home))+"  "+git))
 	b.WriteString("\n")
 
-	b.WriteString(m.section("WIRE IN") + stDim.Render("   ↑↓ pick row · ←→ change · space toggle") + "\n\n")
-	b.WriteString(m.scopeRow(0, "MCP server", m.mcp, mcpTarget(m.mcp)) + "\n")
-	b.WriteString(m.scopeRow(1, "guard hook", m.hook, hookTarget(m.hook)) + "\n")
-	b.WriteString(m.advisorRow(2) + "\n")
-	b.WriteString("  " + stDim.Render("the hook scope installs the apply-guard + dependency install-block / post-install scan hooks") + "\n\n")
+	b.WriteString(m.section("HOOKS") + stDim.Render("   ↑↓ pick row · ←→/space change") + "\n\n")
+	b.WriteString(m.toggleRow(0, "terraform", m.terraform, "apply-guard") + "\n")
+	b.WriteString(m.toggleRow(1, "dependencies", m.deps, "install-block + post-install scan") + "\n")
+	b.WriteString(m.scopeRow(2, m.hookScope) + "\n\n")
+
+	b.WriteString(m.section("MCP"))
+	b.WriteString(m.toggleRow(3, "advisor", m.advisor, "advisor.bumper.sh — security lookups") + "\n")
+	b.WriteString("       " + stWarn.Render(m.gl.warn) + " " + stDim.Render("the dependency guardrail needs this for CVE/malware data —") + "\n")
+	b.WriteString("         " + stDim.Render("only package names + versions leave your machine, never your code") + "\n")
+	b.WriteString(m.scopeRow(4, m.advisorScope) + "\n\n")
 
 	b.WriteString(m.section("ALWAYS"))
 	b.WriteString("  " + stSafe.Render(m.gl.check) + " " + stDim.Render("ignore .bumper/ in .gitignore") + "\n")
-	b.WriteString("  " + stSafe.Render(m.gl.check) + " " + stDim.Render("note the verify workflow in CLAUDE.md") + "\n")
+	b.WriteString("  " + stSafe.Render(m.gl.check) + " " + stDim.Render("note the wired workflows in CLAUDE.md") + "\n")
 	return b.String()
 }
 
-func (m initModel) scopeRow(row int, label string, sel setup.Scope, target string) string {
+// toggleRow renders an on/off guardrail row ([x]/[ ] + label + hint).
+func (m initModel) toggleRow(row int, label string, on bool, hint string) string {
 	focused := m.focusRow == row
 	spine := stDim.Render(m.gl.spine)
-	lbl := stInk.Render(pad(label, 12))
+	lbl := stInk.Render(pad(label, 13))
 	if focused {
 		spine = lipgloss.NewStyle().Foreground(colLive).Render(m.gl.spineActive)
-		lbl = lipgloss.NewStyle().Foreground(colLive).Bold(true).Render(pad(label, 12))
+		lbl = lipgloss.NewStyle().Foreground(colLive).Bold(true).Render(pad(label, 13))
+	}
+	box := "[ ]"
+	if on {
+		box = "[x]"
+	}
+	if focused {
+		box = lipgloss.NewStyle().Foreground(colLive).Bold(true).Render(box)
+	} else {
+		box = stInk.Render(box)
+	}
+	return spine + " " + box + " " + lbl + stDim.Render(hint)
+}
+
+// scopeRow renders a project/user scope selector for the row above it.
+func (m initModel) scopeRow(row int, sel setup.Scope) string {
+	focused := m.focusRow == row
+	spine := stDim.Render(m.gl.spine)
+	lbl := pad("  scope", 13)
+	lblStyled := stDim.Render(lbl)
+	if focused {
+		spine = lipgloss.NewStyle().Foreground(colLive).Render(m.gl.spineActive)
+		lblStyled = lipgloss.NewStyle().Foreground(colLive).Bold(true).Render(lbl)
 	}
 	var chips []string
-	for _, s := range []setup.Scope{setup.ScopeProject, setup.ScopeUser, setup.ScopeNone} {
+	for _, s := range []setup.Scope{setup.ScopeProject, setup.ScopeUser} {
 		if s == sel {
 			c := "[" + string(s) + "]"
 			if focused {
@@ -113,30 +141,7 @@ func (m initModel) scopeRow(row int, label string, sel setup.Scope, target strin
 			chips = append(chips, stDim.Render(" "+string(s)+" "))
 		}
 	}
-	arrow := stDim.Render("  " + m.gl.arrow + " " + target)
-	return spine + " " + lbl + " " + strings.Join(chips, " ") + arrow
-}
-
-// advisorRow renders the hosted-Advisor consent checkbox with its disclosure.
-func (m initModel) advisorRow(row int) string {
-	focused := m.focusRow == row
-	spine := stDim.Render(m.gl.spine)
-	lbl := stInk.Render(pad("Advisor MCP", 12))
-	if focused {
-		spine = lipgloss.NewStyle().Foreground(colLive).Render(m.gl.spineActive)
-		lbl = lipgloss.NewStyle().Foreground(colLive).Bold(true).Render(pad("Advisor MCP", 12))
-	}
-	box := "[ ]"
-	if m.advisor {
-		box = "[x]"
-	}
-	if focused {
-		box = lipgloss.NewStyle().Foreground(colLive).Bold(true).Render(box)
-	} else {
-		box = stInk.Render(box)
-	}
-	hint := stDim.Render("  " + m.gl.arrow + " hosted · only package info leaves the box")
-	return spine + " " + lbl + " " + box + hint
+	return spine + " " + lblStyled + " " + strings.Join(chips, " ")
 }
 
 // --- review ---
@@ -226,26 +231,6 @@ func (m initModel) footerKeys() string {
 
 func kvline(label, value string) string {
 	return "  " + stLabel.Render(pad(label, 9)) + value + "\n"
-}
-
-func mcpTarget(s setup.Scope) string {
-	switch s {
-	case setup.ScopeProject:
-		return ".mcp.json"
-	case setup.ScopeUser:
-		return "~/.claude.json"
-	}
-	return "skip"
-}
-
-func hookTarget(s setup.Scope) string {
-	switch s {
-	case setup.ScopeProject:
-		return ".claude/settings.json"
-	case setup.ScopeUser:
-		return "~/.claude/settings.json"
-	}
-	return "skip"
 }
 
 func collapseHome(path, home string) string {

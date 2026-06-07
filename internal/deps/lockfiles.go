@@ -191,8 +191,8 @@ func dedupe(in []Dep) []Dep {
 // --- npm ---------------------------------------------------------------------
 
 type npmV1Node struct {
-	Version      string                `json:"version"`
-	Dependencies map[string]npmV1Node  `json:"dependencies"`
+	Version      string               `json:"version"`
+	Dependencies map[string]npmV1Node `json:"dependencies"`
 }
 
 func parseNpm(content string) ([]Dep, error) {

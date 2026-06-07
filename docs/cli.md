@@ -11,8 +11,9 @@ bumper search [flags] <query>   find rules by keyword/resource
 bumper explain <RULE_ID>        show one rule in detail
 bumper verify <plan.tfplan>     scan a saved plan and record a verdict that unblocks its apply
 bumper guard                    PreToolUse hook: block unverified apply/destroy (reads stdin)
-bumper init [flags]             wire bumper into your agent (MCP server + apply-guard hook)
-bumper mcp                      run as an MCP server over stdio
+bumper deps [path]              scan a lockfile for vulnerable + malicious dependencies
+bumper deps guard / watch       dependency install hooks (read stdin)
+bumper init [flags]             wire bumper into your agent (guardrail hooks + advisor MCP)
 bumper version
 ```
 
@@ -276,19 +277,28 @@ still one binary).
 
 ---
 
-## `init` / `mcp`
+## `init`
 
-Wire bumper into your coding agent. See [agents.md](agents.md) for details.
+Wire bumper into your coding agent — the guardrail hooks + the hosted [Advisor MCP](mcp.md).
+See [agents.md](agents.md) for details.
 
 ```sh
-bumper init     # interactive wizard: project/user scope for the MCP server + guard hook
-bumper mcp      # run the MCP server directly (stdio) — what init wires up
+bumper init           # interactive wizard
+bumper init --yes     # non-interactive: wire everything (hooks + advisor MCP)
+bumper init --print   # preview, write nothing
 ```
 
 | Flag | Default | Description |
 | --- | --- | --- |
-| `--mcp` | `project` | MCP server scope: `project`\|`user`\|`none` |
-| `--hook` | `project` | guard hook scope: `project`\|`user`\|`none` |
+| `--hook` | `project` | hook scope: `project`\|`user`\|`none` |
+| `--terraform` | `true` | install the terraform apply-guard hook |
+| `--deps` | `true` | install the dependency hooks (install-block + post-install scan) |
+| `--advisor` | `project` | advisor MCP scope: `project`\|`user`\|`none` (`none` = skip) |
+| `--advisor-url` | – | self-hosted Advisor base URL (also `$BUMPER_ADVISOR_URL`) |
 | `--print` | off | show what would change and exit without writing |
 | `--yes` | off | apply non-interactively (no wizard) |
 | `--no-tui` | off | skip the wizard even on a TTY |
+
+Defaults wire everything; hooks self-filter, so a Terraform guard in a Node repo simply
+never fires. The dependency guardrail needs the Advisor for CVE/malware data — selecting
+`--deps` keeps the advisor on (host it yourself with `--advisor-url`).

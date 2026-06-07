@@ -27,9 +27,9 @@ func TestParseInstallCommands(t *testing.T) {
 		{"cargo add serde", "crates.io", "serde"},
 		{"gem install nokogiri", "RubyGems", "nokogiri"},
 		{"cd app && npm install bad-pkg", "npm", "bad-pkg"},
-		{"npm install", "", ""},      // bare → nothing named
-		{"ls -la", "", ""},           // not an install
-		{"npm run build", "", ""},    // not install verb
+		{"npm install", "", ""},   // bare → nothing named
+		{"ls -la", "", ""},        // not an install
+		{"npm run build", "", ""}, // not install verb
 	}
 	for _, tc := range cases {
 		t.Run(tc.cmd, func(t *testing.T) {

@@ -14,18 +14,15 @@ import (
 	"fmt"
 	"io"
 	"os"
-	"os/signal"
 	"path/filepath"
 	"sort"
 	"strings"
-	"syscall"
 	"time"
 
 	"github.com/gnana997/bumper/internal/catalog"
 	"github.com/gnana997/bumper/internal/deps"
 	"github.com/gnana997/bumper/internal/engine"
 	"github.com/gnana997/bumper/internal/enrich"
-	"github.com/gnana997/bumper/internal/mcpserver"
 	"github.com/gnana997/bumper/internal/plan"
 	"github.com/gnana997/bumper/internal/report"
 	"github.com/gnana997/bumper/internal/rules"
@@ -50,7 +47,6 @@ Usage:
   bumper deps watch               PostToolUse hook: scan deps after an install, nudge on findings (stdin)
   bumper verify <plan.tfplan>     scan a saved plan and record a verdict that unblocks its apply
   bumper guard                    PreToolUse hook: block unverified terraform apply/destroy (reads stdin)
-  bumper mcp                      run as an MCP server (scan/search/list/explain tools over stdio)
   bumper version
 
 Enforce (agent context): terraform plan -out tfplan && bumper verify tfplan && terraform apply tfplan
@@ -82,8 +78,6 @@ func run() int {
 			return cmdExplain(args[1:])
 		case "tui":
 			return cmdTUI(args[1:])
-		case "mcp":
-			return cmdMCP(args[1:])
 		case "verify":
 			return cmdVerify(args[1:])
 		case "guard":
@@ -412,9 +406,10 @@ func cmdTUI(args []string) int {
 func cmdInit(args []string) int {
 	fs := flag.NewFlagSet("init", flag.ContinueOnError)
 	fs.SetOutput(os.Stderr)
-	mcpFlag := fs.String("mcp", "project", "MCP server scope: project|user|none")
-	hookFlag := fs.String("hook", "project", "guard + dependency hook scope: project|user|none")
-	advisorFlag := fs.Bool("advisor", true, "wire the hosted Advisor MCP (only package info leaves the machine)")
+	hookFlag := fs.String("hook", "project", "hook scope: project|user|none")
+	terraformFlag := fs.Bool("terraform", true, "install the terraform apply-guard hook")
+	depsFlag := fs.Bool("deps", true, "install the dependency hooks (install-block + post-install scan)")
+	advisorFlag := fs.String("advisor", "project", "advisor MCP scope: project|user|none (none = skip)")
 	advisorURLFlag := fs.String("advisor-url", "", "Advisor base URL for self-hosting (default https://advisor.bumper.sh)")
 	printOnly := fs.Bool("print", false, "show what would change and exit without writing")
 	assumeYes := fs.Bool("yes", false, "apply non-interactively (no wizard)")
@@ -422,13 +417,13 @@ func cmdInit(args []string) int {
 	if err := fs.Parse(args); err != nil {
 		return 2
 	}
-	mcp, ok := setup.ParseScope(*mcpFlag)
-	if !ok {
-		return fail("--mcp must be project|user|none, got %q", *mcpFlag)
-	}
-	hook, ok := setup.ParseScope(*hookFlag)
+	hookScope, ok := setup.ParseScope(*hookFlag)
 	if !ok {
 		return fail("--hook must be project|user|none, got %q", *hookFlag)
+	}
+	advisorScope, ok := setup.ParseScope(*advisorFlag)
+	if !ok {
+		return fail("--advisor must be project|user|none, got %q", *advisorFlag)
 	}
 
 	env, err := setup.Detect()
@@ -436,9 +431,15 @@ func cmdInit(args []string) int {
 		return fail("%v", err)
 	}
 	advisorURL := deps.ResolveAdvisorURL(*advisorURLFlag)
-	// Dependency hooks ride the same scope as the guard hook (one "hooks" choice).
+	advisorOn := advisorScope != setup.ScopeNone
+	// The dependency guardrail needs an advisor endpoint for CVE/malware data.
+	if *depsFlag && !advisorOn {
+		fmt.Fprintln(os.Stderr, "note: --deps needs the advisor for CVE/malware data — enabling it at project scope (use --advisor-url to self-host).")
+		advisorScope, advisorOn = setup.ScopeProject, true
+	}
 	steps := setup.Plan(setup.Options{
-		MCP: mcp, Hook: hook, Deps: hook, Advisor: *advisorFlag, AdvisorURL: advisorURL, Env: env,
+		HookScope: hookScope, Terraform: *terraformFlag, Deps: *depsFlag,
+		Advisor: advisorOn, AdvisorScope: advisorScope, AdvisorURL: advisorURL, Env: env,
 	})
 	p := style.New(os.Stdout)
 
@@ -447,7 +448,7 @@ func cmdInit(args []string) int {
 		for _, s := range steps {
 			fmt.Printf("  • %-34s %s\n", s.Title, s.RelPath(env))
 		}
-		if *advisorFlag {
+		if advisorOn {
 			printAdvisorDisclosure(advisorURL)
 		}
 		fmt.Println("\n(--print) no files were changed.")
@@ -456,7 +457,7 @@ func cmdInit(args []string) int {
 
 	// Interactive: launch the wizard.
 	if !*assumeYes && !*noTUI && isInteractive() {
-		res, err := tui.RunInit(env, mcp, hook)
+		res, err := tui.RunInit(env)
 		if err != nil {
 			return fail("%v", err)
 		}
@@ -476,7 +477,7 @@ func cmdInit(args []string) int {
 		fmt.Fprintln(os.Stderr, "refusing to modify files without confirmation; re-run with --yes (or --print to preview).")
 		return 2
 	}
-	if *advisorFlag {
+	if advisorOn {
 		printAdvisorDisclosure(advisorURL)
 		fmt.Println()
 	}
@@ -492,39 +493,17 @@ func cmdInit(args []string) int {
 	return 0
 }
 
-// printAdvisorDisclosure is the consent notice for wiring the hosted Advisor MCP.
+// printAdvisorDisclosure is the consent notice for wiring the hosted CVE-data MCP.
 func printAdvisorDisclosure(url string) {
-	fmt.Printf("  Advisor MCP → configures the HOSTED server at %s\n", url)
-	fmt.Println("    Only package info (ecosystem/name/version) leaves your machine — never your code.")
-	fmt.Println("    Skip with --advisor=false, or self-host with --advisor-url.")
+	fmt.Printf("  CVE data → adds an MCP at %s so the agent can look up CVE & malware data for your packages\n", url)
+	fmt.Println("    ! only package names + versions leave your machine — never your code")
+	fmt.Println("    Skip with --advisor=none, or self-host with --advisor-url.")
 }
 
 // isInteractive reports whether stdin is a terminal (so the wizard can read keys).
 func isInteractive() bool {
 	fi, err := os.Stdin.Stat()
 	return err == nil && fi.Mode()&os.ModeCharDevice != 0
-}
-
-// cmdMCP runs bumper as a stdio MCP server, exposing scan/list/explain as tools
-// for agentic assistants (Claude Code, etc.).
-func cmdMCP(args []string) int {
-	fs := flag.NewFlagSet("mcp", flag.ContinueOnError)
-	fs.SetOutput(os.Stderr)
-	rulesDir := fs.String("rules", "", "")
-	if err := fs.Parse(args); err != nil {
-		return 2
-	}
-	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
-	defer stop()
-	err := mcpserver.Serve(ctx, *rulesDir)
-	// A client disconnecting (stdin EOF → the SDK's unexported "server is closing"
-	// error) or a shutdown signal (context cancelled) is a normal end of session,
-	// not a failure.
-	if err == nil || errors.Is(err, io.EOF) || errors.Is(err, context.Canceled) ||
-		strings.Contains(err.Error(), "server is closing") {
-		return 0
-	}
-	return fail("%v", err)
 }
 
 // cmdVerify scans a saved plan and, on a pass, records a verdict bound to the
