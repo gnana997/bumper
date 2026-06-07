@@ -28,7 +28,7 @@ func TestMergeAdvisorPreservesOtherServers(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	if a, err := MergeAdvisorMCP(path, "https://advisor.bumper.sh"); err != nil || a != Updated {
+	if a, err := MergeAdvisorMCP(path, "https://advisor.bumper.sh", AgentClaude); err != nil || a != Updated {
 		t.Fatalf("merge: action=%v err=%v, want updated", a, err)
 	}
 	m := readJSON(t, path)
@@ -110,7 +110,7 @@ func TestRefuseInvalidJSON(t *testing.T) {
 	if err := os.WriteFile(path, []byte("{ this is not json"), 0o644); err != nil {
 		t.Fatal(err)
 	}
-	if _, err := MergeAdvisorMCP(path, "https://advisor.bumper.sh"); err == nil {
+	if _, err := MergeAdvisorMCP(path, "https://advisor.bumper.sh", AgentClaude); err == nil {
 		t.Error("expected refusal to overwrite invalid JSON")
 	}
 	// The bad file must be left untouched.
@@ -124,7 +124,7 @@ func TestUpdateIsAtomicNoStrayFiles(t *testing.T) {
 	dir := t.TempDir()
 	path := filepath.Join(dir, ".mcp.json")
 	os.WriteFile(path, []byte(`{"mcpServers":{}}`), 0o644)
-	if _, err := MergeAdvisorMCP(path, "https://advisor.bumper.sh"); err != nil {
+	if _, err := MergeAdvisorMCP(path, "https://advisor.bumper.sh", AgentClaude); err != nil {
 		t.Fatal(err)
 	}
 	// The atomic temp+rename must leave no .bumper-bak or .bumper-tmp behind.
@@ -256,14 +256,81 @@ func TestPlanAugment(t *testing.T) {
 }
 
 func TestAgentBasics(t *testing.T) {
-	if AgentAugment.ShellTool() != "launch-process" || AgentClaude.ShellTool() != "Bash" {
+	if AgentAugment.ShellTool() != "launch-process" || AgentClaude.ShellTool() != "Bash" || AgentGemini.ShellTool() != "run_shell_command" {
 		t.Error("ShellTool mapping wrong")
 	}
-	if _, ok := ParseAgent("augment"); !ok {
-		t.Error("ParseAgent(augment) should be valid")
+	// Event keys: Claude/Augment use PreToolUse/PostToolUse; Gemini uses BeforeTool/AfterTool.
+	if AgentClaude.PreToolEvent() != "PreToolUse" || AgentClaude.PostToolEvent() != "PostToolUse" {
+		t.Error("claude event keys wrong")
+	}
+	if AgentGemini.PreToolEvent() != "BeforeTool" || AgentGemini.PostToolEvent() != "AfterTool" {
+		t.Error("gemini event keys wrong")
+	}
+	for _, ok := range []string{"claude", "augment", "gemini"} {
+		if _, valid := ParseAgent(ok); !valid {
+			t.Errorf("ParseAgent(%q) should be valid", ok)
+		}
 	}
 	if _, ok := ParseAgent("bogus"); ok {
 		t.Error("ParseAgent(bogus) should be invalid")
+	}
+}
+
+func TestPlanGemini(t *testing.T) {
+	dir := t.TempDir()
+	env := Env{Bin: "bumper", Cwd: dir, Home: t.TempDir()}
+	steps := Plan(Options{
+		Agent: AgentGemini, HookScope: ScopeProject, Terraform: true, Deps: true,
+		Advisor: true, AdvisorScope: ScopeProject, Env: env,
+	})
+
+	// All hook + MCP steps target the single .gemini/settings.json; notes go to GEMINI.md.
+	wantGemini := filepath.Join(dir, ".gemini", "settings.json")
+	sawHook, sawMCP, sawGeminiMd := false, false, false
+	for _, s := range steps {
+		switch {
+		case strings.Contains(s.Title, "guard") || strings.Contains(s.Title, "dependency hooks"):
+			if s.Path != wantGemini {
+				t.Errorf("hook step %q path = %q, want %q", s.Title, s.Path, wantGemini)
+			}
+			sawHook = true
+		case strings.Contains(s.Title, "advisor MCP"):
+			if s.Path != wantGemini {
+				t.Errorf("advisor MCP path = %q, want co-located %q", s.Path, wantGemini)
+			}
+			sawMCP = true
+		case strings.Contains(s.Title, "GEMINI.md"):
+			sawGeminiMd = true
+		}
+		if strings.Contains(s.Path, ".mcp.json") || strings.Contains(s.Path, ".claude") || strings.Contains(s.Path, ".augment") {
+			t.Errorf("gemini plan must not touch claude/augment paths, got %q", s.Path)
+		}
+	}
+	if !sawHook || !sawMCP || !sawGeminiMd {
+		t.Fatalf("gemini plan missing steps: hook=%v mcp=%v geminimd=%v", sawHook, sawMCP, sawGeminiMd)
+	}
+
+	// Apply and verify the Gemini-specific output: run_shell_command matcher,
+	// BeforeTool/AfterTool event keys, --client=gemini, and the httpUrl MCP shape.
+	for _, s := range steps {
+		if _, err := s.Run(); err != nil {
+			t.Fatalf("apply %q: %v", s.Title, err)
+		}
+	}
+	got := read(t, wantGemini)
+	for _, want := range []string{
+		"run_shell_command", "BeforeTool", "AfterTool",
+		"guard --client=gemini", "deps guard --client=gemini", "deps watch --client=gemini",
+		"bumper-advisor", "httpUrl", "advisor.bumper.sh/mcp",
+	} {
+		if !strings.Contains(got, want) {
+			t.Errorf(".gemini/settings.json missing %q\n--- got ---\n%s", want, got)
+		}
+	}
+	for _, unwant := range []string{`"matcher": "Bash"`, "PreToolUse", "PostToolUse", `"type": "http"`} {
+		if strings.Contains(got, unwant) {
+			t.Errorf("gemini config should not contain %q\n--- got ---\n%s", unwant, got)
+		}
 	}
 }
 

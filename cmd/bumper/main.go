@@ -408,7 +408,7 @@ func cmdInit(args []string) int {
 	fs := flag.NewFlagSet("init", flag.ContinueOnError)
 	fs.SetOutput(os.Stderr)
 	hookFlag := fs.String("hook", "project", "hook scope: project|user|none")
-	agentFlag := fs.String("agent", "", "coding agent to wire: claude|augment (default: auto-detect)")
+	agentFlag := fs.String("agent", "", "coding agent to wire: claude|augment|gemini (default: auto-detect)")
 	terraformFlag := fs.Bool("terraform", true, "install the terraform apply-guard hook")
 	depsFlag := fs.Bool("deps", true, "install the dependency hooks (install-block + post-install scan)")
 	advisorFlag := fs.String("advisor", "project", "advisor MCP scope: project|user|none (none = skip)")
@@ -436,11 +436,17 @@ func cmdInit(args []string) int {
 	if *agentFlag != "" {
 		a, ok := setup.ParseAgent(*agentFlag)
 		if !ok {
-			return fail("--agent must be claude|augment, got %q", *agentFlag)
+			return fail("--agent must be claude|augment|gemini, got %q", *agentFlag)
 		}
 		agent = a
-	} else if env.AugmentFound && !env.ClaudeFound {
-		agent = setup.AgentAugment // only Augment is present — wire it
+	} else if !env.ClaudeFound {
+		// Auto-switch away from the Claude default only when Claude isn't present.
+		switch {
+		case env.AugmentFound:
+			agent = setup.AgentAugment
+		case env.GeminiFound:
+			agent = setup.AgentGemini
+		}
 	}
 	advisorURL := deps.ResolveAdvisorURL(*advisorURLFlag)
 	advisorOn := advisorScope != setup.ScopeNone
@@ -576,12 +582,12 @@ func cmdGuard(args []string) int {
 	fs := flag.NewFlagSet("guard", flag.ContinueOnError)
 	fs.SetOutput(os.Stderr)
 	maxAge := fs.Duration("max-age", safety.DefaultMaxAge, "how long a verdict stays valid (0 = no expiry)")
-	client := fs.String("client", "claude", "host agent whose shell tool to match: claude|augment")
+	client := fs.String("client", "claude", "host agent whose shell tool to match: claude|augment|gemini")
 	logPath := fs.String("log", "", "append raw hook payload + decision to this file (debug; or $BUMPER_HOOK_LOG)")
 	if err := fs.Parse(args); err != nil {
 		return 2
 	}
-	return runHook("guard", *logPath, func(r io.Reader, w io.Writer) (hookOutcome, error) {
+	return runHook("guard", *logPath, *client, func(r io.Reader, w io.Writer) (hookOutcome, error) {
 		d, err := safety.Guard(r, w, shellToolForClient(*client), time.Now(), *maxAge)
 		return hookOutcome{deny: d.Deny, reason: d.Reason}, err
 	})
@@ -597,6 +603,16 @@ func shellToolForClient(client string) string {
 	return setup.AgentClaude.ShellTool()
 }
 
+// postEventForClient resolves the --client flag to the host agent's post-tool
+// event name, used as the hookEventName in the watch hook's JSON output (Claude/
+// Augment: "PostToolUse"; Gemini: "AfterTool"). Unknown/empty falls back to Claude.
+func postEventForClient(client string) string {
+	if a, ok := setup.ParseAgent(client); ok {
+		return a.PostToolEvent()
+	}
+	return setup.AgentClaude.PostToolEvent()
+}
+
 // hookOutcome is what a hook body reports back: whether it denied a PreToolUse
 // call and the reason. A PostToolUse hook (deps watch) never denies.
 type hookOutcome struct {
@@ -605,40 +621,62 @@ type hookOutcome struct {
 }
 
 // runHook executes a hook body (guard / deps guard / deps watch) with optional
-// debug logging, and returns the process exit code.
+// debug logging, and returns the process exit code. The deny protocol is
+// per-agent, because Claude Code and Gemini CLI disagree on the schema:
 //
-// It buffers stdin so the raw payload AND the emitted decision can both be appended
-// to logPath, then writes the decision to real stdout. When a PreToolUse hook denies
-// it ALSO writes the reason to stderr and returns exit code 2 — the universal block
-// signal every agent honors (and the only one Gemini accepts, since it ignores the
-// JSON deny). Agents that read the stdout JSON get the clean structured deny; the
-// exit-2 path is the backstop if the JSON is ever ignored. Logging and errors are
-// fail-open and never turn an allow into a block.
+//   - Claude Code / Augment: the body writes the `hookSpecificOutput.permissionDecision`
+//     envelope to stdout, and on a deny we ALSO write the reason to stderr and exit 2
+//     — the universal backstop for any agent that honors exit codes.
+//   - Gemini CLI: a block is `{"decision":"deny","reason":…}` on stdout with EXIT 0.
+//     Gemini IGNORES the Claude envelope, and (verified) does NOT honor exit 2 for a
+//     tool block, so the exit-2 path would let the tool run. So for Gemini we emit its
+//     native decision and exit 0.
 //
-// logPath comes from --log; if empty, $BUMPER_HOOK_LOG is used, so logging can be
-// toggled globally without rewiring config (handy when wiring a new agent).
-func runHook(name, logPath string, body func(r io.Reader, w io.Writer) (hookOutcome, error)) int {
+// AfterTool context (deps watch) uses `hookSpecificOutput.additionalContext`, which
+// both agents read — so the watch output needs no per-agent reshaping.
+//
+// It buffers stdin so the raw payload AND the emitted decision are appended to
+// logPath. Logging and errors are fail-open and never turn an allow into a block.
+// logPath comes from --log; if empty, $BUMPER_HOOK_LOG is used.
+func runHook(name, logPath, client string, body func(r io.Reader, w io.Writer) (hookOutcome, error)) int {
 	if logPath == "" {
 		logPath = os.Getenv("BUMPER_HOOK_LOG")
 	}
 	in, _ := io.ReadAll(os.Stdin)
 	var out bytes.Buffer
 	outcome, err := body(bytes.NewReader(in), &out)
-	_, _ = os.Stdout.Write(out.Bytes())
+
+	geminiDeny := outcome.deny && isGeminiClient(client)
+	rendered := out.Bytes()
+	if geminiDeny {
+		// Gemini's BeforeTool block schema (top-level decision/reason), exit 0.
+		rendered, _ = json.Marshal(map[string]any{"decision": "deny", "reason": outcome.reason})
+		rendered = append(rendered, '\n')
+	}
+	_, _ = os.Stdout.Write(rendered)
 	if err != nil {
 		// Fail-open: surface the error but never block the agent's shell.
 		fmt.Fprintf(os.Stderr, "bumper %s: %v\n", name, err)
 	}
 	if logPath != "" {
-		logHookEvent(logPath, name, in, out.Bytes(), err)
+		logHookEvent(logPath, name, in, rendered, err)
 	}
 	if outcome.deny {
+		if geminiDeny {
+			return 0 // Gemini blocks on the stdout decision; exit 2 would let it run
+		}
 		if outcome.reason != "" {
 			fmt.Fprintln(os.Stderr, outcome.reason)
 		}
 		return 2 // universal block signal — covers agents that ignore the JSON deny
 	}
 	return 0
+}
+
+// isGeminiClient reports whether the --client flag selects Gemini CLI.
+func isGeminiClient(client string) bool {
+	a, ok := setup.ParseAgent(client)
+	return ok && a == setup.AgentGemini
 }
 
 // logHookEvent appends one JSON line: timestamp, hook name, the raw stdin payload
@@ -806,13 +844,13 @@ func cmdDepsGuard(args []string) int {
 	fs := flag.NewFlagSet("deps guard", flag.ContinueOnError)
 	fs.SetOutput(os.Stderr)
 	advisorURL := fs.String("advisor-url", "", "Advisor base URL (or $BUMPER_ADVISOR_URL)")
-	clientFlag := fs.String("client", "claude", "host agent whose shell tool to match: claude|augment")
+	clientFlag := fs.String("client", "claude", "host agent whose shell tool to match: claude|augment|gemini")
 	logPath := fs.String("log", "", "append raw hook payload + decision to this file (debug; or $BUMPER_HOOK_LOG)")
 	if err := fs.Parse(args); err != nil {
 		return 2
 	}
 	client := deps.NewClient(deps.ResolveAdvisorURL(*advisorURL))
-	return runHook("deps guard", *logPath, func(r io.Reader, w io.Writer) (hookOutcome, error) {
+	return runHook("deps guard", *logPath, *clientFlag, func(r io.Reader, w io.Writer) (hookOutcome, error) {
 		reason, err := deps.Guard(r, w, client, shellToolForClient(*clientFlag))
 		return hookOutcome{deny: reason != "", reason: reason}, err
 	})
@@ -825,7 +863,7 @@ func cmdDepsWatch(args []string) int {
 	fs := flag.NewFlagSet("deps watch", flag.ContinueOnError)
 	fs.SetOutput(os.Stderr)
 	advisorURL := fs.String("advisor-url", "", "Advisor base URL (or $BUMPER_ADVISOR_URL)")
-	clientFlag := fs.String("client", "claude", "host agent whose shell tool to match: claude|augment")
+	clientFlag := fs.String("client", "claude", "host agent whose shell tool to match: claude|augment|gemini")
 	logPath := fs.String("log", "", "append raw hook payload + decision to this file (debug; or $BUMPER_HOOK_LOG)")
 	if err := fs.Parse(args); err != nil {
 		return 2
@@ -834,8 +872,8 @@ func cmdDepsWatch(args []string) int {
 	client := deps.NewClient(deps.ResolveAdvisorURL(*advisorURL))
 	// PostToolUse: the install already ran, so this hook never blocks (no exit 2);
 	// it only injects context. Always exits 0.
-	return runHook("deps watch", *logPath, func(r io.Reader, w io.Writer) (hookOutcome, error) {
-		return hookOutcome{}, deps.Watch(r, w, client, cwd, shellToolForClient(*clientFlag))
+	return runHook("deps watch", *logPath, *clientFlag, func(r io.Reader, w io.Writer) (hookOutcome, error) {
+		return hookOutcome{}, deps.Watch(r, w, client, cwd, shellToolForClient(*clientFlag), postEventForClient(*clientFlag))
 	})
 }
 

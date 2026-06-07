@@ -64,7 +64,7 @@ Dependabot/Snyk/Socket for what they each do best.
 ## The agent guardrail
 
 This is the part with the fewest direct comparables. bumper installs **blocking pre-tool
-hooks** into Claude Code and Augment so the agent **cannot** run an unverified `terraform
+hooks** into Claude Code, Augment, and Gemini CLI so the agent **cannot** run an unverified `terraform
 apply` or install a known-malicious package — enforced at the tool layer, not as advice the
 model can ignore. Most security tooling assumes a human runs the command and reads the report
 later; bumper assumes an **agent** runs it, autonomously, and gates that. The hosted Advisor
@@ -89,7 +89,7 @@ Being explicit, because a security tool that overclaims is worse than useless:
 
 ## When to reach for bumper
 
-- You run an **AI coding agent** (Claude Code, Augment) and want it gated from destroying
+- You run an **AI coding agent** (Claude Code, Augment, Gemini CLI) and want it gated from destroying
   infra or installing malware — the case nothing else covers well.
 - You want a **deterministic apply gate** that *blocks* on destruction/exposure, not just a
   linter that warns.

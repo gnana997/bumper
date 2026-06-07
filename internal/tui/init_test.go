@@ -41,9 +41,16 @@ func TestInitWizardConfigure(t *testing.T) {
 	}
 	m = step(m, rkey(' '))
 	if m.agent != setup.AgentAugment {
-		t.Error("space on row 0 should switch agent to augment")
+		t.Error("space on row 0 should switch agent claude→augment")
 	}
-	m = step(m, rkey(' ')) // back to claude
+	m = step(m, rkey(' '))
+	if m.agent != setup.AgentGemini {
+		t.Error("space on row 0 should switch agent augment→gemini")
+	}
+	m = step(m, rkey(' ')) // gemini → back to claude
+	if m.agent != setup.AgentClaude {
+		t.Error("space on row 0 should cycle gemini→claude")
+	}
 	// down to terraform (row 1); space toggles it off.
 	m = step(m, key(tea.KeyDown))
 	if m.focusRow != 1 {

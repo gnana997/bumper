@@ -94,20 +94,24 @@ func ParseScope(s string) (Scope, bool) {
 	return "", false
 }
 
-// Agent is a coding agent bumper can wire into. Augment uses the same hook and MCP
-// JSON shapes as Claude Code (deny envelope, mcpServers block); they differ only in
-// the shell-tool name the hook matches and where config lives on disk.
+// Agent is a coding agent bumper can wire into. All three read the same stdin
+// payload (tool_name / tool_input.command) and use the same nested hook entry
+// shape; they differ in the shell-tool name the hook matches, the settings.json
+// event keys (Claude/Augment: PreToolUse/PostToolUse; Gemini: BeforeTool/AfterTool),
+// the MCP entry shape (Claude/Augment: {type,url}; Gemini: {httpUrl}), and where
+// config + notes live on disk.
 type Agent string
 
 const (
 	AgentClaude  Agent = "claude"
 	AgentAugment Agent = "augment"
+	AgentGemini  Agent = "gemini"
 )
 
 // ParseAgent validates an agent string from a flag.
 func ParseAgent(s string) (Agent, bool) {
 	switch Agent(s) {
-	case AgentClaude, AgentAugment:
+	case AgentClaude, AgentAugment, AgentGemini:
 		return Agent(s), true
 	}
 	return "", false
@@ -116,28 +120,58 @@ func ParseAgent(s string) (Agent, bool) {
 // ShellTool is the tool name the agent uses for shell execution — what the hook
 // matcher selects and what the guard checks tool_name against.
 func (a Agent) ShellTool() string {
-	if a == AgentAugment {
+	switch a {
+	case AgentAugment:
 		return "launch-process"
+	case AgentGemini:
+		return "run_shell_command"
+	default:
+		return "Bash"
 	}
-	return "Bash"
 }
 
 // Label is the human-facing name for the agent.
 func (a Agent) Label() string {
-	if a == AgentAugment {
+	switch a {
+	case AgentAugment:
 		return "Augment"
+	case AgentGemini:
+		return "Gemini CLI"
+	default:
+		return "Claude Code"
 	}
-	return "Claude Code"
 }
 
 // clientSuffix is appended to baked hook commands so the binary knows which shell
 // tool to expect at runtime. Empty for Claude (the default) — so existing Claude
 // config and behavior are byte-for-byte unchanged.
 func (a Agent) clientSuffix() string {
-	if a == AgentAugment {
+	switch a {
+	case AgentAugment:
 		return " --client=augment"
+	case AgentGemini:
+		return " --client=gemini"
+	default:
+		return ""
 	}
-	return ""
+}
+
+// PreToolEvent and PostToolEvent are the settings.json event keys the hooks are
+// written under (and the hookEventName a hook echoes back in its JSON output).
+// Claude Code and Augment use PreToolUse/PostToolUse; Gemini CLI uses
+// BeforeTool/AfterTool.
+func (a Agent) PreToolEvent() string {
+	if a == AgentGemini {
+		return "BeforeTool"
+	}
+	return "PreToolUse"
+}
+
+func (a Agent) PostToolEvent() string {
+	if a == AgentGemini {
+		return "AfterTool"
+	}
+	return "PostToolUse"
 }
 
 // Env is the detected environment `bumper init` wires into.
@@ -145,6 +179,7 @@ type Env struct {
 	Bin          string // command to invoke bumper in generated config
 	ClaudeFound  bool   // the `claude` CLI is on PATH
 	AugmentFound bool   // the `auggie`/`augment` CLI is on PATH
+	GeminiFound  bool   // the `gemini` CLI is on PATH
 	Cwd          string // project directory
 	Home         string // user home
 	GitRepo      bool   // cwd is a git repo
@@ -168,11 +203,13 @@ func Detect() (Env, error) {
 			break
 		}
 	}
+	_, geminiErr := exec.LookPath("gemini")
 	_, gitErr := os.Stat(filepath.Join(cwd, ".git"))
 	return Env{
 		Bin:          BinPath(),
 		ClaudeFound:  claudeErr == nil,
 		AugmentFound: augmentFound,
+		GeminiFound:  geminiErr == nil,
 		Cwd:          cwd,
 		Home:         home,
 		GitRepo:      gitErr == nil,
@@ -244,7 +281,7 @@ func Plan(o Options) []Step {
 			if url == "" {
 				url = DefaultAdvisorURL
 			}
-			steps = append(steps, Step{"register advisor MCP · " + string(o.AdvisorScope), mp, func() (Action, error) { return MergeAdvisorMCP(mp, url) }})
+			steps = append(steps, Step{"register advisor MCP · " + string(o.AdvisorScope), mp, func() (Action, error) { return MergeAdvisorMCP(mp, url, agent) }})
 		}
 	}
 
@@ -276,11 +313,17 @@ func hookSettingsPath(o Options) string {
 	return ""
 }
 
+// coLocatesMCP reports whether the agent keeps its MCP servers in the same
+// settings.json as its hooks (Augment, Gemini) rather than a separate file (Claude).
+func coLocatesMCP(a Agent) bool {
+	return a == AgentAugment || a == AgentGemini
+}
+
 // advisorMCPPath is where the hosted-advisor MCP entry is written. Claude keeps MCP
-// separate (.mcp.json project / ~/.claude.json user); Augment co-locates it in the
-// same settings.json as its hooks.
+// separate (.mcp.json project / ~/.claude.json user); Augment and Gemini co-locate
+// it in the same settings.json as their hooks.
 func advisorMCPPath(o Options) string {
-	if o.Agent == AgentAugment {
+	if coLocatesMCP(o.Agent) {
 		dir := agentConfigDir(o.Agent)
 		switch o.AdvisorScope {
 		case ScopeProject:
@@ -301,39 +344,48 @@ func advisorMCPPath(o Options) string {
 
 // agentConfigDir is the per-agent config directory name.
 func agentConfigDir(a Agent) string {
-	if a == AgentAugment {
+	switch a {
+	case AgentAugment:
 		return ".augment"
+	case AgentGemini:
+		return ".gemini"
+	default:
+		return ".claude"
 	}
-	return ".claude"
 }
 
 // contextFilePath is the agent-instructions file the workflow notes go into:
 // CLAUDE.md for Claude Code, AGENTS.md (the cross-agent standard Augment reads) for
-// Augment. Always project-local.
+// Augment, GEMINI.md for Gemini CLI. Always project-local.
 func contextFilePath(o Options) string {
 	name := "CLAUDE.md"
-	if o.Agent == AgentAugment {
+	switch o.Agent {
+	case AgentAugment:
 		name = "AGENTS.md"
+	case AgentGemini:
+		name = "GEMINI.md"
 	}
 	return filepath.Join(o.Env.Cwd, name)
 }
 
-// MergeHook installs the terraform guard as a PreToolUse shell-tool hook in a
-// settings.json file. The matcher and the baked --client flag come from the agent
-// (Claude → "Bash" + no flag; Augment → "launch-process" + --client=augment).
+// MergeHook installs the terraform guard as a pre-tool shell-tool hook in a
+// settings.json file. The matcher, the event key, and the baked --client flag come
+// from the agent (Claude → "Bash"/PreToolUse + no flag; Augment → "launch-process"/
+// PreToolUse + --client=augment; Gemini → "run_shell_command"/BeforeTool + --client=gemini).
 func MergeHook(path, binPath string, agent Agent) (Action, error) {
 	m, existed, err := loadJSONMap(path)
 	if err != nil {
 		return Unchanged, err
 	}
+	event := agent.PreToolEvent()
 	hooks := childMap(m, "hooks")
-	pre := childSlice(hooks, "PreToolUse")
+	pre := childSlice(hooks, event)
 
 	if hookInstalled(pre) {
 		return Unchanged, nil
 	}
 	pre = append(pre, bashHookEntry(agent.ShellTool(), binPath+" guard"+agent.clientSuffix()))
-	hooks["PreToolUse"] = pre
+	hooks[event] = pre
 	m["hooks"] = hooks
 	if err := writeJSONMap(path, m, existed); err != nil {
 		return Unchanged, err
@@ -374,14 +426,15 @@ func MergeDepsHooks(path, binPath string, agent Agent) (Action, error) {
 		return Unchanged, err
 	}
 	matcher, suffix := agent.ShellTool(), agent.clientSuffix()
+	preEvent, postEvent := agent.PreToolEvent(), agent.PostToolEvent()
 	hooks := childMap(m, "hooks")
 	changed := false
-	if pre := childSlice(hooks, "PreToolUse"); !hookCmdInstalled(pre, "deps guard") {
-		hooks["PreToolUse"] = append(pre, bashHookEntry(matcher, binPath+" deps guard"+suffix))
+	if pre := childSlice(hooks, preEvent); !hookCmdInstalled(pre, "deps guard") {
+		hooks[preEvent] = append(pre, bashHookEntry(matcher, binPath+" deps guard"+suffix))
 		changed = true
 	}
-	if post := childSlice(hooks, "PostToolUse"); !hookCmdInstalled(post, "deps watch") {
-		hooks["PostToolUse"] = append(post, bashHookEntry(matcher, binPath+" deps watch"+suffix))
+	if post := childSlice(hooks, postEvent); !hookCmdInstalled(post, "deps watch") {
+		hooks[postEvent] = append(post, bashHookEntry(matcher, binPath+" deps watch"+suffix))
 		changed = true
 	}
 	if !changed {
@@ -424,14 +477,16 @@ func hookCmdInstalled(entries []any, needle string) bool {
 }
 
 // MergeAdvisorMCP registers the hosted Advisor as a streamable-http MCP server.
-// Only package coordinates ever reach it — never source. Idempotent.
-func MergeAdvisorMCP(path, url string) (Action, error) {
+// Only package coordinates ever reach it — never source. Idempotent. The entry
+// shape is per-agent: Claude Code / Augment use {"type":"http","url":…}; Gemini CLI
+// uses {"httpUrl":…} for a streamable-HTTP server.
+func MergeAdvisorMCP(path, url string, agent Agent) (Action, error) {
 	m, existed, err := loadJSONMap(path)
 	if err != nil {
 		return Unchanged, err
 	}
 	servers := childMap(m, "mcpServers")
-	desired := map[string]any{"type": "http", "url": strings.TrimRight(url, "/") + "/mcp"}
+	desired := advisorMCPEntry(agent, url)
 	if cur, ok := servers["bumper-advisor"]; ok && jsonEqual(cur, desired) {
 		return Unchanged, nil
 	}
@@ -441,6 +496,15 @@ func MergeAdvisorMCP(path, url string) (Action, error) {
 		return Unchanged, err
 	}
 	return actionFor(existed), nil
+}
+
+// advisorMCPEntry builds the MCP server entry in the agent's expected shape.
+func advisorMCPEntry(agent Agent, url string) map[string]any {
+	u := strings.TrimRight(url, "/") + "/mcp"
+	if agent == AgentGemini {
+		return map[string]any{"httpUrl": u}
+	}
+	return map[string]any{"type": "http", "url": u}
 }
 
 const depsClaudeMdMarker = "<!-- bumper-deps-workflow -->"
@@ -453,9 +517,9 @@ bumper guards package installs:
 - A known-MALICIOUS install is **blocked before it runs** (pre-install hook); the block
   reason names the package and advisory — fix a typo or pick a maintained alternative.
 - **After any install**, bumper scans the resolved tree. When it flags vulnerable or
-  malicious packages, **spawn a subagent (Task)** to run ` + "`bumper deps`" + `, analyze the
-  findings (use the ` + "`bumper-advisor`" + ` MCP ` + "`get_vuln`" + ` for detail), and apply or propose
-  fixes — keeping triage out of the main thread.
+  malicious packages, run ` + "`bumper deps`" + ` to triage — analyze the findings (use the
+  ` + "`bumper-advisor`" + ` MCP ` + "`get_vuln`" + ` for detail) and apply or propose fixes. If your agent
+  supports subagents (e.g. Claude Code's ` + "`Task`" + `), spawn one to keep triage off the main thread.
 
 Run ` + "`bumper deps`" + ` yourself any time to scan the current project. Only package
 coordinates (ecosystem/name/version) ever leave the machine — never your code.

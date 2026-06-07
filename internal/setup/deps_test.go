@@ -62,7 +62,7 @@ func TestGuardAndDepsHooksCoexist(t *testing.T) {
 
 func TestMergeAdvisorMCP(t *testing.T) {
 	path := filepath.Join(t.TempDir(), ".mcp.json")
-	if _, err := MergeAdvisorMCP(path, "https://advisor.bumper.sh"); err != nil {
+	if _, err := MergeAdvisorMCP(path, "https://advisor.bumper.sh", AgentClaude); err != nil {
 		t.Fatal(err)
 	}
 	s := read(t, path)
@@ -72,7 +72,7 @@ func TestMergeAdvisorMCP(t *testing.T) {
 	if !strings.Contains(s, `"http"`) {
 		t.Error("advisor MCP should be type http")
 	}
-	act, err := MergeAdvisorMCP(path, "https://advisor.bumper.sh")
+	act, err := MergeAdvisorMCP(path, "https://advisor.bumper.sh", AgentClaude)
 	if err != nil || act != Unchanged {
 		t.Errorf("second MergeAdvisorMCP = %v, %v; want Unchanged", act, err)
 	}

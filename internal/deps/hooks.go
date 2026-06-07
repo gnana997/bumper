@@ -83,11 +83,13 @@ func Guard(r io.Reader, w io.Writer, client *Client, shellTool string) (reason s
 	})
 }
 
-// Watch is the PostToolUse post-install hook (model B): after an install, it runs
-// the scan itself, stays silent when clean, and on findings injects context that
-// nudges the main agent to spawn a triage subagent. Non-blocking, fail-open.
-// shellTool is the host agent's shell-execution tool name (see Guard).
-func Watch(r io.Reader, w io.Writer, client *Client, fallbackDir, shellTool string) error {
+// Watch is the post-install hook (model B): after an install, it runs the scan
+// itself, stays silent when clean, and on findings injects context that nudges the
+// agent to triage (spawning a subagent if it supports one). Non-blocking, fail-open. shellTool is the
+// host agent's shell-execution tool name (see Guard); postEvent is the agent's
+// post-tool event name echoed as hookEventName ("PostToolUse" for Claude/Augment,
+// "AfterTool" for Gemini) — the additionalContext field itself is shared.
+func Watch(r io.Reader, w io.Writer, client *Client, fallbackDir, shellTool, postEvent string) error {
 	in, err := readHookInput(r)
 	if err != nil || in.ToolName != shellTool {
 		return nil
@@ -112,7 +114,7 @@ func Watch(r io.Reader, w io.Writer, client *Client, fallbackDir, shellTool stri
 	}
 	return writeJSON(w, map[string]any{
 		"hookSpecificOutput": map[string]any{
-			"hookEventName":     "PostToolUse",
+			"hookEventName":     postEvent,
 			"additionalContext": buildWatchContext(res),
 		},
 	})
@@ -168,9 +170,9 @@ func buildWatchContext(res *ScanResult) string {
 			shown++
 		}
 	}
-	b.WriteString("\nSpawn a subagent (Task) to run `bumper deps` in this directory, analyze these findings " +
-		"(use get_vuln via the bumper-advisor MCP for the ones you fix), and apply or propose remediations — " +
-		"keep this triage out of the main thread.\n")
+	b.WriteString("\nTriage before continuing: run `bumper deps` in this directory for the full report, pull " +
+		"detail with `get_vuln` via the bumper-advisor MCP, and apply or propose fixes. If your agent supports " +
+		"subagents (e.g. Claude Code's Task), spawn one to keep this triage off the main thread.\n")
 	return b.String()
 }
 

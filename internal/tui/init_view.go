@@ -97,10 +97,26 @@ func (m initModel) bodyConfigure() string {
 
 // contextFileName is the agent-instructions filename for the selected agent.
 func (m initModel) contextFileName() string {
-	if m.agent == setup.AgentAugment {
+	switch m.agent {
+	case setup.AgentAugment:
 		return "AGENTS.md"
+	case setup.AgentGemini:
+		return "GEMINI.md"
+	default:
+		return "CLAUDE.md"
 	}
-	return "CLAUDE.md"
+}
+
+// agentFound reports whether the selected agent's CLI was detected on PATH.
+func (m initModel) agentFound() bool {
+	switch m.agent {
+	case setup.AgentAugment:
+		return m.env.AugmentFound
+	case setup.AgentGemini:
+		return m.env.GeminiFound
+	default:
+		return m.env.ClaudeFound
+	}
 }
 
 // agentRow renders the coding-agent selector (claude/augment chips + presence hint).
@@ -114,7 +130,7 @@ func (m initModel) agentRow(row int) string {
 		lblStyled = lipgloss.NewStyle().Foreground(colLive).Bold(true).Render(lbl)
 	}
 	var chips []string
-	for _, a := range []setup.Agent{setup.AgentClaude, setup.AgentAugment} {
+	for _, a := range []setup.Agent{setup.AgentClaude, setup.AgentAugment, setup.AgentGemini} {
 		if a == m.agent {
 			c := "[" + a.Label() + "]"
 			if focused {
@@ -126,10 +142,7 @@ func (m initModel) agentRow(row int) string {
 			chips = append(chips, stDim.Render(" "+a.Label()+" "))
 		}
 	}
-	found := m.env.ClaudeFound
-	if m.agent == setup.AgentAugment {
-		found = m.env.AugmentFound
-	}
+	found := m.agentFound()
 	hint := stSafe.Render("  " + m.gl.check + " on PATH")
 	if !found {
 		hint = stWarn.Render("  "+m.gl.warn+" not found") + stDim.Render(" — config still written")
@@ -244,11 +257,7 @@ func (m initModel) bodyDone() string {
 	} {
 		b.WriteString("  " + stLive.Render(m.gl.bullet) + " " + stDim.Render(line) + "\n")
 	}
-	found := m.env.ClaudeFound
-	if m.agent == setup.AgentAugment {
-		found = m.env.AugmentFound
-	}
-	if !found {
+	if !m.agentFound() {
 		b.WriteString("\n  " + stWarn.Render(m.gl.warn+" "+m.agent.Label()+" CLI not on PATH") + stDim.Render(" — install it to use what you just wired.") + "\n")
 	}
 	return b.String()

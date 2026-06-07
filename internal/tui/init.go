@@ -60,10 +60,15 @@ type initModel struct {
 
 func newInitModel(env setup.Env) initModel {
 	// Default B: wire everything (hooks self-filter, so it's safe and future-proof).
-	// Default to Claude unless only Augment is present.
+	// Default to Claude; auto-switch only when Claude isn't present.
 	agent := setup.AgentClaude
-	if env.AugmentFound && !env.ClaudeFound {
-		agent = setup.AgentAugment
+	if !env.ClaudeFound {
+		switch {
+		case env.AugmentFound:
+			agent = setup.AgentAugment
+		case env.GeminiFound:
+			agent = setup.AgentGemini
+		}
 	}
 	return initModel{
 		env: env, agent: agent, terraform: true, deps: true, advisor: true,
@@ -161,9 +166,12 @@ func (m initModel) onKey(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 func (m *initModel) change() {
 	switch m.focusRow {
 	case 0:
-		if m.agent == setup.AgentClaude {
+		switch m.agent {
+		case setup.AgentClaude:
 			m.agent = setup.AgentAugment
-		} else {
+		case setup.AgentAugment:
+			m.agent = setup.AgentGemini
+		default:
 			m.agent = setup.AgentClaude
 		}
 	case 1:

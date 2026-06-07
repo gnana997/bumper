@@ -116,6 +116,7 @@ deterministic core stands alone if it's absent.
 ```sh
 bumper init                    # Claude Code (auto-detected)
 bumper init --agent augment    # or Augment
+bumper init --agent gemini     # or Gemini CLI
 ```
 
 ## What you can do
@@ -125,7 +126,7 @@ bumper init --agent augment    # or Augment
 | **Scan a plan** | flag exposure/destruction in a Terraform plan, optional AI enrichment | [docs/cli.md](docs/cli.md) |
 | **Scan dependencies** | flag vulnerable + malicious packages from a lockfile | [docs/cli.md](docs/cli.md) |
 | **Enforce the apply** | `verify` binds a passing scan to a plan by sha256; `guard` blocks an unverified `apply` | [docs/agents.md](docs/agents.md) |
-| **Agent guardrail** | `bumper init` wires the guard hooks + the hosted Advisor MCP into Claude Code and Augment (`--agent`) | [docs/agents.md](docs/agents.md) |
+| **Agent guardrail** | `bumper init` wires the guard hooks + the hosted Advisor MCP into Claude Code, Augment, and Gemini CLI (`--agent`) | [docs/agents.md](docs/agents.md) |
 | **Dependency guardrail** | block malicious installs, scan deps for CVEs — in the agent loop and in CI | [docs/agents.md](docs/agents.md#dependency-guardrail) |
 | **CI / GitHub Action** | SARIF to the Security tab, a sticky PR comment, fail on `high+` | [docs/ci.md](docs/ci.md) |
 | **Search the catalog** | `bumper search` ranks enforced rules + an advisory best-practice catalog | [docs/cli.md](docs/cli.md#search) |
@@ -206,7 +207,7 @@ dependency scan is the same repo at the `deps` subpath.)
 | [docs/mcp.md](docs/mcp.md) | the hosted Advisor MCP — tools, what leaves the machine |
 | [docs/architecture.md](docs/architecture.md) | internals, tech stack, supply-chain provenance, roadmap |
 | [examples/](examples/) | runnable, hermetic examples for both gates |
-| [e2e/](e2e/) | run the guardrail against a real Claude Code agent yourself (manual, local) |
+| [e2e/](e2e/) | run the guardrail against a real Claude Code *or* Gemini CLI agent yourself (manual, local) |
 
 ## Contributing & security
 

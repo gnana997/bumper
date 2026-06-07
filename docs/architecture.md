@@ -27,7 +27,7 @@ internal/search/       cross-corpus BM25 search over enforced + advisory
 internal/report/       text / json / sarif / markdown reporters (plan + deps)
 internal/enrich/       AI-CLI adapters (claude/gemini/…) — optional --explain enrichment
 internal/style/        terminal color palette (truecolor + 16-color fallback, TTY/NO_COLOR aware)
-internal/setup/        `bumper init` — merge-safe hook + advisor-MCP wiring (Claude + Augment)
+internal/setup/        `bumper init` — merge-safe hook + advisor-MCP wiring (Claude + Augment + Gemini)
 internal/tui/          the hazard-console TUI and the init wizard
 ```
 
@@ -136,11 +136,12 @@ its own `go.sum` in CI), and the code by CodeQL. Report vulnerabilities via priv
 ## Roadmap
 
 Shipped and live: the Terraform apply gate, the dependency guardrail (vulnerable + malicious),
-the hosted Advisor (MCP + REST), and agent wiring for Claude Code + Augment. Next:
+the hosted Advisor (MCP + REST), and agent wiring for Claude Code, Augment, and Gemini CLI. Next:
 
-- **More agents** — Gemini CLI and Codex. Their hook contracts differ only in the deny
-  envelope / event names; the [exit-2 + stderr backstop](agents.md#how-the-hooks-signal-a-block)
-  already covers basic blocking for any agent that honors exit codes.
+- **More agents** — Codex next. Hook contracts differ only in the deny envelope / event names
+  (Gemini's `BeforeTool`/`AfterTool` vs Claude's `PreToolUse`/`PostToolUse`); the
+  [exit-2 + stderr backstop](agents.md#how-the-hooks-signal-a-block) already covers basic
+  blocking for any agent that honors exit codes.
 - **Grow the multi-cloud rule set** from the embedded advisory catalog
   ([internal/catalog/](../internal/catalog/), rebuilt with `make catalog`) — port high-value
   intents into enforced CEL rules.

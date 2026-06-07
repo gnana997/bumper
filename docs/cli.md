@@ -168,8 +168,8 @@ bumper deps watch    # PostToolUse: after an install, scan + nudge on findings
   so the agent corrects the install rather than just hitting a wall. Bare/manifest installs
   pass through to the post-install scan.
 - **`deps watch`** runs the scan itself after any install; it stays **silent when the tree is
-  clean** and, on findings, injects context nudging the agent to spawn a subagent to run
-  `bumper deps` and remediate. Non-blocking. Full model in [agents.md](agents.md).
+  clean** and, on findings, injects context nudging the agent to run `bumper deps` and
+  remediate (spawning a subagent if it supports one). Non-blocking. Full model in [agents.md](agents.md).
 
 ---
 
@@ -289,12 +289,13 @@ See [agents.md](agents.md) for details.
 bumper init                     # interactive wizard (auto-detects the agent)
 bumper init --yes               # non-interactive: wire everything (hooks + advisor MCP)
 bumper init --agent augment --yes  # wire Augment instead of Claude Code
+bumper init --agent gemini --yes   # or Gemini CLI
 bumper init --print             # preview, write nothing
 ```
 
 | Flag | Default | Description |
 | --- | --- | --- |
-| `--agent` | auto | coding agent to wire: `claude`\|`augment` (auto-detects when unset) |
+| `--agent` | auto | coding agent to wire: `claude`\|`augment`\|`gemini` (auto-detects when unset) |
 | `--hook` | `project` | hook scope: `project`\|`user`\|`none` |
 | `--terraform` | `true` | install the terraform apply-guard hook |
 | `--deps` | `true` | install the dependency hooks (install-block + post-install scan) |
@@ -311,5 +312,8 @@ never fires. The dependency guardrail needs the Advisor for CVE/malware data —
 For **Claude Code** (`--agent claude`) the hooks land in `.claude/settings.json`, the MCP in
 `.mcp.json`, and notes in `CLAUDE.md`. For **Augment** (`--agent augment`) hooks **and** MCP
 co-locate in `.augment/settings.json`, the hook matcher is Augment's `launch-process` shell
-tool, and notes go to `AGENTS.md`. The baked hook commands carry `--client=augment` so the
-guard matches the right tool at runtime.
+tool, and notes go to `AGENTS.md`. For **Gemini CLI** (`--agent gemini`) hooks **and** MCP
+co-locate in `.gemini/settings.json` under `BeforeTool`/`AfterTool` keys, the matcher is
+Gemini's `run_shell_command` tool, the MCP entry uses `httpUrl`, and notes go to `GEMINI.md`.
+The baked hook commands carry `--client=augment`/`--client=gemini` so the guard matches the
+right tool at runtime.

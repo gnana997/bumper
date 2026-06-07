@@ -5,6 +5,8 @@ import (
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
+	"os"
+	"path/filepath"
 	"strings"
 	"testing"
 )
@@ -123,6 +125,58 @@ func TestGuardSilentOnClean(t *testing.T) {
 	}
 }
 
+// TestWatchEmitsAgentEventName proves the post-install nudge echoes the agent's
+// post-tool event name as hookEventName (Gemini → "AfterTool"), and is a silent
+// no-op when the configured shell tool doesn't match the payload.
+func TestWatchEmitsAgentEventName(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		// /scan → one vulnerable finding so Watch emits its context nudge.
+		json.NewEncoder(w).Encode(map[string]any{
+			"status": "ok", "scanned": 1,
+			"findings": []map[string]any{{
+				"ecosystem": "PyPI", "package": "requests", "version": "2.0.0",
+				"vulns": []map[string]any{{"id": "CVE-2024-0001", "severity": "high", "fixed_version": "2.32.0"}},
+			}},
+		})
+	}))
+	defer srv.Close()
+
+	dir := t.TempDir()
+	if err := os.WriteFile(filepath.Join(dir, "requirements.txt"), []byte("requests==2.0.0\n"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	in := `{"tool_name":"run_shell_command","cwd":"` + dir + `","tool_input":{"command":"pip install requests"}}`
+
+	var out bytes.Buffer
+	if err := Watch(strings.NewReader(in), &out, NewClient(srv.URL), dir, "run_shell_command", "AfterTool"); err != nil {
+		t.Fatalf("Watch: %v", err)
+	}
+	var dec struct {
+		HookSpecificOutput struct {
+			HookEventName     string `json:"hookEventName"`
+			AdditionalContext string `json:"additionalContext"`
+		} `json:"hookSpecificOutput"`
+	}
+	if err := json.Unmarshal(out.Bytes(), &dec); err != nil {
+		t.Fatalf("decode: %v (out=%q)", err, out.String())
+	}
+	if dec.HookSpecificOutput.HookEventName != "AfterTool" {
+		t.Errorf("hookEventName = %q, want AfterTool", dec.HookSpecificOutput.HookEventName)
+	}
+	if !strings.Contains(dec.HookSpecificOutput.AdditionalContext, "requests") {
+		t.Errorf("context missing the finding: %q", dec.HookSpecificOutput.AdditionalContext)
+	}
+
+	// Tool-name mismatch (a Claude "Bash" payload on a Gemini-configured hook) → silent.
+	var out2 bytes.Buffer
+	if err := Watch(strings.NewReader(in), &out2, nil, dir, "Bash", "AfterTool"); err != nil {
+		t.Fatalf("Watch mismatch: %v", err)
+	}
+	if out2.Len() != 0 {
+		t.Errorf("expected silent no-op on tool mismatch, got %q", out2.String())
+	}
+}
+
 func TestWorkDirResolution(t *testing.T) {
 	// Claude: cwd present → cwd wins.
 	in := hookInput{CWD: "/claude/wd", WorkspaceRoots: []string{"/ws/root"}}
@@ -174,6 +228,16 @@ func TestGuardShellToolMatch(t *testing.T) {
 	}
 	if !strings.Contains(out.String(), "deny") {
 		t.Errorf("expected deny for matching shell tool, got %q", out.String())
+	}
+
+	// Gemini shell tool: matches when shellTool="run_shell_command" → denies.
+	ginput := `{"tool_name":"run_shell_command","tool_input":{"command":"npm install evilpkg"}}`
+	var outG bytes.Buffer
+	if _, err := Guard(strings.NewReader(ginput), &outG, NewClient(srv.URL), "run_shell_command"); err != nil {
+		t.Fatalf("Guard gemini: %v", err)
+	}
+	if !strings.Contains(outG.String(), "deny") {
+		t.Errorf("expected deny for gemini run_shell_command, got %q", outG.String())
 	}
 
 	// Mismatch: same payload but expecting "Bash" → silent no-op (nil client proves

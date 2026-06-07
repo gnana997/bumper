@@ -27,6 +27,53 @@ Tested against `claude` 2.1.150 — the CLI's flags can change between versions,
 if a scenario fails unexpectedly, first check the flags in `claude --help`
 (`--permission-mode`, `--output-format`) and the captured `log-*.jsonl`.
 
+### Gemini CLI variant (`run-e2e-gemini.sh`)
+
+The same three scenarios against the **actual `gemini` agent**, wired by
+`bumper init --agent gemini`:
+
+```sh
+cd e2e
+./run-e2e-gemini.sh
+```
+
+Requires `gemini` (logged in, **a build with hooks support** — `BeforeTool`/
+`AfterTool`) plus the same `bumper`/`terraform`/`npm`/`jq`. Override via
+`GEMINI=`, `BUMPER=`, `MAL_PKG=`, `VULN_PKG=`.
+
+What's different from the Claude run (all handled by bumper, transparent to you):
+
+| | Claude Code | Gemini CLI |
+|---|---|---|
+| shell tool | `Bash` | `run_shell_command` |
+| hook events | `PreToolUse` / `PostToolUse` | `BeforeTool` / `AfterTool` |
+| config file | `.claude/settings.json` | `.gemini/settings.json` |
+| headless flags | `-p --permission-mode bypassPermissions` | `-p --yolo` + `GEMINI_CLI_TRUST_WORKSPACE=true` |
+| **how a deny lands** | JSON deny on stdout | **exit-2 + stderr backstop** (Gemini ignores stdout on a block) |
+
+> [!IMPORTANT]
+> **Folder trust (the headless gotcha).** Gemini treats project hooks in
+> `.gemini/settings.json` as **untrusted by default**: interactively it shows a
+> one-time trust prompt and then runs them, but in **headless `-p` mode it can't
+> prompt, so it silently skips the hook** (no warning, no execution — the gate just
+> never fires). The script exports **`GEMINI_CLI_TRUST_WORKSPACE=true`** to genuinely
+> trust the workspace so the hooks run.
+> **`--skip-trust` is NOT enough** — it proceeds *as untrusted* and hooks stay off;
+> only the env var (or interactive trust) turns them on.
+> **Real users don't hit this** — they trust their own project once (interactively)
+> and the guardrail fires normally thereafter. See
+> [Gemini's trusted-folders docs](https://geminicli.com/docs/cli/trusted-folders/#headless-and-automated-environments).
+
+The assertions are **identical** because they read bumper's own
+`$BUMPER_HOOK_LOG`, which is client-independent: bumper writes the same
+`hookSpecificOutput` JSON for every agent (Gemini just blocks via exit 2 instead of
+reading it), so `permissionDecision == "deny"` and the `additionalContext` nudge
+both still appear in the log. `--yolo` makes Gemini actually *attempt* the shell
+command (so the `BeforeTool` hook fires); the exit-2 deny stops it before it runs.
+
+> The subagent-capture script (`capture-subagent.sh`) is **Claude-specific** (it
+> parses Claude's `stream-json` event shape) and isn't ported to Gemini.
+
 ## What it checks
 
 | # | Prompt to Claude | Expected | Safety |

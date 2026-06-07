@@ -23,7 +23,7 @@ pins a dependency or writes Terraform for a resource. Together they close the lo
 | **Backing** | local deterministic rules + a sha256 verdict | the hosted Advisor (only coordinates leave the box) |
 
 Both are wired in one step by [`bumper init`](#one-command-setup-bumper-init), for **Claude
-Code** and **Augment**. The hooks **self-filter**, so installing both is safe everywhere — a
+Code**, **Augment**, and **Gemini CLI**. The hooks **self-filter**, so installing both is safe everywhere — a
 Terraform guard in a Node repo simply never fires, and vice-versa.
 
 - [The Terraform apply gate](#the-terraform-apply-gate)
@@ -88,9 +88,9 @@ A dependency carries two different risks, handled at two different moments:
   the agent fixes the install (a typo, or an alternative) instead of just stopping.
 - **Vulnerable dependency** (a legit package with a known CVE) → **post-install,
   non-blocking.** The `bumper deps watch` PostToolUse hook runs the scan after an install;
-  when the tree is clean it's silent, and on findings it nudges the agent to **spawn a
-  subagent** that runs `bumper deps`, pulls full detail via the Advisor MCP (`get_vuln`), and
-  applies fixes — keeping the triage out of the main thread.
+  when the tree is clean it's silent, and on findings it nudges the agent to run `bumper deps`,
+  pull full detail via the Advisor MCP (`get_vuln`), and apply fixes — **spawning a subagent**
+  to keep triage off the main thread if the agent supports one (e.g. Claude Code's `Task`).
 
 Why the asymmetry: a malicious package is hostile *the moment it installs*, so it must be
 stopped **before** it runs. A vulnerable-but-legitimate package is usually fine to install and
@@ -164,7 +164,7 @@ bumper init — would wire bumper into Claude Code:
 ```
 
 `bumper init` is a hazard-console wizard; everything it writes is **merge-safe and
-idempotent**. `--agent claude|augment` picks the target agent (auto-detected by default);
+idempotent**. `--agent claude|augment|gemini` picks the target agent (auto-detected by default);
 `--hook` scopes the hooks (`project|user|none`); `--terraform` / `--deps` pick which hooks;
 `--advisor` scopes the MCP (`project|user|none`); `--print` previews; `--yes` runs
 non-interactively. Defaults wire **everything** — a repo that adds Terraform (or a lockfile)
@@ -225,6 +225,43 @@ Workflow notes go to `AGENTS.md` instead of `CLAUDE.md`:
 }
 ```
 
+### Gemini CLI
+
+`bumper init --agent gemini` wires the same guardrail into **Gemini CLI**. Like Augment, it
+**co-locates hooks and MCP in one file** — `.gemini/settings.json` — but Gemini differs in two
+ways: it names its shell tool **`run_shell_command`**, and it uses **`BeforeTool`/`AfterTool`**
+event keys (not `PreToolUse`/`PostToolUse`). Its MCP entry uses **`httpUrl`** for a
+streamable-HTTP server, and workflow notes go to `GEMINI.md`. The baked commands carry
+`--client=gemini`. A deny is delivered via the [exit-2 + stderr backstop](#how-the-hooks-signal-a-block),
+which Gemini honors as a hard block:
+
+```json
+{
+  "hooks": {
+    "BeforeTool": [
+      { "matcher": "run_shell_command", "hooks": [{ "type": "command", "command": "bumper guard --client=gemini" }] },
+      { "matcher": "run_shell_command", "hooks": [{ "type": "command", "command": "bumper deps guard --client=gemini" }] }
+    ],
+    "AfterTool": [
+      { "matcher": "run_shell_command", "hooks": [{ "type": "command", "command": "bumper deps watch --client=gemini" }] }
+    ]
+  },
+  "mcpServers": {
+    "bumper-advisor": { "httpUrl": "https://advisor.bumper.sh/mcp" }
+  }
+}
+```
+
+> **Gemini folder trust (CI / headless).** Gemini treats project hooks as
+> **untrusted by default**. Interactively, the first time you open the project it
+> shows a one-time trust prompt and then runs them — so the guardrail just works for
+> day-to-day use. But in **headless mode** (`gemini -p …`, CI) it can't show that
+> prompt and **silently skips the hook**. For any automated/headless run, trust the
+> workspace with **`GEMINI_CLI_TRUST_WORKSPACE=true`** (or trust the folder once
+> interactively). Note: **`--skip-trust` does *not* enable hooks** — it proceeds *as
+> untrusted*; only the env var (or interactive trust) turns project hooks on.
+> See [Gemini's trusted-folders docs](https://geminicli.com/docs/cli/trusted-folders/#headless-and-automated-environments).
+
 ---
 
 ## Scanning is the CLI, not an MCP tool
@@ -244,9 +281,9 @@ machine). For offline rule lookups without the Advisor, the CLI also has `bumper
 ## Supported agents
 
 `bumper init` wires both guardrails + the Advisor MCP into **Claude Code** (`--agent claude`,
-the default) and **Augment** (`--agent augment`) — the two agents with a pluggable blocking
-pre-tool hook the binary speaks today. More agents (**Gemini CLI**, **Codex**) are on the
-roadmap; their hook contracts differ only in the deny envelope / event names, and the
+the default), **Augment** (`--agent augment`), and **Gemini CLI** (`--agent gemini`) — three
+agents with a pluggable blocking pre-tool hook the binary speaks today. **Codex** is on the
+roadmap; hook contracts differ only in the deny envelope / event names, and the
 [exit-2 + stderr backstop](#how-the-hooks-signal-a-block) already covers any agent that honors
 exit codes.
 
