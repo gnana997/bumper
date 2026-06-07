@@ -88,13 +88,15 @@ just style.
 ## The hosted Advisor
 
 The dependency scan and the agent's knowledge lookups are backed by the **Advisor** — a
-separate, open-core service in this repo (`bumper-advisor/`), live at `advisor.bumper.sh`. It
-serves the federated IaC catalog + a CVE/malware mirror built from [OSV](https://osv.dev),
-over both REST ([api.md](api.md)) and MCP ([mcp.md](mcp.md)). It is **lookup-not-upload**: the
-binary sends a query or package coordinates, never your code, plan, or state. You can
-[self-host](api.md#self-hosting) it and point `--advisor-url` (or `$BUMPER_ADVISOR_URL`) at
-your own instance. The binary degrades gracefully if it's unreachable — Terraform scanning is
-fully offline and never needs it.
+separate **open-core service** (the `bumper-advisor` repo, Apache-2.0), live at
+`advisor.bumper.sh`. It serves the federated IaC catalog + a CVE/malware mirror built from
+[OSV](https://osv.dev), over both REST ([api.md](api.md)) and MCP ([mcp.md](mcp.md)). It is
+**lookup-not-upload**: the binary sends a query or package coordinates, never your code, plan,
+or state. You can [self-host](self-hosting.md) it and point `--advisor-url` (or
+`$BUMPER_ADVISOR_URL`) at your own instance. The AI insights are the hosted instance's
+value-add and aren't part of the open distribution — a self-host serves the complete
+deterministic data without them. The binary degrades gracefully if the Advisor is unreachable —
+Terraform scanning is fully offline and never needs it.
 
 ## Tech stack
 
@@ -103,7 +105,8 @@ Built with **Go 1.26**, [cel-go](https://github.com/google/cel-go) for predicate
 [MCP Go SDK](https://github.com/modelcontextprotocol/go-sdk), and
 [Bubble Tea](https://github.com/charmbracelet/bubbletea) for the TUI. **Single static binary,
 `CGO_ENABLED=0`** — clean cross-compile, fully offline for Terraform scanning, air-gap
-friendly. (The Advisor service is Python + Postgres/pgvector; see `bumper-advisor/`.)
+friendly. (The Advisor is a separate open-core service — Python + Postgres/pgvector — in the
+`bumper-advisor` repo.)
 
 ## Releases and provenance
 

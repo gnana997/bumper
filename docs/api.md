@@ -329,5 +329,7 @@ for your org, [self-host](#self-hosting).
 ## Self-hosting
 
 The Advisor is part of the open-core bumper project and can be run yourself — point your
-clients at your own base URL instead of `advisor.bumper.sh`. The data is built from public
-OSV + the federated rule catalog. See the repository for the compose setup.
+clients at your own base URL instead of `advisor.bumper.sh` (or `bumper --advisor-url …` /
+`$BUMPER_ADVISOR_URL`). The data is built from public OSV + the federated rule catalog. Full
+walkthrough — compose quick start, exposing it, daily refresh, sizing — in
+**[self-hosting.md](self-hosting.md)**.

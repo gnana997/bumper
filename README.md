@@ -171,6 +171,9 @@ offline.
 - **Deterministic core stands alone.** The AI layer is garnish; if it's absent or
   fails, the deterministic findings are still complete and blocking.
 
+How it stacks up against Checkov/Trivy (IaC) and Dependabot/Snyk/Socket (deps) —
+including what it deliberately *doesn't* do — is in [docs/comparison.md](docs/comparison.md).
+
 ## CI / GitHub Action
 
 Two composite actions, same signed release binary:
