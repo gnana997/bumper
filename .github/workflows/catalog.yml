@@ -1,0 +1,71 @@
+name: catalog
+
+# Builds the federated advisory catalog from the four upstreams (Trivy / Checkov /
+# KICS / Prowler) plus bumper's enforced rules, and publishes it as a rolling
+# `catalog-latest` release asset. The hosted Advisor's daily IaC sync downloads this
+# artifact, so the heavy 4-repo clone happens here in CI — never on the prod box.
+#
+# This is NOT a software release: `catalog-latest` is a prerelease carrying one
+# asset (catalog.tar.gz). The binary releases (v*) are unaffected.
+
+on:
+  schedule:
+    - cron: "0 2 * * *"   # 02:00 UTC daily — ahead of the advisor's 03:30 pull
+  workflow_dispatch: {}
+
+permissions:
+  contents: write          # update the rolling release + its asset
+
+concurrency:
+  group: catalog
+  cancel-in-progress: false
+
+jobs:
+  build-publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-go@v6
+        with:
+          go-version: "1.26"
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: Python deps for the catalog builder
+        run: pip install pyyaml   # Checkov graph checks (CKV2_*) need PyYAML
+
+      - name: Build advisory catalog from the 4 upstreams
+        run: python3 tools/build_catalog.py   # clones Trivy/Checkov/KICS/Prowler → internal/catalog/data
+
+      - name: Build bumper + dump enforced rules
+        run: |
+          go build -o bumper ./cmd/bumper
+          ./bumper list --format json > enforced.raw.json
+
+      - name: Package catalog artifact
+        run: |
+          mkdir -p catalog
+          cp -r internal/catalog/data/trivy   catalog/
+          cp -r internal/catalog/data/checkov catalog/
+          cp -r internal/catalog/data/kics    catalog/
+          cp -r internal/catalog/data/prowler catalog/
+          cp enforced.raw.json catalog/
+          tar -czf catalog.tar.gz -C catalog .
+          echo "artifact contents:"; tar -tzf catalog.tar.gz | head
+          echo "size: $(du -h catalog.tar.gz | cut -f1)"
+
+      - name: Publish rolling catalog-latest release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          notes="Auto-built $(date -u '+%Y-%m-%d %H:%M UTC') from Trivy/Checkov/KICS/Prowler + bumper enforced rules. Consumed by the hosted Advisor's daily IaC sync. Not a software release."
+          if gh release view catalog-latest >/dev/null 2>&1; then
+            gh release upload catalog-latest catalog.tar.gz --clobber
+            gh release edit catalog-latest --notes "$notes"
+          else
+            gh release create catalog-latest catalog.tar.gz \
+              --title "Advisory catalog (rolling)" --notes "$notes" --prerelease
+          fi
