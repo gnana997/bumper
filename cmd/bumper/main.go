@@ -41,7 +41,7 @@ Usage:
   bumper list [flags] [--tui]     list the rule set (or browse it interactively)
   bumper search [flags] <query>   find rules by keyword/resource — what to bake in before writing TF
   bumper explain <RULE_ID>        show one rule in detail
-  bumper init [flags]             wire bumper into Claude Code (MCP server + apply-guard hook)
+  bumper init [flags]             wire bumper into your agent (guardrail hooks + advisor MCP)
   bumper deps [path]              scan a lockfile for known-vulnerable + malicious dependencies
   bumper deps guard               PreToolUse hook: block installs of known-malicious packages (stdin)
   bumper deps watch               PostToolUse hook: scan deps after an install, nudge on findings (stdin)
@@ -603,7 +603,11 @@ func cmdDepsScan(args []string) int {
 	}
 	// Tolerate flags placed after the path (the Go flag pkg otherwise stops at the
 	// first positional) — agents don't always order them flags-first.
-	if err := fs.Parse(hoistFlags(args, map[string]bool{"-advisor-url": true, "--advisor-url": true})); err != nil {
+	if err := fs.Parse(hoistFlags(args, map[string]bool{
+		"-advisor-url": true, "--advisor-url": true,
+		"-format": true, "--format": true,
+		"-min-severity": true, "--min-severity": true,
+	})); err != nil {
 		return 2
 	}
 
