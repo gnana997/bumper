@@ -1,7 +1,8 @@
 # bumper
 
-**One deterministic gate for your two riskiest moments: the `terraform apply`
-that reshapes your cloud, and the dependency you're about to install.**
+**A Terraform-plan & dependency safety gate** — one deterministic gate for your
+two riskiest moments: the `terraform apply` that reshapes your cloud, and the
+dependency you're about to install.
 
 [![CI](https://github.com/gnana997/bumper/actions/workflows/ci.yml/badge.svg)](https://github.com/gnana997/bumper/actions/workflows/ci.yml)
 [![Release](https://img.shields.io/github/v/release/gnana997/bumper?sort=semver)](https://github.com/gnana997/bumper/releases)
