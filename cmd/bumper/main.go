@@ -30,6 +30,7 @@ import (
 	"github.com/gnana997/bumper/internal/safety"
 	"github.com/gnana997/bumper/internal/search"
 	"github.com/gnana997/bumper/internal/setup"
+	"github.com/gnana997/bumper/internal/skills"
 	"github.com/gnana997/bumper/internal/style"
 	"github.com/gnana997/bumper/internal/tui"
 )
@@ -46,6 +47,8 @@ Usage:
   bumper deps [path]              scan a lockfile for known-vulnerable + malicious dependencies
   bumper deps guard               PreToolUse hook: block installs of known-malicious packages (stdin)
   bumper deps watch               PostToolUse hook: scan deps after an install, nudge on findings (stdin)
+  bumper skills [list]            security playbooks that teach your agent to drive bumper
+  bumper skills install [flags]   write the skills into your agent's skills directory
   bumper verify <plan.tfplan>     scan a saved plan and record a verdict that unblocks its apply
   bumper guard                    PreToolUse hook: block unverified terraform apply/destroy (reads stdin)
   bumper version
@@ -87,6 +90,8 @@ func run() int {
 			return cmdInit(args[1:])
 		case "deps":
 			return cmdDeps(args[1:])
+		case "skills":
+			return cmdSkills(args[1:])
 		case "version", "--version", "-v":
 			fmt.Println("bumper " + report.Version)
 			return 0
@@ -411,6 +416,7 @@ func cmdInit(args []string) int {
 	agentFlag := fs.String("agent", "", "coding agent to wire: claude|augment|gemini (default: auto-detect)")
 	terraformFlag := fs.Bool("terraform", true, "install the terraform apply-guard hook")
 	depsFlag := fs.Bool("deps", true, "install the dependency hooks (install-block + post-install scan)")
+	skillsFlag := fs.Bool("skills", true, "install the agent skills (SKILL.md playbooks; skipped for agents that don't read them)")
 	advisorFlag := fs.String("advisor", "project", "advisor MCP scope: project|user|none (none = skip)")
 	advisorURLFlag := fs.String("advisor-url", "", "Advisor base URL for self-hosting (default https://advisor.bumper.sh)")
 	printOnly := fs.Bool("print", false, "show what would change and exit without writing")
@@ -457,7 +463,8 @@ func cmdInit(args []string) int {
 	}
 	steps := setup.Plan(setup.Options{
 		Agent: agent, HookScope: hookScope, Terraform: *terraformFlag, Deps: *depsFlag,
-		Advisor: advisorOn, AdvisorScope: advisorScope, AdvisorURL: advisorURL, Env: env,
+		Advisor: advisorOn, AdvisorScope: advisorScope, AdvisorURL: advisorURL,
+		Skills: *skillsFlag, Env: env,
 	})
 	p := style.New(os.Stdout)
 
@@ -875,6 +882,164 @@ func cmdDepsWatch(args []string) int {
 	return runHook("deps watch", *logPath, *clientFlag, func(r io.Reader, w io.Writer) (hookOutcome, error) {
 		return hookOutcome{}, deps.Watch(r, w, client, cwd, shellToolForClient(*clientFlag), postEventForClient(*clientFlag))
 	})
+}
+
+// cmdSkills dispatches `bumper skills` — the agent-skill (SKILL.md) surface.
+// With no subcommand it lists the skills. `get` prints a playbook (this is what
+// an installed SKILL.md stub calls at runtime). `install` writes the SKILL.md
+// files into a coding agent's skills directory.
+func cmdSkills(args []string) int {
+	if len(args) > 0 {
+		switch args[0] {
+		case "list":
+			return cmdSkillsList(args[1:])
+		case "get":
+			return cmdSkillsGet(args[1:])
+		case "install":
+			return cmdSkillsInstall(args[1:])
+		case "help", "-h", "--help":
+			fmt.Fprint(os.Stderr, skillsUsage)
+			return 0
+		}
+		// Treat `bumper skills <name>` as a shorthand for `get <name>`.
+		if _, ok := skills.Find(args[0]); ok {
+			return cmdSkillsGet(args)
+		}
+		return fail("unknown skills subcommand %q (try: list, get <name>, install)", args[0])
+	}
+	return cmdSkillsList(nil)
+}
+
+const skillsUsage = `bumper skills — security playbooks that teach your agent to drive bumper.
+
+Usage:
+  bumper skills [list]            list the available skills
+  bumper skills get <name>        print a skill's playbook (used by installed stubs)
+  bumper skills install [flags]   write the skills into your agent's skills directory
+
+Install flags:
+  --agent string   agent to install for: claude|gemini (default: auto-detect)
+  --global         install for all projects (~/<agent>/skills) instead of this project
+  --print          show what would change and exit without writing
+`
+
+func cmdSkillsList(args []string) int {
+	fs := flag.NewFlagSet("skills list", flag.ContinueOnError)
+	fs.SetOutput(os.Stderr)
+	if err := fs.Parse(args); err != nil {
+		return 2
+	}
+	fmt.Print("bumper skills — run `bumper skills get <name>` for a playbook:\n\n")
+	for _, s := range skills.All {
+		fmt.Printf("  %-12s %s\n", s.Short, s.Title)
+		fmt.Printf("  %-12s %s\n\n", "", s.Desc)
+	}
+	fmt.Println("Install into your agent: bumper skills install  (or: bumper init --skills)")
+	return 0
+}
+
+func cmdSkillsGet(args []string) int {
+	if len(args) == 0 {
+		return fail("usage: bumper skills get <name> (run `bumper skills list`)")
+	}
+	body, err := skills.Get(args[0])
+	if err != nil {
+		return fail("%v", err)
+	}
+	fmt.Print(body)
+	if !strings.HasSuffix(body, "\n") {
+		fmt.Println()
+	}
+	return 0
+}
+
+func cmdSkillsInstall(args []string) int {
+	fs := flag.NewFlagSet("skills install", flag.ContinueOnError)
+	fs.SetOutput(os.Stderr)
+	agentFlag := fs.String("agent", "", "agent to install for: claude|gemini (default: auto-detect)")
+	global := fs.Bool("global", false, "install for all projects (~/<agent>/skills) instead of this project")
+	printOnly := fs.Bool("print", false, "show what would change and exit without writing")
+	if err := fs.Parse(args); err != nil {
+		return 2
+	}
+	env, err := setup.Detect()
+	if err != nil {
+		return fail("%v", err)
+	}
+	scope := setup.ScopeProject
+	if *global {
+		scope = setup.ScopeUser
+	}
+
+	var agents []setup.Agent
+	if *agentFlag != "" {
+		a, ok := setup.ParseAgent(*agentFlag)
+		if !ok {
+			return fail("--agent must be claude|augment|gemini, got %q", *agentFlag)
+		}
+		if !setup.SupportsSkills(a) {
+			return fail("%s does not use SKILL.md agent skills", a.Label())
+		}
+		agents = []setup.Agent{a}
+	} else {
+		if env.ClaudeFound {
+			agents = append(agents, setup.AgentClaude)
+		}
+		if env.GeminiFound {
+			agents = append(agents, setup.AgentGemini)
+		}
+		if len(agents) == 0 {
+			agents = []setup.Agent{setup.AgentClaude} // sensible default when nothing is detected
+		}
+	}
+
+	for _, a := range agents {
+		sd := setup.SkillsDir(a, scope, env)
+		if sd == "" {
+			continue
+		}
+		if *printOnly {
+			fmt.Printf("bumper skills — would install %d skills for %s into %s:\n", len(skills.All), a.Label(), prettyPath(sd, env))
+			for _, s := range skills.All {
+				fmt.Printf("  • %s\n", s.Name)
+			}
+			continue
+		}
+		results, err := skills.Install(sd)
+		if err != nil {
+			return fail("%v", err)
+		}
+		fmt.Printf("bumper skills — installed for %s in %s:\n", a.Label(), prettyPath(sd, env))
+		for _, r := range results {
+			fmt.Printf("  %-10s %s\n", skillAction(r), r.Skill.Name)
+		}
+	}
+	if !*printOnly {
+		fmt.Println("\n✓ skills installed. They resolve to version-matched playbooks via `bumper skills get`.")
+	}
+	return 0
+}
+
+func skillAction(r skills.Result) string {
+	switch {
+	case r.Created:
+		return "created"
+	case r.Updated:
+		return "updated"
+	default:
+		return "unchanged"
+	}
+}
+
+// prettyPath shows a path relative to cwd when inside it, else with ~ for home.
+func prettyPath(p string, env setup.Env) string {
+	if rel, err := filepath.Rel(env.Cwd, p); err == nil && !strings.HasPrefix(rel, "..") {
+		return rel
+	}
+	if env.Home != "" && strings.HasPrefix(p, env.Home) {
+		return "~" + strings.TrimPrefix(p, env.Home)
+	}
+	return p
 }
 
 // enrichFindings adds an AI plain-English explanation to a scan's findings.

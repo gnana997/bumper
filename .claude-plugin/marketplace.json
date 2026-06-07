@@ -1,0 +1,23 @@
+{
+  "name": "bumper",
+  "owner": {
+    "name": "bumper",
+    "url": "https://github.com/gnana997/bumper"
+  },
+  "metadata": {
+    "description": "Security playbooks that teach coding agents to drive bumper's plan gate, dependency guardrail, and Advisor knowledge base.",
+    "version": "0.1.0"
+  },
+  "plugins": [
+    {
+      "name": "bumper",
+      "source": "./",
+      "description": "bumper security skills: Terraform plan safety gate, dependency vuln/malware triage, and Advisor lookups.",
+      "skills": [
+        "./internal/skills/content/gating-terraform-plans",
+        "./internal/skills/content/triaging-vulnerable-dependencies",
+        "./internal/skills/content/querying-the-bumper-advisor"
+      ]
+    }
+  ]
+}

@@ -334,6 +334,72 @@ func TestPlanGemini(t *testing.T) {
 	}
 }
 
+func TestPlanSkills(t *testing.T) {
+	env := Env{Bin: "bumper", Cwd: "/proj", Home: "/home/u"}
+
+	// Claude reads skills → the step is planned at the hook scope.
+	steps := Plan(Options{Agent: AgentClaude, HookScope: ScopeProject, Skills: true, Env: env})
+	var claudePath string
+	for _, s := range steps {
+		if s.Title == "install agent skills · project" {
+			claudePath = s.Path
+		}
+	}
+	if claudePath != "/proj/.claude/skills" {
+		t.Errorf("claude skills step path = %q, want /proj/.claude/skills", claudePath)
+	}
+
+	// Gemini also reads skills.
+	gem := Plan(Options{Agent: AgentGemini, HookScope: ScopeUser, Skills: true, Env: env})
+	var gemFound bool
+	for _, s := range gem {
+		if s.Title == "install agent skills · user" {
+			gemFound = true
+			if s.Path != "/home/u/.gemini/skills" {
+				t.Errorf("gemini skills step path = %q", s.Path)
+			}
+		}
+	}
+	if !gemFound {
+		t.Error("gemini plan missing skills step")
+	}
+
+	// Augment does not read SKILL.md → no skills step even with Skills:true.
+	aug := Plan(Options{Agent: AgentAugment, HookScope: ScopeProject, Skills: true, Env: env})
+	for _, s := range aug {
+		if s.Title == "install agent skills · project" {
+			t.Error("augment plan should not include a skills step")
+		}
+	}
+
+	// Skills:false omits the step entirely.
+	off := Plan(Options{Agent: AgentClaude, HookScope: ScopeProject, Skills: false, Env: env})
+	for _, s := range off {
+		if s.Title == "install agent skills · project" {
+			t.Error("Skills:false should omit the skills step")
+		}
+	}
+}
+
+func TestSupportsSkillsAndDir(t *testing.T) {
+	if !SupportsSkills(AgentClaude) || !SupportsSkills(AgentGemini) {
+		t.Error("claude and gemini should support skills")
+	}
+	if SupportsSkills(AgentAugment) {
+		t.Error("augment should not support skills")
+	}
+	env := Env{Cwd: "/proj", Home: "/home/u"}
+	if d := SkillsDir(AgentClaude, ScopeProject, env); d != "/proj/.claude/skills" {
+		t.Errorf("project skills dir = %q", d)
+	}
+	if d := SkillsDir(AgentGemini, ScopeUser, env); d != "/home/u/.gemini/skills" {
+		t.Errorf("user skills dir = %q", d)
+	}
+	if d := SkillsDir(AgentClaude, ScopeNone, env); d != "" {
+		t.Errorf("none scope should yield empty dir, got %q", d)
+	}
+}
+
 func TestParseScope(t *testing.T) {
 	for _, ok := range []string{"project", "user", "none"} {
 		if _, valid := ParseScope(ok); !valid {

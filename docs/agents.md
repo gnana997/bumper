@@ -278,6 +278,42 @@ machine). For offline rule lookups without the Advisor, the CLI also has `bumper
 `bumper list` / `bumper explain` over the bundled catalog
 ([rules.md](rules.md#enforced-vs-advisory-two-corpora)).
 
+## Agent skills
+
+The hooks **push** (non-bypassable enforcement) and the Advisor MCP is a **pull**
+(knowledge on demand). Skills are the third surface: the **playbook** that teaches the
+agent *how* to drive the other two. They're [Agent
+Skills](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/overview)
+(`SKILL.md` files) — the open, cross-agent standard Claude Code, Gemini CLI, Codex, and
+Cursor all read.
+
+bumper ships three, one per surface:
+
+| Skill | Triggers when the agent is… | Drives |
+|-------|------------------------------|--------|
+| `gating-terraform-plans` | about to plan/apply Terraform, or editing `.tf` | the plan gate (`bumper` scan → fix → `verify`) |
+| `triaging-vulnerable-dependencies` | adding/upgrading a dep, editing a lockfile | the deps guardrail (`bumper deps` → Advisor → safe version) |
+| `querying-the-bumper-advisor` | needing ground-truth CVE / malware / IaC detail | the Advisor MCP (`bumper-advisor:*` tools) |
+
+Each is a **hybrid**: the `SKILL.md` body carries a concise, safe-by-default playbook (so
+it works even offline), and points at `bumper skills get <name>` for the full,
+version-matched procedure served by the installed binary — so the playbook can never drift
+from the CLI it calls.
+
+**Install** — three channels, all from the bumper repo, all delivering identical files:
+
+```sh
+bumper init --skills          # default: wired alongside the hooks + MCP
+bumper skills install         # skills only (auto-detects claude/gemini; --global for all projects)
+npx skills add gnana997/bumper        # the open cross-agent skills ecosystem
+# or, in Claude Code:  /plugin marketplace add gnana997/bumper
+```
+
+Browse and read them from the CLI: `bumper skills list`, `bumper skills get plan-gate`.
+Skills are installed for agents that read `SKILL.md` (**Claude Code**, **Gemini CLI**);
+**Augment** is AGENTS.md-based, so it's covered by the workflow notes `bumper init` already
+writes instead.
+
 ## Supported agents
 
 `bumper init` wires both guardrails + the Advisor MCP into **Claude Code** (`--agent claude`,

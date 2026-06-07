@@ -74,6 +74,59 @@ command (so the `BeforeTool` hook fires); the exit-2 deny stops it before it run
 > The subagent-capture script (`capture-subagent.sh`) is **Claude-specific** (it
 > parses Claude's `stream-json` event shape) and isn't ported to Gemini.
 
+### Agent-skills variant (`run-e2e-skills.sh`)
+
+A **different** proof from the hook tests above. It verifies bumper's
+[Agent Skills](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/overview)
+(`SKILL.md` playbooks) work in a real agent loop: the agent **discovers** the
+right skill from its description, **reads** the `SKILL.md` body, and **resolves**
+the hybrid pointer by running `bumper skills get <name>` (the stub → CLI
+indirection that lets the playbook track the installed binary).
+
+```sh
+cd e2e
+./run-e2e-skills.sh              # Claude Code (default)
+AGENT=gemini ./run-e2e-skills.sh # Gemini CLI
+```
+
+Requires `claude` **or** `gemini` (logged in), `bumper` (with the `skills`
+subcommand), and `jq`. Override via `BUMPER=`, `CLAUDE=`, `GEMINI=`, `AGENT=`.
+
+**Isolation = clean proof.** Each repo is set up with **`bumper skills install`
+only** — no `bumper init`, so there are *no hooks* and *no* `CLAUDE.md`/`GEMINI.md`
+workflow notes. The only thing that can make the agent bumper-aware is the
+installed skill, so a `bumper skills get` call is unambiguous evidence the skill
+drove the agent.
+
+**Ground truth = a logging wrapper.** A tiny `bumper` shim is placed first on
+`PATH`; it appends every argv the agent invokes to `bumper-calls.log`, then
+forwards to the build under test (so real output is still served). Each scenario
+resets the log, names a *situation* (never the skill or its command), tells the
+agent to **act**, and passes if the right skill **engaged** — by **either** signal:
+
+- **named** — the agent's reply names the right skill. Claude Code reads `SKILL.md`
+  natively, and because the **hybrid** body is self-sufficient it often follows the
+  playbook *without* the `bumper skills get` call — so naming it is proof of
+  discovery + load.
+- **ran** — the agent invoked `bumper` at all. In a skills-**only** repo bumper is
+  knowable *only* via a loaded skill, so any bumper call (whether `skills get` or a
+  direct `bumper deps`/scan) proves the skill drove it.
+
+Both are valid load paths for a working skill, so passing on either avoids
+penalising the graceful-degradation the hybrid design is built for.
+
+| # | Prompt names | Expected skill |
+|---|---|---|
+| **A** | "apply this Terraform (plan.json present)" | `gating-terraform-plans` (`plan-gate`) — scans the seeded plan |
+| **B** | "add `lodash@4.17.4`" | `triaging-vulnerable-dependencies` (`deps-triage`) |
+| **C** | "is `event-stream` safe?" | `querying-the-bumper-advisor` (`advisor`) |
+
+Scenario A is seeded with `examples/terraform-safety/{main.tf,plan.json}` (a real
+plan with destructive changes) so the agent can actually scan it. A preflight
+asserts the build under test serves a playbook offline (a stale binary without
+`skills get` is a hard fail, not a false negative). The harness mechanics are
+validatable token-free by pointing `CLAUDE=`/`GEMINI=` at a fake agent.
+
 ## What it checks
 
 | # | Prompt to Claude | Expected | Safety |

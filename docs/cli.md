@@ -299,6 +299,7 @@ bumper init --print             # preview, write nothing
 | `--hook` | `project` | hook scope: `project`\|`user`\|`none` |
 | `--terraform` | `true` | install the terraform apply-guard hook |
 | `--deps` | `true` | install the dependency hooks (install-block + post-install scan) |
+| `--skills` | `true` | install the agent skills (SKILL.md playbooks; skipped for agents that don't read them) |
 | `--advisor` | `project` | advisor MCP scope: `project`\|`user`\|`none` (`none` = skip) |
 | `--advisor-url` | – | self-hosted Advisor base URL (also `$BUMPER_ADVISOR_URL`) |
 | `--print` | off | show what would change and exit without writing |
@@ -317,3 +318,29 @@ co-locate in `.gemini/settings.json` under `BeforeTool`/`AfterTool` keys, the ma
 Gemini's `run_shell_command` tool, the MCP entry uses `httpUrl`, and notes go to `GEMINI.md`.
 The baked hook commands carry `--client=augment`/`--client=gemini` so the guard matches the
 right tool at runtime.
+
+## `skills`
+
+Agent skills — `SKILL.md` playbooks that teach your agent to drive bumper's plan gate,
+dependency guardrail, and Advisor. See [agents.md](agents.md#agent-skills).
+
+```sh
+bumper skills                   # list the available skills (alias: bumper skills list)
+bumper skills get plan-gate     # print a skill's playbook (this is what an installed stub calls)
+bumper skills install           # write the skills into your agent's skills directory
+bumper skills install --global  # ~/<agent>/skills, for all your projects
+bumper skills install --agent gemini --print   # preview for one agent, write nothing
+```
+
+| Skill | `get` name | Drives |
+| --- | --- | --- |
+| `gating-terraform-plans` | `plan-gate` | the Terraform plan gate |
+| `triaging-vulnerable-dependencies` | `deps-triage` | the dependency guardrail |
+| `querying-the-bumper-advisor` | `advisor` | the Advisor MCP |
+
+`install` auto-detects which skill-reading agents you have (Claude Code, Gemini CLI) and is
+idempotent. The playbooks are embedded in the binary, so `get` works offline and always
+matches the installed version — the installed `SKILL.md` is a thin pointer back to it. The
+same files are published for the `npx skills add gnana997/bumper` and Claude plugin-marketplace
+channels. **Augment** doesn't read `SKILL.md`, so it's skipped (covered by `bumper init`'s
+`AGENTS.md` notes instead).

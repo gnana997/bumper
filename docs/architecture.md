@@ -27,7 +27,8 @@ internal/search/       cross-corpus BM25 search over enforced + advisory
 internal/report/       text / json / sarif / markdown reporters (plan + deps)
 internal/enrich/       AI-CLI adapters (claude/gemini/…) — optional --explain enrichment
 internal/style/        terminal color palette (truecolor + 16-color fallback, TTY/NO_COLOR aware)
-internal/setup/        `bumper init` — merge-safe hook + advisor-MCP wiring (Claude + Augment + Gemini)
+internal/setup/        `bumper init` — merge-safe hook + advisor-MCP + skills wiring (Claude + Augment + Gemini)
+internal/skills/       embedded SKILL.md playbooks (go:embed) — `bumper skills` get/list/install
 internal/tui/          the hazard-console TUI and the init wizard
 ```
 

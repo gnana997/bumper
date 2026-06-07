@@ -98,7 +98,7 @@ error. Output formats (both scans): `--format text` (default) · `json` · `sari
 · `markdown`. Only package coordinates leave your machine for a deps scan —
 **never your code**.
 
-## Three ways to run it
+## Four ways to run it
 
 - **CLI / CI gate** — text · JSON · SARIF (Security tab) · a sticky PR comment,
   for both plan and dependency scans.
@@ -108,6 +108,9 @@ error. Output formats (both scans): `--format text` (default) · `json` · `sari
 - **Hosted [Advisor MCP](docs/mcp.md)** — your agent queries it for
   best-practice, CVE, and malware data (lookup-only — your code never leaves the
   machine).
+- **[Agent skills](docs/agents.md#agent-skills)** — `SKILL.md` playbooks that
+  teach the agent to drive all of the above. `bumper init` installs them, or
+  `npx skills add gnana997/bumper` for any agent.
 
 An AI CLI you already have (`claude`, `gemini`, `codex`, `opencode`, `auggie`)
 optionally explains each finding in plain English — zero setup, zero cost. The
@@ -128,6 +131,7 @@ bumper init --agent gemini     # or Gemini CLI
 | **Enforce the apply** | `verify` binds a passing scan to a plan by sha256; `guard` blocks an unverified `apply` | [docs/agents.md](docs/agents.md) |
 | **Agent guardrail** | `bumper init` wires the guard hooks + the hosted Advisor MCP into Claude Code, Augment, and Gemini CLI (`--agent`) | [docs/agents.md](docs/agents.md) |
 | **Dependency guardrail** | block malicious installs, scan deps for CVEs — in the agent loop and in CI | [docs/agents.md](docs/agents.md#dependency-guardrail) |
+| **Agent skills** | `bumper skills install` adds `SKILL.md` playbooks that teach the agent to drive bumper | [docs/agents.md](docs/agents.md#agent-skills) |
 | **CI / GitHub Action** | SARIF to the Security tab, a sticky PR comment, fail on `high+` | [docs/ci.md](docs/ci.md) |
 | **Search the catalog** | `bumper search` ranks enforced rules + an advisory best-practice catalog | [docs/cli.md](docs/cli.md#search) |
 | **Interactive console** | `bumper tui` — the "hazard console" for the scary local apply | [docs/cli.md](docs/cli.md#tui) |
@@ -203,7 +207,7 @@ dependency scan is the same repo at the `deps` subpath.)
 | [docs/cli.md](docs/cli.md) | command reference — scan, deps, list, search, explain, verify, guard, tui, init |
 | [docs/rules.md](docs/rules.md) | rule format (YAML + CEL), coverage, the advisory catalog, writing your own |
 | [docs/ci.md](docs/ci.md) | the GitHub Actions — inputs, permissions, SARIF, sticky comment |
-| [docs/agents.md](docs/agents.md) | the agent guardrail — the two tool-layer gates (Terraform apply + dependency install), `bumper init`, supported agents |
+| [docs/agents.md](docs/agents.md) | the agent guardrail — the two tool-layer gates (Terraform apply + dependency install), agent skills, `bumper init`, supported agents |
 | [docs/mcp.md](docs/mcp.md) | the hosted Advisor MCP — tools, what leaves the machine |
 | [docs/architecture.md](docs/architecture.md) | internals, tech stack, supply-chain provenance, roadmap |
 | [examples/](examples/) | runnable, hermetic examples for both gates |

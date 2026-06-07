@@ -15,6 +15,8 @@ import (
 	"os/exec"
 	"path/filepath"
 	"strings"
+
+	"github.com/gnana997/bumper/internal/skills"
 )
 
 // Action describes what a single file mutation did.
@@ -228,6 +230,7 @@ type Options struct {
 	Advisor      bool   // register the hosted advisor MCP
 	AdvisorScope Scope  // project|user — where the advisor MCP entry is written
 	AdvisorURL   string // override for self-hosting; "" → the public default
+	Skills       bool   // install the agent skills (SKILL.md playbooks)
 	Env          Env
 }
 
@@ -296,7 +299,54 @@ func Plan(o Options) []Step {
 	if o.Deps {
 		steps = append(steps, Step{"note deps workflow in " + cmName, cm, func() (Action, error) { return EnsureDepsClaudeMd(cm) }})
 	}
+
+	// Agent skills (SKILL.md playbooks). Only for agents that read them; Augment
+	// (AGENTS.md-based) is covered by the workflow notes above instead.
+	if o.Skills && SupportsSkills(agent) {
+		if sd := SkillsDir(agent, o.HookScope, o.Env); sd != "" {
+			steps = append(steps, Step{"install agent skills · " + string(o.HookScope), sd, func() (Action, error) { return installSkills(sd) }})
+		}
+	}
 	return steps
+}
+
+// SupportsSkills reports whether the agent reads SKILL.md agent skills. Claude
+// Code and Gemini CLI do; Augment (AGENTS.md-based) does not.
+func SupportsSkills(a Agent) bool {
+	return a == AgentClaude || a == AgentGemini
+}
+
+// SkillsDir is where agent skills are written for the agent + scope:
+// <agentcfg>/skills under the project (project scope) or home (user scope).
+func SkillsDir(a Agent, scope Scope, env Env) string {
+	dir := filepath.Join(agentConfigDir(a), "skills")
+	switch scope {
+	case ScopeProject:
+		return filepath.Join(env.Cwd, dir)
+	case ScopeUser:
+		return filepath.Join(env.Home, dir)
+	}
+	return ""
+}
+
+// installSkills writes the embedded skills into skillsDir and folds the per-file
+// outcomes into a single Action for the init plan (Created if any file is new,
+// else Updated if any changed, else Unchanged).
+func installSkills(skillsDir string) (Action, error) {
+	results, err := skills.Install(skillsDir)
+	if err != nil {
+		return Unchanged, err
+	}
+	act := Unchanged
+	for _, r := range results {
+		switch {
+		case r.Created:
+			return Created, nil
+		case r.Updated:
+			act = Updated
+		}
+	}
+	return act, nil
 }
 
 // hookSettingsPath is the settings file the hooks are written to, per agent + scope.
