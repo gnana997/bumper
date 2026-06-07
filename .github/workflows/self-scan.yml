@@ -82,3 +82,43 @@ jobs:
             echo
             bumper deps --format markdown --no-fail "${{ matrix.target }}"
           } >> "$GITHUB_STEP_SUMMARY"
+
+  # Publish machine-readable reports for bumper.sh ("See it in action"). Builds
+  # bumper from source (so reports reflect the latest parser fixes), scans every
+  # showcase target as JSON, and uploads a self-contained reports.json manifest +
+  # a reports.tar.gz of the full per-target output to the rolling reports-latest
+  # prerelease asset. Mirrors the catalog-latest pattern.
+  publish:
+    name: publish reports-latest
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0 # tags, so `git describe` resolves the release version
+      - uses: actions/setup-go@v5
+        with:
+          go-version: "1.26"
+      - name: Build bumper from source
+        run: go build -o bumper ./cmd/bumper
+      - name: Generate reports
+        run: |
+          export BUMPER_BIN=./bumper
+          export BUMPER_VERSION="$(git describe --tags --abbrev=0 2>/dev/null || echo dev)"
+          export GENERATED_AT="$(date -u '+%Y-%m-%dT%H:%M:%SZ')"
+          go run ./tools/build_reports --out reports
+          tar -czf reports.tar.gz -C reports .
+          echo "generated:"; ls -la reports
+      - name: Publish rolling reports-latest release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          notes="Auto-generated $(date -u '+%Y-%m-%d %H:%M UTC') by the self-scan workflow — bumper's own scan output over the bundled examples + go.sum. Consumed by bumper.sh. Not a software release."
+          if gh release view reports-latest >/dev/null 2>&1; then
+            gh release upload reports-latest reports/reports.json reports.tar.gz --clobber
+            gh release edit reports-latest --notes "$notes"
+          else
+            gh release create reports-latest reports/reports.json reports.tar.gz \
+              --title "Self-scan reports (rolling)" --notes "$notes" --prerelease
+          fi
