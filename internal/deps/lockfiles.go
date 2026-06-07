@@ -319,14 +319,32 @@ func parseTomlPackages(content, ecosystem string) []Dep {
 
 // --- Go ----------------------------------------------------------------------
 
-var reGoSumLine = regexp.MustCompile(`^(\S+)\s+v(\S+?)(?:/go\.mod)?\s+h1:`)
+var reGoSumLine = regexp.MustCompile(`^(\S+)\s+v(\S+?)(/go\.mod)?\s+h1:`)
 
 func parseGoSum(content string) []Dep {
+	// go.sum is a hash ledger, NOT the resolved dependency set: it records a hash for
+	// every module version touched while computing the module graph. A line whose
+	// version is suffixed "/go.mod" means only that version's go.mod was read during
+	// resolution — its code was never downloaded and is (very often) not in the build.
+	// Only a *zip* hash line (no "/go.mod" suffix) means the module was actually
+	// fetched and compiled in. Counting the go.mod-only entries over-reports vulns in
+	// versions that were never part of the binary, so we emit a dep only for versions
+	// that have a zip hash. (The truly precise source is `go list -m all`, but that
+	// needs a build; this is the correct static read of go.sum.)
+	zipped := map[string]bool{}
 	var deps []Dep
 	for _, line := range strings.Split(content, "\n") {
-		if m := reGoSumLine.FindStringSubmatch(line); m != nil {
-			deps = append(deps, Dep{"Go", m[1], strings.ReplaceAll(m[2], "+incompatible", "")})
+		m := reGoSumLine.FindStringSubmatch(line)
+		if m == nil || m[3] != "" { // m[3] == "/go.mod" → graph metadata, not the build
+			continue
 		}
+		ver := strings.ReplaceAll(m[2], "+incompatible", "")
+		key := m[1] + "@" + ver
+		if zipped[key] {
+			continue
+		}
+		zipped[key] = true
+		deps = append(deps, Dep{"Go", m[1], ver})
 	}
 	return deps
 }

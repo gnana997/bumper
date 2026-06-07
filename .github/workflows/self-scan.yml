@@ -1,0 +1,84 @@
+# Self-scan — bumper runs its own published GitHub Actions against the bundled
+# examples and the repo's own go.sum, on a schedule. Two purposes:
+#   1. Dogfood: prove the *released* Actions (gnana997/bumper@v1 and
+#      gnana997/bumper/deps@v1) install and run end-to-end on every supported
+#      format. If a release breaks an Action, this catches it.
+#   2. A live, viewable report rendered into each run's job summary.
+#
+# Deliberately QUIET: it never fails the build (fail-severity: none), uploads no
+# SARIF, and posts no PR comments. The example fixtures are *intentionally*
+# vulnerable (incl. a malicious package), so failing or polluting the Security
+# tab would be wrong. The go.sum target is the real dogfood — it should report
+# clean (needs a release that includes the go.sum parser fix).
+name: self-scan
+
+on:
+  workflow_dispatch: {}
+  schedule:
+    - cron: "0 6 * * 1" # Mondays 06:00 UTC (the hosted advisor refreshes daily)
+  push:
+    paths:
+      - "examples/**"
+      - "go.sum"
+      - ".github/workflows/self-scan.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  terraform:
+    name: terraform plan safety (example)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      # The published Terraform action — install + scan + gate. Quiet mode.
+      - name: Run bumper (published Action)
+        uses: gnana997/bumper@v1
+        with:
+          plan-json: examples/terraform-safety/plan.json
+          fail-severity: none
+          upload-sarif: false
+          comment: false
+
+      # The action put `bumper` on PATH; reuse it to render the report into the
+      # run summary (no second install).
+      - name: Report → run summary
+        run: |
+          {
+            echo "## Terraform plan safety — \`examples/terraform-safety/plan.json\`"
+            echo
+            bumper --format markdown --no-fail examples/terraform-safety/plan.json
+          } >> "$GITHUB_STEP_SUMMARY"
+
+  dependencies:
+    name: dependency scan
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        target:
+          - examples/dependency-scan/package-lock.json # crafted npm: vuln + malware
+          - examples/dependency-scan/requirements.txt # crafted Python: CVEs
+          - examples/dependency-scan/real-world/npm/package-lock.json # real npm giant
+          - examples/dependency-scan/real-world/python/uv.lock # real Python giant
+          - examples/dependency-scan/real-world/rust/Cargo.lock # real Rust giant
+          - go.sum # the repo's own deps — should be clean
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Run bumper deps (published Action)
+        uses: gnana997/bumper/deps@v1
+        with:
+          lockfile: ${{ matrix.target }}
+          fail-severity: none
+          upload-sarif: false
+          comment: false
+
+      - name: Report → run summary
+        run: |
+          {
+            echo "## Dependency scan — \`${{ matrix.target }}\`"
+            echo
+            bumper deps --format markdown --no-fail "${{ matrix.target }}"
+          } >> "$GITHUB_STEP_SUMMARY"

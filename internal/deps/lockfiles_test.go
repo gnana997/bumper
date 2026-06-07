@@ -51,7 +51,9 @@ func TestParseLockfiles(t *testing.T) {
 		},
 		{
 			"go.sum", "go.sum",
-			"github.com/gin-gonic/gin v1.6.0 h1:abc=\ngithub.com/gin-gonic/gin v1.6.0/go.mod h1:def=\ngolang.org/x/text v0.3.2 h1:xyz=",
+			// x/sys appears ONLY as a /go.mod hash (graph metadata, never compiled in)
+			// and must be excluded; gin & x/text have real zip hashes and are kept.
+			"github.com/gin-gonic/gin v1.6.0 h1:abc=\ngithub.com/gin-gonic/gin v1.6.0/go.mod h1:def=\ngolang.org/x/sys v0.0.0-20210809222454-d867a43fc93e/go.mod h1:zzz=\ngolang.org/x/text v0.3.2 h1:xyz=",
 			"github.com/gin-gonic/gin@1.6.0,golang.org/x/text@0.3.2", "Go",
 		},
 		{

@@ -1,0 +1,6 @@
+# Sample Python dependencies pinned to known-vulnerable versions, for
+# demonstrating `bumper deps`. Only exact `==` pins are scanned.
+requests==2.19.0
+urllib3==1.24.1
+django==2.2.0
+pyyaml==5.1
