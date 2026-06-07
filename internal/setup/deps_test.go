@@ -18,7 +18,7 @@ func read(t *testing.T, path string) string {
 
 func TestMergeDepsHooks(t *testing.T) {
 	path := filepath.Join(t.TempDir(), ".claude", "settings.json")
-	act, err := MergeDepsHooks(path, "bumper")
+	act, err := MergeDepsHooks(path, "bumper", AgentClaude)
 	if err != nil || act != Created {
 		t.Fatalf("first MergeDepsHooks = %v, %v; want Created", act, err)
 	}
@@ -33,7 +33,7 @@ func TestMergeDepsHooks(t *testing.T) {
 		t.Error("both hook events should be present")
 	}
 	// idempotent
-	act, err = MergeDepsHooks(path, "bumper")
+	act, err = MergeDepsHooks(path, "bumper", AgentClaude)
 	if err != nil || act != Unchanged {
 		t.Errorf("second MergeDepsHooks = %v, %v; want Unchanged", act, err)
 	}
@@ -43,11 +43,11 @@ func TestMergeDepsHooks(t *testing.T) {
 // never trick the other's "already installed?" check.
 func TestGuardAndDepsHooksCoexist(t *testing.T) {
 	path := filepath.Join(t.TempDir(), ".claude", "settings.json")
-	if _, err := MergeDepsHooks(path, "bumper"); err != nil {
+	if _, err := MergeDepsHooks(path, "bumper", AgentClaude); err != nil {
 		t.Fatal(err)
 	}
 	// deps guard present but NOT terraform guard — MergeHook must still install it.
-	act, err := MergeHook(path, "bumper")
+	act, err := MergeHook(path, "bumper", AgentClaude)
 	if err != nil || act != Updated {
 		t.Fatalf("MergeHook after deps = %v, %v; want Updated (tf guard must still install)", act, err)
 	}

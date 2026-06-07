@@ -1,5 +1,5 @@
 // Package setup implements `bumper init`: wiring bumper into a coding agent
-// (Claude Code). It installs the guardrail hooks (terraform apply-guard +
+// (Claude Code or Augment). It installs the guardrail hooks (terraform apply-guard +
 // dependency install-block/post-install scan), registers the hosted Advisor MCP,
 // ignores the verdict store, and drops the workflow notes into CLAUDE.md.
 //
@@ -94,13 +94,60 @@ func ParseScope(s string) (Scope, bool) {
 	return "", false
 }
 
+// Agent is a coding agent bumper can wire into. Augment uses the same hook and MCP
+// JSON shapes as Claude Code (deny envelope, mcpServers block); they differ only in
+// the shell-tool name the hook matches and where config lives on disk.
+type Agent string
+
+const (
+	AgentClaude  Agent = "claude"
+	AgentAugment Agent = "augment"
+)
+
+// ParseAgent validates an agent string from a flag.
+func ParseAgent(s string) (Agent, bool) {
+	switch Agent(s) {
+	case AgentClaude, AgentAugment:
+		return Agent(s), true
+	}
+	return "", false
+}
+
+// ShellTool is the tool name the agent uses for shell execution — what the hook
+// matcher selects and what the guard checks tool_name against.
+func (a Agent) ShellTool() string {
+	if a == AgentAugment {
+		return "launch-process"
+	}
+	return "Bash"
+}
+
+// Label is the human-facing name for the agent.
+func (a Agent) Label() string {
+	if a == AgentAugment {
+		return "Augment"
+	}
+	return "Claude Code"
+}
+
+// clientSuffix is appended to baked hook commands so the binary knows which shell
+// tool to expect at runtime. Empty for Claude (the default) — so existing Claude
+// config and behavior are byte-for-byte unchanged.
+func (a Agent) clientSuffix() string {
+	if a == AgentAugment {
+		return " --client=augment"
+	}
+	return ""
+}
+
 // Env is the detected environment `bumper init` wires into.
 type Env struct {
-	Bin         string // command to invoke bumper in generated config
-	ClaudeFound bool   // the `claude` CLI is on PATH
-	Cwd         string // project directory
-	Home        string // user home
-	GitRepo     bool   // cwd is a git repo
+	Bin          string // command to invoke bumper in generated config
+	ClaudeFound  bool   // the `claude` CLI is on PATH
+	AugmentFound bool   // the `auggie`/`augment` CLI is on PATH
+	Cwd          string // project directory
+	Home         string // user home
+	GitRepo      bool   // cwd is a git repo
 }
 
 // Detect inspects the current environment.
@@ -114,13 +161,21 @@ func Detect() (Env, error) {
 		return Env{}, err
 	}
 	_, claudeErr := exec.LookPath("claude")
+	augmentFound := false
+	for _, b := range []string{"auggie", "augment"} {
+		if _, e := exec.LookPath(b); e == nil {
+			augmentFound = true
+			break
+		}
+	}
 	_, gitErr := os.Stat(filepath.Join(cwd, ".git"))
 	return Env{
-		Bin:         BinPath(),
-		ClaudeFound: claudeErr == nil,
-		Cwd:         cwd,
-		Home:        home,
-		GitRepo:     gitErr == nil,
+		Bin:          BinPath(),
+		ClaudeFound:  claudeErr == nil,
+		AugmentFound: augmentFound,
+		Cwd:          cwd,
+		Home:         home,
+		GitRepo:      gitErr == nil,
 	}, nil
 }
 
@@ -129,6 +184,7 @@ func Detect() (Env, error) {
 // the defaults wire everything and a monorepo that adds Terraform later is already
 // covered. The hosted advisor is the single MCP (the local stdio server is gone).
 type Options struct {
+	Agent        Agent  // which coding agent to wire (claude|augment)
 	HookScope    Scope  // project|user|none — where the hook(s) are written
 	Terraform    bool   // install the terraform apply-guard hook
 	Deps         bool   // install the dependency hooks (deps guard + deps watch)
@@ -168,14 +224,16 @@ func Plan(o Options) []Step {
 	bin := o.Env.Bin
 	var steps []Step
 
+	agent := o.Agent
+
 	// Hooks (terraform apply-guard + dependency guard/scan) share one settings.json.
 	if hp := hookSettingsPath(o); hp != "" {
 		sc := string(o.HookScope)
 		if o.Terraform {
-			steps = append(steps, Step{"install terraform guard · " + sc, hp, func() (Action, error) { return MergeHook(hp, bin) }})
+			steps = append(steps, Step{"install terraform guard · " + sc, hp, func() (Action, error) { return MergeHook(hp, bin, agent) }})
 		}
 		if o.Deps {
-			steps = append(steps, Step{"install dependency hooks · " + sc, hp, func() (Action, error) { return MergeDepsHooks(hp, bin) }})
+			steps = append(steps, Step{"install dependency hooks · " + sc, hp, func() (Action, error) { return MergeDepsHooks(hp, bin, agent) }})
 		}
 	}
 
@@ -193,27 +251,45 @@ func Plan(o Options) []Step {
 	// Always: ignore the verdict store; document only the workflows we wired.
 	gi := filepath.Join(o.Env.Cwd, ".gitignore")
 	steps = append(steps, Step{"ignore .bumper/ verdict store", gi, func() (Action, error) { return EnsureGitignore(gi) }})
-	cm := filepath.Join(o.Env.Cwd, "CLAUDE.md")
+	cm := contextFilePath(o) // CLAUDE.md for Claude, AGENTS.md for Augment
+	cmName := filepath.Base(cm)
 	if o.Terraform {
-		steps = append(steps, Step{"note terraform workflow in CLAUDE.md", cm, func() (Action, error) { return EnsureClaudeMd(cm) }})
+		steps = append(steps, Step{"note terraform workflow in " + cmName, cm, func() (Action, error) { return EnsureClaudeMd(cm) }})
 	}
 	if o.Deps {
-		steps = append(steps, Step{"note deps workflow in CLAUDE.md", cm, func() (Action, error) { return EnsureDepsClaudeMd(cm) }})
+		steps = append(steps, Step{"note deps workflow in " + cmName, cm, func() (Action, error) { return EnsureDepsClaudeMd(cm) }})
 	}
 	return steps
 }
 
+// hookSettingsPath is the settings file the hooks are written to, per agent + scope.
+// Augment co-locates hooks and MCP in .augment/settings.json; Claude uses
+// .claude/settings.json.
 func hookSettingsPath(o Options) string {
+	dir, file := agentConfigDir(o.Agent), "settings.json"
 	switch o.HookScope {
 	case ScopeProject:
-		return filepath.Join(o.Env.Cwd, ".claude", "settings.json")
+		return filepath.Join(o.Env.Cwd, dir, file)
 	case ScopeUser:
-		return filepath.Join(o.Env.Home, ".claude", "settings.json")
+		return filepath.Join(o.Env.Home, dir, file)
 	}
 	return ""
 }
 
+// advisorMCPPath is where the hosted-advisor MCP entry is written. Claude keeps MCP
+// separate (.mcp.json project / ~/.claude.json user); Augment co-locates it in the
+// same settings.json as its hooks.
 func advisorMCPPath(o Options) string {
+	if o.Agent == AgentAugment {
+		dir := agentConfigDir(o.Agent)
+		switch o.AdvisorScope {
+		case ScopeProject:
+			return filepath.Join(o.Env.Cwd, dir, "settings.json")
+		case ScopeUser:
+			return filepath.Join(o.Env.Home, dir, "settings.json")
+		}
+		return ""
+	}
 	switch o.AdvisorScope {
 	case ScopeProject:
 		return filepath.Join(o.Env.Cwd, ".mcp.json")
@@ -223,8 +299,29 @@ func advisorMCPPath(o Options) string {
 	return ""
 }
 
-// MergeHook installs the guard as a PreToolUse Bash hook in a settings.json file.
-func MergeHook(path, binPath string) (Action, error) {
+// agentConfigDir is the per-agent config directory name.
+func agentConfigDir(a Agent) string {
+	if a == AgentAugment {
+		return ".augment"
+	}
+	return ".claude"
+}
+
+// contextFilePath is the agent-instructions file the workflow notes go into:
+// CLAUDE.md for Claude Code, AGENTS.md (the cross-agent standard Augment reads) for
+// Augment. Always project-local.
+func contextFilePath(o Options) string {
+	name := "CLAUDE.md"
+	if o.Agent == AgentAugment {
+		name = "AGENTS.md"
+	}
+	return filepath.Join(o.Env.Cwd, name)
+}
+
+// MergeHook installs the terraform guard as a PreToolUse shell-tool hook in a
+// settings.json file. The matcher and the baked --client flag come from the agent
+// (Claude → "Bash" + no flag; Augment → "launch-process" + --client=augment).
+func MergeHook(path, binPath string, agent Agent) (Action, error) {
 	m, existed, err := loadJSONMap(path)
 	if err != nil {
 		return Unchanged, err
@@ -235,13 +332,7 @@ func MergeHook(path, binPath string) (Action, error) {
 	if hookInstalled(pre) {
 		return Unchanged, nil
 	}
-	pre = append(pre, map[string]any{
-		"matcher": "Bash",
-		"hooks": []any{map[string]any{
-			"type":    "command",
-			"command": binPath + " guard",
-		}},
-	})
+	pre = append(pre, bashHookEntry(agent.ShellTool(), binPath+" guard"+agent.clientSuffix()))
 	hooks["PreToolUse"] = pre
 	m["hooks"] = hooks
 	if err := writeJSONMap(path, m, existed); err != nil {
@@ -277,19 +368,20 @@ func hookInstalled(pre []any) bool {
 // MergeDepsHooks installs the dependency guardrail hooks: `deps guard` (PreToolUse,
 // blocks malicious installs) and `deps watch` (PostToolUse, scans after install).
 // Idempotent and additive — it coexists with the terraform guard hook.
-func MergeDepsHooks(path, binPath string) (Action, error) {
+func MergeDepsHooks(path, binPath string, agent Agent) (Action, error) {
 	m, existed, err := loadJSONMap(path)
 	if err != nil {
 		return Unchanged, err
 	}
+	matcher, suffix := agent.ShellTool(), agent.clientSuffix()
 	hooks := childMap(m, "hooks")
 	changed := false
 	if pre := childSlice(hooks, "PreToolUse"); !hookCmdInstalled(pre, "deps guard") {
-		hooks["PreToolUse"] = append(pre, bashHookEntry(binPath+" deps guard"))
+		hooks["PreToolUse"] = append(pre, bashHookEntry(matcher, binPath+" deps guard"+suffix))
 		changed = true
 	}
 	if post := childSlice(hooks, "PostToolUse"); !hookCmdInstalled(post, "deps watch") {
-		hooks["PostToolUse"] = append(post, bashHookEntry(binPath+" deps watch"))
+		hooks["PostToolUse"] = append(post, bashHookEntry(matcher, binPath+" deps watch"+suffix))
 		changed = true
 	}
 	if !changed {
@@ -302,9 +394,10 @@ func MergeDepsHooks(path, binPath string) (Action, error) {
 	return actionFor(existed), nil
 }
 
-func bashHookEntry(command string) map[string]any {
+// bashHookEntry builds one hook entry matching the given shell-tool name.
+func bashHookEntry(matcher, command string) map[string]any {
 	return map[string]any{
-		"matcher": "Bash",
+		"matcher": matcher,
 		"hooks":   []any{map[string]any{"type": "command", "command": command}},
 	}
 }

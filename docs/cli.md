@@ -283,13 +283,15 @@ Wire bumper into your coding agent — the guardrail hooks + the hosted [Advisor
 See [agents.md](agents.md) for details.
 
 ```sh
-bumper init           # interactive wizard
-bumper init --yes     # non-interactive: wire everything (hooks + advisor MCP)
-bumper init --print   # preview, write nothing
+bumper init                     # interactive wizard (auto-detects the agent)
+bumper init --yes               # non-interactive: wire everything (hooks + advisor MCP)
+bumper init --agent augment --yes  # wire Augment instead of Claude Code
+bumper init --print             # preview, write nothing
 ```
 
 | Flag | Default | Description |
 | --- | --- | --- |
+| `--agent` | auto | coding agent to wire: `claude`\|`augment` (auto-detects when unset) |
 | `--hook` | `project` | hook scope: `project`\|`user`\|`none` |
 | `--terraform` | `true` | install the terraform apply-guard hook |
 | `--deps` | `true` | install the dependency hooks (install-block + post-install scan) |
@@ -302,3 +304,9 @@ bumper init --print   # preview, write nothing
 Defaults wire everything; hooks self-filter, so a Terraform guard in a Node repo simply
 never fires. The dependency guardrail needs the Advisor for CVE/malware data — selecting
 `--deps` keeps the advisor on (host it yourself with `--advisor-url`).
+
+For **Claude Code** (`--agent claude`) the hooks land in `.claude/settings.json`, the MCP in
+`.mcp.json`, and notes in `CLAUDE.md`. For **Augment** (`--agent augment`) hooks **and** MCP
+co-locate in `.augment/settings.json`, the hook matcher is Augment's `launch-process` shell
+tool, and notes go to `AGENTS.md`. The baked hook commands carry `--client=augment` so the
+guard matches the right tool at runtime.

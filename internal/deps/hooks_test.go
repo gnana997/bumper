@@ -88,7 +88,7 @@ func TestGuardDeniesMalicious(t *testing.T) {
 
 	in := `{"tool_name":"Bash","tool_input":{"command":"npm install evilpkg"}}`
 	var out bytes.Buffer
-	if err := Guard(strings.NewReader(in), &out, NewClient(srv.URL)); err != nil {
+	if err := Guard(strings.NewReader(in), &out, NewClient(srv.URL), "Bash"); err != nil {
 		t.Fatalf("Guard: %v", err)
 	}
 	var dec struct {
@@ -115,7 +115,7 @@ func TestGuardSilentOnClean(t *testing.T) {
 	}))
 	defer srv.Close()
 	var out bytes.Buffer
-	if err := Guard(strings.NewReader(`{"tool_name":"Bash","tool_input":{"command":"npm install express"}}`), &out, NewClient(srv.URL)); err != nil {
+	if err := Guard(strings.NewReader(`{"tool_name":"Bash","tool_input":{"command":"npm install express"}}`), &out, NewClient(srv.URL), "Bash"); err != nil {
 		t.Fatalf("Guard: %v", err)
 	}
 	if out.Len() != 0 {
@@ -126,10 +126,46 @@ func TestGuardSilentOnClean(t *testing.T) {
 func TestGuardFailOpenOnBadInput(t *testing.T) {
 	var out bytes.Buffer
 	// nil client would panic if it ever got called — proves we bail before the call.
-	if err := Guard(strings.NewReader("not json"), &out, nil); err != nil {
+	if err := Guard(strings.NewReader("not json"), &out, nil, "Bash"); err != nil {
 		t.Fatalf("Guard: %v", err)
 	}
 	if out.Len() != 0 {
 		t.Errorf("expected no output on bad input, got %q", out.String())
+	}
+}
+
+// TestGuardShellToolMatch proves the hook keys off the configured shell-tool name:
+// it fires on Augment's "launch-process" when told to, and is a silent no-op when
+// the tool name doesn't match the configured one (e.g. a Claude binary on Augment).
+func TestGuardShellToolMatch(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		json.NewEncoder(w).Encode(map[string]any{
+			"status": "ok", "checked": 1, "malicious_count": 1,
+			"results": []map[string]any{{
+				"ecosystem": "npm", "package": "evilpkg",
+				"advisories": []map[string]any{{"id": "MAL-2026-1", "summary": "bad"}},
+			}},
+		})
+	}))
+	defer srv.Close()
+
+	// Augment shell tool: matches when shellTool="launch-process" → denies.
+	in := `{"tool_name":"launch-process","tool_input":{"command":"npm install evilpkg"}}`
+	var out bytes.Buffer
+	if err := Guard(strings.NewReader(in), &out, NewClient(srv.URL), "launch-process"); err != nil {
+		t.Fatalf("Guard: %v", err)
+	}
+	if !strings.Contains(out.String(), "deny") {
+		t.Errorf("expected deny for matching shell tool, got %q", out.String())
+	}
+
+	// Mismatch: same payload but expecting "Bash" → silent no-op (nil client proves
+	// we bail before any network call).
+	var out2 bytes.Buffer
+	if err := Guard(strings.NewReader(in), &out2, nil, "Bash"); err != nil {
+		t.Fatalf("Guard: %v", err)
+	}
+	if out2.Len() != 0 {
+		t.Errorf("expected silent no-op on tool mismatch, got %q", out2.String())
 	}
 }

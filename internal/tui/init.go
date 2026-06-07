@@ -37,6 +37,7 @@ type (
 
 type initModel struct {
 	env          setup.Env
+	agent        setup.Agent // which coding agent to wire (claude|augment)
 	terraform    bool        // install the terraform apply-guard hook
 	deps         bool        // install the dependency hooks
 	hookScope    setup.Scope // project|user — where hooks go
@@ -44,7 +45,7 @@ type initModel struct {
 	advisorScope setup.Scope // project|user — where the advisor MCP goes
 
 	phase    initPhase
-	focusRow int // 0=terraform 1=deps 2=hookScope 3=advisor 4=advisorScope
+	focusRow int // 0=agent 1=terraform 2=deps 3=hookScope 4=advisor 5=advisorScope
 
 	steps    []setup.Step
 	results  []stepResult
@@ -59,13 +60,18 @@ type initModel struct {
 
 func newInitModel(env setup.Env) initModel {
 	// Default B: wire everything (hooks self-filter, so it's safe and future-proof).
+	// Default to Claude unless only Augment is present.
+	agent := setup.AgentClaude
+	if env.AugmentFound && !env.ClaudeFound {
+		agent = setup.AgentAugment
+	}
 	return initModel{
-		env: env, terraform: true, deps: true, advisor: true,
+		env: env, agent: agent, terraform: true, deps: true, advisor: true,
 		hookScope: setup.ScopeProject, advisorScope: setup.ScopeProject, gl: pickGlyphs(),
 	}
 }
 
-const initLastRow = 4 // 0=terraform 1=deps 2=hookScope 3=advisor 4=advisorScope
+const initLastRow = 5 // 0=agent 1=terraform 2=deps 3=hookScope 4=advisor 5=advisorScope
 
 func (m initModel) Init() tea.Cmd { return initTickCmd() }
 
@@ -118,7 +124,7 @@ func (m initModel) onKey(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 			}
 		case "enter":
 			m.steps = setup.Plan(setup.Options{
-				HookScope: m.hookScope, Terraform: m.terraform, Deps: m.deps,
+				Agent: m.agent, HookScope: m.hookScope, Terraform: m.terraform, Deps: m.deps,
 				Advisor: m.advisor, AdvisorScope: m.advisorScope, Env: m.env,
 			})
 			m.phase = ipReview
@@ -155,20 +161,26 @@ func (m initModel) onKey(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 func (m *initModel) change() {
 	switch m.focusRow {
 	case 0:
-		m.terraform = !m.terraform
+		if m.agent == setup.AgentClaude {
+			m.agent = setup.AgentAugment
+		} else {
+			m.agent = setup.AgentClaude
+		}
 	case 1:
+		m.terraform = !m.terraform
+	case 2:
 		m.deps = !m.deps
 		if m.deps {
 			m.advisor = true // deps needs the advisor for CVE/malware data
 		}
-	case 2:
-		m.hookScope = flipScope(m.hookScope)
 	case 3:
+		m.hookScope = flipScope(m.hookScope)
+	case 4:
 		m.advisor = !m.advisor
 		if !m.advisor {
 			m.deps = false // can't scan deps without an advisor
 		}
-	case 4:
+	case 5:
 		m.advisorScope = flipScope(m.advisorScope)
 	}
 }

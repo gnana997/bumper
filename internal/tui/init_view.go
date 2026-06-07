@@ -50,7 +50,7 @@ func (m initModel) compose(body string) string {
 func (m initModel) header() string {
 	bar := lipgloss.NewStyle().Foreground(colLive).Render(m.gl.spineActive)
 	left := bar + " " + stHeading.Render("BUMPER") + stDim.Render("  "+m.gl.arrow+"  ") + stLive.Render("INIT")
-	sub := stDim.Render("wire the safety gate into Claude Code")
+	sub := stDim.Render("wire the safety gate into your coding agent")
 	right := stDim.Render("hazard console")
 	gap := m.w - lipgloss.Width(left) - lipgloss.Width(sub) - lipgloss.Width(right) - 2
 	if gap < 1 {
@@ -68,11 +68,6 @@ func (m initModel) bodyConfigure() string {
 	b.WriteString("\n")
 	b.WriteString(m.section("ENVIRONMENT"))
 	b.WriteString(kvline("binary", stInk.Render(m.env.Bin)))
-	if m.env.ClaudeFound {
-		b.WriteString(kvline("claude", stSafe.Render(m.gl.check+" found on PATH")))
-	} else {
-		b.WriteString(kvline("claude", stWarn.Render(m.gl.warn+" not found")+stDim.Render(" — config still written; install Claude Code to use it")))
-	}
 	git := stDim.Render("not a git repo")
 	if m.env.GitRepo {
 		git = stDim.Render("git repo")
@@ -80,21 +75,66 @@ func (m initModel) bodyConfigure() string {
 	b.WriteString(kvline("project", stInk.Render(collapseHome(m.env.Cwd, m.env.Home))+"  "+git))
 	b.WriteString("\n")
 
-	b.WriteString(m.section("HOOKS") + stDim.Render("   ↑↓ pick row · ←→/space change") + "\n\n")
-	b.WriteString(m.toggleRow(0, "terraform", m.terraform, "apply-guard") + "\n")
-	b.WriteString(m.toggleRow(1, "dependencies", m.deps, "install-block + post-install scan") + "\n")
-	b.WriteString(m.scopeRow(2, m.hookScope) + "\n\n")
+	b.WriteString(m.section("AGENT") + stDim.Render("   ↑↓ pick row · ←→/space change") + "\n\n")
+	b.WriteString(m.agentRow(0) + "\n\n")
+
+	b.WriteString(m.section("HOOKS"))
+	b.WriteString(m.toggleRow(1, "terraform", m.terraform, "apply-guard") + "\n")
+	b.WriteString(m.toggleRow(2, "dependencies", m.deps, "install-block + post-install scan") + "\n")
+	b.WriteString(m.scopeRow(3, m.hookScope) + "\n\n")
 
 	b.WriteString(m.section("MCP"))
-	b.WriteString(m.toggleRow(3, "advisor", m.advisor, "advisor.bumper.sh — security lookups") + "\n")
+	b.WriteString(m.toggleRow(4, "advisor", m.advisor, "advisor.bumper.sh — security lookups") + "\n")
 	b.WriteString("       " + stWarn.Render(m.gl.warn) + " " + stDim.Render("the dependency guardrail needs this for CVE/malware data —") + "\n")
 	b.WriteString("         " + stDim.Render("only package names + versions leave your machine, never your code") + "\n")
-	b.WriteString(m.scopeRow(4, m.advisorScope) + "\n\n")
+	b.WriteString(m.scopeRow(5, m.advisorScope) + "\n\n")
 
 	b.WriteString(m.section("ALWAYS"))
 	b.WriteString("  " + stSafe.Render(m.gl.check) + " " + stDim.Render("ignore .bumper/ in .gitignore") + "\n")
-	b.WriteString("  " + stSafe.Render(m.gl.check) + " " + stDim.Render("note the wired workflows in CLAUDE.md") + "\n")
+	b.WriteString("  " + stSafe.Render(m.gl.check) + " " + stDim.Render("note the wired workflows in "+m.contextFileName()) + "\n")
 	return b.String()
+}
+
+// contextFileName is the agent-instructions filename for the selected agent.
+func (m initModel) contextFileName() string {
+	if m.agent == setup.AgentAugment {
+		return "AGENTS.md"
+	}
+	return "CLAUDE.md"
+}
+
+// agentRow renders the coding-agent selector (claude/augment chips + presence hint).
+func (m initModel) agentRow(row int) string {
+	focused := m.focusRow == row
+	spine := stDim.Render(m.gl.spine)
+	lbl := pad("  target", 13)
+	lblStyled := stDim.Render(lbl)
+	if focused {
+		spine = lipgloss.NewStyle().Foreground(colLive).Render(m.gl.spineActive)
+		lblStyled = lipgloss.NewStyle().Foreground(colLive).Bold(true).Render(lbl)
+	}
+	var chips []string
+	for _, a := range []setup.Agent{setup.AgentClaude, setup.AgentAugment} {
+		if a == m.agent {
+			c := "[" + a.Label() + "]"
+			if focused {
+				chips = append(chips, lipgloss.NewStyle().Foreground(colLive).Bold(true).Render(c))
+			} else {
+				chips = append(chips, stInk.Render(c))
+			}
+		} else {
+			chips = append(chips, stDim.Render(" "+a.Label()+" "))
+		}
+	}
+	found := m.env.ClaudeFound
+	if m.agent == setup.AgentAugment {
+		found = m.env.AugmentFound
+	}
+	hint := stSafe.Render("  " + m.gl.check + " on PATH")
+	if !found {
+		hint = stWarn.Render("  "+m.gl.warn+" not found") + stDim.Render(" — config still written")
+	}
+	return spine + " " + lblStyled + " " + strings.Join(chips, " ") + hint
 }
 
 // toggleRow renders an on/off guardrail row ([x]/[ ] + label + hint).
@@ -198,14 +238,18 @@ func (m initModel) bodyDone() string {
 	}
 	b.WriteString("\n" + m.section("NEXT"))
 	for _, line := range []string{
-		"commit .mcp.json + .claude/settings.json to share the gate with your team",
-		"restart Claude Code to load the MCP server",
+		"commit the generated config to share the gate with your team",
+		"restart " + m.agent.Label() + " to load the MCP server",
 		"the guard blocks unverified terraform apply / destroy",
 	} {
 		b.WriteString("  " + stLive.Render(m.gl.bullet) + " " + stDim.Render(line) + "\n")
 	}
-	if !m.env.ClaudeFound {
-		b.WriteString("\n  " + stWarn.Render(m.gl.warn+" claude CLI not on PATH") + stDim.Render(" — install Claude Code to use what you just wired.") + "\n")
+	found := m.env.ClaudeFound
+	if m.agent == setup.AgentAugment {
+		found = m.env.AugmentFound
+	}
+	if !found {
+		b.WriteString("\n  " + stWarn.Render(m.gl.warn+" "+m.agent.Label()+" CLI not on PATH") + stDim.Render(" — install it to use what you just wired.") + "\n")
 	}
 	return b.String()
 }

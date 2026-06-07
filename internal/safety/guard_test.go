@@ -83,7 +83,7 @@ func TestDecideSilentForNonTerraform(t *testing.T) {
 		hookInput("Bash", "terraform plan -out tfplan", "/repo"),
 		hookInput("Bash", "git commit -m apply", "/repo"),
 	} {
-		if d := Decide(tc, now, DefaultMaxAge); d.Deny {
+		if d := Decide(tc, "Bash", now, DefaultMaxAge); d.Deny {
 			t.Errorf("expected silent allow for %q, got deny: %s", tc.ToolInput.Command, d.Reason)
 		}
 	}
@@ -91,11 +91,11 @@ func TestDecideSilentForNonTerraform(t *testing.T) {
 
 func TestDecideBareApplyAndDestroyDeny(t *testing.T) {
 	now := time.Now()
-	bare := Decide(hookInput("Bash", "terraform apply", "/repo"), now, DefaultMaxAge)
+	bare := Decide(hookInput("Bash", "terraform apply", "/repo"), "Bash", now, DefaultMaxAge)
 	if !bare.Deny || !strings.Contains(bare.Reason, "saved plan") {
 		t.Errorf("bare apply: deny=%v reason=%q", bare.Deny, bare.Reason)
 	}
-	destroy := Decide(hookInput("Bash", "terraform destroy -auto-approve", "/repo"), now, DefaultMaxAge)
+	destroy := Decide(hookInput("Bash", "terraform destroy -auto-approve", "/repo"), "Bash", now, DefaultMaxAge)
 	if !destroy.Deny || !strings.Contains(destroy.Reason, "destroy") {
 		t.Errorf("destroy: deny=%v reason=%q", destroy.Deny, destroy.Reason)
 	}
@@ -108,14 +108,14 @@ func TestDecideUnverifiedApplyDeny(t *testing.T) {
 		t.Fatal(err)
 	}
 	// No verdict written → must deny.
-	d := Decide(hookInput("Bash", "terraform apply tfplan", dir), time.Now(), DefaultMaxAge)
+	d := Decide(hookInput("Bash", "terraform apply tfplan", dir), "Bash", time.Now(), DefaultMaxAge)
 	if !d.Deny || !strings.Contains(d.Reason, "bumper verify") {
 		t.Errorf("unverified apply: deny=%v reason=%q", d.Deny, d.Reason)
 	}
 }
 
 func TestDecideMissingPlanDeny(t *testing.T) {
-	d := Decide(hookInput("Bash", "terraform apply ghost.tfplan", t.TempDir()), time.Now(), DefaultMaxAge)
+	d := Decide(hookInput("Bash", "terraform apply ghost.tfplan", t.TempDir()), "Bash", time.Now(), DefaultMaxAge)
 	if !d.Deny || !strings.Contains(d.Reason, "not found") {
 		t.Errorf("missing plan: deny=%v reason=%q", d.Deny, d.Reason)
 	}
@@ -139,7 +139,7 @@ func TestVerifyThenGuardAllow(t *testing.T) {
 		t.Fatalf("clean plan should pass, blocking=%d", len(res.Blocking))
 	}
 
-	d := Decide(hookInput("Bash", "terraform apply tfplan", dir), time.Now(), DefaultMaxAge)
+	d := Decide(hookInput("Bash", "terraform apply tfplan", dir), "Bash", time.Now(), DefaultMaxAge)
 	if d.Deny {
 		t.Fatalf("verified plan should be allowed, got deny: %s", d.Reason)
 	}
@@ -148,7 +148,7 @@ func TestVerifyThenGuardAllow(t *testing.T) {
 	if err := os.WriteFile(planPath, []byte(destructivePlanJSON), 0o644); err != nil {
 		t.Fatal(err)
 	}
-	d2 := Decide(hookInput("Bash", "terraform apply tfplan", dir), time.Now(), DefaultMaxAge)
+	d2 := Decide(hookInput("Bash", "terraform apply tfplan", dir), "Bash", time.Now(), DefaultMaxAge)
 	if !d2.Deny {
 		t.Error("tampered plan (sha mismatch) should be denied")
 	}
@@ -165,12 +165,12 @@ func TestDecideStaleVerdict(t *testing.T) {
 		t.Fatal(err)
 	}
 	// max-age 24h, verdict is 48h old → stale → deny.
-	d := Decide(hookInput("Bash", "terraform apply tfplan", dir), time.Now(), 24*time.Hour)
+	d := Decide(hookInput("Bash", "terraform apply tfplan", dir), "Bash", time.Now(), 24*time.Hour)
 	if !d.Deny || !strings.Contains(d.Reason, "stale") {
 		t.Errorf("stale verdict: deny=%v reason=%q", d.Deny, d.Reason)
 	}
 	// max-age 0 disables expiry → allow.
-	if d := Decide(hookInput("Bash", "terraform apply tfplan", dir), time.Now(), 0); d.Deny {
+	if d := Decide(hookInput("Bash", "terraform apply tfplan", dir), "Bash", time.Now(), 0); d.Deny {
 		t.Errorf("max-age 0 should never expire, got deny: %s", d.Reason)
 	}
 }
@@ -179,7 +179,7 @@ func TestGuardEndToEnd(t *testing.T) {
 	// A non-Bash payload produces no output (silent allow).
 	payload, _ := json.Marshal(hookInput("Read", "", "/repo"))
 	var out bytes.Buffer
-	if err := Guard(bytes.NewReader(payload), &out, time.Now(), DefaultMaxAge); err != nil {
+	if err := Guard(bytes.NewReader(payload), &out, "Bash", time.Now(), DefaultMaxAge); err != nil {
 		t.Fatalf("Guard: %v", err)
 	}
 	if out.Len() != 0 {
@@ -189,7 +189,7 @@ func TestGuardEndToEnd(t *testing.T) {
 	// A bare apply produces a deny decision in the hook JSON contract.
 	payload, _ = json.Marshal(hookInput("Bash", "terraform apply", "/repo"))
 	out.Reset()
-	if err := Guard(bytes.NewReader(payload), &out, time.Now(), DefaultMaxAge); err != nil {
+	if err := Guard(bytes.NewReader(payload), &out, "Bash", time.Now(), DefaultMaxAge); err != nil {
 		t.Fatalf("Guard: %v", err)
 	}
 	var decoded hookOutput
@@ -205,7 +205,7 @@ func TestGuardEndToEnd(t *testing.T) {
 
 	// Malformed payload is fail-open (no error, no output).
 	out.Reset()
-	if err := Guard(strings.NewReader("not json"), &out, time.Now(), DefaultMaxAge); err != nil {
+	if err := Guard(strings.NewReader("not json"), &out, "Bash", time.Now(), DefaultMaxAge); err != nil {
 		t.Errorf("malformed payload should fail-open, got err: %v", err)
 	}
 	if out.Len() != 0 {

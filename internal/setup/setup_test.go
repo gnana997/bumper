@@ -55,7 +55,7 @@ func TestMergeHookCreateIdempotentPreserve(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	if a, err := MergeHook(path, "bumper"); err != nil || a != Updated {
+	if a, err := MergeHook(path, "bumper", AgentClaude); err != nil || a != Updated {
 		t.Fatalf("merge: action=%v err=%v, want updated", a, err)
 	}
 	m := readJSON(t, path)
@@ -83,14 +83,14 @@ func TestMergeHookCreateIdempotentPreserve(t *testing.T) {
 		t.Error("unrelated 'my-linter' hook was clobbered")
 	}
 
-	if a, err := MergeHook(path, "bumper"); err != nil || a != Unchanged {
+	if a, err := MergeHook(path, "bumper", AgentClaude); err != nil || a != Unchanged {
 		t.Errorf("re-merge: action=%v err=%v, want unchanged", a, err)
 	}
 }
 
 func TestMergeHookCommandIncludesGuard(t *testing.T) {
 	path := filepath.Join(t.TempDir(), "settings.json")
-	if _, err := MergeHook(path, "/opt/bumper"); err != nil {
+	if _, err := MergeHook(path, "/opt/bumper", AgentClaude); err != nil {
 		t.Fatal(err)
 	}
 	m := readJSON(t, path)
@@ -197,6 +197,73 @@ func TestPlanScopePaths(t *testing.T) {
 	hook := Step{Path: "/home/u/.claude/settings.json"}
 	if r := hook.RelPath(env); r != "~/.claude/settings.json" {
 		t.Errorf("RelPath home = %q, want ~/.claude/settings.json", r)
+	}
+}
+
+func TestPlanAugment(t *testing.T) {
+	dir := t.TempDir()
+	env := Env{Bin: "bumper", Cwd: dir, Home: t.TempDir()}
+	steps := Plan(Options{
+		Agent: AgentAugment, HookScope: ScopeProject, Terraform: true, Deps: true,
+		Advisor: true, AdvisorScope: ScopeProject, Env: env,
+	})
+
+	// All hook + MCP steps target the single .augment/settings.json; notes go to AGENTS.md.
+	wantAugment := filepath.Join(dir, ".augment", "settings.json")
+	sawHook, sawMCP, sawAgentsMd := false, false, false
+	for _, s := range steps {
+		switch {
+		case strings.Contains(s.Title, "guard") || strings.Contains(s.Title, "dependency hooks"):
+			if s.Path != wantAugment {
+				t.Errorf("hook step %q path = %q, want %q", s.Title, s.Path, wantAugment)
+			}
+			sawHook = true
+		case strings.Contains(s.Title, "advisor MCP"):
+			if s.Path != wantAugment {
+				t.Errorf("advisor MCP path = %q, want co-located %q", s.Path, wantAugment)
+			}
+			sawMCP = true
+		case strings.Contains(s.Title, "AGENTS.md"):
+			sawAgentsMd = true
+		}
+		if strings.Contains(s.Path, ".mcp.json") || strings.Contains(s.Path, ".claude") {
+			t.Errorf("augment plan must not touch claude paths, got %q", s.Path)
+		}
+	}
+	if !sawHook || !sawMCP || !sawAgentsMd {
+		t.Fatalf("augment plan missing steps: hook=%v mcp=%v agentsmd=%v", sawHook, sawMCP, sawAgentsMd)
+	}
+
+	// Apply and verify the baked commands carry --client=augment + the launch-process matcher.
+	for _, s := range steps {
+		if _, err := s.Run(); err != nil {
+			t.Fatalf("apply %q: %v", s.Title, err)
+		}
+	}
+	b, err := os.ReadFile(wantAugment)
+	if err != nil {
+		t.Fatal(err)
+	}
+	got := string(b)
+	for _, want := range []string{"launch-process", "guard --client=augment", "deps guard --client=augment", "deps watch --client=augment", "bumper-advisor", "advisor.bumper.sh/mcp"} {
+		if !strings.Contains(got, want) {
+			t.Errorf(".augment/settings.json missing %q\n--- got ---\n%s", want, got)
+		}
+	}
+	if strings.Contains(got, `"matcher": "Bash"`) {
+		t.Error("augment config should not contain a Bash matcher")
+	}
+}
+
+func TestAgentBasics(t *testing.T) {
+	if AgentAugment.ShellTool() != "launch-process" || AgentClaude.ShellTool() != "Bash" {
+		t.Error("ShellTool mapping wrong")
+	}
+	if _, ok := ParseAgent("augment"); !ok {
+		t.Error("ParseAgent(augment) should be valid")
+	}
+	if _, ok := ParseAgent("bogus"); ok {
+		t.Error("ParseAgent(bogus) should be invalid")
 	}
 }
 

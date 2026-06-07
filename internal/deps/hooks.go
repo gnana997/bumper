@@ -33,9 +33,11 @@ func readHookInput(r io.Reader) (hookInput, error) {
 // Guard is the PreToolUse pre-install hook: it blocks an install of a
 // known-MALICIOUS package, with an informative reason so the agent self-corrects.
 // Fail-open throughout — a bumper or network error must never wedge the shell.
-func Guard(r io.Reader, w io.Writer, client *Client) error {
+// shellTool is the host agent's shell-execution tool name (e.g. "Bash" for Claude
+// Code, "launch-process" for Augment); the hook is a no-op for any other tool.
+func Guard(r io.Reader, w io.Writer, client *Client, shellTool string) error {
 	in, err := readHookInput(r)
-	if err != nil || in.ToolName != "Bash" {
+	if err != nil || in.ToolName != shellTool {
 		return nil
 	}
 	var named []Dep
@@ -63,9 +65,10 @@ func Guard(r io.Reader, w io.Writer, client *Client) error {
 // Watch is the PostToolUse post-install hook (model B): after an install, it runs
 // the scan itself, stays silent when clean, and on findings injects context that
 // nudges the main agent to spawn a triage subagent. Non-blocking, fail-open.
-func Watch(r io.Reader, w io.Writer, client *Client, fallbackDir string) error {
+// shellTool is the host agent's shell-execution tool name (see Guard).
+func Watch(r io.Reader, w io.Writer, client *Client, fallbackDir, shellTool string) error {
 	in, err := readHookInput(r)
-	if err != nil || in.ToolName != "Bash" {
+	if err != nil || in.ToolName != shellTool {
 		return nil
 	}
 	if !isInstallish(in.ToolInput.Command) {

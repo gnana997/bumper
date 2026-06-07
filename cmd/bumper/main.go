@@ -407,6 +407,7 @@ func cmdInit(args []string) int {
 	fs := flag.NewFlagSet("init", flag.ContinueOnError)
 	fs.SetOutput(os.Stderr)
 	hookFlag := fs.String("hook", "project", "hook scope: project|user|none")
+	agentFlag := fs.String("agent", "", "coding agent to wire: claude|augment (default: auto-detect)")
 	terraformFlag := fs.Bool("terraform", true, "install the terraform apply-guard hook")
 	depsFlag := fs.Bool("deps", true, "install the dependency hooks (install-block + post-install scan)")
 	advisorFlag := fs.String("advisor", "project", "advisor MCP scope: project|user|none (none = skip)")
@@ -430,6 +431,16 @@ func cmdInit(args []string) int {
 	if err != nil {
 		return fail("%v", err)
 	}
+	agent := setup.AgentClaude
+	if *agentFlag != "" {
+		a, ok := setup.ParseAgent(*agentFlag)
+		if !ok {
+			return fail("--agent must be claude|augment, got %q", *agentFlag)
+		}
+		agent = a
+	} else if env.AugmentFound && !env.ClaudeFound {
+		agent = setup.AgentAugment // only Augment is present — wire it
+	}
 	advisorURL := deps.ResolveAdvisorURL(*advisorURLFlag)
 	advisorOn := advisorScope != setup.ScopeNone
 	// The dependency guardrail needs an advisor endpoint for CVE/malware data.
@@ -438,13 +449,13 @@ func cmdInit(args []string) int {
 		advisorScope, advisorOn = setup.ScopeProject, true
 	}
 	steps := setup.Plan(setup.Options{
-		HookScope: hookScope, Terraform: *terraformFlag, Deps: *depsFlag,
+		Agent: agent, HookScope: hookScope, Terraform: *terraformFlag, Deps: *depsFlag,
 		Advisor: advisorOn, AdvisorScope: advisorScope, AdvisorURL: advisorURL, Env: env,
 	})
 	p := style.New(os.Stdout)
 
 	if *printOnly {
-		fmt.Printf("bumper init — would wire bumper (%s) into Claude Code:\n\n", env.Bin)
+		fmt.Printf("bumper init — would wire bumper (%s) into %s:\n\n", env.Bin, agent.Label())
 		for _, s := range steps {
 			fmt.Printf("  • %-34s %s\n", s.Title, s.RelPath(env))
 		}
@@ -468,7 +479,7 @@ func cmdInit(args []string) int {
 		for _, line := range res.Lines {
 			fmt.Println("  " + line)
 		}
-		fmt.Printf("\n%s bumper is wired in. Commit .mcp.json and .claude/settings.json to share the gate with your team.\n", p.OK(p.Glyphs.Check))
+		fmt.Printf("\n%s bumper is wired in. Commit the generated config to share the gate with your team.\n", p.OK(p.Glyphs.Check))
 		return 0
 	}
 
@@ -481,7 +492,7 @@ func cmdInit(args []string) int {
 		printAdvisorDisclosure(advisorURL)
 		fmt.Println()
 	}
-	fmt.Printf("bumper init — wiring bumper (%s) into Claude Code:\n\n", env.Bin)
+	fmt.Printf("bumper init — wiring bumper (%s) into %s:\n\n", env.Bin, agent.Label())
 	for _, s := range steps {
 		act, err := s.Run()
 		if err != nil {
@@ -489,7 +500,7 @@ func cmdInit(args []string) int {
 		}
 		fmt.Printf("  %-10s %s\n", act, s.RelPath(env))
 	}
-	fmt.Println("\n✓ bumper is wired in. Commit .mcp.json and .claude/settings.json to share the gate with your team.")
+	fmt.Println("\n✓ bumper is wired in. Commit the generated config to share the gate with your team.")
 	return 0
 }
 
@@ -564,14 +575,25 @@ func cmdGuard(args []string) int {
 	fs := flag.NewFlagSet("guard", flag.ContinueOnError)
 	fs.SetOutput(os.Stderr)
 	maxAge := fs.Duration("max-age", safety.DefaultMaxAge, "how long a verdict stays valid (0 = no expiry)")
+	client := fs.String("client", "claude", "host agent whose shell tool to match: claude|augment")
 	if err := fs.Parse(args); err != nil {
 		return 2
 	}
-	if err := safety.Guard(os.Stdin, os.Stdout, time.Now(), *maxAge); err != nil {
+	if err := safety.Guard(os.Stdin, os.Stdout, shellToolForClient(*client), time.Now(), *maxAge); err != nil {
 		// Fail-open: never wedge the user's shell on a guard error.
 		fmt.Fprintf(os.Stderr, "bumper guard: %v\n", err)
 	}
 	return 0
+}
+
+// shellToolForClient resolves the --client flag to the host agent's shell-tool
+// name (what the hook matches). Unknown/empty falls back to Claude's "Bash", so
+// existing config without the flag behaves exactly as before.
+func shellToolForClient(client string) string {
+	if a, ok := setup.ParseAgent(client); ok {
+		return a.ShellTool()
+	}
+	return setup.AgentClaude.ShellTool()
 }
 
 // cmdDeps routes the dependency-guardrail subcommands: the scanner (default),
@@ -701,11 +723,12 @@ func cmdDepsGuard(args []string) int {
 	fs := flag.NewFlagSet("deps guard", flag.ContinueOnError)
 	fs.SetOutput(os.Stderr)
 	advisorURL := fs.String("advisor-url", "", "Advisor base URL (or $BUMPER_ADVISOR_URL)")
+	clientFlag := fs.String("client", "claude", "host agent whose shell tool to match: claude|augment")
 	if err := fs.Parse(args); err != nil {
 		return 2
 	}
 	client := deps.NewClient(deps.ResolveAdvisorURL(*advisorURL))
-	if err := deps.Guard(os.Stdin, os.Stdout, client); err != nil {
+	if err := deps.Guard(os.Stdin, os.Stdout, client, shellToolForClient(*clientFlag)); err != nil {
 		fmt.Fprintf(os.Stderr, "bumper deps guard: %v\n", err)
 	}
 	return 0
@@ -718,12 +741,13 @@ func cmdDepsWatch(args []string) int {
 	fs := flag.NewFlagSet("deps watch", flag.ContinueOnError)
 	fs.SetOutput(os.Stderr)
 	advisorURL := fs.String("advisor-url", "", "Advisor base URL (or $BUMPER_ADVISOR_URL)")
+	clientFlag := fs.String("client", "claude", "host agent whose shell tool to match: claude|augment")
 	if err := fs.Parse(args); err != nil {
 		return 2
 	}
 	cwd, _ := os.Getwd()
 	client := deps.NewClient(deps.ResolveAdvisorURL(*advisorURL))
-	if err := deps.Watch(os.Stdin, os.Stdout, client, cwd); err != nil {
+	if err := deps.Watch(os.Stdin, os.Stdout, client, cwd, shellToolForClient(*clientFlag)); err != nil {
 		fmt.Fprintf(os.Stderr, "bumper deps watch: %v\n", err)
 	}
 	return 0

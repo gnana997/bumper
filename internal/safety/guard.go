@@ -47,12 +47,14 @@ type hookSpecificOutput struct {
 // as the hook's JSON output. It is fail-open on malformed input: a bumper bug
 // must never wedge the user's shell. The decision to block is conveyed purely
 // through the JSON output, so the process still exits 0.
-func Guard(r io.Reader, w io.Writer, now time.Time, maxAge time.Duration) error {
+// shellTool is the host agent's shell-execution tool name (e.g. "Bash" for Claude
+// Code, "launch-process" for Augment); any other tool yields a silent allow.
+func Guard(r io.Reader, w io.Writer, shellTool string, now time.Time, maxAge time.Duration) error {
 	in, err := readHookInput(r)
 	if err != nil {
 		return nil // fail-open: can't understand the payload, don't block
 	}
-	return writeDecision(w, Decide(in, now, maxAge))
+	return writeDecision(w, Decide(in, shellTool, now, maxAge))
 }
 
 func readHookInput(r io.Reader) (HookInput, error) {
@@ -82,8 +84,8 @@ func writeDecision(w io.Writer, d Decision) error {
 // Decide inspects a Bash tool call and blocks unverified terraform apply/destroy.
 // Any other tool or command yields a zero (silent) Decision, which is what makes
 // guard safe to install as a global, always-on hook.
-func Decide(in HookInput, now time.Time, maxAge time.Duration) Decision {
-	if in.ToolName != "Bash" {
+func Decide(in HookInput, shellTool string, now time.Time, maxAge time.Duration) Decision {
+	if in.ToolName != shellTool {
 		return Decision{}
 	}
 	for _, c := range parseTerraformCommands(in.ToolInput.Command) {

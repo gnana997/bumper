@@ -68,7 +68,8 @@ go install github.com/gnana997/bumper/cmd/bumper@latest
 Then wire it into your coding agent (guardrail hooks + the hosted Advisor MCP):
 
 ```sh
-bumper init
+bumper init                    # Claude Code (auto-detected)
+bumper init --agent augment    # or Augment
 ```
 
 Every release is checksummed, **cosign-signed** (keyless), and carries a **SLSA
@@ -98,7 +99,7 @@ error. Output formats: `--format text` (default) · `json` · `sarif` · `markdo
 | --- | --- | --- |
 | **Scan & explain** | flag exposure/destruction in a plan, optional AI enrichment | [docs/cli.md](docs/cli.md) |
 | **Enforce the apply** | `verify` binds a passing scan to a plan by sha256; `guard` blocks an unverified `apply` | [docs/agents.md](docs/agents.md) |
-| **Agent guardrail** | `bumper init` wires the guard hooks + the hosted Advisor MCP into Claude Code, Codex, opencode, … | [docs/agents.md](docs/agents.md) |
+| **Agent guardrail** | `bumper init` wires the guard hooks + the hosted Advisor MCP into Claude Code and Augment (`--agent`) | [docs/agents.md](docs/agents.md) |
 | **Dependency guardrail** | block malicious installs, scan deps for CVEs — in the agent loop and in CI | [docs/agents.md](docs/agents.md#dependency-guardrail) |
 | **CI / GitHub Action** | SARIF to the Security tab, a sticky PR comment, fail on `high+` | [docs/ci.md](docs/ci.md) |
 | **Search the catalog** | `bumper search` ranks enforced rules + an advisory best-practice catalog | [docs/cli.md](docs/cli.md#search) |

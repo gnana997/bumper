@@ -81,10 +81,11 @@ bumper init — would wire bumper into Claude Code:
 ```
 
 `bumper init` is a hazard-console wizard; everything it writes is **merge-safe and
-idempotent**. `--hook` scopes the hooks (`project|user|none`); `--terraform` / `--deps`
-pick which hooks; `--advisor` scopes the MCP (`project|user|none`); `--print` previews;
-`--yes` runs non-interactively. Hooks self-filter, so the defaults wire everything — a
-repo that adds Terraform later is already covered. It writes:
+idempotent**. `--agent claude|augment` picks the target agent (auto-detected by default);
+`--hook` scopes the hooks (`project|user|none`); `--terraform` / `--deps` pick which hooks;
+`--advisor` scopes the MCP (`project|user|none`); `--print` previews; `--yes` runs
+non-interactively. Hooks self-filter, so the defaults wire everything — a repo that adds
+Terraform later is already covered. For **Claude Code** it writes:
 
 **`.claude/settings.json`** — the guardrail hooks on `Bash` (terraform apply-guard,
 dependency install-block, post-install scan):
@@ -114,6 +115,31 @@ CVE/malware lookups; only package coordinates leave the machine):
 }
 ```
 
+### Augment
+
+`bumper init --agent augment` wires the same guardrail into Augment. The shapes are
+identical; only the location and the shell-tool name differ. Augment **co-locates hooks
+and MCP in one file** — `.augment/settings.json` — matches its shell tool
+**`launch-process`** (not `Bash`), and the baked commands carry `--client=augment` so the
+hook knows which tool to expect. Workflow notes go to `AGENTS.md` instead of `CLAUDE.md`:
+
+```json
+{
+  "hooks": {
+    "PreToolUse": [
+      { "matcher": "launch-process", "hooks": [{ "type": "command", "command": "bumper guard --client=augment" }] },
+      { "matcher": "launch-process", "hooks": [{ "type": "command", "command": "bumper deps guard --client=augment" }] }
+    ],
+    "PostToolUse": [
+      { "matcher": "launch-process", "hooks": [{ "type": "command", "command": "bumper deps watch --client=augment" }] }
+    ]
+  },
+  "mcpServers": {
+    "bumper-advisor": { "type": "http", "url": "https://advisor.bumper.sh/mcp" }
+  }
+}
+```
+
 ## Scanning, not MCP tools
 
 bumper has **one MCP** — the hosted [Advisor](mcp.md), for proactive knowledge/CVE/malware
@@ -127,11 +153,15 @@ For offline rule lookups without the Advisor, the CLI has `bumper search` / `bum
 
 ## Supported agents
 
-`bumper init` wires the hooks + advisor MCP into **Claude Code**, **Codex**,
-**opencode**, **auggie**, and **gemini**. The `--explain` enrichment (for
-`scan`/TUI) shells out to whichever of `claude` / `gemini` / `codex` / `opencode` /
-`auggie` you already have installed and authenticated — no API key, no vendor
-account. The deterministic verdict never depends on any of them.
+`bumper init` wires the guardrail hooks + advisor MCP into **Claude Code** (`--agent
+claude`, the default) and **Augment** (`--agent augment`) — the two agents with a
+pluggable blocking pre-tool hook that the binary speaks today. More agents (Gemini CLI,
+Codex) are on the roadmap; their hook contracts differ in the deny envelope / event names.
+
+Separately, the `--explain` enrichment (for `scan`/TUI) shells out to whichever of
+`claude` / `gemini` / `codex` / `opencode` / `auggie` you already have installed and
+authenticated — no API key, no vendor account. The deterministic verdict never depends on
+any of them.
 
 ## Dependency guardrail
 
