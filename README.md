@@ -148,7 +148,7 @@ intel (`MAL-*`) — refreshed daily, with AI-written remediation insights on
 critical/high CVEs. `bumper deps` and the agent malware-gate query it by package
 coordinate only.
 
-**Offline advisory catalog:** `bumper search` also spans ~2,700 knowledge-only
+**Offline advisory catalog:** `bumper search` also spans ~2,600 knowledge-only
 best-practice entries normalized from Trivy, Checkov, KICS, and Prowler — so an
 agent can ask "what should I bake in before writing Terraform for X?" fully
 offline.

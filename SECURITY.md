@@ -40,7 +40,7 @@ upgrade to the newest version before reporting.
 
 In scope:
 
-- the `bumper` binary and all subcommands (`scan`, `verify`, `guard`, `mcp`,
+- the `bumper` binary and all subcommands (`scan`, `deps`, `verify`, `guard`,
   `init`, `tui`),
 - the release artifacts and their signatures/attestations,
 - the deterministic rule engine and the `guard` enforcement logic (e.g. a way to

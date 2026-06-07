@@ -29,7 +29,7 @@ transition — so it can catch the class of problem an end-state scanner structu
 | **Enforces** — binds a pass to the plan by sha256 and *blocks* the apply | ✅ `verify` + `guard` | ◑ warns / can fail CI; no apply-time bind |
 | **Agent tool-layer hook** (blocks an unverified apply mid-session) | ✅ | ✗ |
 | Deterministic, single static binary, fully offline | ✅ | ◑ varies |
-| Raw rule count / frameworks | 112 enforced TF rules (+ ~2,700 advisory) | **far more** (thousands of rules; k8s, CFN, ARM, Helm, Dockerfile…) |
+| Raw rule count / frameworks | 112 enforced TF rules (+ ~2,600 advisory) | **far more** (thousands of rules; k8s, CFN, ARM, Helm, Dockerfile…) |
 | Policy-as-code (Rego/OPA, custom graph policies) | ✗ (YAML+CEL rules) | ✅ (Checkov, others) |
 
 **The honest summary:** for breadth — more clouds, more frameworks, thousands of rules,
